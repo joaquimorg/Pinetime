@@ -111,3 +111,17 @@ Here are some people I would like to highlight:
  - [Lup Yuen Lee](https://github.com/lupyuen) : He is everywhere: he works on a Rust firmware, builds a MCUBoot based bootloader for the Pinetime, designs a Flutter based companion app for smartphones and writes a lot of articles about the Pinetime!
 
 *If you feel like you should appear on this list, just get in touch with me or submit a PR :)*
+
+
+## My Build
+
+- $ mkdir build  
+- $ cd build
+
+- config -
+- $ cmake -DCMAKE_BUILD_TYPE=Debug -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
+
+- $ make -j pinetime-app
+
+- upload via remote openocd
+- $ arm-none-eabi-gdb.exe -ex="target remote 192.168.1.187:3333" src/pinetime-app-0.9.0.out -ex "load" -ex "det" -ex "q"
