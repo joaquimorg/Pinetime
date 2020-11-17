@@ -28,43 +28,19 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 584,
+				"line" : 586,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 587,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 573,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 569,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 570,
+				"line" : 589,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
 				"line" : 575,
-				"parent" : 0
-			},
-			{
-				"command" : 2,
-				"file" : 0,
-				"line" : 574,
 				"parent" : 0
 			},
 			{
@@ -92,9 +68,33 @@
 				"parent" : 0
 			},
 			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 573,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 574,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 579,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 578,
+				"parent" : 0
+			},
+			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 473,
+				"line" : 475,
 				"parent" : 0
 			}
 		]
@@ -105,7 +105,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g  "
+					"fragment" : "-O3 -DNDEBUG  "
 				},
 				{
 					"backtrace" : 2,
@@ -177,7 +177,7 @@
 				},
 				{
 					"backtrace" : 2,
-					"fragment" : "-O0"
+					"fragment" : "-O3"
 				}
 			],
 			"defines" : 
@@ -668,7 +668,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g  "
+					"fragment" : "-O3 -DNDEBUG  "
 				},
 				{
 					"backtrace" : 2,

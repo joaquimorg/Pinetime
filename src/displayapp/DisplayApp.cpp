@@ -58,10 +58,9 @@ void DisplayApp::Process(void *instance) {
   xTaskNotifyGive(xTaskGetCurrentTaskHandle());
 
   while (1) {
-
     app->Refresh();
-
   }
+  
 }
 
 void DisplayApp::InitHw() {
@@ -71,6 +70,7 @@ void DisplayApp::InitHw() {
 uint32_t acc = 0;
 uint32_t count = 0;
 bool toggle = true;
+
 void DisplayApp::Refresh() {
   TickType_t queueTimeout;
   switch (state) {

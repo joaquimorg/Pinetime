@@ -2,7 +2,7 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "src/pinetime-mcuboot-app-0.9.0.out"
+			"path" : "src/pinetime-app-0.9.0.out"
 		}
 	],
 	"backtrace" : 1,
@@ -29,55 +29,31 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 655,
+				"line" : 625,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 563,
+				"line" : 565,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 656,
+				"line" : 627,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 658,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 573,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 569,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 570,
+				"line" : 628,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
 				"line" : 575,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 574,
 				"parent" : 0
 			},
 			{
@@ -105,9 +81,33 @@
 				"parent" : 0
 			},
 			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 573,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 574,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 579,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 578,
+				"parent" : 0
+			},
+			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 473,
+				"line" : 475,
 				"parent" : 0
 			}
 		]
@@ -118,7 +118,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g  "
+					"fragment" : "-O3 -DNDEBUG  "
 				},
 				{
 					"backtrace" : 4,
@@ -190,7 +190,7 @@
 				},
 				{
 					"backtrace" : 4,
-					"fragment" : "-O0"
+					"fragment" : "-O3"
 				},
 				{
 					"fragment" : "-std=gnu++11"
@@ -696,7 +696,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g  "
+					"fragment" : "-O3 -DNDEBUG  "
 				},
 				{
 					"backtrace" : 4,
@@ -768,7 +768,7 @@
 				},
 				{
 					"backtrace" : 4,
-					"fragment" : "-O0"
+					"fragment" : "-O3"
 				},
 				{
 					"fragment" : "-std=gnu99"
@@ -1240,17 +1240,17 @@
 			"id" : "nrf-sdk::@145eef247bfb46b6828c"
 		}
 	],
-	"id" : "pinetime-mcuboot-app::@145eef247bfb46b6828c",
+	"id" : "pinetime-app::@145eef247bfb46b6828c",
 	"link" : 
 	{
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-O3 -DNDEBUG",
 				"role" : "flags"
 			},
 			{
-				"fragment" : "-mthumb -mabi=aapcs -std=gnu++98 -std=c99 -L /mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/mdk -T/mnt/d/Work/PineTime/OS/Pinetime/gcc_nrf52-mcuboot.ld -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections --specs=nano.specs -lc -lnosys -lm -Wl,-Map=pinetime-mcuboot-app-0.9.0.map",
+				"fragment" : "-mthumb -mabi=aapcs -std=gnu++98 -std=c99 -L /mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/mdk -T/mnt/d/Work/PineTime/OS/Pinetime/gcc_nrf52.ld -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections --specs=nano.specs -lc -lnosys -lm -Wl,-Map=pinetime-app-0.9.0.map",
 				"role" : "flags"
 			},
 			{
@@ -1284,8 +1284,8 @@
 			"path" : "/usr/bin"
 		}
 	},
-	"name" : "pinetime-mcuboot-app",
-	"nameOnDisk" : "pinetime-mcuboot-app-0.9.0.out",
+	"name" : "pinetime-app",
+	"nameOnDisk" : "pinetime-app-0.9.0.out",
 	"paths" : 
 	{
 		"build" : "src",

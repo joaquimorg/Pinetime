@@ -267,14 +267,16 @@ set(LVGL_SRC
         libs/lvgl/src/lv_objx/lv_list.h
         libs/lvgl/src/lv_objx/lv_tileview.c
         libs/lvgl/src/lv_objx/lv_tileview.h
-        libs/lvgl/src/lv_objx/lv_tabview.c
-        libs/lvgl/src/lv_objx/lv_tabview.h
+        #libs/lvgl/src/lv_objx/lv_tabview.c
+        #libs/lvgl/src/lv_objx/lv_tabview.h
         libs/lvgl/src/lv_objx/lv_btnm.c
         libs/lvgl/src/lv_objx/lv_btnm.h
-        libs/lvgl/src/lv_objx/lv_page.c
-        libs/lvgl/src/lv_objx/lv_page.h
+        #libs/lvgl/src/lv_objx/lv_page.c
+        #libs/lvgl/src/lv_objx/lv_page.h
         libs/lvgl/src/lv_objx/lv_img.c
         libs/lvgl/src/lv_objx/lv_img.h
+        libs/lvgl/src/lv_objx/lv_imgbtn.h
+        libs/lvgl/src/lv_objx/lv_imgbtn.c
         libs/lvgl/src/lv_objx/lv_lmeter.c
         libs/lvgl/src/lv_objx/lv_lmeter.h
         libs/lvgl/src/lv_objx/lv_arc.c
@@ -499,7 +501,7 @@ include_directories(
         "${NRF5_SDK_PATH}/modules/nrfx/drivers/include"
         "${NRF5_SDK_PATH}/modules/nrfx/hal"
         "${NRF5_SDK_PATH}/modules/nrfx/mdk"
-        ${NRF5_SDK_PATH}/external/freertos/source/include
+        "${NRF5_SDK_PATH}/external/freertos/source/include"
         "${NRF5_SDK_PATH}/components/toolchain/cmsis/include"
         "${NRF5_SDK_PATH}/components/libraries/atomic"
         "${NRF5_SDK_PATH}/components/libraries/atomic_fifo"

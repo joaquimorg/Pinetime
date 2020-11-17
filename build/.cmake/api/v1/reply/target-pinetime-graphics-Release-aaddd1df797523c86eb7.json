@@ -29,55 +29,31 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 684,
+				"line" : 686,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 563,
+				"line" : 565,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 685,
+				"line" : 687,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 687,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 573,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 569,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 570,
+				"line" : 689,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
 				"line" : 575,
-				"parent" : 0
-			},
-			{
-				"command" : 4,
-				"file" : 0,
-				"line" : 574,
 				"parent" : 0
 			},
 			{
@@ -105,9 +81,33 @@
 				"parent" : 0
 			},
 			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 573,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 574,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 579,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 578,
+				"parent" : 0
+			},
+			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 473,
+				"line" : 475,
 				"parent" : 0
 			}
 		]
@@ -118,7 +118,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g  "
+					"fragment" : "-O3 -DNDEBUG  "
 				},
 				{
 					"backtrace" : 4,
@@ -190,7 +190,7 @@
 				},
 				{
 					"backtrace" : 4,
-					"fragment" : "-O0"
+					"fragment" : "-O3"
 				},
 				{
 					"fragment" : "-std=gnu99"
@@ -648,7 +648,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g  "
+					"fragment" : "-O3 -DNDEBUG  "
 				},
 				{
 					"backtrace" : 4,
@@ -720,7 +720,7 @@
 				},
 				{
 					"backtrace" : 4,
-					"fragment" : "-O0"
+					"fragment" : "-O3"
 				},
 				{
 					"fragment" : "-std=gnu++11"
@@ -1193,7 +1193,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-O3 -DNDEBUG",
 				"role" : "flags"
 			},
 			{
