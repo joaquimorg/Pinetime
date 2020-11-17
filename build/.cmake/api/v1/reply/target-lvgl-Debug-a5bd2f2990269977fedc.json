@@ -1,0 +1,1498 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "src/liblvgl.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"target_compile_options",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 608,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 611,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 573,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 569,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 570,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 575,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 574,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 571,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 572,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 577,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 576,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 473,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g  "
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-MP"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-MD"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mthumb"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mabi=aapcs"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wno-unknown-pragmas"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-g3"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fno-strict-aliasing"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-fno-builtin"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "--short-enums"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mcpu=cortex-m4"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mfloat-abi=hard"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-mfpu=fpv4-sp-d16"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Wreturn-type"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-Werror=return-type"
+				},
+				{
+					"backtrace" : 2,
+					"fragment" : "-O0"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 3,
+					"define" : "BOARD_PCA10040"
+				},
+				{
+					"backtrace" : 4,
+					"define" : "CONFIG_GPIO_AS_PINRESET"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "DEBUG"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "DEBUG_NRF_USER"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "FREERTOS"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "NIMBLE_CFG_CONTROLLER"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52832"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52832_XXAA"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_12"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_15"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_20"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_31"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_36"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_51"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_54"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_55"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_58"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_64"
+				},
+				{
+					"backtrace" : 3,
+					"define" : "NRF52_PAN_74"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "OS_CPUTIME_FREQ"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "__HEAP_SIZE=8192"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "__STACK_SIZE=8192"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/FreeRTOS"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/date/includes"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/porting/npl/freertos/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/porting/nimble/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/controller/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/transport/ram/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/drivers/nrf52/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/ext/tinycrypt/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/services/gap/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/services/gatt/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/util/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/store/ram/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/drivers_nrf/nrf_soc_nosd"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/boards"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/softdevice/common"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/integration/nrfx"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/integration/nrfx/legacy"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/drivers/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/hal"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/mdk"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/freertos/source/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/toolchain/cmsis/include"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_fifo"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_flags"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/balloc"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/bootloader/ble_dfu"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/cli"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crc16"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crc32"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crypto"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/csense"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/csense_drv"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/delay"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/ecc"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/experimental_section_vars"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/experimental_task_manager"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/fds"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/fstorage"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/gfx"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/gpiote"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/hardfault"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/hci"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/led_softblink"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/log"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/log/src"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/low_power_pwm"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mem_manager"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/memobj"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mpu"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mutex"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/pwm"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/pwr_mgmt"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/queue"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/ringbuf"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/scheduler"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/sdcard"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/slip"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/sortlist"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/spi_mngr"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/stack_guard"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/strerror"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/svc"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/timer"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/audio"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/cdc"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/cdc/acm"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/generic"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/kbd"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/mouse"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/msc"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/util"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/segger_rtt"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/fprintf"
+				},
+				{
+					"backtrace" : 12,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/thedotfactory_fonts"
+				},
+				{
+					"backtrace" : 12,
+					"isSystem" : true,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/."
+				},
+				{
+					"backtrace" : 12,
+					"isSystem" : true,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/.."
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				2,
+				4,
+				6,
+				9,
+				10,
+				12,
+				14,
+				16,
+				19,
+				20,
+				22,
+				24,
+				26,
+				28,
+				30,
+				32,
+				34,
+				36,
+				38,
+				40,
+				42,
+				44,
+				46,
+				49,
+				51,
+				53,
+				55,
+				57,
+				59,
+				61,
+				63,
+				65,
+				67,
+				69,
+				72,
+				74,
+				76,
+				78,
+				80,
+				83,
+				86,
+				88,
+				90,
+				92,
+				93,
+				95,
+				97,
+				99,
+				101,
+				103,
+				105,
+				107,
+				109,
+				111,
+				113,
+				116,
+				117,
+				119
+			],
+			"sysroot" : 
+			{
+				"path" : "/usr/bin"
+			}
+		}
+	],
+	"id" : "lvgl::@145eef247bfb46b6828c",
+	"name" : "lvgl",
+	"nameOnDisk" : "liblvgl.a",
+	"paths" : 
+	{
+		"build" : "src",
+		"source" : "src"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Header Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				3,
+				5,
+				7,
+				8,
+				11,
+				13,
+				15,
+				17,
+				18,
+				21,
+				23,
+				25,
+				27,
+				29,
+				31,
+				33,
+				35,
+				37,
+				39,
+				41,
+				43,
+				45,
+				47,
+				48,
+				50,
+				52,
+				54,
+				56,
+				58,
+				60,
+				62,
+				64,
+				66,
+				68,
+				70,
+				71,
+				73,
+				75,
+				77,
+				79,
+				81,
+				82,
+				84,
+				85,
+				87,
+				89,
+				91,
+				94,
+				96,
+				98,
+				100,
+				102,
+				104,
+				106,
+				108,
+				110,
+				112,
+				114,
+				115,
+				118,
+				120
+			]
+		},
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				2,
+				4,
+				6,
+				9,
+				10,
+				12,
+				14,
+				16,
+				19,
+				20,
+				22,
+				24,
+				26,
+				28,
+				30,
+				32,
+				34,
+				36,
+				38,
+				40,
+				42,
+				44,
+				46,
+				49,
+				51,
+				53,
+				55,
+				57,
+				59,
+				61,
+				63,
+				65,
+				67,
+				69,
+				72,
+				74,
+				76,
+				78,
+				80,
+				83,
+				86,
+				88,
+				90,
+				92,
+				93,
+				95,
+				97,
+				99,
+				101,
+				103,
+				105,
+				107,
+				109,
+				111,
+				113,
+				116,
+				117,
+				119
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lv_conf.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/lvgl.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_obj.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_obj.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_group.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_group.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_disp.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_disp.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_debug.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_debug.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_indev.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_indev.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_refr.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_refr.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_core/lv_style.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_core/lv_style.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_anim.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_anim.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_async.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_async.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_fs.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_fs.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_task.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_task.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_area.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_area.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_bidi.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_bidi.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_circ.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_circ.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_color.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_color.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_gc.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_gc.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_ll.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_ll.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_log.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_log.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_math.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_math.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_mem.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_mem.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_printf.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_printf.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_templ.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_templ.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_txt.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_txt.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_types.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_utils.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_misc/lv_utils.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_arc.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_arc.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_basic.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_basic.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_img.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_img.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_label.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_label.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_line.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_line.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_rect.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_rect.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_triangle.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_draw_triangle.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_img_cache.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_img_cache.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_img_decoder.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_draw/lv_img_decoder.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal_disp.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal_disp.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal_indev.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal_indev.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal_tick.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_hal/lv_hal_tick.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_font/lv_font.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_font/lv_font.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_font/lv_font_fmt_txt.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_font/lv_font_fmt_txt.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_font/lv_symbol_def.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_themes/lv_theme.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_themes/lv_theme.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_btn.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_btn.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_cont.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_cont.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_label.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_label.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_themes/lv_theme_night.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_themes/lv_theme_night.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_list.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_list.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_tileview.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_tileview.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_tabview.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_tabview.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_btnm.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_btnm.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_page.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_page.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_img.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_img.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_lmeter.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_lmeter.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_arc.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_arc.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_gauge.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_gauge.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_mbox.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_mbox.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_bar.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_bar.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_slider.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_slider.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_ddlist.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_ddlist.h",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_line.c",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "src/libs/lvgl/src/lv_objx/lv_line.h",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

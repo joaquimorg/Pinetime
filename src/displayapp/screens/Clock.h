@@ -50,10 +50,13 @@ namespace Pinetime {
         private:
           static const char* MonthToString(Pinetime::Controllers::DateTime::Months month);
           static const char* DayOfWeekToString(Pinetime::Controllers::DateTime::Days dayOfWeek);
+          static const char* DayOfWeekShortToString(Pinetime::Controllers::DateTime::Days dayOfWeek);
           static char const *DaysString[];
+          static char const *DaysStringShort[];
           static char const *MonthsString[];
 
-          char displayedChar[5];
+          //char displayedChar[5];
+          uint8_t sHour, sMinute, sSecond;
 
           uint16_t currentYear = 1970;
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
@@ -67,8 +70,12 @@ namespace Pinetime {
           DirtyValue<uint8_t> heartbeat  {0};
           DirtyValue<bool> notificationState {false};
 
+          lv_style_t ble_style;
+          
           lv_obj_t* label_time;
+          lv_obj_t* label_time_sec;
           lv_obj_t* label_date;
+          lv_obj_t* label_date_day;
           lv_obj_t* backgroundLabel;
           lv_obj_t* batteryIcon;
           lv_obj_t* bleIcon;

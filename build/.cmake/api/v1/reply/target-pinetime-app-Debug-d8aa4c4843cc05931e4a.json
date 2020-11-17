@@ -1,0 +1,1699 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "src/pinetime-app-0.9.0.out"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"link_directories",
+			"target_link_libraries",
+			"target_compile_options",
+			"add_definitions",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 623,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 563,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 625,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 626,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 573,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 569,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 570,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 575,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 574,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 571,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 572,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 577,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 576,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 473,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g  "
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-MP"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-MD"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mthumb"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mabi=aapcs"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Wno-unknown-pragmas"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-g3"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fno-strict-aliasing"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fno-builtin"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "--short-enums"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mcpu=cortex-m4"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mfloat-abi=hard"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mfpu=fpv4-sp-d16"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Wreturn-type"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Werror=return-type"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-O0"
+				},
+				{
+					"fragment" : "-std=gnu++11"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 5,
+					"define" : "BOARD_PCA10040"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "CONFIG_GPIO_AS_PINRESET"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "DEBUG"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "DEBUG_NRF_USER"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "FREERTOS"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "NIMBLE_CFG_CONTROLLER"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52832"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52832_XXAA"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_12"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_15"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_20"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_31"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_36"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_51"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_54"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_55"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_58"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_64"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_74"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "OS_CPUTIME_FREQ"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "__HEAP_SIZE=8192"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "__STACK_SIZE=8192"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/FreeRTOS"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/date/includes"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/porting/npl/freertos/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/porting/nimble/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/controller/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/transport/ram/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/drivers/nrf52/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/ext/tinycrypt/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/services/gap/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/services/gatt/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/util/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/store/ram/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/drivers_nrf/nrf_soc_nosd"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/boards"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/softdevice/common"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/integration/nrfx"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/integration/nrfx/legacy"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/drivers/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/hal"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/mdk"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/freertos/source/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/toolchain/cmsis/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_fifo"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_flags"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/balloc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/bootloader/ble_dfu"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/cli"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crc16"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crc32"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crypto"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/csense"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/csense_drv"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/delay"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/ecc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/experimental_section_vars"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/experimental_task_manager"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/fds"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/fstorage"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/gfx"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/gpiote"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/hardfault"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/hci"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/led_softblink"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/log"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/log/src"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/low_power_pwm"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mem_manager"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/memobj"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mpu"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mutex"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/pwm"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/pwr_mgmt"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/queue"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/ringbuf"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/scheduler"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/sdcard"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/slip"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/sortlist"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/spi_mngr"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/stack_guard"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/strerror"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/svc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/timer"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/audio"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/cdc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/cdc/acm"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/generic"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/kbd"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/mouse"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/msc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/util"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/segger_rtt"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/fprintf"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/thedotfactory_fonts"
+				},
+				{
+					"backtrace" : 14,
+					"isSystem" : true,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/."
+				},
+				{
+					"backtrace" : 14,
+					"isSystem" : true,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/.."
+				}
+			],
+			"language" : "CXX",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				51,
+				54,
+				55
+			],
+			"sysroot" : 
+			{
+				"path" : "/usr/bin"
+			}
+		},
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g  "
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-MP"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-MD"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mthumb"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mabi=aapcs"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Wno-unknown-pragmas"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-g3"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fno-strict-aliasing"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-fno-builtin"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "--short-enums"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mcpu=cortex-m4"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mfloat-abi=hard"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-mfpu=fpv4-sp-d16"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Wreturn-type"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-Werror=return-type"
+				},
+				{
+					"backtrace" : 4,
+					"fragment" : "-O0"
+				},
+				{
+					"fragment" : "-std=gnu99"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 5,
+					"define" : "BOARD_PCA10040"
+				},
+				{
+					"backtrace" : 6,
+					"define" : "CONFIG_GPIO_AS_PINRESET"
+				},
+				{
+					"backtrace" : 7,
+					"define" : "DEBUG"
+				},
+				{
+					"backtrace" : 8,
+					"define" : "DEBUG_NRF_USER"
+				},
+				{
+					"backtrace" : 9,
+					"define" : "FREERTOS"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "NIMBLE_CFG_CONTROLLER"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52832"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52832_XXAA"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_12"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_15"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_20"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_31"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_36"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_51"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_54"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_55"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_58"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_64"
+				},
+				{
+					"backtrace" : 5,
+					"define" : "NRF52_PAN_74"
+				},
+				{
+					"backtrace" : 11,
+					"define" : "OS_CPUTIME_FREQ"
+				},
+				{
+					"backtrace" : 12,
+					"define" : "__HEAP_SIZE=8192"
+				},
+				{
+					"backtrace" : 13,
+					"define" : "__STACK_SIZE=8192"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/FreeRTOS"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/date/includes"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/porting/npl/freertos/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/porting/nimble/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/controller/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/transport/ram/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/drivers/nrf52/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/ext/tinycrypt/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/services/gap/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/services/gatt/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/util/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/libs/mynewt-nimble/nimble/host/store/ram/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/drivers_nrf/nrf_soc_nosd"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/boards"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/softdevice/common"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/integration/nrfx"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/integration/nrfx/legacy"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/drivers/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/hal"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/mdk"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/freertos/source/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/toolchain/cmsis/include"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_fifo"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/atomic_flags"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/balloc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/bootloader/ble_dfu"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/cli"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crc16"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crc32"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/crypto"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/csense"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/csense_drv"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/delay"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/ecc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/experimental_section_vars"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/experimental_task_manager"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/fds"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/fstorage"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/gfx"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/gpiote"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/hardfault"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/hci"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/led_softblink"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/log"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/log/src"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/low_power_pwm"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mem_manager"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/memobj"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mpu"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/mutex"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/pwm"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/pwr_mgmt"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/queue"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/ringbuf"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/scheduler"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/sdcard"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/slip"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/sortlist"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/spi_mngr"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/stack_guard"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/strerror"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/svc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/timer"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/audio"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/cdc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/cdc/acm"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/generic"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/kbd"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/hid/mouse"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/usbd/class/msc"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/components/libraries/util"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/segger_rtt"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/fprintf"
+				},
+				{
+					"backtrace" : 14,
+					"path" : "/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/external/thedotfactory_fonts"
+				},
+				{
+					"backtrace" : 14,
+					"isSystem" : true,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/."
+				},
+				{
+					"backtrace" : 14,
+					"isSystem" : true,
+					"path" : "/mnt/d/Work/PineTime/OS/Pinetime/src/.."
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				48,
+				49,
+				50,
+				52,
+				53
+			],
+			"sysroot" : 
+			{
+				"path" : "/usr/bin"
+			}
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "lvgl::@145eef247bfb46b6828c"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "nimble::@145eef247bfb46b6828c"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "nrf-sdk::@145eef247bfb46b6828c"
+		}
+	],
+	"id" : "pinetime-app::@145eef247bfb46b6828c",
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-g",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-mthumb -mabi=aapcs -std=gnu++98 -std=c99 -L /mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde/modules/nrfx/mdk -T/mnt/d/Work/PineTime/OS/Pinetime/gcc_nrf52.ld -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections --specs=nano.specs -lc -lnosys -lm -Wl,-Map=pinetime-app-0.9.0.map",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "-L/mnt/d/Work/PineTime/OS/Pinetime/src/..",
+				"role" : "libraryPath"
+			},
+			{
+				"fragment" : "-Wl,-rpath,/mnt/d/Work/PineTime/OS/Pinetime/src/..",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "libnimble.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "libnrf-sdk.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "liblvgl.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX",
+		"sysroot" : 
+		{
+			"path" : "/usr/bin"
+		}
+	},
+	"name" : "pinetime-app",
+	"nameOnDisk" : "pinetime-app-0.9.0.out",
+	"paths" : 
+	{
+		"build" : "src",
+		"source" : "src"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11,
+				12,
+				13,
+				14,
+				15,
+				16,
+				17,
+				18,
+				19,
+				20,
+				21,
+				22,
+				23,
+				24,
+				25,
+				26,
+				27,
+				28,
+				29,
+				30,
+				31,
+				32,
+				33,
+				34,
+				35,
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				51,
+				52,
+				53,
+				54,
+				55
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/BootloaderVersion.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/logging/NrfLogger.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/DisplayApp.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Screen.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Clock.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Tile.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Meter.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Gauge.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/InfiniPaint.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/DropDownDemo.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Modal.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/BatteryIcon.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/BleIcon.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/NotificationIcon.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Brightness.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/SystemInfo.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Label.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/FirmwareUpdate.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Music.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/FirmwareValidation.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/ApplicationList.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/screens/Notifications.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/St7789.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/SpiNorFlash.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/SpiMaster.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/Spi.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/Watchdog.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/DebugPins.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/InternalFlash.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/battery/BatteryController.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/BleController.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/NotificationManager.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/datetime/DateTimeController.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/brightness/BrightnessController.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/NimbleController.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/DeviceInformationService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/CurrentTimeClient.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/AlertNotificationClient.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/DfuService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/CurrentTimeService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/AlertNotificationService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/MusicService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/BatteryInformationService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/ImmediateAlertService.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/ble/ServiceDiscovery.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/components/firmwarevalidator/FirmwareValidator.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/Cst816s.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/FreeRTOS/port.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/FreeRTOS/port_cmsis_systick.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/FreeRTOS/port_cmsis.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/displayapp/LittleVgl.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/displayapp/fonts/lv_font_montserrat_20.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/displayapp/fonts/lv_font_clock_70.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/systemtask/SystemTask.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/drivers/TwiMaster.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

@@ -39,14 +39,17 @@ namespace Pinetime {
                   app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
                   screenIndex--;
                   current = screens[screenIndex]();
+                  return true;
+                } else {
+                  return false;
                 }
-                return true;
+                
               case TouchEvents::SwipeUp:
                 if (screenIndex < screens.size() - 1) {
                   current.reset(nullptr);
                   app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
                   screenIndex++;
-                  current = screens[screenIndex]();
+                  current = screens[screenIndex]();                
                 }
                 return true;
               default:

@@ -1,0 +1,148 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "src",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.10"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "src",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "pinetime"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "pinetime-app",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 1,
+					"id" : "FLASH_ERASE::@145eef247bfb46b6828c",
+					"jsonFile" : "target-FLASH_ERASE-Debug-5559b456919690640aa0.json",
+					"name" : "FLASH_ERASE",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "FLASH_pinetime-app::@145eef247bfb46b6828c",
+					"jsonFile" : "target-FLASH_pinetime-app-Debug-a47476348d4129325dc9.json",
+					"name" : "FLASH_pinetime-app",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "lvgl::@145eef247bfb46b6828c",
+					"jsonFile" : "target-lvgl-Debug-a5bd2f2990269977fedc.json",
+					"name" : "lvgl",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "nimble::@145eef247bfb46b6828c",
+					"jsonFile" : "target-nimble-Debug-59b7b28c433c5c64fb0e.json",
+					"name" : "nimble",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "nrf-sdk::@145eef247bfb46b6828c",
+					"jsonFile" : "target-nrf-sdk-Debug-4c62c1ee609e09f89670.json",
+					"name" : "nrf-sdk",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pinetime-app::@145eef247bfb46b6828c",
+					"jsonFile" : "target-pinetime-app-Debug-d8aa4c4843cc05931e4a.json",
+					"name" : "pinetime-app",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pinetime-graphics::@145eef247bfb46b6828c",
+					"jsonFile" : "target-pinetime-graphics-Debug-9473dbaceda7e59432ca.json",
+					"name" : "pinetime-graphics",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "pinetime-mcuboot-app::@145eef247bfb46b6828c",
+					"jsonFile" : "target-pinetime-mcuboot-app-Debug-650d3196247c4d144035.json",
+					"name" : "pinetime-mcuboot-app",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/mnt/d/Work/PineTime/OS/Pinetime/build",
+		"source" : "/mnt/d/Work/PineTime/OS/Pinetime"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}

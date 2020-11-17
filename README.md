@@ -115,10 +115,16 @@ Here are some people I would like to highlight:
 
 ## My Build
 
+- Programer :
+  clock :   w - green   - SWDIO
+            b - yellow  - SWDCLK
+            r - brown   - GND
+
 - $ mkdir build  
 - $ cd build
 
 - config -
+- $ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
 - $ cmake -DCMAKE_BUILD_TYPE=Debug -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
 
 - $ make -j pinetime-app

@@ -13,11 +13,15 @@
 using namespace Pinetime::Components;
 
 extern "C" {
-LV_FONT_DECLARE(jetbrains_mono_extrabold_compressed)
-LV_FONT_DECLARE(jetbrains_mono_bold_20)
+//LV_FONT_DECLARE(jetbrains_mono_extrabold_compressed)
+//LV_FONT_DECLARE(jetbrains_mono_bold_20)
+LV_FONT_DECLARE(lv_font_clock_70)
+LV_FONT_DECLARE(lv_font_montserrat_20)
 }
 
 lv_style_t* LabelBigStyle = nullptr;
+
+lv_style_t* DefaultStyle = nullptr;
 
 static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p) {
   auto* lvgl = static_cast<LittleVgl*>(disp_drv->user_data);
@@ -256,9 +260,12 @@ void LittleVgl::InitTheme() {
 }
 
 void LittleVgl::InitBaseTheme() {
-  if(font == nullptr) font = &jetbrains_mono_bold_20;
+  //if(font == nullptr) font = &jetbrains_mono_bold_20;
+  if(font == nullptr) font = &lv_font_montserrat_20;  
   lv_style_copy(&def, &lv_style_plain); /*Initialize the default style*/
   def.text.font = font;
+
+  DefaultStyle = &(this->def);
 
   lv_style_copy(&bg, &lv_style_plain);
   bg.body.main_color = LV_COLOR_BLACK;
@@ -364,7 +371,8 @@ void LittleVgl::InitThemeLabel() {
   prim.text.color = lv_color_hsv_to_rgb(hue, 5, 95);
 
   lv_style_copy(&labelBigStyle, &prim);
-  labelBigStyle.text.font = &jetbrains_mono_extrabold_compressed;
+  //labelBigStyle.text.font = &jetbrains_mono_extrabold_compressed;
+  labelBigStyle.text.font = &lv_font_clock_70;
   LabelBigStyle = &(this->labelBigStyle);
 
   lv_style_copy(&sec, &bg);

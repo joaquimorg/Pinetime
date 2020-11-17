@@ -41,7 +41,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         notificationManager{notificationManager} {
   msgQueue = xQueueCreate(queueSize, itemSize);
   onClockApp = true;
-  modal.reset(new Screens::Modal(this));
+  //modal.reset(new Screens::Modal(this));
 }
 
 void DisplayApp::Start() {
@@ -129,12 +129,23 @@ void DisplayApp::Refresh() {
         if(!currentScreen->OnTouchEvent(gesture)) {
           switch (gesture) {
             case TouchEvents::SwipeUp:
-              currentScreen->OnButtonPushed();
+              onClockApp = false;
+              //currentScreen->OnButtonPushed();
               lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
+              currentScreen.reset(nullptr);
+              currentScreen.reset(new Screens::ApplicationList(this));
               break;
-            case TouchEvents::SwipeDown:
+            /*case TouchEvents::SwipeDown:
               currentScreen->OnButtonPushed();
               lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+              break;*/
+            case TouchEvents::SwipeDown:
+              if(!onClockApp) {
+                lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+                currentScreen.reset(nullptr);
+                currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager));
+                onClockApp = true;
+              }
               break;
             default:
               break;

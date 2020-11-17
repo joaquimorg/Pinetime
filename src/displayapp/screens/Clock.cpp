@@ -12,9 +12,10 @@
 #include "NotificationIcon.h"
 
 using namespace Pinetime::Applications::Screens;
-extern lv_font_t jetbrains_mono_extrabold_compressed;
-extern lv_font_t jetbrains_mono_bold_20;
+//extern lv_font_t jetbrains_mono_extrabold_compressed;
+//extern lv_font_t jetbrains_mono_bold_20;
 extern lv_style_t* LabelBigStyle;
+extern lv_style_t* DefaultStyle;
 
 static void event_handler(lv_obj_t * obj, lv_event_t event) {
   Clock* screen = static_cast<Clock *>(obj->user_data);
@@ -28,35 +29,71 @@ Clock::Clock(DisplayApp* app,
         Controllers::NotificationManager& notificatioManager) : Screen(app), currentDateTime{{}},
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager} {
-  displayedChar[0] = 0;
+  /*displayedChar[0] = 0;
   displayedChar[1] = 0;
   displayedChar[2] = 0;
   displayedChar[3] = 0;
-  displayedChar[4] = 0;
+  displayedChar[4] = 0;*/
+
+  sHour = 99;
+  sMinute = 99;
+  sSecond = 99;
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text(batteryIcon, Symbols::batteryFull);
-  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_TOP_RIGHT, -5, 2);
+  lv_label_set_text(batteryIcon, Symbols::batteryHalf);
+  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, 2);
 
   batteryPlug = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(batteryPlug, Symbols::plug);
   lv_obj_align(batteryPlug, batteryIcon, LV_ALIGN_OUT_LEFT_MID, -5, 0);
-
+  
+  lv_style_copy(&ble_style, DefaultStyle);
   bleIcon = lv_label_create(lv_scr_act(), nullptr);
+  ble_style.text.color = lv_color_hex(0x444444);  
+  //ble_style.text.color = lv_color_hex(0x0000FF);  
+  lv_label_set_style(bleIcon, LV_LABEL_STYLE_MAIN, &ble_style);
   lv_label_set_text(bleIcon, Symbols::bluetooth);
-  lv_obj_align(bleIcon, batteryPlug, LV_ALIGN_OUT_LEFT_MID, -5, 0);
+  lv_obj_align(bleIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 30, 0);
+
+  static lv_style_t not_style;
+  lv_style_copy(&not_style, DefaultStyle);
 
   notificationIcon = lv_label_create(lv_scr_act(), NULL);
+  not_style.text.color = lv_color_hex(0x00FF00);  
+  lv_label_set_style(notificationIcon, LV_LABEL_STYLE_MAIN, &not_style);
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
   lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 10, 0);
 
   label_date = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_text_fmt(label_date, "%s %d", "JAN", 2020);
+  lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
+  lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
-  lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_IN_LEFT_MID, 0, 60);
+  static lv_style_t date_style;
+  lv_style_copy(&date_style, DefaultStyle);
 
-  label_time = lv_label_create(lv_scr_act(), nullptr);
+  label_date_day = lv_label_create(lv_scr_act(), NULL);
+  date_style.text.color = lv_color_hex(0xff7842);  
+  lv_label_set_style(label_date_day, LV_LABEL_STYLE_MAIN, &date_style);
+  lv_label_set_text_fmt(label_date_day,  "%s\n%02i", "THU", 1);
+  //lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
+  lv_obj_align(label_date_day, lv_scr_act(), LV_ALIGN_CENTER, 62, -6);
+
+  label_time = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_style(label_time, LV_LABEL_STYLE_MAIN, LabelBigStyle);
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_LEFT_MID, 0, 0);
+  lv_label_set_text_fmt(label_time,  "%02i\n%02i", 0, 0);      
+  lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, 0, -33);
+
+  static lv_style_t seconds_style;
+  lv_style_copy(&seconds_style, LabelBigStyle);
+
+  label_time_sec = lv_label_create(lv_scr_act(), NULL);
+  seconds_style.text.color = lv_color_hex(0x444444);  
+  lv_label_set_style(label_time_sec, LV_LABEL_STYLE_MAIN, &seconds_style);
+  lv_label_set_text_fmt(label_time_sec,  "%02i", 0);
+  lv_label_set_align( label_time_sec, LV_LABEL_ALIGN_CENTER );
+  lv_obj_align(label_time_sec, lv_scr_act(), LV_ALIGN_CENTER, 0, 56);
 
   backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   backgroundLabel->user_data = this;
@@ -68,7 +105,7 @@ Clock::Clock(DisplayApp* app,
   lv_label_set_text(backgroundLabel, "");
 
 
-  heartbeatIcon = lv_label_create(lv_scr_act(), nullptr);
+  /*heartbeatIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(heartbeatIcon, Symbols::heartBeat);
   lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
 
@@ -78,15 +115,15 @@ Clock::Clock(DisplayApp* app,
 
   heartbeatBpm = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(heartbeatBpm, "BPM");
-  lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
-
-  stepValue = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text(stepValue, "0");
-  lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, -2);
+  lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);*/
 
   stepIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(stepIcon, Symbols::shoe);
-  lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_LEFT_MID, -5, 0);
+  lv_obj_align(stepIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
+
+  stepValue = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_text(stepValue, "894");
+  lv_obj_align(stepValue, stepIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
 }
 
 Clock::~Clock() {
@@ -105,14 +142,17 @@ bool Clock::Refresh() {
   bleState = bleController.IsConnected();
   if (bleState.IsUpdated()) {
     if(bleState.Get() == true) {
-      lv_label_set_text(bleIcon, BleIcon::GetIcon(true));
+      //lv_label_set_text(bleIcon, BleIcon::GetIcon(true));      
+      ble_style.text.color = lv_color_hex(0x0000FF);  
     } else {
-      lv_label_set_text(bleIcon, BleIcon::GetIcon(false));
+      //lv_label_set_text(bleIcon, BleIcon::GetIcon(false));
+      ble_style.text.color = lv_color_hex(0x444444);  
     }
   }
-  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_TOP_RIGHT, -5, 5);
+
+  /*lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_TOP_RIGHT, -5, 5);
   lv_obj_align(batteryPlug, batteryIcon, LV_ALIGN_OUT_LEFT_MID, -5, 0);
-  lv_obj_align(bleIcon, batteryPlug, LV_ALIGN_OUT_LEFT_MID, -5, 0);
+  lv_obj_align(bleIcon, batteryPlug, LV_ALIGN_OUT_LEFT_MID, -5, 0);*/
 
   notificationState = notificatioManager.AreNewNotificationsAvailable();
   if(notificationState.IsUpdated()) {
@@ -125,7 +165,7 @@ bool Clock::Refresh() {
   currentDateTime = dateTimeController.CurrentDateTime();
 
   if(currentDateTime.IsUpdated()) {
-    auto newDateTime = currentDateTime.Get();
+        auto newDateTime = currentDateTime.Get();
 
     auto dp = date::floor<date::days>(newDateTime);
     auto time = date::make_time(newDateTime-dp);
@@ -136,32 +176,24 @@ bool Clock::Refresh() {
     auto day = (unsigned)yearMonthDay.day();
     auto dayOfWeek = static_cast<Pinetime::Controllers::DateTime::Days>(date::weekday(yearMonthDay).iso_encoding());
 
-    auto hour = time.hours().count();
-    auto minute = time.minutes().count();
+    uint8_t hour = static_cast<int>(time.hours().count());
+    uint8_t minute = static_cast<int>(time.minutes().count());
+    uint8_t second = static_cast<int>(time.seconds().count());
 
-    char minutesChar[3];
-    sprintf(minutesChar, "%02d", static_cast<int>(minute));
-
-    char hoursChar[3];
-    sprintf(hoursChar, "%02d", static_cast<int>(hour));
-
-    char timeStr[6];
-    sprintf(timeStr, "%c%c:%c%c", hoursChar[0],hoursChar[1],minutesChar[0], minutesChar[1]);
-
-    if(hoursChar[0] != displayedChar[0] || hoursChar[1] != displayedChar[1] || minutesChar[0] != displayedChar[2] || minutesChar[1] != displayedChar[3]) {
-      displayedChar[0] = hoursChar[0];
-      displayedChar[1] = hoursChar[1];
-      displayedChar[2] = minutesChar[0];
-      displayedChar[3] = minutesChar[1];
-
-      lv_label_set_text(label_time, timeStr);
+    if(sHour != hour || sMinute != minute || sSecond != second) {
+      sHour = hour;
+      sMinute = minute;
+      sSecond = second;
+      lv_label_set_text_fmt(label_time,  "%02i\n%02i", sHour, sMinute);
+      lv_label_set_text_fmt(label_time_sec,  "%02i", sSecond);
     }
+  
 
     if ((year != currentYear) || (month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
-      char dateStr[22];
-      sprintf(dateStr, "%s %d %s %d", DayOfWeekToString(dayOfWeek), day, MonthToString(month), year);
-      lv_label_set_text(label_date, dateStr);
 
+      lv_label_set_text_fmt(label_date_day,  "%s\n%02i", DayOfWeekShortToString(dayOfWeek), day);
+
+      lv_label_set_text_fmt(label_date, "%s %d", MonthToString(month), year);
 
       currentYear = year;
       currentMonth = month;
@@ -171,22 +203,22 @@ bool Clock::Refresh() {
   }
 
   // TODO heartbeat = heartBeatController.GetValue();
-  if(heartbeat.IsUpdated()) {
+  /*if(heartbeat.IsUpdated()) {
     char heartbeatBuffer[4];
     sprintf(heartbeatBuffer, "%d", heartbeat.Get());
     lv_label_set_text(heartbeatValue, heartbeatBuffer);
     lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
     lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
     lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
-  }
+  }*/
 
   // TODO stepCount = stepController.GetValue();
   if(stepCount.IsUpdated()) {
     char stepBuffer[5];
     sprintf(stepBuffer, "%lu", stepCount.Get());
     lv_label_set_text(stepValue, stepBuffer);
-    lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, -2);
-    lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_LEFT_MID, -5, 0);
+    //lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, -2);
+    //lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_LEFT_MID, -5, 0);
   }
 
   return running;
@@ -200,6 +232,10 @@ const char *Clock::DayOfWeekToString(Pinetime::Controllers::DateTime::Days dayOf
   return Clock::DaysString[static_cast<uint8_t>(dayOfWeek)];
 }
 
+const char *Clock::DayOfWeekShortToString(Pinetime::Controllers::DateTime::Days dayOfWeek) {
+  return Clock::DaysStringShort[static_cast<uint8_t>(dayOfWeek)];
+}
+
 char const *Clock::DaysString[] = {
         "",
         "MONDAY",
@@ -209,6 +245,17 @@ char const *Clock::DaysString[] = {
         "FRIDAY",
         "SATURDAY",
         "SUNDAY"
+};
+
+char const *Clock::DaysStringShort[] = {
+        "",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT",
+        "SUN"
 };
 
 char const *Clock::MonthsString[] = {
