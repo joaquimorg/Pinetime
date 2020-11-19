@@ -13,11 +13,12 @@ namespace Pinetime {
       class Tile : public Screen {
         public:
           struct Applications {
-            const char* icon;
+            const void * icon;
+            const char* name;
             Pinetime::Applications::Apps application;
           };
 
-          explicit Tile(DisplayApp* app, std::array<Applications, 6>& applications);
+          explicit Tile(DisplayApp* app, std::array<Applications, 4>& applications);
           ~Tile() override;
 
           bool Refresh() override;
@@ -26,13 +27,13 @@ namespace Pinetime {
           void OnObjectEvent(lv_obj_t* obj, lv_event_t event, uint32_t buttonId);
 
         private:
-          lv_obj_t * btnm1;
+          lv_obj_t * backgroundLabel;
           bool running = true;
 
           //std::unique_ptr<Modal> modal;
 
-          const char* btnm_map1[8];
-          Pinetime::Applications::Apps apps[6];
+          lv_obj_t * iconsApps[4];
+          Pinetime::Applications::Apps apps[4];
       };
     }
   }

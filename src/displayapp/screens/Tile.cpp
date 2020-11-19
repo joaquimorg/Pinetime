@@ -18,8 +18,10 @@ static void event_handler(lv_obj_t * obj, lv_event_t event) {
   screen->OnObjectEvent(obj, event, eventData);
 }
 
-Tile::Tile(DisplayApp* app, std::array<Applications, 6>& applications) : Screen(app) {
-  for(int i = 0, appIndex = 0; i < 8; i++) {
+static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
+
+Tile::Tile(DisplayApp* app, std::array<Applications, 4>& applications) : Screen(app) {
+  /*for(int i = 0, appIndex = 0; i < 8; i++) {
     if(i == 3) btnm_map1[i] = "\n";
     else if(i == 7) btnm_map1[i] = "";
     else {
@@ -35,7 +37,31 @@ Tile::Tile(DisplayApp* app, std::array<Applications, 6>& applications) : Screen(
   lv_obj_set_size(btnm1, LV_HOR_RES, LV_VER_RES);
 
   btnm1->user_data = this;
-  lv_obj_set_event_cb(btnm1, event_handler);
+  lv_obj_set_event_cb(btnm1, event_handler);*/
+
+  for(int i = 0, appIndex = 0; i < 4; i++) {
+    if ( applications[i].application == Apps::None)
+      appIndex++;
+    else {
+      iconsApps[appIndex] = lv_imgbtn_create(lv_scr_act(), NULL);
+      lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_REL, applications[i].icon);
+      lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_PR, applications[i].icon);
+      lv_obj_align(iconsApps[appIndex], NULL, LV_ALIGN_CENTER, iconPos[i][0], iconPos[i][1]);
+      iconsApps[appIndex]->user_data = this;
+      lv_obj_set_event_cb(iconsApps[appIndex], event_handler);
+
+      apps[appIndex] = applications[i].application;
+      appIndex++;
+    }
+  }
+
+  backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  backgroundLabel->user_data = this;
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text(backgroundLabel, "");
+
 }
 
 Tile::~Tile() {

@@ -386,6 +386,28 @@ list(APPEND SOURCE_FILES
 
         systemtask/SystemTask.cpp
         drivers/TwiMaster.cpp
+
+        #App Icons 
+        displayapp/icons/icon_brightness.c
+        displayapp/icons/icon_calc.c
+        displayapp/icons/icon_charging.c
+        displayapp/icons/icon_clock.c
+        displayapp/icons/icon_email.c
+        displayapp/icons/icon_firmware.c
+        displayapp/icons/icon_game.c
+        displayapp/icons/icon_heart_rate.c
+        displayapp/icons/icon_help.c
+        displayapp/icons/icon_info.c
+        displayapp/icons/icon_information.c
+        displayapp/icons/icon_iot.c
+        displayapp/icons/icon_low_battery.c
+        displayapp/icons/icon_map.c
+        displayapp/icons/icon_phone.c
+        displayapp/icons/icon_qr_code.c
+        displayapp/icons/icon_raining.c
+        displayapp/icons/icon_running.c
+        displayapp/icons/icon_settings.c
+                
         )
 
 list(APPEND GRAPHICS_SOURCE_FILES

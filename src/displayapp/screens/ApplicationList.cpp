@@ -7,11 +7,16 @@
 
 using namespace Pinetime::Applications::Screens;
 
+LV_IMG_DECLARE(icon_settings);
+LV_IMG_DECLARE(icon_information);
+LV_IMG_DECLARE(icon_phone);
+LV_IMG_DECLARE(icon_brightness);
+
 ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app) :
         Screen(app),
         screens{app, {
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
+                [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); }
+                //[this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
                 //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
           }
         } {}
@@ -38,21 +43,20 @@ bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
-  std::array<Screens::Tile::Applications, 6> applications {
-          {{Symbols::clock, Apps::Clock},
-          {Symbols::music, Apps::Music},
-          {Symbols::sun, Apps::Brightness},
-          {Symbols::list, Apps::SysInfo},
-          {Symbols::check, Apps::FirmwareValidation},
-          {Symbols::none, Apps::None}
+  std::array<Screens::Tile::Applications, 4> applications {
+          {                        
+            {&icon_settings,    "Firmware",       Apps::Gauge},
+            {&icon_information, "Sysinfo",        Apps::SysInfo},            
+            {&icon_phone,       "Notifications",  Apps::Notifications},
+            {&icon_brightness,  "Brightness",     Apps::Brightness}
           }
-
 
   };
 
   return std::unique_ptr<Screen>(new Screens::Tile(app, applications));
 }
 
+/*
 std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
   std::array<Screens::Tile::Applications, 6> applications {
           {{Symbols::tachometer, Apps::Gauge},
@@ -80,3 +84,4 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   return std::unique_ptr<Screen>(new Screens::Tile(app, applications));
 }
+*/
