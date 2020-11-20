@@ -114,6 +114,11 @@ Here are some people I would like to highlight:
 
 *If you feel like you should appear on this list, just get in touch with me or submit a PR :)*
 
+## Screen Mockups
+
+https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=0%3A1
+
+![Pinetime screen mockup](images/PinetimeClockMockup.png "Pinetime")
 
 ## My Build
 
