@@ -24,10 +24,15 @@ static void event_handler(lv_obj_t * obj, lv_event_t event) {
 
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
 
-Tile::Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::array<Applications, 4>& applications) : Screen(app) {
+Tile::Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::array<Applications, 4>& applications) : 
+    Screen(app),
+    dateTimeController{dateTimeController} 
+{
 
   uint8_t hours = dateTimeController.Hours();
   uint8_t minutes = dateTimeController.Minutes();
+  oldHours = hours;
+  oldMinutes = minutes;
 
   // Time
   lv_obj_t* label_time = lv_label_create(lv_scr_act(), NULL);  
@@ -68,6 +73,16 @@ Tile::~Tile() {
 }
 
 bool Tile::Refresh() {
+
+  uint8_t hours = dateTimeController.Hours();
+  uint8_t minutes = dateTimeController.Minutes();
+
+  if(oldHours != hours || oldMinutes != minutes) {
+    lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
+    oldHours = hours;
+    oldMinutes = minutes;
+  }
+
   return running;
 }
 

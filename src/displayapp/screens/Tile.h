@@ -29,12 +29,18 @@ namespace Pinetime {
 
         private:
           lv_obj_t * backgroundLabel;
+          lv_obj_t * label_time;
           bool running = true;
+          
+          uint8_t oldHours = 0;
+          uint8_t oldMinutes = 0;
 
           //std::unique_ptr<Modal> modal;
 
           lv_obj_t * iconsApps[4];
           Pinetime::Applications::Apps apps[4];
+
+          Controllers::DateTime& dateTimeController;
       };
     }
   }
