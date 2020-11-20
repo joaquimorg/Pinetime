@@ -12,9 +12,9 @@
 #include "NotificationIcon.h"
 
 using namespace Pinetime::Applications::Screens;
-//extern lv_font_t jetbrains_mono_extrabold_compressed;
-//extern lv_font_t jetbrains_mono_bold_20;
-extern lv_style_t* LabelBigStyle;
+
+extern lv_style_t* LabelStyle76;
+extern lv_style_t* LabelStyle42;
 extern lv_style_t* DefaultStyle;
 
 static void event_handler(lv_obj_t * obj, lv_event_t event) {
@@ -29,11 +29,6 @@ Clock::Clock(DisplayApp* app,
         Controllers::NotificationManager& notificatioManager) : Screen(app), currentDateTime{{}},
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager} {
-  /*displayedChar[0] = 0;
-  displayedChar[1] = 0;
-  displayedChar[2] = 0;
-  displayedChar[3] = 0;
-  displayedChar[4] = 0;*/
 
   sHour = 99;
   sMinute = 99;
@@ -41,7 +36,7 @@ Clock::Clock(DisplayApp* app,
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(batteryIcon, Symbols::batteryHalf);
-  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, 2);
+  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_TOP_RIGHT, -5, 2);
 
   batteryPlug = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(batteryPlug, Symbols::plug);
@@ -64,46 +59,46 @@ Clock::Clock(DisplayApp* app,
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
   lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 10, 0);
 
-  label_date = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text_fmt(label_date, "%s %d", "JAN", 2020);
-  lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
-  static lv_style_t date_style;
-  lv_style_copy(&date_style, DefaultStyle);
-
-  label_date_day = lv_label_create(lv_scr_act(), NULL);
-  date_style.text.color = lv_color_hex(0xff7842);  
-  lv_label_set_style(label_date_day, LV_LABEL_STYLE_MAIN, &date_style);
-  lv_label_set_text_fmt(label_date_day,  "%s\n%02i", "THU", 1);
-  //lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_date_day, lv_scr_act(), LV_ALIGN_CENTER, 62, -6);
-
+  // Time
   label_time = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_style(label_time, LV_LABEL_STYLE_MAIN, LabelBigStyle);
-  lv_label_set_text_fmt(label_time,  "%02i\n%02i", 0, 0);      
+  lv_label_set_style(label_time, LV_LABEL_STYLE_MAIN, LabelStyle76);
+  lv_label_set_text_fmt(label_time,  "%02i:%02i", 0, 0);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, 0, -33);
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -15, 0);
 
+
+  // Seconds
   static lv_style_t seconds_style;
-  lv_style_copy(&seconds_style, LabelBigStyle);
+  lv_style_copy(&seconds_style, LabelStyle42);
 
   label_time_sec = lv_label_create(lv_scr_act(), NULL);
   seconds_style.text.color = lv_color_hex(0x444444);  
   lv_label_set_style(label_time_sec, LV_LABEL_STYLE_MAIN, &seconds_style);
   lv_label_set_text_fmt(label_time_sec,  "%02i", 0);
   lv_label_set_align( label_time_sec, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_time_sec, lv_scr_act(), LV_ALIGN_CENTER, 0, 56);
+  lv_obj_align(label_time_sec, label_time, LV_ALIGN_OUT_RIGHT_TOP, 5, 0);
 
-  backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
-  backgroundLabel->user_data = this;
-  lv_obj_set_click(backgroundLabel, true);
-  lv_obj_set_event_cb(backgroundLabel, event_handler);
-  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
-  lv_obj_set_size(backgroundLabel, 240, 240);
-  lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");
+  // Date - Month / year
+  static lv_style_t dateyear_style;
+  lv_style_copy(&dateyear_style, DefaultStyle);  
+  label_date = lv_label_create(lv_scr_act(), nullptr);
+  dateyear_style.text.color = lv_color_hex(0x8400C2);  
+  lv_label_set_style(label_date, LV_LABEL_STYLE_MAIN, &dateyear_style);
+  lv_label_set_text_fmt(label_date, "%s %d", "JAN", 2020);
+  lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
+  lv_obj_align(label_date, label_time, LV_ALIGN_OUT_BOTTOM_RIGHT, 40, 10);
 
+  // Date - Day / Week day
+  static lv_style_t date_style;
+  lv_style_copy(&date_style, DefaultStyle);
+
+  label_date_day = lv_label_create(lv_scr_act(), NULL);
+  date_style.text.color = lv_color_hex(0xC7B300);  
+  lv_label_set_style(label_date_day, LV_LABEL_STYLE_MAIN, &date_style);
+  lv_label_set_text_fmt(label_date_day,  "%s %02i", "SATURDAY", 1);
+  //lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
+  lv_obj_align(label_date_day, label_time, LV_ALIGN_OUT_TOP_LEFT, 0, -12);  
 
   /*heartbeatIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(heartbeatIcon, Symbols::heartBeat);
@@ -117,13 +112,30 @@ Clock::Clock(DisplayApp* app,
   lv_label_set_text(heartbeatBpm, "BPM");
   lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);*/
 
+  static lv_style_t step_style;
+  lv_style_copy(&step_style, DefaultStyle);
+  step_style.text.color = lv_color_hex(0x4678C2);  
+
   stepIcon = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_style(stepIcon, LV_LABEL_STYLE_MAIN, &step_style);
   lv_label_set_text(stepIcon, Symbols::shoe);
   lv_obj_align(stepIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
 
   stepValue = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text(stepValue, "894");
+  lv_label_set_style(stepValue, LV_LABEL_STYLE_MAIN, &step_style);
+  lv_label_set_text(stepValue, "2500");
   lv_obj_align(stepValue, stepIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+
+
+  backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  //backgroundLabel->user_data = this;
+  //lv_obj_set_click(backgroundLabel, true);
+  //lv_obj_set_event_cb(backgroundLabel, event_handler);
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text(backgroundLabel, "");
+
 }
 
 Clock::~Clock() {
@@ -155,6 +167,7 @@ bool Clock::Refresh() {
   lv_obj_align(bleIcon, batteryPlug, LV_ALIGN_OUT_LEFT_MID, -5, 0);*/
 
   notificationState = notificatioManager.AreNewNotificationsAvailable();
+
   if(notificationState.IsUpdated()) {
     if(notificationState.Get() == true)
       lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
@@ -184,14 +197,14 @@ bool Clock::Refresh() {
       sHour = hour;
       sMinute = minute;
       sSecond = second;
-      lv_label_set_text_fmt(label_time,  "%02i\n%02i", sHour, sMinute);
+      lv_label_set_text_fmt(label_time,  "%02i:%02i", sHour, sMinute);
       lv_label_set_text_fmt(label_time_sec,  "%02i", sSecond);
     }
   
 
     if ((year != currentYear) || (month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 
-      lv_label_set_text_fmt(label_date_day,  "%s\n%02i", DayOfWeekShortToString(dayOfWeek), day);
+      lv_label_set_text_fmt(label_date_day,  "%s %02i", DayOfWeekToString(dayOfWeek), day);
 
       lv_label_set_text_fmt(label_date, "%s %d", MonthToString(month), year);
 

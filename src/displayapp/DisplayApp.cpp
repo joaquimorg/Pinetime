@@ -133,7 +133,7 @@ void DisplayApp::Refresh() {
               //currentScreen->OnButtonPushed();
               lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
               currentScreen.reset(nullptr);
-              currentScreen.reset(new Screens::ApplicationList(this));
+              currentScreen.reset(new Screens::ApplicationList(this, dateTimeController));
               break;
             /*case TouchEvents::SwipeDown:
               currentScreen->OnButtonPushed();
@@ -205,7 +205,7 @@ void DisplayApp::RunningState() {
     onClockApp = false;
     switch(nextApp) {
       case Apps::None:
-      case Apps::Launcher: currentScreen.reset(new Screens::ApplicationList(this)); break;
+      case Apps::Launcher: currentScreen.reset(new Screens::ApplicationList(this, dateTimeController)); break;
       case Apps::Clock:
         currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager));
         onClockApp = true;

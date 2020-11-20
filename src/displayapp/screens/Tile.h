@@ -6,6 +6,7 @@
 #include "Modal.h"
 #include <lvgl/src/lv_core/lv_style.h>
 #include <displayapp/Apps.h>
+#include "components/datetime/DateTimeController.h"
 
 namespace Pinetime {
   namespace Applications {
@@ -18,7 +19,7 @@ namespace Pinetime {
             Pinetime::Applications::Apps application;
           };
 
-          explicit Tile(DisplayApp* app, std::array<Applications, 4>& applications);
+          explicit Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::array<Applications, 4>& applications);
           ~Tile() override;
 
           bool Refresh() override;

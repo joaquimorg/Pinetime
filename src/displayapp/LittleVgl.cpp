@@ -15,11 +15,13 @@ using namespace Pinetime::Components;
 extern "C" {
 //LV_FONT_DECLARE(jetbrains_mono_extrabold_compressed)
 //LV_FONT_DECLARE(jetbrains_mono_bold_20)
-LV_FONT_DECLARE(lv_font_clock_70)
+LV_FONT_DECLARE(lv_font_clock_76)
+LV_FONT_DECLARE(lv_font_clock_42)
 LV_FONT_DECLARE(lv_font_montserrat_20)
 }
 
-lv_style_t* LabelBigStyle = nullptr;
+lv_style_t* LabelStyle76 = nullptr;
+lv_style_t* LabelStyle42 = nullptr;
 
 lv_style_t* DefaultStyle = nullptr;
 
@@ -81,9 +83,16 @@ void LittleVgl::SetFullRefresh(FullRefreshDirections direction) {
   }
 }
 
+
 void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
 
   uint16_t y1, y2, width, height = 0;
+
+  if( (scrollDirection == LittleVgl::FullRefreshDirections::Down) && (area->y2 == visibleNbLines - 1)) {
+    writeOffset = ((writeOffset + totalNbLines) - visibleNbLines) % totalNbLines;
+  } else if( (scrollDirection == FullRefreshDirections::Up) && (area->y1 == 0) ) {
+    writeOffset = (writeOffset + visibleNbLines) % totalNbLines;
+  }
 
   y1 = (area->y1 + writeOffset) % totalNbLines;
   y2 = (area->y2 + writeOffset) % totalNbLines;
@@ -92,9 +101,7 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
   height = (y2 - y1) + 1;
 
   if(scrollDirection == LittleVgl::FullRefreshDirections::Down) {
-    if(area->y2 == visibleNbLines - 1) {
-        writeOffset = ((writeOffset + totalNbLines) - visibleNbLines) % totalNbLines;
-    }
+
     if(area->y2 < visibleNbLines - 1) {
       uint16_t toScroll = 0;
         if(area->y1 == 0) {
@@ -116,9 +123,7 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
     }
 
   } else if(scrollDirection == FullRefreshDirections::Up) {
-    if(area->y1 == 0) {
-      writeOffset = (writeOffset + visibleNbLines) % totalNbLines;
-    }
+
     if(area->y1 > 0) {
       if(area->y2 == visibleNbLines - 1) {
         scrollOffset += (height * 2);
@@ -139,17 +144,18 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
     ulTaskNotifyTake(pdTRUE, 100);
     height = y2;
-    //lcd.BeginDrawBuffer(area->x1, 0, width, height);
-    //lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    
+    lcd.BeginDrawBuffer(area->x1, 0, width, height);
+    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    
   } else {
     lcd.BeginDrawBuffer(area->x1, y1, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
   }
   
-  /* IMPORTANT!!!
-   * Inform the graphics library that you are ready with the flushing*/
+  // IMPORTANT!!!
+  // Inform the graphics library that you are ready with the flushing
   lv_disp_flush_ready(&disp_drv);
 }
+
 
 /*
 void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
@@ -304,32 +310,32 @@ void LittleVgl::InitTheme() {
   InitThemeContainer();
   InitThemeButton();
   InitThemeLabel();
-  InitThemeLine();
-  InitThemeLed();
-  InitThemeImage();
-  InitThemeBar();
+  //InitThemeLine();
+  //InitThemeLed();
+  //InitThemeImage();
+  //InitThemeBar();
   InitThemeSlider();
-  InitThemeSwitch();
-  InitThemeMeter();
-  InitThemeGauge();
-  InitThemeArc();
-  InitThemePreload();
-  InitThemeChart();
-  InitThemeCalendar();
-  InitThemeCheckBox();
-  InitThemeButtonMatrix();
-  InitThemeKnob();
-  InitThemeMessageBox();
-  InitThemePage();
-  InitThemeTextArea();
-  InitThemeSpinBox();
-  InitThemeList();
-  InitThemeDropDownList();
-  InitThemeRoller();
-  InitThemeTabView();
-  InitThemeTileView();
-  InitThemeTable();
-  InitThemeWindow();
+  //InitThemeSwitch();
+  //InitThemeMeter();
+  //InitThemeGauge();
+  //InitThemeArc();
+  //InitThemePreload();
+  //InitThemeChart();
+  //InitThemeCalendar();
+  //InitThemeCheckBox();
+  //InitThemeButtonMatrix();
+  //InitThemeKnob();
+  //InitThemeMessageBox();
+  //InitThemePage();
+  //InitThemeTextArea();
+  //InitThemeSpinBox();
+  //InitThemeList();
+  //InitThemeDropDownList();
+  //InitThemeRoller();
+  //InitThemeTabView();
+  //InitThemeTileView();
+  //InitThemeTable();
+  //InitThemeWindow();
 
   lv_theme_set_current(&theme);
 }
@@ -445,10 +451,13 @@ void LittleVgl::InitThemeLabel() {
   lv_style_copy(&prim, &bg);
   prim.text.color = lv_color_hsv_to_rgb(hue, 5, 95);
 
-  lv_style_copy(&labelBigStyle, &prim);
-  //labelBigStyle.text.font = &jetbrains_mono_extrabold_compressed;
-  labelBigStyle.text.font = &lv_font_clock_70;
-  LabelBigStyle = &(this->labelBigStyle);
+  lv_style_copy(&labelStyle76, &prim);
+  labelStyle76.text.font = &lv_font_clock_76;
+  LabelStyle76 = &(this->labelStyle76);
+
+  lv_style_copy(&labelStyle42, &prim);
+  labelStyle42.text.font = &lv_font_clock_42;
+  LabelStyle42 = &(this->labelStyle42);
 
   lv_style_copy(&sec, &bg);
   sec.text.color = lv_color_hsv_to_rgb(hue, 15, 65);

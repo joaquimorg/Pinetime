@@ -26,6 +26,8 @@ void St7789::Init() {
   DisplayInversionOn();
   NormalModeOn();
   DisplayOn();
+  VerticalScrollDefinition(0, 320, 0);
+  VerticalScrollStartAddress(0);
 }
 
 void St7789::WriteCommand(uint8_t cmd) {
@@ -190,6 +192,7 @@ void St7789::Wakeup() {
   RowAddressSet();
   DisplayInversionOn();
   NormalModeOn();
+  VerticalScrollDefinition(0, 320, 0);
   VerticalScrollStartAddress(verticalScrollingStartAddress);
   DisplayOn();
   NRF_LOG_INFO("[LCD] Wakeup")

@@ -78,56 +78,56 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "FLASH_ERASE::@145eef247bfb46b6828c",
-					"jsonFile" : "target-FLASH_ERASE-Release-c6fdab7801e643cee2a4.json",
+					"jsonFile" : "target-FLASH_ERASE-Release-56b53c730e861f6ad4ca.json",
 					"name" : "FLASH_ERASE",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "FLASH_pinetime-app::@145eef247bfb46b6828c",
-					"jsonFile" : "target-FLASH_pinetime-app-Release-ad4645eb46b507ee653f.json",
+					"jsonFile" : "target-FLASH_pinetime-app-Release-5f9a315bd1b32e88eb00.json",
 					"name" : "FLASH_pinetime-app",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "lvgl::@145eef247bfb46b6828c",
-					"jsonFile" : "target-lvgl-Release-022b918a81f8ccd11712.json",
+					"jsonFile" : "target-lvgl-Release-19884d2ff66278f3e261.json",
 					"name" : "lvgl",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "nimble::@145eef247bfb46b6828c",
-					"jsonFile" : "target-nimble-Release-cfc84e0b20e35e50f783.json",
+					"jsonFile" : "target-nimble-Release-111eaf8e89ef6d0fee06.json",
 					"name" : "nimble",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "nrf-sdk::@145eef247bfb46b6828c",
-					"jsonFile" : "target-nrf-sdk-Release-34a1f33f16939cc4bfff.json",
+					"jsonFile" : "target-nrf-sdk-Release-e97652c91d6e56ba9923.json",
 					"name" : "nrf-sdk",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "pinetime-app::@145eef247bfb46b6828c",
-					"jsonFile" : "target-pinetime-app-Release-59510eabcc93d0b9a734.json",
+					"jsonFile" : "target-pinetime-app-Release-98e546ed253cc9bef05f.json",
 					"name" : "pinetime-app",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "pinetime-graphics::@145eef247bfb46b6828c",
-					"jsonFile" : "target-pinetime-graphics-Release-f14d06beb4910b245c62.json",
+					"jsonFile" : "target-pinetime-graphics-Release-4df99aa4c24db238a08b.json",
 					"name" : "pinetime-graphics",
 					"projectIndex" : 1
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "pinetime-mcuboot-app::@145eef247bfb46b6828c",
-					"jsonFile" : "target-pinetime-mcuboot-app-Release-cf64c75c65b1bad471af.json",
+					"jsonFile" : "target-pinetime-mcuboot-app-Release-24058594b15898b946a7.json",
 					"name" : "pinetime-mcuboot-app",
 					"projectIndex" : 1
 				}

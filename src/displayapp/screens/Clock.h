@@ -55,7 +55,6 @@ namespace Pinetime {
           static char const *DaysStringShort[];
           static char const *MonthsString[];
 
-          //char displayedChar[5];
           uint8_t sHour, sMinute, sSecond;
 
           uint16_t currentYear = 1970;

@@ -378,14 +378,18 @@ list(APPEND SOURCE_FILES
         FreeRTOS/port_cmsis_systick.c
         FreeRTOS/port_cmsis.c
 
+        systemtask/SystemTask.cpp
+        drivers/TwiMaster.cpp
+
         displayapp/LittleVgl.cpp
+
+        #Fonts
         #displayapp/fonts/jetbrains_mono_extrabold_compressed.c
         #displayapp/fonts/jetbrains_mono_bold_20.c
         displayapp/fonts/lv_font_montserrat_20.c
-        displayapp/fonts/lv_font_clock_70.c
-
-        systemtask/SystemTask.cpp
-        drivers/TwiMaster.cpp
+        #displayapp/fonts/lv_font_clock_70.c
+        displayapp/fonts/lv_font_clock_76.c
+        displayapp/fonts/lv_font_clock_42.c
 
         #App Icons 
         displayapp/icons/icon_brightness.c
@@ -407,6 +411,8 @@ list(APPEND SOURCE_FILES
         displayapp/icons/icon_raining.c
         displayapp/icons/icon_running.c
         displayapp/icons/icon_settings.c
+        displayapp/icons/icon_music.c
+        displayapp/icons/icon_error.c
                 
         )
 

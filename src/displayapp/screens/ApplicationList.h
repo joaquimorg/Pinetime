@@ -15,17 +15,18 @@ namespace Pinetime {
     namespace Screens {
       class ApplicationList : public Screen {
         public:
-          explicit ApplicationList(DisplayApp* app);
+          explicit ApplicationList(DisplayApp* app, Pinetime::Controllers::DateTime& dateTimeController);
           ~ApplicationList() override;
           bool Refresh() override;
           bool OnButtonPushed() override;
           bool OnTouchEvent(TouchEvents event) override;
         private:
           bool running = true;
+          Controllers::DateTime& dateTimeController;
 
-          ScreenList<1> screens;
+          ScreenList<2> screens;
           std::unique_ptr<Screen> CreateScreen1();
-          //std::unique_ptr<Screen> CreateScreen2();
+          std::unique_ptr<Screen> CreateScreen2();
           //std::unique_ptr<Screen> CreateScreen3();
       };
     }

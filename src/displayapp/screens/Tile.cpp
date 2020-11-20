@@ -9,35 +9,31 @@
 
 using namespace Pinetime::Applications::Screens;
 
-//extern lv_font_t jetbrains_mono_bold_20;
+typedef struct {
+    lv_btnm_ext_t imgbtn;       
+    int appNumber;          
+}temp_btnm_ext_t;
 
 static void event_handler(lv_obj_t * obj, lv_event_t event) {
+  temp_btnm_ext_t * ext = static_cast<temp_btnm_ext_t *>(lv_obj_get_ext_attr(obj));
   Tile* screen = static_cast<Tile *>(obj->user_data);
-  uint32_t* eventDataPtr = (uint32_t*) lv_event_get_data();
-  uint32_t eventData = *eventDataPtr;
-  screen->OnObjectEvent(obj, event, eventData);
+
+  screen->OnObjectEvent(obj, event, ext->appNumber);
+
 }
 
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
 
-Tile::Tile(DisplayApp* app, std::array<Applications, 4>& applications) : Screen(app) {
-  /*for(int i = 0, appIndex = 0; i < 8; i++) {
-    if(i == 3) btnm_map1[i] = "\n";
-    else if(i == 7) btnm_map1[i] = "";
-    else {
-      btnm_map1[i] = applications[appIndex].icon;
-      apps[appIndex] = applications[appIndex].application;
-      appIndex++;
-    }
-  }
-  //modal.reset(new Modal(app));
+Tile::Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::array<Applications, 4>& applications) : Screen(app) {
 
-  btnm1 = lv_btnm_create(lv_scr_act(), nullptr);
-  lv_btnm_set_map(btnm1, btnm_map1);
-  lv_obj_set_size(btnm1, LV_HOR_RES, LV_VER_RES);
+  uint8_t hours = dateTimeController.Hours();
+  uint8_t minutes = dateTimeController.Minutes();
 
-  btnm1->user_data = this;
-  lv_obj_set_event_cb(btnm1, event_handler);*/
+  // Time
+  lv_obj_t* label_time = lv_label_create(lv_scr_act(), NULL);  
+  lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
+  lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
 
   for(int i = 0, appIndex = 0; i < 4; i++) {
     if ( applications[i].application == Apps::None)
@@ -47,8 +43,11 @@ Tile::Tile(DisplayApp* app, std::array<Applications, 4>& applications) : Screen(
       lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_REL, applications[i].icon);
       lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_PR, applications[i].icon);
       lv_obj_align(iconsApps[appIndex], NULL, LV_ALIGN_CENTER, iconPos[i][0], iconPos[i][1]);
+      lv_obj_allocate_ext_attr(iconsApps[appIndex], sizeof(temp_btnm_ext_t));
       iconsApps[appIndex]->user_data = this;
       lv_obj_set_event_cb(iconsApps[appIndex], event_handler);
+      temp_btnm_ext_t * ext = static_cast<temp_btnm_ext_t *>(lv_obj_get_ext_attr(iconsApps[appIndex]));
+      ext->appNumber = appIndex;
 
       apps[appIndex] = applications[i].application;
       appIndex++;
@@ -73,7 +72,7 @@ bool Tile::Refresh() {
 }
 
 void Tile::OnObjectEvent(lv_obj_t *obj, lv_event_t event, uint32_t buttonId) {
-  if(event == LV_EVENT_VALUE_CHANGED) {
+  if(event == LV_EVENT_CLICKED) {
     app->StartApp(apps[buttonId]);
     running = false;
   }
