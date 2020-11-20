@@ -1,7 +1,8 @@
 #pragma once
 
-#include <vector>
+#include <array>
 #include <functional>
+#include <memory>
 #include "Screen.h"
 #include "../DisplayApp.h"
 
