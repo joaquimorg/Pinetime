@@ -2,9 +2,8 @@
 
 #include <vector>
 #include <functional>
-#include "components/ble/NimbleController.h"
 #include "Screen.h"
-#include "Label.h"
+#include "../DisplayApp.h"
 
 namespace Pinetime {
   namespace Applications {

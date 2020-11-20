@@ -4,7 +4,7 @@
 #include <chrono>
 
 #include "Screen.h"
-//#include "ScreenList.h"
+#include "ScreenList.h"
 #include <bits/unique_ptr.h>
 #include <libs/lvgl/src/lv_core/lv_style.h>
 #include <libs/lvgl/src/lv_core/lv_obj.h>
@@ -65,8 +65,8 @@ namespace Pinetime {
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
 
-          //ScreenList<1> screens;
-          //std::unique_ptr<Screen> WatchFaceDigital();
+          ScreenList<1> screens;
+          std::unique_ptr<Screen> WatchFaceDigital();
 
           bool running = true;
 

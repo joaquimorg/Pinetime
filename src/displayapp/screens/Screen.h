@@ -7,6 +7,27 @@ namespace Pinetime {
   namespace Applications {
     class DisplayApp;
     namespace Screens {
+
+      template <class T>
+      class DirtyValue {
+        public:
+          explicit DirtyValue(T v) { value = v; }
+          explicit DirtyValue(T& v) { value = v; }
+          bool IsUpdated() const { return isUpdated; }
+          T& Get() { this->isUpdated = false; return value; }
+
+          DirtyValue& operator=(const T& other) {
+            if (this->value != other) {
+              this->value = other;
+              this->isUpdated = true;
+            }
+            return *this;
+          }
+        private:
+          T value;
+          bool isUpdated = true;
+      };
+
       class Screen {
         public:
           explicit Screen(DisplayApp* app) : app{app} {}

@@ -38,7 +38,7 @@ Tile::Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::arra
   lv_obj_t* label_time = lv_label_create(lv_scr_act(), NULL);  
   lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 0);
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 4);
 
   for(int i = 0, appIndex = 0; i < 4; i++) {
     if ( applications[i].application == Apps::None)

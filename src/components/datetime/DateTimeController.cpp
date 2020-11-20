@@ -64,3 +64,54 @@ void DateTime::UpdateTime(uint32_t systickCounter) {
   second = time.seconds().count();
 }
 
+
+const char *DateTime::MonthToString() {
+  return DateTime::MonthsString[(uint8_t)month];
+}
+
+const char *DateTime::DayOfWeekToString() {
+  return DateTime::DaysString[(uint8_t)dayOfWeek];
+}
+
+const char *DateTime::DayOfWeekShortToString() {
+  return DateTime::DaysStringShort[(uint8_t)dayOfWeek];
+}
+
+
+char const *DateTime::DaysString[] = {
+        "",
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY"
+};
+
+char const *DateTime::DaysStringShort[] = {
+        "",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT",
+        "SUN"
+};
+
+char const *DateTime::MonthsString[] = {
+        "",
+        "JAN",
+        "FEB",
+        "MAR",
+        "APR",
+        "MAY",
+        "JUN",
+        "JUL",
+        "AUG",
+        "SEP",
+        "OCT",
+        "NOV",
+        "DEC"
+};

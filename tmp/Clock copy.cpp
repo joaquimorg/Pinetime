@@ -10,7 +10,7 @@
 #include "Symbols.h"
 #include "components/ble/NotificationManager.h"
 #include "NotificationIcon.h"
-//#include "WatchFaceDigital.h"
+#include "WatchFaceDigital.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -233,7 +233,7 @@ bool Clock::OnButtonPushed() {
 }
 
 
-/*
+
 std::unique_ptr<Screen> SystemInfo::WatchFaceDigital() {  
   return std::unique_ptr<Screen>(new Screens::WatchFaceDigital(app, dateTimeController, batteryController, bleController, notificatioManager));
-}*/
+}
