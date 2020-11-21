@@ -349,7 +349,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
         #Watch Faces
-        #displayapp/screens/WatchFaceDigital.cpp
+        displayapp/screens/WatchFaceDigital.cpp
 
         main.cpp
         drivers/St7789.cpp
@@ -463,7 +463,7 @@ set(INCLUDE_FILES
         displayapp/screens/ApplicationList.h
         displayapp/Apps.h
         displayapp/screens/Notifications.h
-        #displayapp/screens/WatchFaceDigital.h
+        displayapp/screens/WatchFaceDigital.h
         drivers/St7789.h
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h

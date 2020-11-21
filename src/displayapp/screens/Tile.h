@@ -6,6 +6,7 @@
 #include "Modal.h"
 #include "Screen.h"
 #include "../Apps.h"
+#include "components/datetime/DateTimeController.h"
 
 namespace Pinetime {
   namespace Applications {
