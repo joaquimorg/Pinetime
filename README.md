@@ -123,12 +123,10 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 
 ![Pinetime screen mockup](images/PinetimeClockMockup.png "Pinetime")
 
-## My Build
+![Pinetime screen ](images/Pinetime_Clock.jpg "Pinetime")
 
-### Programer :
-  - clock :   w - green   - SWDIO
-  -           b - yellow  - SWDCLK
-  -           r - brown   - GND
+
+## My Build
 
 - $ mkdir build  
 - $ cd build
