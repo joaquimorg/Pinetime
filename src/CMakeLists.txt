@@ -350,6 +350,10 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Notifications.cpp
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
+        displayapp/screens/WatchFaceAnalog.cpp
+        displayapp/screens/WatchFaceMinimal.cpp
+        displayapp/icons/bg_clock.c
+        displayapp/icons/bg_clock_w.c
 
         main.cpp
         drivers/St7789.cpp
@@ -390,7 +394,7 @@ list(APPEND SOURCE_FILES
         #displayapp/fonts/jetbrains_mono_extrabold_compressed.c
         #displayapp/fonts/jetbrains_mono_bold_20.c
         displayapp/fonts/lv_font_montserrat_20.c
-        #displayapp/fonts/lv_font_clock_70.c
+        displayapp/fonts/lv_font_clock_90.c
         displayapp/fonts/lv_font_clock_76.c
         displayapp/fonts/lv_font_clock_42.c
 
@@ -463,7 +467,12 @@ set(INCLUDE_FILES
         displayapp/screens/ApplicationList.h
         displayapp/Apps.h
         displayapp/screens/Notifications.h
+        
+        #Watch Faces
         displayapp/screens/WatchFaceDigital.h
+        displayapp/screens/WatchFaceAnalog.h
+        displayapp/screens/WatchFaceMinimal.h
+
         drivers/St7789.h
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h

@@ -37,8 +37,10 @@ namespace Pinetime {
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
 
-          ScreenList<1> screens;
+          ScreenList<3> screens;
           std::unique_ptr<Screen> WatchFaceDigitalScreen();
+          std::unique_ptr<Screen> WatchFaceAnalogScreen();
+          std::unique_ptr<Screen> WatchFaceMinimalScreen();
 
           bool running = true;
 

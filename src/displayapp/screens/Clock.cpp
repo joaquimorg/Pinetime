@@ -12,12 +12,10 @@
 #include "components/ble/NotificationManager.h"
 #include "../DisplayApp.h"
 #include "WatchFaceDigital.h"
+#include "WatchFaceAnalog.h"
+#include "WatchFaceMinimal.h"
 
 using namespace Pinetime::Applications::Screens;
-
-extern lv_style_t* LabelStyle76;
-extern lv_style_t* LabelStyle42;
-extern lv_style_t* DefaultStyle;
 
 Clock::Clock(DisplayApp* app,
         Controllers::DateTime& dateTimeController,
@@ -27,10 +25,12 @@ Clock::Clock(DisplayApp* app,
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager},
         screens{app, {
-                [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); }
-                //[this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
-                //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
-          }
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); }
+          },
+          Screens::ScreenListModes::LongPress,
+          1
         } {}
 
 Clock::~Clock() {
@@ -54,4 +54,12 @@ bool Clock::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 
 std::unique_ptr<Screen> Clock::WatchFaceDigitalScreen() {  
   return std::unique_ptr<Screen>(new Screens::WatchFaceDigital(app, dateTimeController, batteryController, bleController, notificatioManager));
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceAnalogScreen() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceAnalog(app, dateTimeController, batteryController, bleController, notificatioManager));
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceMinimalScreen() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceMinimal(app, dateTimeController, batteryController, bleController, notificatioManager));
 }

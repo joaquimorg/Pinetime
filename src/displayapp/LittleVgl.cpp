@@ -11,11 +11,13 @@ using namespace Pinetime::Components;
 extern "C" {
 //LV_FONT_DECLARE(jetbrains_mono_extrabold_compressed)
 //LV_FONT_DECLARE(jetbrains_mono_bold_20)
+LV_FONT_DECLARE(lv_font_clock_90)
 LV_FONT_DECLARE(lv_font_clock_76)
 LV_FONT_DECLARE(lv_font_clock_42)
 LV_FONT_DECLARE(lv_font_montserrat_20)
 }
 
+lv_style_t* LabelStyle90 = nullptr;
 lv_style_t* LabelStyle76 = nullptr;
 lv_style_t* LabelStyle42 = nullptr;
 
@@ -446,6 +448,10 @@ void LittleVgl::InitThemeButton() {
 void LittleVgl::InitThemeLabel() {
   lv_style_copy(&prim, &bg);
   prim.text.color = lv_color_hsv_to_rgb(hue, 5, 95);
+
+  lv_style_copy(&labelStyle90, &prim);
+  labelStyle90.text.font = &lv_font_clock_90;
+  LabelStyle90 = &(this->labelStyle90);
 
   lv_style_copy(&labelStyle76, &prim);
   labelStyle76.text.font = &lv_font_clock_76;
