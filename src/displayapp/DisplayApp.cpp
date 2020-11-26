@@ -216,7 +216,6 @@ void DisplayApp::RunningState() {
         currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController));
         onClockApp = true;
         break;
-//      case Apps::Test: currentScreen.reset(new Screens::Message(this)); break;
       case Apps::SysInfo: currentScreen.reset(new Screens::SystemInfo(this, dateTimeController, batteryController, brightnessController, bleController, watchdog)); break;
       case Apps::Meter: currentScreen.reset(new Screens::Meter(this)); break;
       case Apps::Gauge: currentScreen.reset(new Screens::Gauge(this)); break;

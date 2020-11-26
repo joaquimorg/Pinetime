@@ -20,7 +20,7 @@ namespace Pinetime {
             Pinetime::Applications::Apps application;
           };
 
-          explicit Tile(uint8_t screenID,
+          explicit Tile(uint8_t screenID, uint8_t numScreens,
               DisplayApp* app, 
               Controllers::DateTime& dateTimeController,
               Controllers::Settings& settingsController, 

@@ -366,9 +366,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WatchFaceMinimal.cpp
         displayapp/screens/WatchFaceCustom.cpp
         displayapp/icons/bg_clock.c
-        displayapp/icons/bg_clock_1.c
-        displayapp/icons/bg_clock_2_b.c
-        displayapp/icons/bg_clock_3_b.c
 
         displayapp/icons/bg_img_1.c
 

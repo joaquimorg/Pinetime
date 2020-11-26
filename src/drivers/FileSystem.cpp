@@ -59,8 +59,8 @@ FileSystem::FileSystem(SpiNorFlash& spiNorFlash) : spiNorFlash{spiNorFlash} {
 	// block device configuration
 	cfg.read_size = 128;
 	cfg.prog_size = 128;
-	cfg.block_size = 4096;
-	cfg.block_count = 1792;
+	cfg.block_size = 65535;
+	cfg.block_count = 64;
     cfg.cache_size = 128;
     cfg.block_cycles = 500;
 	cfg.lookahead_size = 128;    

@@ -1,5 +1,6 @@
 #include "Tile.h"
 #include "../DisplayApp.h"
+#include "Symbols.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -18,7 +19,8 @@ static void event_handler(lv_obj_t * obj, lv_event_t event) {
 
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
 
-Tile::Tile(uint8_t screenID, DisplayApp* app, 
+Tile::Tile(uint8_t screenID, uint8_t numScreens,
+    DisplayApp* app, 
     Controllers::DateTime& dateTimeController, 
     Controllers::Settings &settingsController, 
     std::array<Applications, 4>& applications) : 
@@ -38,6 +40,17 @@ Tile::Tile(uint8_t screenID, DisplayApp* app,
   lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 4);
+
+  // Ugly Code... to do
+  if ( numScreens > 1 ) {
+    lv_obj_t* label_screens = lv_label_create(lv_scr_act(), NULL);  
+    lv_label_set_align( label_screens, LV_LABEL_ALIGN_CENTER );
+    lv_label_set_recolor(label_screens, true);
+    if ( screenID == 0 ) lv_label_set_text(label_screens, "•\n#606060 •#\n#606060 •#");
+    else if ( screenID == 1 ) lv_label_set_text(label_screens, "#606060 •#\n•\n#606060 •#");
+    else if ( screenID == 2 ) lv_label_set_text(label_screens, "#606060 •#\n#606060 •#\n•");
+    lv_obj_align(label_screens, lv_scr_act(), LV_ALIGN_IN_RIGHT_MID, -10, 0);
+  }
 
   for(int i = 0, appIndex = 0; i < 4; i++) {
     if ( applications[i].application == Apps::None)

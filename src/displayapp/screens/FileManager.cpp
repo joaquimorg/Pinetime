@@ -24,7 +24,7 @@ FileManager::FileManager(Pinetime::Applications::DisplayApp *app, Pinetime::Driv
 
   /*Create a list*/
   lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-  lv_obj_set_size(list1, 160, 150);
+  lv_obj_set_size(list1, 160, 200);
   lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0); 
 
 
@@ -37,7 +37,7 @@ FileManager::FileManager(Pinetime::Applications::DisplayApp *app, Pinetime::Driv
   fs.mkdir("/config");
 
   fs.dir_open(&dir, "/");
-  list_btn = lv_list_add_btn(list1, NULL , "/");  
+  //list_btn = lv_list_add_btn(list1, NULL , "/");  
 
   do {
     size = fs.dir_read(&dir, &info);

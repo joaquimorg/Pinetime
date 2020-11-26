@@ -12,7 +12,7 @@ using namespace Pinetime::Applications::Screens;
 #define SECOND_LENGTH 110
 #define PI 3.14159265358979323846
 
-LV_IMG_DECLARE(bg_clock_2_b);
+LV_IMG_DECLARE(bg_clock);
 
 extern lv_style_t* DefaultStyle;
 
@@ -44,12 +44,12 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
 
   
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, &bg_clock_2_b);
+  lv_img_set_src(bg_clock_img, &bg_clock);
   lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(batteryIcon, Symbols::batteryHalf);
-  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_CENTER, 55, 55);
+  lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -8, -4);
 
   static lv_style_t not_style;
   lv_style_copy(&not_style, DefaultStyle);
@@ -58,7 +58,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   not_style.text.color = lv_color_hex(0x00FF00);  
   lv_label_set_style(notificationIcon, LV_LABEL_STYLE_MAIN, &not_style);
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
-  lv_obj_align(notificationIcon, lv_scr_act(), LV_ALIGN_CENTER, -55, 55);
+  lv_obj_align(notificationIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 8, -4);
 
   // Date - Day / Week day
   static lv_style_t date_style;

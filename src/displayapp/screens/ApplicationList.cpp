@@ -37,9 +37,7 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
           settingsController.GetAppMenu()
         },
         dateTimeController{dateTimeController}
-        {
-
-}
+        {}
 
 
 ApplicationList::~ApplicationList() {
@@ -73,7 +71,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(0, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, 3, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
@@ -87,7 +85,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(1, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(1, 3, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
@@ -101,35 +99,5 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(2, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(2, 3, app, dateTimeController, settingsController, applications));
 }
-
-/*
-std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
-  std::array<Screens::Tile::Applications, 6> applications {
-          {{Symbols::tachometer, Apps::Gauge},
-           {Symbols::asterisk, Apps::Meter},
-           {Symbols::paintbrush, Apps::Paint},
-                  {Symbols::info, Apps::Notifications},
-                  {Symbols::none, Apps::None},
-                  {Symbols::none, Apps::None}
-          }
-  };
-
-  return std::unique_ptr<Screen>(new Screens::Tile(app, applications));
-}
-
-std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
-  std::array<Screens::Tile::Applications, 6> applications {
-          {{"A", Apps::Meter},
-           {"B", Apps::Gauge},
-           {"C", Apps::Clock},
-           {"D", Apps::Music},
-           {"E", Apps::SysInfo},
-           {"F", Apps::Brightness}
-          }
-  };
-
-  return std::unique_ptr<Screen>(new Screens::Tile(app, applications));
-}
-*/

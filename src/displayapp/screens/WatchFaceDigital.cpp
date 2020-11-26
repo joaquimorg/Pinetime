@@ -39,7 +39,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   //ble_style.text.color = lv_color_hex(0x0000FF);  
   lv_label_set_style(bleIcon, LV_LABEL_STYLE_MAIN, &ble_style);
   lv_label_set_text(bleIcon, Symbols::bluetooth);
-  lv_obj_align(bleIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 30, 0);
+  lv_obj_align(bleIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 40, 0);
 
   static lv_style_t not_style;
   lv_style_copy(&not_style, DefaultStyle);
@@ -91,15 +91,15 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   //lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_date_day, label_time, LV_ALIGN_OUT_TOP_LEFT, 0, -12);  
 
-  /*heartbeatIcon = lv_label_create(lv_scr_act(), nullptr);
+  heartbeatIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(heartbeatIcon, Symbols::heartBeat);
-  lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
+  lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -50, -2);
 
   heartbeatValue = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(heartbeatValue, "0");
   lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
 
-  heartbeatBpm = lv_label_create(lv_scr_act(), nullptr);
+  /*heartbeatBpm = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(heartbeatBpm, "BPM");
   lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);*/
 
@@ -204,20 +204,16 @@ bool WatchFaceDigital::Refresh() {
   }
 
   // TODO heartbeat = heartBeatController.GetValue();
-  /*if(heartbeat.IsUpdated()) {
-    char heartbeatBuffer[4];
-    sprintf(heartbeatBuffer, "%d", heartbeat.Get());
-    lv_label_set_text(heartbeatValue, heartbeatBuffer);
-    lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
-    lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
-    lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
-  }*/
+  if(heartbeat.IsUpdated()) {    
+    lv_label_set_text_fmt(heartbeatValue, "%d", heartbeat.Get());
+    //lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
+    //lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+    //lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+  }
 
   // TODO stepCount = stepController.GetValue();
-  if(stepCount.IsUpdated()) {
-    char stepBuffer[5];
-    sprintf(stepBuffer, "%lu", stepCount.Get());
-    lv_label_set_text(stepValue, stepBuffer);
+  if(stepCount.IsUpdated()) {        
+    lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
     //lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, -2);
     //lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_LEFT_MID, -5, 0);
   }
