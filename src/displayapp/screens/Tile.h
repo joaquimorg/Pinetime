@@ -7,6 +7,7 @@
 #include "Screen.h"
 #include "../Apps.h"
 #include "components/datetime/DateTimeController.h"
+#include "components/settings/Settings.h"
 
 namespace Pinetime {
   namespace Applications {
@@ -19,7 +20,11 @@ namespace Pinetime {
             Pinetime::Applications::Apps application;
           };
 
-          explicit Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::array<Applications, 4>& applications);
+          explicit Tile(uint8_t screenID,
+              DisplayApp* app, 
+              Controllers::DateTime& dateTimeController,
+              Controllers::Settings& settingsController, 
+              std::array<Applications, 4>& applications);
           ~Tile() override;
 
           bool Refresh() override;
@@ -41,6 +46,7 @@ namespace Pinetime {
           Pinetime::Applications::Apps apps[4];
 
           Controllers::DateTime& dateTimeController;
+          Controllers::Settings& settingsController;
       };
     }
   }

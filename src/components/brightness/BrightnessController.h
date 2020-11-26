@@ -18,9 +18,9 @@ namespace Pinetime {
       void Restore();
 
     private:
-      static constexpr uint8_t pinLcdBacklight1 = 14;
+      /*static constexpr uint8_t pinLcdBacklight1 = 14;
       static constexpr uint8_t pinLcdBacklight2 = 22;
-      static constexpr uint8_t pinLcdBacklight3 = 23;
+      static constexpr uint8_t pinLcdBacklight3 = 23;*/
       Levels level = Levels::High;
       Levels backupLevel = Levels::High;
     };

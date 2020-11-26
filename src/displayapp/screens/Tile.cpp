@@ -18,11 +18,16 @@ static void event_handler(lv_obj_t * obj, lv_event_t event) {
 
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
 
-Tile::Tile(DisplayApp* app, Controllers::DateTime& dateTimeController, std::array<Applications, 4>& applications) : 
+Tile::Tile(uint8_t screenID, DisplayApp* app, 
+    Controllers::DateTime& dateTimeController, 
+    Controllers::Settings &settingsController, 
+    std::array<Applications, 4>& applications) : 
     Screen(app),
-    dateTimeController{dateTimeController} 
+    dateTimeController{dateTimeController},
+    settingsController{settingsController} 
 {
 
+  settingsController.SetAppMenu(screenID);
   uint8_t hours = dateTimeController.Hours();
   uint8_t minutes = dateTimeController.Minutes();
   oldHours = hours;

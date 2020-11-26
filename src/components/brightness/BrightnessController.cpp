@@ -1,13 +1,14 @@
 #include "BrightnessController.h"
 #include <hal/nrf_gpio.h>
+#include "board_config.h"
 
 using namespace Pinetime::Controllers;
 
 
 void BrightnessController::Init() {
-  nrf_gpio_cfg_output(pinLcdBacklight1);
-  nrf_gpio_cfg_output(pinLcdBacklight2);
-  nrf_gpio_cfg_output(pinLcdBacklight3);
+  nrf_gpio_cfg_output(LCD_LIGHT_1);
+  nrf_gpio_cfg_output(LCD_LIGHT_2);
+  nrf_gpio_cfg_output(LCD_LIGHT_3);
   Set(level);
 }
 
@@ -16,24 +17,24 @@ void BrightnessController::Set(BrightnessController::Levels level) {
   switch(level) {
     default:
     case Levels::High:
-      nrf_gpio_pin_clear(pinLcdBacklight1);
-      nrf_gpio_pin_clear(pinLcdBacklight2);
-      nrf_gpio_pin_clear(pinLcdBacklight3);
+      nrf_gpio_pin_clear(LCD_LIGHT_1);
+      nrf_gpio_pin_clear(LCD_LIGHT_2);
+      nrf_gpio_pin_clear(LCD_LIGHT_3);
       break;
     case Levels::Medium:
-      nrf_gpio_pin_clear(pinLcdBacklight1);
-      nrf_gpio_pin_clear(pinLcdBacklight2);
-      nrf_gpio_pin_set(pinLcdBacklight3);
+      nrf_gpio_pin_clear(LCD_LIGHT_1);
+      nrf_gpio_pin_clear(LCD_LIGHT_2);
+      nrf_gpio_pin_set(LCD_LIGHT_3);
       break;
     case Levels::Low:
-      nrf_gpio_pin_clear(pinLcdBacklight1);
-      nrf_gpio_pin_set(pinLcdBacklight2);
-      nrf_gpio_pin_set(pinLcdBacklight3);
+      nrf_gpio_pin_clear(LCD_LIGHT_1);
+      nrf_gpio_pin_set(LCD_LIGHT_2);
+      nrf_gpio_pin_set(LCD_LIGHT_3);
       break;
     case Levels::Off:
-      nrf_gpio_pin_set(pinLcdBacklight1);
-      nrf_gpio_pin_set(pinLcdBacklight2);
-      nrf_gpio_pin_set(pinLcdBacklight3);
+      nrf_gpio_pin_set(LCD_LIGHT_1);
+      nrf_gpio_pin_set(LCD_LIGHT_2);
+      nrf_gpio_pin_set(LCD_LIGHT_3);
       break;
   }
 }

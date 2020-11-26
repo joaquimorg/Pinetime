@@ -10,6 +10,7 @@
 
 namespace Pinetime {
   namespace Controllers {
+    class Settings;
     class Battery;
     class Ble;
     class NotificationManager;
@@ -23,7 +24,8 @@ namespace Pinetime {
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
-                  Controllers::NotificationManager& notificatioManager);
+                  Controllers::NotificationManager& notificatioManager,
+                  Controllers::Settings &settingsController);
           ~Clock() override;
 
           bool Refresh() override;
@@ -36,11 +38,13 @@ namespace Pinetime {
           Controllers::Battery& batteryController;
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
+          Controllers::Settings& settingsController;
 
-          ScreenList<3> screens;
+          ScreenList<4> screens;
           std::unique_ptr<Screen> WatchFaceDigitalScreen();
           std::unique_ptr<Screen> WatchFaceAnalogScreen();
           std::unique_ptr<Screen> WatchFaceMinimalScreen();
+          std::unique_ptr<Screen> WatchFaceCustomScreen();
 
           bool running = true;
 

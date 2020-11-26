@@ -15,10 +15,12 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
-                  Controllers::NotificationManager& notificatioManager) : Screen(app), currentDateTime{{}},
+                  Controllers::NotificationManager& notificatioManager,
+                  Controllers::Settings &settingsController) : Screen(app), currentDateTime{{}},
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
-                                           bleController{bleController}, notificatioManager{notificatioManager} {
-
+                                           bleController{bleController}, notificatioManager{notificatioManager},
+                                           settingsController{settingsController} {
+  settingsController.SetClockFace(0);
   sHour = 99;
   sMinute = 99;
   sSecond = 99;

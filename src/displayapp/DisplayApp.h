@@ -10,6 +10,7 @@
 #include "components/brightness/BrightnessController.h"
 #include "components/firmwarevalidator/FirmwareValidator.h"
 #include "displayapp/screens/Modal.h"
+#include "components/settings/Settings.h"
 
 namespace Pinetime {
 
@@ -17,8 +18,10 @@ namespace Pinetime {
     class St7789;
     class Cst816S;
     class WatchdogView;
+    class FileSystem;
   }
   namespace Controllers {
+    class Settings;
     class Battery;
     class Ble;
     class DateTime;
@@ -41,6 +44,8 @@ namespace Pinetime {
         DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,
+                   Pinetime::Drivers::FileSystem& fileSystem,
+                   Controllers::Settings &settingsController,
                    System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager& notificationManager);
         void Start();
@@ -70,7 +75,9 @@ namespace Pinetime {
         Pinetime::Controllers::Battery &batteryController;
         Pinetime::Controllers::Ble &bleController;
         Pinetime::Controllers::DateTime& dateTimeController;
+        Pinetime::Controllers::Settings& settingsController;
         Pinetime::Drivers::WatchdogView& watchdog;
+        Pinetime::Drivers::FileSystem& fileSystem;
 
         Pinetime::Drivers::Cst816S& touchPanel;
         TouchEvents OnTouchEvent();

@@ -2,12 +2,13 @@
 #include <hal/nrf_gpio.h>
 #include <libraries/log/nrf_log.h>
 #include <algorithm>
+#include "board_config.h"
 
 using namespace Pinetime::Controllers;
 
 void Battery::Init() {
-  nrf_gpio_cfg_input(chargingPin, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
-  nrf_gpio_cfg_input(powerPresentPin, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+  nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+  nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
 
   nrfx_saadc_config_t adcConfig = NRFX_SAADC_DEFAULT_CONFIG;
   nrfx_saadc_init(&adcConfig, SaadcEventHandler);
@@ -19,15 +20,15 @@ void Battery::Init() {
           .acq_time   = NRF_SAADC_ACQTIME_3US,
           .mode       = NRF_SAADC_MODE_SINGLE_ENDED,
           .burst      = NRF_SAADC_BURST_DISABLED,
-          .pin_p      = batteryVoltageAdcInput,
+          .pin_p      = BATTERY_VOL,
           .pin_n      = NRF_SAADC_INPUT_DISABLED
   };
   nrfx_saadc_channel_init(0, &adcChannelConfig);
 }
 
 void Battery::Update() {
-  isCharging = !nrf_gpio_pin_read(chargingPin);
-  isPowerPresent = !nrf_gpio_pin_read(powerPresentPin);
+  isCharging = !nrf_gpio_pin_read(CHARGE_IRQ);
+  isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
 
   nrf_saadc_value_t value = 0;
   nrfx_saadc_sample_convert(0, &value);

@@ -18,15 +18,23 @@ LV_IMG_DECLARE(icon_game);
 LV_IMG_DECLARE(icon_running);
 LV_IMG_DECLARE(icon_heart_rate);
 
-ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app, Pinetime::Controllers::DateTime& dateTimeController) :
+LV_IMG_DECLARE(icon_folder);
+LV_IMG_DECLARE(icon_raining);
+LV_IMG_DECLARE(icon_iot);
+LV_IMG_DECLARE(icon_qr_code);
+
+ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app, 
+        Pinetime::Controllers::DateTime& dateTimeController,
+        Pinetime::Controllers::Settings &settingsController) :
         Screen(app),
+        settingsController{settingsController},
         screens{app, {
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); }
-                //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
+                [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
+                [this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
           },
           Screens::ScreenListModes::UpDown,
-          0
+          settingsController.GetAppMenu()
         },
         dateTimeController{dateTimeController}
         {
@@ -65,7 +73,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(app, dateTimeController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
@@ -79,7 +87,21 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(app, dateTimeController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(1, app, dateTimeController, settingsController, applications));
+}
+
+std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
+  std::array<Screens::Tile::Applications, 4> applications {
+          {                        
+            {&icon_folder,      "File",       Apps::FileManager},
+            {&icon_raining,     "Weather",    Apps::Meter},            
+            {&icon_iot,         "Iot",        Apps::Meter},
+            {&icon_qr_code,     "Mobile App", Apps::Meter}
+          }
+
+  };
+
+  return std::unique_ptr<Screen>(new Screens::Tile(2, app, dateTimeController, settingsController, applications));
 }
 
 /*

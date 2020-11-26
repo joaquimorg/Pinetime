@@ -14,6 +14,7 @@
 #include "WatchFaceDigital.h"
 #include "WatchFaceAnalog.h"
 #include "WatchFaceMinimal.h"
+#include "WatchFaceCustom.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -21,17 +22,24 @@ Clock::Clock(DisplayApp* app,
         Controllers::DateTime& dateTimeController,
         Controllers::Battery& batteryController,
         Controllers::Ble& bleController,
-        Controllers::NotificationManager& notificatioManager) : Screen(app),
+        Controllers::NotificationManager& notificatioManager,
+        Controllers::Settings &settingsController) : Screen(app),
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager},
+                                           settingsController{settingsController},
         screens{app, {
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
-                [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); }
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen(); }
           },
           Screens::ScreenListModes::LongPress,
-          1
-        } {}
+          settingsController.GetClockFace()
+        } {
+
+          settingsController.SetAppMenu(0);
+
+        }
 
 Clock::~Clock() {
   lv_obj_clean(lv_scr_act());
@@ -53,13 +61,17 @@ bool Clock::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 }
 
 std::unique_ptr<Screen> Clock::WatchFaceDigitalScreen() {  
-  return std::unique_ptr<Screen>(new Screens::WatchFaceDigital(app, dateTimeController, batteryController, bleController, notificatioManager));
+  return std::unique_ptr<Screen>(new Screens::WatchFaceDigital(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
 }
 
 std::unique_ptr<Screen> Clock::WatchFaceAnalogScreen() {  
-  return std::unique_ptr<Screen>(new Screens::WatchFaceAnalog(app, dateTimeController, batteryController, bleController, notificatioManager));
+  return std::unique_ptr<Screen>(new Screens::WatchFaceAnalog(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
 }
 
 std::unique_ptr<Screen> Clock::WatchFaceMinimalScreen() {  
-  return std::unique_ptr<Screen>(new Screens::WatchFaceMinimal(app, dateTimeController, batteryController, bleController, notificatioManager));
+  return std::unique_ptr<Screen>(new Screens::WatchFaceMinimal(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceCustomScreen() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceCustom(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
 }

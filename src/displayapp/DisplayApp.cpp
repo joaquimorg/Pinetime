@@ -16,6 +16,7 @@
 #include "displayapp/screens/Notifications.h"
 #include "displayapp/screens/SystemInfo.h"
 #include "displayapp/screens/Tile.h"
+#include "displayapp/screens/FileManager.h"
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/Watchdog.h"
@@ -26,6 +27,8 @@ using namespace Pinetime::Applications;
 DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &touchPanel,
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,
+                       Pinetime::Drivers::FileSystem& fileSystem,
+                       Controllers::Settings &settingsController,
                        System::SystemTask &systemTask,
                        Pinetime::Controllers::NotificationManager& notificationManager) :
         lcd{lcd},
@@ -34,8 +37,10 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         bleController{bleController},
         dateTimeController{dateTimeController},
         watchdog{watchdog},
+        fileSystem{fileSystem},
+        settingsController{settingsController},
         touchPanel{touchPanel},
-        currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager) },
+        currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController) },
         systemTask{systemTask},
         notificationManager{notificationManager} {
   msgQueue = xQueueCreate(queueSize, itemSize);
@@ -132,7 +137,7 @@ void DisplayApp::Refresh() {
               //currentScreen->OnButtonPushed();
               lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
               currentScreen.reset(nullptr);
-              currentScreen.reset(new Screens::ApplicationList(this, dateTimeController));
+              currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController));
               break;
             /*case TouchEvents::SwipeDown:
               currentScreen->OnButtonPushed();
@@ -140,10 +145,12 @@ void DisplayApp::Refresh() {
               break;*/
             case TouchEvents::SwipeDown:
               if(!onClockApp) {
-                lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+                /*lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
                 currentScreen.reset(nullptr);
-                currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager));
-                onClockApp = true;
+                currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController));
+                onClockApp = true;*/
+                lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+                currentScreen->OnButtonPushed();
               }
               break;
             default:
@@ -204,9 +211,9 @@ void DisplayApp::RunningState() {
     onClockApp = false;
     switch(nextApp) {
       case Apps::None:
-      case Apps::Launcher: currentScreen.reset(new Screens::ApplicationList(this, dateTimeController)); break;
+      case Apps::Launcher: currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController)); break;
       case Apps::Clock:
-        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager));
+        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController));
         onClockApp = true;
         break;
 //      case Apps::Test: currentScreen.reset(new Screens::Message(this)); break;
@@ -218,6 +225,7 @@ void DisplayApp::RunningState() {
       case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;
       case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
+      case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this, fileSystem)); break;
     }
     nextApp = Apps::None;
   }

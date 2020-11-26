@@ -13,6 +13,7 @@
 
 namespace Pinetime {
   namespace Controllers {
+    class Settings;
     class Battery;
     class Ble;
     class NotificationManager;
@@ -26,7 +27,8 @@ namespace Pinetime {
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
-                  Controllers::NotificationManager& notificatioManager);
+                  Controllers::NotificationManager& notificatioManager,
+                  Controllers::Settings &settingsController);
           
           ~WatchFaceAnalog() override;
 
@@ -69,6 +71,7 @@ namespace Pinetime {
           Controllers::Battery& batteryController;
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
+          Controllers::Settings& settingsController;
       };
     }
   }

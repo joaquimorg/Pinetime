@@ -16,7 +16,10 @@ namespace Pinetime {
         public:
 
           ScreenList(DisplayApp* app, std::array<std::function<std::unique_ptr<Screen>()>, N>&& screens, ScreenListModes mode, uint8_t initScreen)
-          : Screen(app), screens{std::move(screens)}, current{this->screens[initScreen]()}, mode{mode} {}
+          : Screen(app), screens{std::move(screens)}, current{this->screens[initScreen]()}, mode{mode} {
+            screenIndex = initScreen;
+          }
+
           ~ScreenList() override {
 
           }

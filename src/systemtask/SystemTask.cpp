@@ -22,6 +22,7 @@
 #include "drivers/SpiNorFlash.h"
 #include "drivers/TwiMaster.h"
 #include "main.h"
+#include "board_config.h"
 
 using namespace Pinetime::System;
 
@@ -35,14 +36,16 @@ void IdleTimerCallback(TimerHandle_t xTimer) {
 
 SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        Pinetime::Drivers::SpiNorFlash& spiNorFlash,
+                       Pinetime::Drivers::FileSystem& fileSystem,
                        Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel,
                        Components::LittleVgl &lvgl,
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController,
+                       Controllers::Settings &settingsController,
                        Pinetime::Controllers::NotificationManager& notificationManager) :
-                       spi{spi}, lcd{lcd}, spiNorFlash{spiNorFlash},
+                       spi{spi}, lcd{lcd}, spiNorFlash{spiNorFlash}, fileSystem{fileSystem},
                        twiMaster{twiMaster}, touchPanel{touchPanel}, lvgl{lvgl}, batteryController{batteryController},
-                       bleController{bleController}, dateTimeController{dateTimeController},
+                       bleController{bleController}, dateTimeController{dateTimeController}, settingsController{settingsController},
                        watchdog{}, watchdogView{watchdog}, notificationManager{notificationManager},
                        nimbleController(*this, bleController,dateTimeController, notificationManager, batteryController, spiNorFlash) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
@@ -68,6 +71,7 @@ void SystemTask::Work() {
   spi.Init();
   spiNorFlash.Init();
   spiNorFlash.Wakeup();
+  fileSystem.mount();
   nimbleController.Init();
   nimbleController.StartAdvertising();
   lcd.Init();
@@ -75,17 +79,18 @@ void SystemTask::Work() {
   twiMaster.Init();
   touchPanel.Init();
   batteryController.Init();
+  settingsController.Init();
 
   displayApp.reset(new Pinetime::Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController,
-                                                          dateTimeController, watchdogView, *this, notificationManager));
+                                                          dateTimeController, watchdogView, fileSystem, settingsController, *this, notificationManager));
   displayApp->Start();
 
   batteryController.Update();
   displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateBatteryLevel);
 
-  nrf_gpio_cfg_sense_input(pinButton, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
-  nrf_gpio_cfg_output(15);
-  nrf_gpio_pin_set(15);
+  nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
+  nrf_gpio_cfg_output(KEY_ENABLE);
+  nrf_gpio_pin_set(KEY_ENABLE);
 
   nrfx_gpiote_in_config_t pinConfig;
   pinConfig.skip_gpio_setup = true;
@@ -94,9 +99,9 @@ void SystemTask::Work() {
   pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
 
-  nrfx_gpiote_in_init(pinButton, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(KEY_ACTION, &pinConfig, nrfx_gpiote_evt_handler);
 
-  nrf_gpio_cfg_sense_input(pinTouchIrq, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  nrf_gpio_cfg_sense_input(TP_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
@@ -104,7 +109,7 @@ void SystemTask::Work() {
   pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
-  nrfx_gpiote_in_init(pinTouchIrq, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
 
   idleTimer = xTimerCreate ("idleTimer", idleTime, pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
@@ -202,7 +207,7 @@ void SystemTask::Work() {
     monitor.Process();
     uint32_t systick_counter = nrf_rtc_counter_get(portNRF_RTC_REG);
     dateTimeController.UpdateTime(systick_counter);
-    if(!nrf_gpio_pin_read(pinButton))
+    if(!nrf_gpio_pin_read(KEY_ACTION))
       watchdog.Kick();
   }
   // Clear diagnostic suppression

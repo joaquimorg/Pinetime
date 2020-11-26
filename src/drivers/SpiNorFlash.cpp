@@ -72,8 +72,12 @@ uint8_t SpiNorFlash::ReadConfigurationRegister() {
 
 void SpiNorFlash::Read(uint32_t address, uint8_t *buffer, size_t size) {
   static constexpr uint8_t cmdSize = 4;
-  uint8_t cmd[cmdSize] = { static_cast<uint8_t>(Commands::Read), (uint8_t)(address >> 16U), (uint8_t)(address >> 8U),
-                     (uint8_t)address };
+  uint8_t cmd[cmdSize] = {};//{ static_cast<uint8_t>(Commands::Read), (uint8_t)(address >> 16U), (uint8_t)(address >> 8U), (uint8_t)address };
+  cmd[0] = static_cast<uint8_t>(Commands::Read);
+  cmd[1] = (uint8_t)(address >> 16U);
+  cmd[2] = (uint8_t)(address >> 8U);
+  cmd[3] = (uint8_t)address;
+
   spi.Read(reinterpret_cast<uint8_t *>(&cmd), cmdSize, buffer, size);
 }
 
@@ -84,8 +88,14 @@ void SpiNorFlash::WriteEnable() {
 
 void SpiNorFlash::SectorErase(uint32_t sectorAddress) {
   static constexpr uint8_t cmdSize = 4;
-  uint8_t cmd[cmdSize] = { static_cast<uint8_t>(Commands::SectorErase), (uint8_t)(sectorAddress >> 16U), (uint8_t)(sectorAddress >> 8U),
-                           (uint8_t)sectorAddress };
+  /*uint8_t cmd[cmdSize] = { static_cast<uint8_t>(Commands::SectorErase), (uint8_t)(sectorAddress >> 16U), (uint8_t)(sectorAddress >> 8U),
+                           (uint8_t)sectorAddress };*/
+
+  uint8_t cmd[cmdSize] = {};
+  cmd[0] = static_cast<uint8_t>(Commands::SectorErase);
+  cmd[1] = (uint8_t)(sectorAddress >> 16U);
+  cmd[2] = (uint8_t)(sectorAddress >> 8U);
+  cmd[3] = (uint8_t)sectorAddress;
 
   WriteEnable();
   while(!WriteEnabled()) vTaskDelay(1);
@@ -120,8 +130,14 @@ void SpiNorFlash::Write(uint32_t address, const uint8_t *buffer, size_t size) {
     uint32_t pageLimit = (addr & ~(pageSize - 1u)) + pageSize;
     uint32_t toWrite = pageLimit - addr > len ? len :  pageLimit - addr;
 
-    uint8_t cmd[cmdSize] = { static_cast<uint8_t>(Commands::PageProgram), (uint8_t)(addr >> 16U), (uint8_t)(addr >> 8U),
-                             (uint8_t)addr };
+    /*uint8_t cmd[cmdSize] = { static_cast<uint8_t>(Commands::PageProgram), (uint8_t)(addr >> 16U), (uint8_t)(addr >> 8U),
+                             (uint8_t)addr };*/
+
+    uint8_t cmd[cmdSize] = {};
+    cmd[0] = static_cast<uint8_t>(Commands::PageProgram);
+    cmd[1] = (uint8_t)(addr >> 16U);
+    cmd[2] = (uint8_t)(addr >> 8U);
+    cmd[3] = (uint8_t)addr;
 
     WriteEnable();
     while(!WriteEnabled()) vTaskDelay(1);

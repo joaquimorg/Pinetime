@@ -1,3 +1,5 @@
+#include "board_config.h"
+
 // nrf
 #include <hal/nrf_rtc.h>
 #include <hal/nrf_wdt.h>
@@ -26,6 +28,7 @@
 #include <task.h>
 #include <timers.h>
 
+#include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "components/ble/NotificationManager.h"
@@ -35,6 +38,7 @@
 #include "drivers/Spi.h"
 #include "drivers/SpiMaster.h"
 #include "drivers/SpiNorFlash.h"
+#include "drivers/FileSystem.h"
 #include "drivers/St7789.h"
 #include "drivers/TwiMaster.h"
 #include "drivers/Cst816s.h"
@@ -48,6 +52,7 @@ Pinetime::Logging::NrfLogger logger;
 Pinetime::Logging::DummyLogger logger;
 #endif
 
+/*
 static constexpr uint8_t pinSpiSck = 2;
 static constexpr uint8_t pinSpiMosi = 3;
 static constexpr uint8_t pinSpiMiso = 4;
@@ -57,22 +62,27 @@ static constexpr uint8_t pinLcdDataCommand = 18;
 static constexpr uint8_t pinTwiScl = 7;
 static constexpr uint8_t pinTwiSda = 6;
 static constexpr uint8_t touchPanelTwiAddress = 0x15;
+*/
+
+Pinetime::Controllers::Settings settingsController;
 
 Pinetime::Drivers::SpiMaster spi{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, {
         Pinetime::Drivers::SpiMaster::BitOrder::Msb_Lsb,
         Pinetime::Drivers::SpiMaster::Modes::Mode3,
         Pinetime::Drivers::SpiMaster::Frequencies::Freq8Mhz,
-        pinSpiSck,
-        pinSpiMosi,
-        pinSpiMiso
+        SPI_SCK,
+        SPI_MOSI,
+        SPI_MISO
   }
 };
 
-Pinetime::Drivers::Spi lcdSpi {spi, pinLcdCsn};
-Pinetime::Drivers::St7789 lcd {lcdSpi, pinLcdDataCommand};
+Pinetime::Drivers::Spi lcdSpi {spi, LCD_CSN};
+Pinetime::Drivers::St7789 lcd {lcdSpi, LCD_DC};
 
-Pinetime::Drivers::Spi flashSpi {spi, pinSpiFlashCsn};
+Pinetime::Drivers::Spi flashSpi {spi, FLASH_CSN};
 Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
+
+Pinetime::Drivers::FileSystem fileSystem {spiNorFlash};
 
 // The TWI device should work @ up to 400Khz but there is a HW bug which prevent it from
 // respecting correct timings. According to erratas heet, this magic value makes it run
@@ -80,8 +90,8 @@ Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
 static constexpr uint32_t MaxTwiFrequencyWithoutHardwareBug{0x06200000};
 Pinetime::Drivers::TwiMaster twiMaster{Pinetime::Drivers::TwiMaster::Modules::TWIM1,
                                        Pinetime::Drivers::TwiMaster::Parameters {
-                                               MaxTwiFrequencyWithoutHardwareBug, pinTwiSda, pinTwiScl}};
-Pinetime::Drivers::Cst816S touchPanel {twiMaster, touchPanelTwiAddress};
+                                               MaxTwiFrequencyWithoutHardwareBug, TWI_SDA, TWI_SCL}};
+Pinetime::Drivers::Cst816S touchPanel {twiMaster, TP_TWI_ADDR};
 Pinetime::Components::LittleVgl lvgl {lcd, touchPanel};
 
 
@@ -91,13 +101,13 @@ Pinetime::Controllers::Ble bleController;
 Pinetime::Controllers::DateTime dateTimeController;
 void ble_manager_set_ble_connection_callback(void (*connection)());
 void ble_manager_set_ble_disconnection_callback(void (*disconnection)());
-static constexpr uint8_t pinTouchIrq = 28;
+//static constexpr uint8_t pinTouchIrq = 28;
 std::unique_ptr<Pinetime::System::SystemTask> systemTask;
 
 Pinetime::Controllers::NotificationManager notificationManager;
 
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
-  if(pin == pinTouchIrq) {
+  if(pin == TP_IRQ) {
     systemTask->OnTouchEvent();
     return ;
   }
@@ -236,8 +246,8 @@ int main(void) {
 
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, lvgl, batteryController, bleController,
-                                                    dateTimeController, notificationManager));
+  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, fileSystem, twiMaster, touchPanel, lvgl, batteryController, bleController,
+                                                    dateTimeController, settingsController, notificationManager));
   systemTask->Start();
   nimble_port_init();
 

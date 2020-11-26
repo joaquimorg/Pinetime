@@ -7,11 +7,13 @@
 #include <timers.h>
 
 #include "SystemMonitor.h"
+#include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/NimbleController.h"
 #include "components/ble/NotificationManager.h"
 #include "displayapp/DisplayApp.h"
 #include "drivers/Watchdog.h"
+#include "drivers/FileSystem.h"
 
 namespace Pinetime {
   namespace Drivers {
@@ -30,10 +32,12 @@ namespace Pinetime {
 
         SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                    Pinetime::Drivers::SpiNorFlash& spiNorFlash,
+                   Pinetime::Drivers::FileSystem& fileSystem,
                    Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel,
                    Components::LittleVgl &lvgl,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController,
+                   Controllers::Settings &settingsController,
                    Pinetime::Controllers::NotificationManager& manager);
 
 
@@ -53,6 +57,7 @@ namespace Pinetime {
         Pinetime::Drivers::SpiMaster& spi;
         Pinetime::Drivers::St7789& lcd;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
+        Pinetime::Drivers::FileSystem& fileSystem;
         Pinetime::Drivers::TwiMaster& twiMaster;
         Pinetime::Drivers::Cst816S& touchPanel;
         Pinetime::Components::LittleVgl& lvgl;
@@ -68,8 +73,9 @@ namespace Pinetime {
         Pinetime::Drivers::WatchdogView watchdogView;
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Controllers::NimbleController nimbleController;
+        Pinetime::Controllers::Settings& settingsController;
 
-
+        /*
         static constexpr uint8_t pinSpiSck = 2;
         static constexpr uint8_t pinSpiMosi = 3;
         static constexpr uint8_t pinSpiMiso = 4;
@@ -77,6 +83,7 @@ namespace Pinetime {
         static constexpr uint8_t pinLcdDataCommand = 18;
         static constexpr uint8_t pinButton = 13;
         static constexpr uint8_t pinTouchIrq = 28;
+        */
 
         static void Process(void* instance);
         void Work();

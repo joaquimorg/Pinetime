@@ -267,12 +267,14 @@ set(LVGL_SRC
         libs/lvgl/src/lv_objx/lv_list.h
         libs/lvgl/src/lv_objx/lv_tileview.c
         libs/lvgl/src/lv_objx/lv_tileview.h
+        libs/lvgl/src/lv_objx/lv_ta.c
+        libs/lvgl/src/lv_objx/lv_ta.h
         #libs/lvgl/src/lv_objx/lv_tabview.c
         #libs/lvgl/src/lv_objx/lv_tabview.h
         libs/lvgl/src/lv_objx/lv_btnm.c
         libs/lvgl/src/lv_objx/lv_btnm.h
-        #libs/lvgl/src/lv_objx/lv_page.c
-        #libs/lvgl/src/lv_objx/lv_page.h
+        libs/lvgl/src/lv_objx/lv_page.c
+        libs/lvgl/src/lv_objx/lv_page.h
         libs/lvgl/src/lv_objx/lv_img.c
         libs/lvgl/src/lv_objx/lv_img.h
         libs/lvgl/src/lv_objx/lv_imgbtn.h
@@ -293,6 +295,13 @@ set(LVGL_SRC
         libs/lvgl/src/lv_objx/lv_ddlist.h
         libs/lvgl/src/lv_objx/lv_line.c
         libs/lvgl/src/lv_objx/lv_line.h
+        )
+
+set(LITTLEFS_SRC        
+        libs/littlefs/lfs_util.h
+        libs/littlefs/lfs_util.c
+        libs/littlefs/lfs.h
+        libs/littlefs/lfs.c
         )
 
 list(APPEND IMAGE_FILES
@@ -348,21 +357,31 @@ list(APPEND SOURCE_FILES
         displayapp/screens/FirmwareValidation.cpp
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
+
+        displayapp/screens/FileManager.cpp
+
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
         displayapp/screens/WatchFaceAnalog.cpp
         displayapp/screens/WatchFaceMinimal.cpp
+        displayapp/screens/WatchFaceCustom.cpp
         displayapp/icons/bg_clock.c
-        displayapp/icons/bg_clock_w.c
+        displayapp/icons/bg_clock_1.c
+        displayapp/icons/bg_clock_2_b.c
+        displayapp/icons/bg_clock_3_b.c
+
+        displayapp/icons/bg_img_1.c
 
         main.cpp
         drivers/St7789.cpp
+        drivers/FileSystem.cpp
         drivers/SpiNorFlash.cpp
         drivers/SpiMaster.cpp
         drivers/Spi.cpp
         drivers/Watchdog.cpp
         drivers/DebugPins.cpp
         drivers/InternalFlash.cpp
+        components/settings/Settings.cpp
         components/battery/BatteryController.cpp
         components/ble/BleController.cpp
         components/ble/NotificationManager.cpp
@@ -420,6 +439,7 @@ list(APPEND SOURCE_FILES
         displayapp/icons/icon_settings.c
         displayapp/icons/icon_music.c
         displayapp/icons/icon_error.c
+        displayapp/icons/icon_folder.c
                 
         )
 
@@ -472,14 +492,17 @@ set(INCLUDE_FILES
         displayapp/screens/WatchFaceDigital.h
         displayapp/screens/WatchFaceAnalog.h
         displayapp/screens/WatchFaceMinimal.h
+        displayapp/screens/WatchFaceCustom.h
 
         drivers/St7789.h
+        drivers/FileSystem.h
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h
         drivers/Spi.h
         drivers/Watchdog.h
         drivers/DebugPins.h
         drivers/InternalFlash.h
+        components/settings/Settings.h
         components/battery/BatteryController.h
         components/ble/BleController.h
         components/ble/NotificationManager.h
@@ -659,13 +682,26 @@ target_compile_options(lvgl PRIVATE
         $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
         )
 
+# littlefs
+add_library(littlefs STATIC ${LITTLEFS_SRC})
+target_include_directories(littlefs SYSTEM PUBLIC . ../)
+target_include_directories(littlefs SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
+target_compile_options(littlefs PRIVATE
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
+        )
+        
+
 # Build autonomous binary (without support for bootloader)
 set(EXECUTABLE_NAME "pinetime-app")
 set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
 set(NRF5_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/gcc_nrf52.ld")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_FILE_NAME})
-target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl)
+target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs)
 target_compile_options(${EXECUTABLE_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
@@ -696,7 +732,7 @@ set(IMAGE_MCUBOOT_FILE_NAME image-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_M
 set(DFU_FILE_NAME dfu-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.zip)
 set(NRF5_LINKER_SCRIPT_MCUBOOT "${CMAKE_SOURCE_DIR}/gcc_nrf52-mcuboot.ld")
 add_executable(${EXECUTABLE_MCUBOOT_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl)
+target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs)
 set_target_properties(${EXECUTABLE_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_FILE_NAME})
 target_compile_options(${EXECUTABLE_MCUBOOT_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
