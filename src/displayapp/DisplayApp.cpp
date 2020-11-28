@@ -17,6 +17,8 @@
 #include "displayapp/screens/SystemInfo.h"
 #include "displayapp/screens/Tile.h"
 #include "displayapp/screens/FileManager.h"
+#include "displayapp/screens/Settings.h"
+#include "displayapp/screens/Steps.h"
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/Watchdog.h"
@@ -101,6 +103,7 @@ void DisplayApp::Refresh() {
           vTaskDelay(100);
         }
         lcd.DisplayOff();
+        //currentScreen->OnButtonPushed();
         systemTask.PushMessage(System::SystemTask::Messages::OnDisplayTaskSleeping);
         state = States::Idle;
         break;
@@ -225,6 +228,8 @@ void DisplayApp::RunningState() {
       case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
       case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
+      case Apps::Settings: currentScreen.reset(new Screens::Settings(this)); break;
+      case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter)); break;
     }
     nextApp = Apps::None;
   }

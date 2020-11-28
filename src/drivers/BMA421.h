@@ -18,7 +18,12 @@ namespace Pinetime {
 
             void Init();
             void Update();
+
             uint32_t GetSteps() const { return step_count; };
+            uint8_t GetActivity() const { return activity; };
+            uint8_t GetTapStatus() const { return tapStatus; };
+            float GetTemp() const { return tempC; };
+            bma4_accel GetAccel() const { return accelData; };
 
         private:
 
@@ -30,7 +35,11 @@ namespace Pinetime {
             struct bma4_dev bma;
             struct bma4_accel_config accel_conf;
 
+            struct bma4_accel accelData;
             uint32_t step_count = 0;
+            uint8_t activity = 0;
+            uint8_t tapStatus = 0;
+            float tempC = 0;
             
     };
   }

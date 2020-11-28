@@ -63,7 +63,7 @@ bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
   std::array<Screens::Tile::Applications, 4> applications {
           {                        
-            {&icon_settings,    "Firmware",       Apps::Gauge},
+            {&icon_settings,    "Settings",       Apps::Settings},
             {&icon_information, "Sysinfo",        Apps::SysInfo},            
             {&icon_phone,       "Notifications",  Apps::Notifications},
             {&icon_brightness,  "Brightness",     Apps::Brightness}
@@ -79,7 +79,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
           {                        
             {&icon_music,       "Music",      Apps::Music},
             {&icon_game,        "Paint",      Apps::Paint},            
-            {&icon_running,     "Steps",      Apps::Meter},
+            {&icon_running,     "Steps",      Apps::Steps},
             {&icon_heart_rate,  "Heart Rate", Apps::Meter}
           }
 

@@ -119,15 +119,22 @@ void SystemTask::Work() {
   //
 
   // Step Counter IRQ
-  nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
+  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_LOTOHI;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
+  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
+  //nrf_gpio_cfg_input(BMA421_IRQ,NRF_GPIO_PIN_NOPULL);
+
+  nrf_drv_gpiote_in_config_t inConfig = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
+  inConfig.pull = NRF_GPIO_PIN_PULLUP;                                       
+  nrf_drv_gpiote_in_init(BMA421_IRQ, &inConfig, nrfx_gpiote_evt_handler);
+  nrf_drv_gpiote_in_event_enable(BMA421_IRQ, true);
+
   //
 
   idleTimer = xTimerCreate ("idleTimer", idleTime, pdFALSE, this, IdleTimerCallback);
@@ -140,7 +147,7 @@ void SystemTask::Work() {
     uint8_t msg;
     if (xQueueReceive(systemTasksMsgQueue, &msg, isSleeping ? 2500 : 1000)) {
       batteryController.Update();
-      stepCounter.Update();
+      
       Messages message = static_cast<Messages >(msg);
       switch(message) {
         case Messages::GoToRunning:
@@ -194,6 +201,9 @@ void SystemTask::Work() {
           break;
         case Messages::OnButtonEvent:
           ReloadIdleTimer();
+          break;
+        case Messages::OnStepEvent:
+          stepCounter.Update();
           break;
         case Messages::OnDisplayTaskSleeping:
           if(BootloaderVersion::IsValid()) {

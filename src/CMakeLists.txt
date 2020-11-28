@@ -353,8 +353,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Meter.cpp
         displayapp/screens/Gauge.cpp
         displayapp/screens/InfiniPaint.cpp
-        #displayapp/screens/DropDownDemo.cpp
-        #displayapp/screens/Modal.cpp
+        displayapp/screens/Steps.cpp
+        displayapp/screens/Settings.cpp
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp
