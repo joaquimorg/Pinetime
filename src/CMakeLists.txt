@@ -304,6 +304,15 @@ set(LITTLEFS_SRC
         libs/littlefs/lfs.c
         )
 
+set(BMA421_SRC        
+        libs/bma421/bma4_defs.h
+        libs/bma421/bma4.c
+        libs/bma421/bma4.h        
+        libs/bma421/bma421_config.h
+        libs/bma421/bma421.c
+        libs/bma421/bma421.h
+        )
+
 list(APPEND IMAGE_FILES
         displayapp/icons/battery/os_battery_error.c
         displayapp/icons/battery/os_battery_100.c
@@ -370,6 +379,8 @@ list(APPEND SOURCE_FILES
         displayapp/icons/bg_img_1.c
 
         main.cpp
+        drivers/HRS3300.cpp
+        drivers/BMA421.cpp
         drivers/St7789.cpp
         drivers/FileSystem.cpp
         drivers/SpiNorFlash.cpp
@@ -378,6 +389,7 @@ list(APPEND SOURCE_FILES
         drivers/Watchdog.cpp
         drivers/DebugPins.cpp
         drivers/InternalFlash.cpp
+        components/vibration/VibrationController.cpp
         components/settings/Settings.cpp
         components/battery/BatteryController.cpp
         components/ble/BleController.cpp
@@ -491,6 +503,8 @@ set(INCLUDE_FILES
         displayapp/screens/WatchFaceMinimal.h
         displayapp/screens/WatchFaceCustom.h
 
+        drivers/HRS3300.h
+        drivers/BMA421.h
         drivers/St7789.h
         drivers/FileSystem.h
         drivers/SpiNorFlash.h
@@ -691,6 +705,18 @@ target_compile_options(littlefs PRIVATE
         $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
         )
         
+# BMA421_SRC
+add_library(bma421 STATIC ${BMA421_SRC})
+target_include_directories(bma421 SYSTEM PUBLIC . ../)
+target_include_directories(bma421 SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
+target_compile_options(bma421 PRIVATE
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
+        )
+
 
 # Build autonomous binary (without support for bootloader)
 set(EXECUTABLE_NAME "pinetime-app")
@@ -698,7 +724,7 @@ set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetime_VERSION_MAJOR}.${pinetime
 set(NRF5_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/gcc_nrf52.ld")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_FILE_NAME})
-target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs)
+target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs bma421)
 target_compile_options(${EXECUTABLE_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
@@ -729,7 +755,7 @@ set(IMAGE_MCUBOOT_FILE_NAME image-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_M
 set(DFU_FILE_NAME dfu-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.zip)
 set(NRF5_LINKER_SCRIPT_MCUBOOT "${CMAKE_SOURCE_DIR}/gcc_nrf52-mcuboot.ld")
 add_executable(${EXECUTABLE_MCUBOOT_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs)
+target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs bma421)
 set_target_properties(${EXECUTABLE_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_FILE_NAME})
 target_compile_options(${EXECUTABLE_MCUBOOT_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>

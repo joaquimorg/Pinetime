@@ -12,6 +12,9 @@
 #include "components/ble/NotificationManager.h"
 
 namespace Pinetime {
+  namespace Drivers {
+    class BMA421;
+  }
   namespace Controllers {
     class Settings;
     class Battery;
@@ -28,7 +31,8 @@ namespace Pinetime {
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
                   Controllers::NotificationManager& notificatioManager,
-                  Controllers::Settings &settingsController);
+                  Controllers::Settings &settingsController,
+                  Drivers::BMA421& stepCounter);
           
           ~WatchFaceDigital() override;
 
@@ -71,6 +75,7 @@ namespace Pinetime {
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
           Controllers::Settings& settingsController;
+          Pinetime::Drivers::BMA421& stepCounter;
       };
     }
   }

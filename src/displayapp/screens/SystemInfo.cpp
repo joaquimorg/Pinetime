@@ -8,6 +8,7 @@
 #include "components/brightness/BrightnessController.h"
 #include "components/datetime/DateTimeController.h"
 #include "drivers/Watchdog.h"
+#include "drivers/BMA421.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -16,10 +17,12 @@ SystemInfo::SystemInfo(Pinetime::Applications::DisplayApp *app,
                        Pinetime::Controllers::Battery& batteryController,
                        Pinetime::Controllers::BrightnessController& brightnessController,
                        Pinetime::Controllers::Ble& bleController,
-                       Pinetime::Drivers::WatchdogView& watchdog) :
+                       Pinetime::Drivers::WatchdogView& watchdog,
+                       Pinetime::Drivers::BMA421& stepCounter) :
         Screen(app),
         dateTimeController{dateTimeController}, batteryController{batteryController},
         brightnessController{brightnessController}, bleController{bleController}, watchdog{watchdog},
+        stepCounter{stepCounter},
         screens{app, {
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
@@ -108,8 +111,17 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
   auto& bleAddr = bleController.Address();
-  sprintf(t2, "BLE MAC: \n  %02x:%02x:%02x:%02x:%02x:%02x",
-          bleAddr[5], bleAddr[4], bleAddr[3], bleAddr[2], bleAddr[1], bleAddr[0]);
+  sprintf(t2, "BLE MAC: \n  %02x:%02x:%02x:%02x:%02x:%02x"
+              "\n"
+              "Free heap: %d"
+              "\n"
+              "Steps: %li",
+          bleAddr[5], bleAddr[4], bleAddr[3], bleAddr[2], bleAddr[1], bleAddr[0],
+          xPortGetFreeHeapSize(),
+          stepCounter.GetSteps()
+          );
+
+  
   return std::unique_ptr<Screen>(new Screens::Label(app, t2));
 }
 

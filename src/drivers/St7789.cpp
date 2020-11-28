@@ -3,6 +3,7 @@
 #include <libraries/delay/nrf_delay.h>
 #include <nrfx_log.h>
 #include "Spi.h"
+#include "board_config.h"
 
 using namespace Pinetime::Drivers;
 
@@ -14,8 +15,8 @@ St7789::St7789(Spi &spi, uint8_t pinDataCommand) : spi{spi}, pinDataCommand{pinD
 void St7789::Init() {
   spi.Init();
   nrf_gpio_cfg_output(pinDataCommand);
-  nrf_gpio_cfg_output(26);
-  nrf_gpio_pin_set(26);
+  nrf_gpio_cfg_output(LCD_RST);
+  nrf_gpio_pin_set(LCD_RST);
   HardwareReset();
   SoftwareReset();
   SleepOut();
@@ -169,9 +170,9 @@ void St7789::NextDrawBuffer(const uint8_t *data, size_t size) {
 }
 
 void St7789::HardwareReset() {
-  nrf_gpio_pin_clear(26);
+  nrf_gpio_pin_clear(LCD_RST);
   nrf_delay_ms(10);
-  nrf_gpio_pin_set(26);
+  nrf_gpio_pin_set(LCD_RST);
 }
 
 void St7789::Sleep() {

@@ -14,6 +14,7 @@ namespace Pinetime {
 
   namespace Drivers {
     class WatchdogView;
+    //class BMA421;
   }
 
   namespace Applications {
@@ -27,7 +28,8 @@ namespace Pinetime {
                               Pinetime::Controllers::Battery& batteryController,
                               Pinetime::Controllers::BrightnessController& brightnessController,
                               Pinetime::Controllers::Ble& bleController,
-                              Pinetime::Drivers::WatchdogView& watchdog);
+                              Pinetime::Drivers::WatchdogView& watchdog,
+                              Pinetime::Drivers::BMA421& stepCounter);
           ~SystemInfo() override;
           bool Refresh() override;
           bool OnButtonPushed() override;
@@ -40,6 +42,7 @@ namespace Pinetime {
           Pinetime::Controllers::BrightnessController& brightnessController;
           Pinetime::Controllers::Ble& bleController;
           Pinetime::Drivers::WatchdogView& watchdog;
+          Pinetime::Drivers::BMA421& stepCounter;
 
           char t1[200];
           char t2[200];

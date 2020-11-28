@@ -38,10 +38,10 @@
 #include "drivers/Spi.h"
 #include "drivers/SpiMaster.h"
 #include "drivers/SpiNorFlash.h"
-#include "drivers/FileSystem.h"
 #include "drivers/St7789.h"
 #include "drivers/TwiMaster.h"
 #include "drivers/Cst816s.h"
+#include "drivers/BMA421.h"
 #include "systemtask/SystemTask.h"
 
 #if NRF_LOG_ENABLED
@@ -82,8 +82,6 @@ Pinetime::Drivers::St7789 lcd {lcdSpi, LCD_DC};
 Pinetime::Drivers::Spi flashSpi {spi, FLASH_CSN};
 Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
 
-Pinetime::Drivers::FileSystem fileSystem {spiNorFlash};
-
 // The TWI device should work @ up to 400Khz but there is a HW bug which prevent it from
 // respecting correct timings. According to erratas heet, this magic value makes it run
 // at ~390Khz with correct timings.
@@ -93,6 +91,8 @@ Pinetime::Drivers::TwiMaster twiMaster{Pinetime::Drivers::TwiMaster::Modules::TW
                                                MaxTwiFrequencyWithoutHardwareBug, TWI_SDA, TWI_SCL}};
 Pinetime::Drivers::Cst816S touchPanel {twiMaster, TP_TWI_ADDR};
 Pinetime::Components::LittleVgl lvgl {lcd, touchPanel};
+
+Pinetime::Drivers::BMA421 stepCounter {twiMaster};
 
 
 TimerHandle_t debounceTimer;
@@ -109,6 +109,11 @@ Pinetime::Controllers::NotificationManager notificationManager;
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
   if(pin == TP_IRQ) {
     systemTask->OnTouchEvent();
+    return ;
+  }
+
+  if(pin == BMA421_IRQ) {
+    systemTask->OnStepEvent();
     return ;
   }
 
@@ -246,7 +251,7 @@ int main(void) {
 
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, fileSystem, twiMaster, touchPanel, lvgl, batteryController, bleController,
+  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
                                                     dateTimeController, settingsController, notificationManager));
   systemTask->Start();
   nimble_port_init();

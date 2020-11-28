@@ -13,10 +13,10 @@
 #include "components/ble/NotificationManager.h"
 #include "displayapp/DisplayApp.h"
 #include "drivers/Watchdog.h"
-#include "drivers/FileSystem.h"
 
 namespace Pinetime {
   namespace Drivers {
+    class BMA421;
     class Cst816S;
     class SpiMaster;
     class SpiNorFlash;
@@ -27,13 +27,12 @@ namespace Pinetime {
     class SystemTask {
       public:
         enum class Messages {GoToSleep, GoToRunning, OnNewTime, OnNewNotification, BleConnected,
-            BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnButtonEvent, OnDisplayTaskSleeping
+            BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnStepEvent, OnButtonEvent, OnDisplayTaskSleeping
         };
 
         SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
-                   Pinetime::Drivers::SpiNorFlash& spiNorFlash,
-                   Pinetime::Drivers::FileSystem& fileSystem,
-                   Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel,
+                   Pinetime::Drivers::SpiNorFlash& spiNorFlash,                   
+                   Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel, Drivers::BMA421& stepCounter,
                    Components::LittleVgl &lvgl,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController,
@@ -46,6 +45,7 @@ namespace Pinetime {
 
         void OnButtonPushed();
         void OnTouchEvent();
+        void OnStepEvent();
 
         void OnIdle();
 
@@ -57,9 +57,9 @@ namespace Pinetime {
         Pinetime::Drivers::SpiMaster& spi;
         Pinetime::Drivers::St7789& lcd;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
-        Pinetime::Drivers::FileSystem& fileSystem;
         Pinetime::Drivers::TwiMaster& twiMaster;
         Pinetime::Drivers::Cst816S& touchPanel;
+        Pinetime::Drivers::BMA421& stepCounter;
         Pinetime::Components::LittleVgl& lvgl;
         Pinetime::Controllers::Battery& batteryController;
         std::unique_ptr<Pinetime::Applications::DisplayApp> displayApp;

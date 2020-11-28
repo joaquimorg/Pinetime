@@ -15,6 +15,7 @@
 #include "BootloaderVersion.h"
 #include "components/ble/BleController.h"
 #include "displayapp/LittleVgl.h"
+#include "drivers/BMA421.h"
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/InternalFlash.h"
@@ -36,15 +37,15 @@ void IdleTimerCallback(TimerHandle_t xTimer) {
 
 SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        Pinetime::Drivers::SpiNorFlash& spiNorFlash,
-                       Pinetime::Drivers::FileSystem& fileSystem,
-                       Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel,
+                       Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel, Drivers::BMA421& stepCounter,
                        Components::LittleVgl &lvgl,
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController,
                        Controllers::Settings &settingsController,
                        Pinetime::Controllers::NotificationManager& notificationManager) :
-                       spi{spi}, lcd{lcd}, spiNorFlash{spiNorFlash}, fileSystem{fileSystem},
-                       twiMaster{twiMaster}, touchPanel{touchPanel}, lvgl{lvgl}, batteryController{batteryController},
+                       spi{spi}, lcd{lcd}, spiNorFlash{spiNorFlash},
+                       twiMaster{twiMaster}, touchPanel{touchPanel}, stepCounter{stepCounter},
+                       lvgl{lvgl}, batteryController{batteryController},
                        bleController{bleController}, dateTimeController{dateTimeController}, settingsController{settingsController},
                        watchdog{}, watchdogView{watchdog}, notificationManager{notificationManager},
                        nimbleController(*this, bleController,dateTimeController, notificationManager, batteryController, spiNorFlash) {
@@ -71,23 +72,26 @@ void SystemTask::Work() {
   spi.Init();
   spiNorFlash.Init();
   spiNorFlash.Wakeup();
-  fileSystem.mount();
+
   nimbleController.Init();
   nimbleController.StartAdvertising();
   lcd.Init();
 
   twiMaster.Init();
   touchPanel.Init();
+  stepCounter.Init();
+  stepCounter.Update();
   batteryController.Init();
   settingsController.Init();
 
   displayApp.reset(new Pinetime::Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController,
-                                                          dateTimeController, watchdogView, fileSystem, settingsController, *this, notificationManager));
+                                                          dateTimeController, watchdogView, settingsController, stepCounter, *this, notificationManager));
   displayApp->Start();
 
   batteryController.Update();
   displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateBatteryLevel);
 
+  // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
   nrf_gpio_cfg_output(KEY_ENABLE);
   nrf_gpio_pin_set(KEY_ENABLE);
@@ -100,7 +104,9 @@ void SystemTask::Work() {
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
 
   nrfx_gpiote_in_init(KEY_ACTION, &pinConfig, nrfx_gpiote_evt_handler);
+  //
 
+  // Touch IRQ
   nrf_gpio_cfg_sense_input(TP_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
@@ -110,6 +116,19 @@ void SystemTask::Work() {
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  //
+
+  // Step Counter IRQ
+  nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
+
+  pinConfig.skip_gpio_setup = true;
+  pinConfig.hi_accuracy = false;
+  pinConfig.is_watcher = false;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_LOTOHI;
+  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
+
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  //
 
   idleTimer = xTimerCreate ("idleTimer", idleTime, pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
@@ -121,6 +140,7 @@ void SystemTask::Work() {
     uint8_t msg;
     if (xQueueReceive(systemTasksMsgQueue, &msg, isSleeping ? 2500 : 1000)) {
       batteryController.Update();
+      stepCounter.Update();
       Messages message = static_cast<Messages >(msg);
       switch(message) {
         case Messages::GoToRunning:
@@ -240,6 +260,15 @@ void SystemTask::OnTouchEvent() {
   if(!isSleeping) {
     PushMessage(Messages::OnTouchEvent);
     displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+  }
+}
+
+void SystemTask::OnStepEvent() {
+  if(isGoingToSleep) return ;
+  NRF_LOG_INFO("[systemtask] Step event");
+  if(!isSleeping) {
+    PushMessage(Messages::OnStepEvent);
+    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);
   }
 }
 

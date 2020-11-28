@@ -4,6 +4,7 @@
 #include "BleIcon.h"
 #include "Symbols.h"
 #include "NotificationIcon.h"
+#include "drivers/BMA421.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -16,10 +17,15 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
                   Controllers::NotificationManager& notificatioManager,
-                  Controllers::Settings &settingsController) : Screen(app), currentDateTime{{}},
-                                           dateTimeController{dateTimeController}, batteryController{batteryController},
-                                           bleController{bleController}, notificatioManager{notificatioManager},
-                                           settingsController{settingsController} {
+                  Controllers::Settings &settingsController,
+                  Drivers::BMA421& stepCounter
+                  ) : Screen(app), 
+                  currentDateTime{{}},
+                  dateTimeController{dateTimeController}, batteryController{batteryController},
+                  bleController{bleController}, notificatioManager{notificatioManager},
+                  settingsController{settingsController},
+                  stepCounter{stepCounter}
+{
   settingsController.SetClockFace(0);
   sHour = 99;
   sMinute = 99;
@@ -211,7 +217,7 @@ bool WatchFaceDigital::Refresh() {
     //lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
   }
 
-  // TODO stepCount = stepController.GetValue();
+  stepCount = stepCounter.GetSteps();
   if(stepCount.IsUpdated()) {        
     lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
     //lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, -2);

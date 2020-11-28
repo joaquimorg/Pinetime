@@ -18,7 +18,7 @@ namespace Pinetime {
     class St7789;
     class Cst816S;
     class WatchdogView;
-    class FileSystem;
+    class BMA421;
   }
   namespace Controllers {
     class Settings;
@@ -35,7 +35,7 @@ namespace Pinetime {
     class DisplayApp {
       public:
         enum class States {Idle, Running};
-        enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateDateTime, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, ButtonPushed,
+        enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateDateTime, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, StepEvent, ButtonPushed,
             NewNotification, BleFirmwareUpdateStarted };
 
         enum class FullRefreshDirections { None, Up, Down };
@@ -43,9 +43,9 @@ namespace Pinetime {
 
         DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
-                   Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,
-                   Pinetime::Drivers::FileSystem& fileSystem,
+                   Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
+                   Drivers::BMA421& stepCounter,
                    System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager& notificationManager);
         void Start();
@@ -77,10 +77,11 @@ namespace Pinetime {
         Pinetime::Controllers::DateTime& dateTimeController;
         Pinetime::Controllers::Settings& settingsController;
         Pinetime::Drivers::WatchdogView& watchdog;
-        Pinetime::Drivers::FileSystem& fileSystem;
 
         Pinetime::Drivers::Cst816S& touchPanel;
         TouchEvents OnTouchEvent();
+
+        Pinetime::Drivers::BMA421& stepCounter;
 
         std::unique_ptr<Screens::Screen> currentScreen;
 

@@ -14,14 +14,14 @@ namespace Pinetime {
 
       class FileManager : public Screen{
         public:
-          FileManager(DisplayApp* app, Pinetime::Drivers::FileSystem& fs);
+          FileManager(DisplayApp* app);
           ~FileManager() override;
 
           bool Refresh() override;
           bool OnButtonPushed() override;
 
         private:
-          Pinetime::Drivers::FileSystem& fs;
+          //Pinetime::Drivers::FileSystem fs;
 
           lv_obj_t * list;
           bool running = true;

@@ -13,7 +13,7 @@ static void event_handler(lv_obj_t * obj, lv_event_t event)
 }
 
 
-FileManager::FileManager(Pinetime::Applications::DisplayApp *app, Pinetime::Drivers::FileSystem& fs) : Screen(app), fs{fs}  {
+FileManager::FileManager(Pinetime::Applications::DisplayApp *app) : Screen(app) {
   
   /*uint32_t count = fs.read();
 
@@ -34,13 +34,13 @@ FileManager::FileManager(Pinetime::Applications::DisplayApp *app, Pinetime::Driv
   struct lfs_info info = {};
   lfs_dir_t dir = {};
 
-  fs.mkdir("/config");
+  //fs.mkdir("/config");
 
-  fs.dir_open(&dir, "/");
+  //fs.dir_open(&dir, "/");
   //list_btn = lv_list_add_btn(list1, NULL , "/");  
 
   do {
-    size = fs.dir_read(&dir, &info);
+    //size = fs.dir_read(&dir, &info);
     list_btn = lv_list_add_btn(list1, NULL , info.name);
   } while ( size > 0);  
 
@@ -51,7 +51,7 @@ FileManager::FileManager(Pinetime::Applications::DisplayApp *app, Pinetime::Driv
   list_btn = lv_list_add_btn(list1, NULL , "Save");
   */
 
-  fs.dir_close(&dir);
+  //fs.dir_close(&dir);
 }
 
 FileManager::~FileManager() {
