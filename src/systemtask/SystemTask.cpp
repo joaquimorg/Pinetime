@@ -47,7 +47,8 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        twiMaster{twiMaster}, touchPanel{touchPanel}, stepCounter{stepCounter},
                        lvgl{lvgl}, batteryController{batteryController},
                        bleController{bleController}, dateTimeController{dateTimeController}, settingsController{settingsController},
-                       watchdog{}, watchdogView{watchdog}, notificationManager{notificationManager},
+                       notificationManager{notificationManager},
+                       watchdog{}, watchdogView{watchdog},
                        nimbleController(*this, bleController,dateTimeController, notificationManager, batteryController, spiNorFlash) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
 }
@@ -153,9 +154,9 @@ void SystemTask::Work() {
       Messages message = static_cast<Messages >(msg);
       switch(message) {
         case Messages::GoToRunning:
-          spi.Wakeup();
-          twiMaster.Wakeup();
-          stepCounter.Wakeup();
+          //spi.Wakeup();
+          //twiMaster.Wakeup();
+          //stepCounter.Wakeup();
 
           nimbleController.StartAdvertising();
           xTimerStart(idleTimer, 0);
@@ -207,7 +208,7 @@ void SystemTask::Work() {
           ReloadIdleTimer();
           break;
         case Messages::OnStepEvent:
-          stepCounter.Update();
+          //stepCounter.Update();
           break;
         case Messages::OnDisplayTaskSleeping:
           if(BootloaderVersion::IsValid()) {
@@ -217,9 +218,9 @@ void SystemTask::Work() {
           }
           lcd.Sleep();
           touchPanel.Sleep();
-          stepCounter.Sleep();
-          spi.Sleep();
-          twiMaster.Sleep();
+          //stepCounter.Sleep();
+          //spi.Sleep();
+          //twiMaster.Sleep();
           isSleeping = true;
           isGoingToSleep = false;
           break;
@@ -281,8 +282,9 @@ void SystemTask::OnStepEvent() {
   if(isGoingToSleep) return ;
   NRF_LOG_INFO("[systemtask] Step event");
   if(!isSleeping) {
-    PushMessage(Messages::OnStepEvent);
-    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);
+    //PushMessage(Messages::OnStepEvent);
+    //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);
+    stepCounter.Update();
   }
 }
 

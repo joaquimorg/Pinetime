@@ -53,10 +53,12 @@ void St7789::SoftwareReset() {
 
 void St7789::SleepOut() {
   WriteCommand(static_cast<uint8_t>(Commands::SleepOut));
+  nrf_delay_ms(10);
 }
 
 void St7789::SleepIn() {
   WriteCommand(static_cast<uint8_t>(Commands::SleepIn));
+  nrf_delay_ms(10);
 }
 
 void St7789::ColMod() {
@@ -177,24 +179,24 @@ void St7789::HardwareReset() {
 
 void St7789::Sleep() {
   SleepIn();
-  nrf_gpio_cfg_default(pinDataCommand);
+  //nrf_gpio_cfg_default(pinDataCommand);
   NRF_LOG_INFO("[LCD] Sleep");
 }
 
 void St7789::Wakeup() {
-  nrf_gpio_cfg_output(pinDataCommand);
+  //nrf_gpio_cfg_output(pinDataCommand);
   // TODO why do we need to reset the controller?
-  HardwareReset();
-  SoftwareReset();
+  //HardwareReset();
+  //SoftwareReset();
   SleepOut();
-  ColMod();
-  MemoryDataAccessControl();
-  ColumnAddressSet();
-  RowAddressSet();
-  DisplayInversionOn();
-  NormalModeOn();
+  //ColMod();
+  //MemoryDataAccessControl();
+  //ColumnAddressSet();
+  //RowAddressSet();
+  //DisplayInversionOn();
+  //NormalModeOn();
   VerticalScrollDefinition(0, 320, 0);
   VerticalScrollStartAddress(verticalScrollingStartAddress);
-  DisplayOn();
+  //DisplayOn();
   NRF_LOG_INFO("[LCD] Wakeup")
 }

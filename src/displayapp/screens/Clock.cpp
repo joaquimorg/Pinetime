@@ -29,14 +29,15 @@ Clock::Clock(DisplayApp* app,
         bleController{bleController}, notificatioManager{notificatioManager},
         settingsController{settingsController},
         stepCounter{stepCounter},
-        screens{app, {
+        screens{app, 
+          settingsController.GetClockFace(),
+          {
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen(); }
           },
-          Screens::ScreenListModes::LongPress,
-          settingsController.GetClockFace()
+          Screens::ScreenListModes::LongPress          
         } {
 
           settingsController.SetAppMenu(0);

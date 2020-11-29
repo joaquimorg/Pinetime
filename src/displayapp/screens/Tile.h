@@ -44,10 +44,10 @@ namespace Pinetime {
 
           lv_obj_t * iconsApps[4];
           lv_obj_t * iconsAppsLabel[4];
-          Pinetime::Applications::Apps apps[4];
 
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
+          Pinetime::Applications::Apps apps[4];
       };
     }
   }

@@ -16,13 +16,21 @@ Brightness::Brightness(Pinetime::Applications::DisplayApp *app, Controllers::Bri
   lv_obj_set_width(slider, LV_DPI * 2);
   lv_obj_align(slider, nullptr, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_event_cb(slider, slider_event_cb);
-  lv_slider_set_range(slider, 0, 2);
+  lv_slider_set_range(slider, 0, 4);
   lv_slider_set_value(slider, LevelToInt(brightness.Level()), LV_ANIM_OFF);
 
   slider_label = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(slider_label, LevelToString(brightness.Level()));
   lv_obj_set_auto_realign(slider_label, true);
   lv_obj_align(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+
+  lv_obj_t *backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  //backgroundLabel->user_data = this;
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text(backgroundLabel, "");
+
 }
 
 Brightness::~Brightness() {
@@ -42,7 +50,9 @@ const char *Brightness::LevelToString(Pinetime::Controllers::BrightnessControlle
   switch(level) {
     case Pinetime::Controllers::BrightnessController::Levels::Off: return "Off";
     case Pinetime::Controllers::BrightnessController::Levels::Low: return "Low";
+    case Pinetime::Controllers::BrightnessController::Levels::LowMedium: return "Low Medium";
     case Pinetime::Controllers::BrightnessController::Levels::Medium: return "Medium";
+    case Pinetime::Controllers::BrightnessController::Levels::MediumHigh: return "Medium High";
     case Pinetime::Controllers::BrightnessController::Levels::High: return "High";
     default : return "???";
   }
@@ -55,18 +65,21 @@ void Brightness::OnValueChanged() {
 void Brightness::SetValue(uint8_t value) {
   switch(value) {
     case 0: brightness.Set(Controllers::BrightnessController::Levels::Low); break;
-    case 1: brightness.Set(Controllers::BrightnessController::Levels::Medium); break;
-    case 2: brightness.Set(Controllers::BrightnessController::Levels::High); break;
+    case 1: brightness.Set(Controllers::BrightnessController::Levels::LowMedium); break;
+    case 2: brightness.Set(Controllers::BrightnessController::Levels::Medium); break;
+    case 3: brightness.Set(Controllers::BrightnessController::Levels::MediumHigh); break;
+    case 4: brightness.Set(Controllers::BrightnessController::Levels::High); break;
   }
   lv_label_set_text(slider_label, LevelToString(brightness.Level()));
 }
 
 uint8_t Brightness::LevelToInt(Pinetime::Controllers::BrightnessController::Levels level) {
-  switch(level) {
-    case Pinetime::Controllers::BrightnessController::Levels::Off: return 0;
+  switch(level) {    
     case Pinetime::Controllers::BrightnessController::Levels::Low: return 0;
-    case Pinetime::Controllers::BrightnessController::Levels::Medium: return 1;
-    case Pinetime::Controllers::BrightnessController::Levels::High: return 2;
+    case Pinetime::Controllers::BrightnessController::Levels::LowMedium: return 1;
+    case Pinetime::Controllers::BrightnessController::Levels::Medium: return 2;
+    case Pinetime::Controllers::BrightnessController::Levels::MediumHigh: return 3;
+    case Pinetime::Controllers::BrightnessController::Levels::High: return 4;
     default : return 0;
   }
 }

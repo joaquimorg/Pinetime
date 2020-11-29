@@ -175,7 +175,9 @@ void BMA421::Init() {
     pinConfig.output_en = BMA4_OUTPUT_ENABLE;
     pinConfig.input_en = BMA4_INPUT_DISABLE;
     //rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
-    //bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);    
+    //bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  
+
+    Sleep();  
 }
 
 /*! @brief Converts raw sensor values(LSB) to meters per seconds square.

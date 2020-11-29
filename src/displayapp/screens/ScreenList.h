@@ -15,8 +15,18 @@ namespace Pinetime {
       class ScreenList : public Screen {
         public:
 
-          ScreenList(DisplayApp* app, std::array<std::function<std::unique_ptr<Screen>()>, N>&& screens, ScreenListModes mode, uint8_t initScreen)
-          : Screen(app), screens{std::move(screens)}, current{this->screens[initScreen]()}, mode{mode} {
+          ScreenList(            
+            DisplayApp* app, 
+            uint8_t initScreen,
+            std::array<std::function<std::unique_ptr<Screen>()>, N>&& screens, 
+            ScreenListModes mode            
+          )
+          : Screen(app), 
+            initScreen{initScreen},
+            screens{std::move(screens)}, 
+            mode{mode},
+            current{this->screens[initScreen]()}
+          {
             screenIndex = initScreen;
           }
 
@@ -100,11 +110,15 @@ namespace Pinetime {
           }
 
         private:
-          bool running = true;
-          ScreenListModes mode = ScreenListModes::UpDown;
-          uint8_t screenIndex = 0;
+          
+          uint8_t initScreen = 0;
           std::array<std::function<std::unique_ptr<Screen>()>, N> screens;
+          ScreenListModes mode = ScreenListModes::UpDown;
+
+          uint8_t screenIndex = 0;          
           std::unique_ptr<Screen> current;
+
+          bool running = true;
       };
     }
   }

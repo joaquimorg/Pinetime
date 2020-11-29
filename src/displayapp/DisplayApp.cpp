@@ -103,13 +103,15 @@ void DisplayApp::Refresh() {
           brightnessController.Lower();
           vTaskDelay(100);
         }
-        lcd.DisplayOff();
-        //currentScreen->OnButtonPushed();
+        //lcd.DisplayOff();        
         systemTask.PushMessage(System::SystemTask::Messages::OnDisplayTaskSleeping);
         state = States::Idle;
+        currentScreen.reset(nullptr);
         break;
       case Messages::GoToRunning:
-        lcd.DisplayOn();
+        //lcd.DisplayOn();        
+        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));
+        onClockApp = true;
         brightnessController.Restore();
         state = States::Running;
         break;

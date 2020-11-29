@@ -79,7 +79,7 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
   }
 
   backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
-  backgroundLabel->user_data = this;
+  //backgroundLabel->user_data = this;
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);

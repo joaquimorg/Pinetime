@@ -71,11 +71,12 @@ namespace Pinetime {
         std::atomic<bool> isSleeping{false};
         std::atomic<bool> isGoingToSleep{false};
         std::atomic<bool> isWakingUp{false};
-        Pinetime::Drivers::Watchdog watchdog;
-        Pinetime::Drivers::WatchdogView watchdogView;
-        Pinetime::Controllers::NotificationManager& notificationManager;
-        Pinetime::Controllers::NimbleController nimbleController;
         Pinetime::Controllers::Settings& settingsController;
+        Pinetime::Controllers::NotificationManager& notificationManager;
+        Pinetime::Drivers::Watchdog watchdog;
+        Pinetime::Drivers::WatchdogView watchdogView;        
+        Pinetime::Controllers::NimbleController nimbleController;
+        
 
         /*
         static constexpr uint8_t pinSpiSck = 2;
