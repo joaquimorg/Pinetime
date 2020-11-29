@@ -9,6 +9,8 @@ using namespace Pinetime::Applications::Screens;
 
 Steps::Steps(Pinetime::Applications::DisplayApp *app, Pinetime::Drivers::BMA421& stepCounter) : Screen(app), stepCounter{stepCounter} {
 
+  stepCounter.Update();
+
   lirq = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(lirq, true);                      /*Enable re-coloring by commands in the text*/
   lv_label_set_text_fmt(lirq,     "IRQ #00FF00 %i#", nrf_gpio_pin_read(BMA421_IRQ)); 
@@ -42,7 +44,7 @@ Steps::Steps(Pinetime::Applications::DisplayApp *app, Pinetime::Drivers::BMA421&
   sens_data = stepCounter.GetAccel();
   lAccel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(lAccel, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_text_fmt(lAccel,       "Accel #00FF00 %.2f, %.2f, %.2f#", sens_data.x, sens_data.y, sens_data.z); 
+  lv_label_set_text_fmt(lAccel,       "Accel #00FF00 %i, %i, %i#", sens_data.x, sens_data.y, sens_data.z); 
   lv_label_set_align(lAccel, LV_LABEL_ALIGN_LEFT);
   lv_obj_align(lAccel, NULL, LV_ALIGN_IN_LEFT_MID, 10, 60);
 }
@@ -62,7 +64,7 @@ bool Steps::Refresh() {
   lv_label_set_text_fmt(lTemp,      "Temp #00FF00 %.2f#", stepCounter.GetTemp()); 
 
   sens_data = stepCounter.GetAccel();
-  lv_label_set_text_fmt(lAccel,     "Accel #00FF00 %.2f, %.2f, %.2f#", sens_data.x, sens_data.y, sens_data.z); 
+  lv_label_set_text_fmt(lAccel,     "Accel #00FF00 %i, %i, %i#", sens_data.x, sens_data.y, sens_data.z); 
   return running;
 }
 

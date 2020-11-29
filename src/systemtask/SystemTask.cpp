@@ -119,21 +119,21 @@ void SystemTask::Work() {
   //
 
   // Step Counter IRQ
-  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
+  pinConfig.sense = (nrf_gpiote_polarity_t)GPIOTE_CONFIG_POLARITY_Toggle;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
   //nrf_gpio_cfg_input(BMA421_IRQ,NRF_GPIO_PIN_NOPULL);
 
-  nrf_drv_gpiote_in_config_t inConfig = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
+  /*nrf_drv_gpiote_in_config_t inConfig = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
   inConfig.pull = NRF_GPIO_PIN_PULLUP;                                       
   nrf_drv_gpiote_in_init(BMA421_IRQ, &inConfig, nrfx_gpiote_evt_handler);
-  nrf_drv_gpiote_in_event_enable(BMA421_IRQ, true);
+  nrf_drv_gpiote_in_event_enable(BMA421_IRQ, true);*/
 
   //
 
@@ -153,6 +153,7 @@ void SystemTask::Work() {
         case Messages::GoToRunning:
           spi.Wakeup();
           twiMaster.Wakeup();
+          stepCounter.Wakeup();
 
           nimbleController.StartAdvertising();
           xTimerStart(idleTimer, 0);
@@ -213,7 +214,7 @@ void SystemTask::Work() {
           }
           lcd.Sleep();
           touchPanel.Sleep();
-
+          stepCounter.Sleep();
           spi.Sleep();
           twiMaster.Sleep();
           isSleeping = true;

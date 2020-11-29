@@ -30,8 +30,8 @@ int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length
 void user_delay(uint32_t period_us, void *intf_ptr)
 {
     //TwiMaster *twiMaster = (TwiMaster *)intf_ptr;
-    uint32_t i;
-    for(i = 0; i < (period_us * 64); i++) {}
+    //uint32_t i;
+    //for(i = 0; i < (period_us * 64); i++) {}
 }
 
 /*!
@@ -101,13 +101,9 @@ void BMA421::Init() {
     bma4_error_codes_print_result("bma4_soft_reset", rslt);
     vTaskDelay(50);
 
-    /* Sets the advance power save mode */
-    //rslt = bma4_set_advance_power_save(0x00, &bma);
-    //bma4_error_codes_print_result("bma4_set_advance_power_save", rslt);
-
     /* Upload the configuration file to enable the features of the sensor. */
-    /*rslt = bma421_write_config_file(&bma);
-    bma4_error_codes_print_result("bma421_write_config", rslt);*/
+    //rslt = bma421_write_config_file(&bma);
+    //bma4_error_codes_print_result("bma421_write_config", rslt);
 
     /* Enable the accelerometer */
     rslt = bma4_set_accel_enable(1, &bma);
@@ -150,21 +146,21 @@ void BMA421::Init() {
      * Running
      */
     /* Enable single & double tap feature */
-    rslt = bma421_feature_enable(BMA421_STEP_CNTR, 1, &bma);
+    rslt = bma421_feature_enable(BMA421_STEP_CNTR | BMA421_STEP_ACT, 1, &bma);
     bma4_error_codes_print_result("bma421_feature_enable status", rslt);
 
     /* Interrupt Mapping
      */
     //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, (BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_DOUBLE_TAP_INT | BMA421_WRIST_WEAR_INT), 1, &bma);
-    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, 1, &bma);
+    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT, 1, &bma);
     bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
 
 
     /* Set water-mark level 1 to get interrupt after 20 steps.
      * Range of step counter interrupt is 0 to 20460(resolution of 20 steps).
      */
-    //rslt = bma421_step_counter_set_watermark(1, &bma);
-    //bma4_error_codes_print_result("bma421_step_counter status", rslt);
+    rslt = bma421_step_counter_set_watermark(1, &bma);
+    bma4_error_codes_print_result("bma421_step_counter status", rslt);
 
     /* Set the interrupt mode in the sensor.
     */
@@ -178,12 +174,8 @@ void BMA421::Init() {
     pinConfig.od = BMA4_OPEN_DRAIN;
     pinConfig.output_en = BMA4_OUTPUT_ENABLE;
     pinConfig.input_en = BMA4_INPUT_DISABLE;
-    rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
-    bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);
-
-    /* Sets the advance power save mode */
-    //rslt = bma4_set_advance_power_save(0x03, &bma);
-    //bma4_error_codes_print_result("bma4_set_advance_power_save", rslt);
+    //rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
+    //bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);    
 }
 
 /*! @brief Converts raw sensor values(LSB) to meters per seconds square.
@@ -200,6 +192,20 @@ static float lsb_to_ms2(int16_t val, float g_range, uint8_t bit_width)
     float half_scale = (float)(1 << bit_width) / 2.0f;
 
     return GRAVITY_EARTH * val * g_range / half_scale;
+}
+
+void BMA421::Wakeup() {
+    uint8_t rslt;
+    /* Sets the advance power save mode */
+    rslt = bma4_set_advance_power_save(BMA4_DISABLE, &bma);
+    bma4_error_codes_print_result("bma4_set_advance_power_save", rslt);
+}
+
+void BMA421::Sleep() {
+    uint8_t rslt;
+    /* Sets the advance power save mode */
+    rslt = bma4_set_advance_power_save(0x03, &bma);
+    bma4_error_codes_print_result("bma4_set_advance_power_save", rslt);
 }
 
 void BMA421::Update() {
@@ -224,29 +230,31 @@ void BMA421::Update() {
 
     /* Read the accel data */
     rslt = bma4_read_accel_xyz(&sens_data, &bma);
-    /* Converting lsb to meters per seconds square for 12 bit accelerometer at 2G range */
-    /*accelData.x = lsb_to_ms2(sens_data.x, 2, bma.resolution);
-    accelData.y = lsb_to_ms2(sens_data.y, 2, bma.resolution);
-    accelData.z = lsb_to_ms2(sens_data.z, 2, bma.resolution);*/
 
-    accelData = sens_data;
+    /* Converting lsb to meters per seconds square for 12 bit accelerometer at 2G range */
+    // pinetime has 90° rotated Accl
+    accelData.y = lsb_to_ms2(sens_data.x, 2, bma.resolution);
+    accelData.x = lsb_to_ms2(sens_data.y, 2, bma.resolution);
+    accelData.z = lsb_to_ms2(sens_data.z, 2, bma.resolution);
+
+    //accelData = sens_data;
 
     /* Read the interrupt register */
-    //rslt = bma421_read_int_status(&int_status, &bma);
-    //bma4_error_codes_print_result("bma421_read_int_status status", rslt);    
+    rslt = bma421_read_int_status(&int_status, &bma);
+    bma4_error_codes_print_result("bma421_read_int_status status", rslt);    
 
     /* Check if step counter interrupt is triggered */
-    //if (int_status & BMA421_STEP_CNTR_INT)
-    //{
+    if (int_status & BMA421_STEP_CNTR_INT)
+    {
         rslt = bma421_step_counter_output(&step_out, &bma);
         bma4_error_codes_print_result("bma421_step_counter_output status", rslt);
 
         step_count = step_out;
-    //}
+    }
 
     /* An interrupt is set if any activity is recognized  */
-    //if (int_status & BMA421_ACTIVITY_INT)
-    //{
+    if (int_status & BMA421_ACTIVITY_INT)
+    {
         /* Read activity output register for recognizing specific activity */
         rslt = bma421_activity_output(&activity_out, &bma);
         bma4_error_codes_print_result("bma421_activity_output status", rslt);
@@ -270,9 +278,9 @@ void BMA421::Update() {
                 break;
         }
 
-    //}
+    }
 
-    /*if (int_status & BMA421_SINGLE_TAP_INT)
+    if (int_status & BMA421_SINGLE_TAP_INT)
     {
         //printf("Single tap received\n");
         tapStatus = 1;
@@ -286,7 +294,7 @@ void BMA421::Update() {
         //printf("WRIST Tilt\n");
         tapStatus = 3;
     } else {
-        tapStatus = 0;
-    }*/
+        tapStatus = int_status;
+    }
 
 }

@@ -19,6 +19,9 @@ namespace Pinetime {
             void Init();
             void Update();
 
+            void Wakeup();
+            void Sleep();
+
             uint32_t GetSteps() const { return step_count; };
             uint8_t GetActivity() const { return activity; };
             uint8_t GetTapStatus() const { return tapStatus; };
