@@ -7,6 +7,7 @@
 #include <timers.h>
 
 #include "SystemMonitor.h"
+#include "components/vibration/VibrationController.h"
 #include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/NimbleController.h"
@@ -53,6 +54,7 @@ namespace Pinetime {
 
       private:
         TaskHandle_t taskHandle;
+        Pinetime::Controllers::VibrationController vibration;
 
         Pinetime::Drivers::SpiMaster& spi;
         Pinetime::Drivers::St7789& lcd;

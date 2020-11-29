@@ -244,17 +244,17 @@ void BMA421::Update() {
     bma4_error_codes_print_result("bma421_read_int_status status", rslt);    
 
     /* Check if step counter interrupt is triggered */
-    if (int_status & BMA421_STEP_CNTR_INT)
-    {
+    //if (int_status & BMA421_STEP_CNTR_INT)
+    //{
         rslt = bma421_step_counter_output(&step_out, &bma);
         bma4_error_codes_print_result("bma421_step_counter_output status", rslt);
 
         step_count = step_out;
-    }
+    //}
 
     /* An interrupt is set if any activity is recognized  */
-    if (int_status & BMA421_ACTIVITY_INT)
-    {
+    //if (int_status & BMA421_ACTIVITY_INT)
+    //{
         /* Read activity output register for recognizing specific activity */
         rslt = bma421_activity_output(&activity_out, &bma);
         bma4_error_codes_print_result("bma421_activity_output status", rslt);
@@ -278,7 +278,7 @@ void BMA421::Update() {
                 break;
         }
 
-    }
+    //}
 
     if (int_status & BMA421_SINGLE_TAP_INT)
     {

@@ -41,7 +41,7 @@ namespace Pinetime {
         enum class FullRefreshDirections { None, Up, Down };
         enum class TouchModes { Gestures, Polling };
 
-        DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &,
+        DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &touchPanel,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
@@ -57,44 +57,41 @@ namespace Pinetime {
         void SetTouchMode(TouchModes mode);
 
       private:
-        TaskHandle_t taskHandle;
-        static void Process(void* instance);
-        void InitHw();
+
         Pinetime::Drivers::St7789& lcd;
         Pinetime::Components::LittleVgl& lvgl;
-        void Refresh();
-
-        States state = States::Running;
-        void RunningState();
-        void IdleState();
-        QueueHandle_t msgQueue;
-
-        static constexpr uint8_t queueSize = 10;
-        static constexpr uint8_t itemSize = 1;
-
+        Pinetime::Drivers::Cst816S& touchPanel;
         Pinetime::Controllers::Battery &batteryController;
         Pinetime::Controllers::Ble &bleController;
         Pinetime::Controllers::DateTime& dateTimeController;
-        Pinetime::Controllers::Settings& settingsController;
         Pinetime::Drivers::WatchdogView& watchdog;
-
-        Pinetime::Drivers::Cst816S& touchPanel;
-        TouchEvents OnTouchEvent();
-
+        Pinetime::Controllers::Settings& settingsController;
         Pinetime::Drivers::BMA421& stepCounter;
-
+        Pinetime::System::SystemTask& systemTask;
+        Pinetime::Controllers::NotificationManager& notificationManager;
         std::unique_ptr<Screens::Screen> currentScreen;
 
-        //bool isClock = true; -- not used !
+        Pinetime::Controllers::FirmwareValidator validator;
+        Controllers::BrightnessController brightnessController;
 
-        Pinetime::System::SystemTask& systemTask;
+
+        TaskHandle_t taskHandle;
+        States state = States::Running;
+        QueueHandle_t msgQueue;
+        static constexpr uint8_t queueSize = 10;
+        static constexpr uint8_t itemSize = 1;
+        
         Apps nextApp = Apps::None;
         bool onClockApp = false; // TODO find a better way to know that we should handle gestures and button differently for the Clock app.
-        Controllers::BrightnessController brightnessController;
-        //std::unique_ptr<Screens::Modal> modal;
-        Pinetime::Controllers::NotificationManager& notificationManager;
-        Pinetime::Controllers::FirmwareValidator validator;
         TouchModes touchMode = TouchModes::Gestures;
+
+        static void Process(void* instance);
+        void InitHw();
+        void Refresh();
+        void RunningState();
+        void IdleState();
+        TouchEvents OnTouchEvent();        
+                
     };
   }
 }

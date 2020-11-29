@@ -14,7 +14,8 @@ extern "C" {
 LV_FONT_DECLARE(lv_font_clock_90)
 LV_FONT_DECLARE(lv_font_clock_76)
 LV_FONT_DECLARE(lv_font_clock_42)
-LV_FONT_DECLARE(lv_font_montserrat_20)
+//LV_FONT_DECLARE(lv_font_montserrat_20)
+LV_FONT_DECLARE(lv_font_montserrat_18)
 }
 
 lv_style_t* LabelStyle90 = nullptr;
@@ -327,7 +328,7 @@ void LittleVgl::InitTheme() {
   //InitThemePage();
   //InitThemeTextArea();
   //InitThemeSpinBox();
-  //InitThemeList();
+  InitThemeList();
   //InitThemeDropDownList();
   //InitThemeRoller();
   //InitThemeTabView();
@@ -340,7 +341,7 @@ void LittleVgl::InitTheme() {
 
 void LittleVgl::InitBaseTheme() {
   //if(font == nullptr) font = &jetbrains_mono_bold_20;
-  if(font == nullptr) font = &lv_font_montserrat_20;  
+  if(font == nullptr) font = &lv_font_montserrat_18;  
   lv_style_copy(&def, &lv_style_plain); /*Initialize the default style*/
   def.text.font = font;
 

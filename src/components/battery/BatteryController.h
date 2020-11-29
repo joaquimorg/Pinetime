@@ -13,6 +13,8 @@ namespace Pinetime {
         bool IsCharging() const { return isCharging; }
         bool IsPowerPresent() const { return isPowerPresent; }
 
+        void TurnOff();
+
       private:
         //static constexpr uint32_t chargingPin = 12;
         //static constexpr uint32_t powerPresentPin = 19;

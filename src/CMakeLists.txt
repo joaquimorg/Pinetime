@@ -421,6 +421,7 @@ list(APPEND SOURCE_FILES
         #Fonts
         #displayapp/fonts/jetbrains_mono_extrabold_compressed.c
         #displayapp/fonts/jetbrains_mono_bold_20.c
+        displayapp/fonts/lv_font_montserrat_18.c
         displayapp/fonts/lv_font_montserrat_20.c
         displayapp/fonts/lv_font_clock_90.c
         displayapp/fonts/lv_font_clock_76.c

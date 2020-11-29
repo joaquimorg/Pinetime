@@ -35,16 +35,17 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
                        Pinetime::Controllers::NotificationManager& notificationManager) :
         lcd{lcd},
         lvgl{lvgl},
+        touchPanel{touchPanel},
         batteryController{batteryController},
         bleController{bleController},
         dateTimeController{dateTimeController},
         watchdog{watchdog},        
         settingsController{settingsController},
         stepCounter{stepCounter},
-        touchPanel{touchPanel},
-        currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) },
         systemTask{systemTask},
-        notificationManager{notificationManager} {
+        notificationManager{notificationManager},
+        currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) }        
+{
   msgQueue = xQueueCreate(queueSize, itemSize);
   onClockApp = true;
   //modal.reset(new Screens::Modal(this));
@@ -111,6 +112,9 @@ void DisplayApp::Refresh() {
         lcd.DisplayOn();
         brightnessController.Restore();
         state = States::Running;
+        break;
+       case Messages::StepEvent:
+
         break;
       case Messages::UpdateDateTime:
 //        modal->Show();
@@ -228,7 +232,7 @@ void DisplayApp::RunningState() {
       case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
       case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
-      case Apps::Settings: currentScreen.reset(new Screens::Settings(this)); break;
+      case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter)); break;
     }
     nextApp = Apps::None;

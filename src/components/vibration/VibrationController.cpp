@@ -8,13 +8,13 @@ using namespace Pinetime::Controllers;
 
 void VibrationController::Init() {
     nrf_gpio_cfg_output(VIBRATOR_CTRL);
-    nrf_gpio_pin_clear(VIBRATOR_CTRL);
+    nrf_gpio_pin_set(VIBRATOR_CTRL);
 
-    Vibrate(100);
+    Vibrate(25);
 }
 
 void VibrationController::Vibrate(uint8_t durationMs) {
-    nrf_gpio_pin_set(VIBRATOR_CTRL);
-    vTaskDelay(durationMs);
     nrf_gpio_pin_clear(VIBRATOR_CTRL);
+    vTaskDelay(durationMs);
+    nrf_gpio_pin_set(VIBRATOR_CTRL);
 }

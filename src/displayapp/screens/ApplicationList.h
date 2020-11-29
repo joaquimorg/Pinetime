@@ -19,14 +19,17 @@ namespace Pinetime {
           bool OnButtonPushed() override;
           bool OnTouchEvent(TouchEvents event) override;
         private:
-          bool running = true;
+
+          ScreenList<3> screens;
+
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
 
-          ScreenList<3> screens;
           std::unique_ptr<Screen> CreateScreen1();
           std::unique_ptr<Screen> CreateScreen2();
           std::unique_ptr<Screen> CreateScreen3();
+
+          bool running = true;          
       };
     }
   }

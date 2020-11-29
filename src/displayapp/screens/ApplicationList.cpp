@@ -27,6 +27,7 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
         Pinetime::Controllers::DateTime& dateTimeController,
         Pinetime::Controllers::Settings &settingsController) :
         Screen(app),
+        dateTimeController{dateTimeController},
         settingsController{settingsController},
         screens{app, {
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
@@ -35,9 +36,8 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
           },
           Screens::ScreenListModes::UpDown,
           settingsController.GetAppMenu()
-        },
-        dateTimeController{dateTimeController}
-        {}
+        }        
+{}
 
 
 ApplicationList::~ApplicationList() {
@@ -65,7 +65,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
           {                        
             {&icon_settings,    "Settings",       Apps::Settings},
             {&icon_information, "Sysinfo",        Apps::SysInfo},            
-            {&icon_phone,       "Notifications",  Apps::Notifications},
+            {&icon_phone,       "Notification",  Apps::Notifications},
             {&icon_brightness,  "Brightness",     Apps::Brightness}
           }
 

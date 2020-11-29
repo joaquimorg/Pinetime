@@ -66,6 +66,13 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
       temp_btnm_ext_t * ext = static_cast<temp_btnm_ext_t *>(lv_obj_get_ext_attr(iconsApps[appIndex]));
       ext->appNumber = appIndex;
 
+      iconsAppsLabel[appIndex] = lv_label_create(lv_scr_act(), NULL);
+      lv_label_set_long_mode(iconsAppsLabel[appIndex], LV_LABEL_LONG_SROLL);
+      lv_obj_set_width(iconsAppsLabel[appIndex], 105);      
+      lv_label_set_text(iconsAppsLabel[appIndex], applications[i].name);
+      lv_label_set_align(iconsAppsLabel[appIndex], LV_LABEL_ALIGN_CENTER );
+      lv_obj_align(iconsAppsLabel[appIndex], iconsApps[appIndex], LV_ALIGN_IN_BOTTOM_MID, 0, 25);
+
       apps[appIndex] = applications[i].application;
       appIndex++;
     }

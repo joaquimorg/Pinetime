@@ -7,6 +7,10 @@
 using namespace Pinetime::Controllers;
 
 void Battery::Init() {
+
+  nrf_gpio_cfg_output(PWR_CTRL);
+  nrf_gpio_pin_clear(PWR_CTRL);
+
   nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
   nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
 
@@ -45,4 +49,9 @@ void Battery::Update() {
 
 void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * event) {
 
+}
+
+
+void Battery::TurnOff() {
+  nrf_gpio_pin_set(PWR_CTRL);
 }

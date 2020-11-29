@@ -139,6 +139,8 @@ void SystemTask::Work() {
 
   idleTimer = xTimerCreate ("idleTimer", idleTime, pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
+  
+  vibration.Init();
 
   // Suppress endless loop diagnostic
   #pragma clang diagnostic push
@@ -179,6 +181,7 @@ void SystemTask::Work() {
           break;
         case Messages::OnNewNotification:
           if(isSleeping && !isWakingUp) GoToRunning();
+          vibration.Vibrate(25);
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::NewNotification);
           break;
         case Messages::BleConnected:
