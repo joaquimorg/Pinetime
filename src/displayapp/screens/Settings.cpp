@@ -5,6 +5,7 @@
 #include "board_config.h"
 #include <libraries/gpiote/app_gpiote.h>
 #include "components/battery/BatteryController.h"
+#include <mdk/nrf.h>
 
 using namespace Pinetime::Applications::Screens;
 
@@ -18,7 +19,12 @@ namespace {
 
 }
 
-Settings::Settings(Pinetime::Applications::DisplayApp *app, Controllers::Battery& batteryController) : Screen(app), batteryController{batteryController} {
+Settings::Settings(
+  Pinetime::Applications::DisplayApp *app, 
+  Controllers::Battery& batteryController) : 
+  Screen(app), 
+  batteryController{batteryController}
+{
 
   llabel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(llabel, true);                      /*Enable re-coloring by commands in the text*/
@@ -26,14 +32,14 @@ Settings::Settings(Pinetime::Applications::DisplayApp *app, Controllers::Battery
   lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 0);
 
-  /*buttonPwrOff = lv_btn_create(lv_scr_act(), nullptr);
+  buttonPwrOff = lv_btn_create(lv_scr_act(), nullptr);
   buttonPwrOff->user_data = this;
   lv_obj_align(buttonPwrOff, nullptr, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
   lv_obj_set_event_cb(buttonPwrOff, ButtonEventHandler);
 
   lv_obj_t* labelButtonPwrOff = lv_label_create(buttonPwrOff, nullptr);
   lv_label_set_recolor(labelButtonPwrOff, true);
-  lv_label_set_text(labelButtonPwrOff, "#ff0000 Power Off#");*/
+  lv_label_set_text(labelButtonPwrOff, "#ff0000 Reset#");
 
 }
 
@@ -54,6 +60,6 @@ bool Settings::OnButtonPushed() {
 
 void Settings::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
   if(object == buttonPwrOff && event == LV_EVENT_PRESSED) {
-    batteryController.TurnOff();
+    NVIC_SystemReset();
   }
 }

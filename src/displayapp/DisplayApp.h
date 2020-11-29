@@ -20,6 +20,7 @@ namespace Pinetime {
     class WatchdogView;
     class BMA421;
   }
+  
   namespace Controllers {
     class Settings;
     class Battery;

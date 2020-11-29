@@ -8,6 +8,10 @@
 
 namespace Pinetime {
 
+  namespace Drivers {
+    class WatchdogView;
+    class BMA421;
+  }
   namespace Controllers {
     class Battery;
     class BrightnessController;
