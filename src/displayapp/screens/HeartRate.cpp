@@ -10,7 +10,7 @@ LV_IMG_DECLARE(icon_heart_rate);
 extern lv_style_t* LabelStyle42;
 
 HeartRate::HeartRate(
-  Pinetime::Applications::DisplayApp *app, Drivers::HRS3300 &hrs, Controllers::Settings &settingsController,) : 
+  Pinetime::Applications::DisplayApp *app, Drivers::HRS3300 &hrs, Controllers::Settings &settingsController) : 
   Screen(app),
   hrs{hrs},
   settingsController{settingsController}
