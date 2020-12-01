@@ -3,9 +3,10 @@
 
 #include <stdint.h>
 
-#ifndef bool
-#define bool unsigned char
-#endif
+//#ifndef bool
+//#define bool unsigned char
+//#endif
+
 #define WHO_AM_3300 0x21
 typedef enum
 {

@@ -50,7 +50,7 @@ namespace Pinetime {
           DirtyValue<bool> bleState {false};
           DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
           DirtyValue<uint32_t> stepCount  {0};
-          DirtyValue<uint8_t> heartbeat  {0};
+          //DirtyValue<uint8_t> heartbeat  {0};
           DirtyValue<bool> notificationState {false};
 
           lv_style_t ble_style;

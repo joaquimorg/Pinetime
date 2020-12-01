@@ -6,27 +6,39 @@
 
 using namespace Pinetime::Applications::Screens;
 
+LV_IMG_DECLARE(icon_heart_rate);
+extern lv_style_t* LabelStyle42;
 
 HeartRate::HeartRate(
-  Pinetime::Applications::DisplayApp *app, Drivers::HRS3300& hrs) : 
+  Pinetime::Applications::DisplayApp *app, Drivers::HRS3300 &hrs, Controllers::Settings &settingsController,) : 
   Screen(app),
-  hrs{hrs}
+  hrs{hrs},
+  settingsController{settingsController}
 {
 
   hrs.SetEnable(Drivers::HRS3300::HRS_ENABLE,
-                 Drivers::HRS3300::HRS_WAIT_TIME_400ms);
+                 Drivers::HRS3300::HRS_WAIT_TIME_75ms);
 
   llabel = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(llabel, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_text_fmt(llabel, "#0000FF Screen# %s", "Heart Rate"); 
+  lv_label_set_recolor(llabel, true);                     
+  lv_label_set_text_fmt(llabel, "#00FF00 %s#", "Heart Rate"); 
   lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, -50);
+  lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 60);
+
+  lv_obj_t * heart_rate = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(heart_rate, &icon_heart_rate);
+  lv_obj_align(heart_rate, NULL, LV_ALIGN_CENTER, 0, -45);
+
+  static lv_style_t heart_rate_style;
+  lv_style_copy(&heart_rate_style, LabelStyle42);
+  heart_rate_style.text.color = lv_color_hex(0xFF0000);  
+
 
   lhrs = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(lhrs, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_text_fmt(lhrs, "#00FF00 H.RateS # %i\n#0000FF A.LightS # %i\n#FF0000 H.Rate # %i", 0, 0, 0); 
+  lv_label_set_style(lhrs, LV_LABEL_STYLE_MAIN, &heart_rate_style);
+  lv_label_set_text(lhrs, "--"); 
   lv_label_set_align(lhrs, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(lhrs, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(lhrs, NULL, LV_ALIGN_CENTER, 0, 20);
 
 }
 
@@ -38,10 +50,17 @@ HeartRate::~HeartRate() {
 
 bool HeartRate::Refresh() {
 
-  uint32_t hrs_val = hrs.ReadHeartRateSensor();
-  uint32_t als_val = hrs.ReadAmbientLightSensor();  
-  uint8_t hrv = hrs.GetHeartRate();
-  lv_label_set_text_fmt(lhrs, "#00FF00 H.RateS # %i\n#0000FF A.LightS # %i\n#FF0000 H.Rate # %i", hrs_val, als_val, hrv); 
+  uint8_t hrv = hrs.ReadHeartRate(); // If 0 read ok
+  heartRate = hrs.GetHeartRate(); // heartRate.hr_result
+  
+  if ( hrv == 251 ) {
+    lv_label_set_text_fmt(lhrs, "%02i", heartRate.hr_result); 
+    settingsController.SetHeartRate( heartRate.hr_result );
+  } else
+    lv_label_set_text(lhrs, "--"); 
+
+  //lv_label_set_align(lhrs, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(lhrs, NULL, LV_ALIGN_CENTER, 0, 20);
 
   return running;
 }

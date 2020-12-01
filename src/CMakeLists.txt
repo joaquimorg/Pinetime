@@ -318,6 +318,8 @@ set(HRS3300_SRC
         libs/hrs3300/hrs3300_reg_init.h
         libs/hrs3300/hrs3300.h
         libs/hrs3300/hrs3300.c
+        #libs/hrs3300/HRS3300lib.h
+        #libs/hrs3300/HRS3300lib.cpp
         )
         
 

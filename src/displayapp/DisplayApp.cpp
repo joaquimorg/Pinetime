@@ -32,10 +32,10 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                       
                        Controllers::Settings &settingsController,
-                       Drivers::BMA421& stepCounter,
-                       Drivers::HRS3300& hrs,
+                       Drivers::BMA421 &stepCounter,
+                       Drivers::HRS3300 &hrs,
                        System::SystemTask &systemTask,
-                       Pinetime::Controllers::NotificationManager& notificationManager) :
+                       Pinetime::Controllers::NotificationManager &notificationManager) :
         lcd{lcd},
         lvgl{lvgl},
         touchPanel{touchPanel},
@@ -238,7 +238,7 @@ void DisplayApp::RunningState() {
       case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter)); break;
-      case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs)); break;
+      case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController)); break;
 
       // To Do :-)
       case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;

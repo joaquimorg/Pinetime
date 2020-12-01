@@ -2,6 +2,7 @@
 
 #include "TwiMaster.h"
 #include "board_config.h"
+#include "hrs3300/hrs3300.h"
 
 #define HRS3300_I2C_ADDRESS HR_TWI_ADDR
 #define HRS3300_DEVICE_ID 0x21
@@ -93,11 +94,16 @@ namespace Pinetime {
           uint16_t ReadHeartRateSensor();
           uint16_t ReadAmbientLightSensor();
 
-          uint8_t  GetHeartRate();
+          uint8_t  ReadHeartRate();
+
+          hrs3300_results_t GetHeartRate() const { return heartRate; };
+
 
         private:
 
           TwiMaster& twiMaster;
+
+          hrs3300_results_t heartRate = {};
 
           uint16_t i2c_reg_write(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
           uint16_t i2c_reg_read(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);

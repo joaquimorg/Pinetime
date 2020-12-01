@@ -102,7 +102,11 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -50, -2);
 
   heartbeatValue = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text(heartbeatValue, "0");
+  if ( settingsController.GetHeartRate() == 0 )
+    lv_label_set_text(heartbeatValue, "--");
+  else
+    lv_label_set_text_fmt(heartbeatValue, "%02i", settingsController.GetHeartRate());
+
   lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
 
   /*heartbeatBpm = lv_label_create(lv_scr_act(), nullptr);
@@ -210,12 +214,12 @@ bool WatchFaceDigital::Refresh() {
   }
 
   // TODO heartbeat = heartBeatController.GetValue();
-  if(heartbeat.IsUpdated()) {    
+  /*if(heartbeat.IsUpdated()) {    
     lv_label_set_text_fmt(heartbeatValue, "%d", heartbeat.Get());
     //lv_obj_align(heartbeatIcon, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 5, -2);
     //lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
     //lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
-  }
+  }*/
 
   stepCount = stepCounter.GetSteps();
   if(stepCount.IsUpdated()) {        

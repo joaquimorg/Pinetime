@@ -47,10 +47,10 @@ namespace Pinetime {
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
-                   Drivers::BMA421& stepCounter,
-                   Drivers::HRS3300& hrs,
+                   Drivers::BMA421 &stepCounter,
+                   Drivers::HRS3300 &hrs,
                    System::SystemTask &systemTask,
-                   Pinetime::Controllers::NotificationManager& notificationManager);
+                   Pinetime::Controllers::NotificationManager &notificationManager);
         void Start();
         void PushMessage(Messages msg);
 
