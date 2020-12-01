@@ -18,6 +18,11 @@ extern "C" { int __hardfp_sqrt(int f){ return sqrt(f); } }
 
 using namespace Pinetime::Drivers;
 
+void HRSTimerCallback(TimerHandle_t xTimer) {
+
+  auto hrs3300 = static_cast<HRS3300 *>(pvTimerGetTimerID(xTimer));
+  hrs3300->HRReading();
+}
 
 HRS3300::HRS3300(TwiMaster &twiMaster) : twiMaster{twiMaster} {}
 
@@ -40,6 +45,9 @@ void HRS3300::Init()
     SetAdcResolution();
     SetHrsGain();
 
+    hrTimer = xTimerCreate ("hrTimer", pdMS_TO_TICKS( 45 ), pdTRUE, this, HRSTimerCallback);
+    //xTimerStart(hrTimer, 0);
+
 }
 
 void HRS3300::SetEnable(enum HRS_ENABLE_DISABLE enable,
@@ -59,11 +67,16 @@ void HRS3300::SetEnable(enum HRS_ENABLE_DISABLE enable,
     charbuf = charbuf | 1 << 3; // This bit is set by default. Not sure if it needs to be set.
     i2c_reg_write(HRS3300_REG_PDRIVER, &charbuf, 1);
 
-    if ( enable == HRS_ENABLE)
+    if ( enable == HRS_ENABLE) {
         Hrs3300_alg_open();
-    else
+        Hrs3300_bp_alg_open();
+        xTimerStart(hrTimer, 0);
+    } else {
+        xTimerStop(hrTimer, 0);
         Hrs3300_alg_close();
+    }
 
+    timer_index = 0;
 }
 
 void HRS3300::SetAdcResolution(enum ADC_RESOLUTION resolution)
@@ -113,51 +126,85 @@ uint16_t  HRS3300::ReadAmbientLightSensor()
 uint8_t HRS3300::ReadHeartRate() {
 
     int16_t new_raw_data, als_raw_data;
-    hrs3300_results_t alg_results;    
+    hrs3300_results_t       alg_results;
+    //hrs3300_bp_results_t	bp_alg_results;
     
-    static uint16_t timer_index = 0;
+    //static uint16_t timer_index = 0;
 
     new_raw_data = ReadHeartRateSensor();
     als_raw_data = ReadAmbientLightSensor();
 
     Hrs3300_alg_send_data(new_raw_data, als_raw_data, 0, 0, 0, 0);
 
-    //timer_index++;
-    //if (timer_index >= 25)
-    //{
+    timer_index++;
+    if (timer_index >= 25)
+    {
         timer_index = 0;
         alg_results = Hrs3300_alg_get_results();
 
-        switch (alg_results.alg_status)
+        /*
+            MSG_ALG_NOT_OPEN        = 0x01
+            MSG_NO_TOUCH            = 0x02
+            MSG_PPG_LEN_TOO_SHORT   = 0x03
+            MSG_HR_READY            = 0x04
+            MSG_ALG_TIMEOUT         = 0x05
+            MSG_SETTLE              = 0x06
+        */
+
+        if (alg_results.alg_status == MSG_HR_READY)
         {
-            case MSG_ALG_NOT_OPEN:
-                return 254;
-                break;
-            case MSG_NO_TOUCH:
-                return 253;
-                break;
-            case MSG_PPG_LEN_TOO_SHORT:
-                return 252;
-                break;
-            case MSG_HR_READY:
-                heartRate = alg_results;
-                return 251;
-                break;
-            case MSG_ALG_TIMEOUT:
-                return 250;
-                break;
-            case MSG_SETTLE:
-                return 249;
-                break;
+            heartRate = alg_results.hr_result;
+
+            // Not working .... :(
+            //Hrs3300_bp_alg_send_data(new_raw_data);
+            //bp_alg_results = Hrs3300_alg_get_bp_results();
+
+            /*
+                MSG_BP_ALG_NOT_OPEN      = 0x01
+                MSG_BP_NO_TOUCH          = 0x02
+                MSG_BP_PPG_LEN_TOO_SHORT = 0x03
+                MSG_BP_READY             = 0x04
+                MSG_BP_ALG_TIMEOUT       = 0x05
+                MSG_BP_SETTLE            = 0x06
+            */
+            /*
+            if (bp_alg_results.bp_alg_status == MSG_BP_READY) 
+            {
+                bpHigh = bp_alg_results.sbp;
+                bpLow  = bp_alg_results.dbp;
+
+            } else {
+                return 230 + bp_alg_results.bp_alg_status;
+            }
+            */
             
-            default:
-                break;
+            return 240 + alg_results.alg_status;
+
+        } else {
+            return 240 + alg_results.alg_status;
         }
 
-    //}
-
-
+    }
     return 255;
+}
+
+void HRS3300::HRReading() {
+    
+    heartRateStatus = ReadHeartRate();
+    if ( heartRateStatus == 244 ) {
+      xTimerStop(hrTimer, 0);
+      for (uint8_t i = 1; i < 8; i++)
+      {
+        heartRateHistory[i - 1] = heartRateHistory[i];
+      }
+      heartRateHistory[7] = heartRate;
+    } else if ( heartRateStatus == 245 ) {
+      xTimerStop(hrTimer, 0);
+    } else if ( heartRateStatus == 246 ) {
+      xTimerStop(hrTimer, 0);
+    } else {
+      
+    }
 }
 
 /* --------------------------------------------------------------- */
@@ -190,7 +237,8 @@ void Hrs3300_write_reg(uint8_t addr, uint8_t data)
 
 uint8_t Hrs3300_read_reg(uint8_t addr) 
 {
-   uint8_t reg_temp;
+   //uint8_t reg_temp;
    //_i2c_read(0x44, addr, &reg_temp, 1);
-   return reg_temp;
+   //return reg_temp;
+   return 0;
 }

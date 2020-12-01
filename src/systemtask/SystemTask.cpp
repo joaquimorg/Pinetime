@@ -142,7 +142,7 @@ void SystemTask::Work() {
 
   //
 
-  idleTimer = xTimerCreate ("idleTimer", idleTime, pdFALSE, this, IdleTimerCallback);
+  idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(idleTime), pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
   
   vibration.Init();
@@ -209,6 +209,9 @@ void SystemTask::Work() {
           ReloadIdleTimer();
           break;
         case Messages::OnButtonEvent:
+          ReloadIdleTimer();
+          break;
+        case Messages::ReloadIdleTimer:
           ReloadIdleTimer();
           break;
         case Messages::OnStepEvent:

@@ -269,8 +269,8 @@ set(LVGL_SRC
         libs/lvgl/src/lv_objx/lv_tileview.h
         libs/lvgl/src/lv_objx/lv_ta.c
         libs/lvgl/src/lv_objx/lv_ta.h
-        #libs/lvgl/src/lv_objx/lv_tabview.c
-        #libs/lvgl/src/lv_objx/lv_tabview.h
+        libs/lvgl/src/lv_objx/lv_chart.c
+        libs/lvgl/src/lv_objx/lv_chart.h
         libs/lvgl/src/lv_objx/lv_btnm.c
         libs/lvgl/src/lv_objx/lv_btnm.h
         libs/lvgl/src/lv_objx/lv_page.c

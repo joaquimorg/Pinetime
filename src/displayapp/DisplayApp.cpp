@@ -238,7 +238,7 @@ void DisplayApp::RunningState() {
       case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter)); break;
-      case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController)); break;
+      case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
 
       // To Do :-)
       case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;

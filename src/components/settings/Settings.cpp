@@ -4,7 +4,7 @@ using namespace Pinetime::Controllers;
 
 void Settings::Init() {
     // default Clock face
-    clockFace = 1;
+    clockFace = 0;
 }
 
 void Settings::SetClockFace( uint8_t face ) {

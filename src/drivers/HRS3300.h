@@ -1,5 +1,7 @@
 #pragma once
 
+#include <FreeRTOS.h>
+#include <timers.h>
 #include "TwiMaster.h"
 #include "board_config.h"
 #include "hrs3300/hrs3300.h"
@@ -93,17 +95,32 @@ namespace Pinetime {
           void SetHrsGain(enum HRS_GAIN gain = HRS_GAIN_64x);
           uint16_t ReadHeartRateSensor();
           uint16_t ReadAmbientLightSensor();
+          
+          void HRReading();
 
-          uint8_t  ReadHeartRate();
+          uint8_t GetHeartRate() const { return heartRate; };
+          uint8_t GetBPHigh() const { return bpHigh; };
+          uint8_t GetBPLow() const { return bpLow; };
 
-          hrs3300_results_t GetHeartRate() const { return heartRate; };
+          uint8_t GetStatus() const { return heartRateStatus; };
+          uint8_t GetHistory( uint8_t pos ) const { return heartRateHistory[pos]; };
 
 
         private:
 
           TwiMaster& twiMaster;
 
-          hrs3300_results_t heartRate = {};
+          uint8_t heartRate = 0;
+          uint8_t bpHigh = 0;
+          uint8_t bpLow = 0;
+          uint8_t heartRateStatus = 255;
+
+          uint8_t heartRateHistory[8] = {0};
+
+          uint16_t timer_index = 0;
+          TimerHandle_t hrTimer;
+
+          uint8_t ReadHeartRate();
 
           uint16_t i2c_reg_write(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
           uint16_t i2c_reg_read(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
