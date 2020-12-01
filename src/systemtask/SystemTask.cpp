@@ -22,6 +22,7 @@
 #include "drivers/SpiMaster.h"
 #include "drivers/SpiNorFlash.h"
 #include "drivers/TwiMaster.h"
+#include "drivers/HRS3300.h"
 #include "main.h"
 #include "board_config.h"
 
@@ -49,6 +50,7 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        bleController{bleController}, dateTimeController{dateTimeController}, settingsController{settingsController},
                        notificationManager{notificationManager},
                        watchdog{}, watchdogView{watchdog},
+                       hrs3300{twiMaster},
                        nimbleController(*this, bleController,dateTimeController, notificationManager, batteryController, spiNorFlash) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
 }
@@ -80,13 +82,15 @@ void SystemTask::Work() {
 
   twiMaster.Init();
   touchPanel.Init();
-  stepCounter.Init();
-  stepCounter.Update();
+  
   batteryController.Init();
   settingsController.Init();
 
+  hrs3300.Init();
+  stepCounter.Init();
+
   displayApp.reset(new Pinetime::Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController,
-                                                          dateTimeController, watchdogView, settingsController, stepCounter, *this, notificationManager));
+                                                          dateTimeController, watchdogView, settingsController, stepCounter, hrs3300, *this, notificationManager));
   displayApp->Start();
 
   batteryController.Update();

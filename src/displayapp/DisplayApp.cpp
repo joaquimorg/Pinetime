@@ -19,6 +19,8 @@
 #include "displayapp/screens/FileManager.h"
 #include "displayapp/screens/Settings.h"
 #include "displayapp/screens/Steps.h"
+#include "displayapp/screens/HeartRate.h"
+#include "displayapp/screens/ScreensTemplate.h"
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/Watchdog.h"
@@ -31,6 +33,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
                        Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                       
                        Controllers::Settings &settingsController,
                        Drivers::BMA421& stepCounter,
+                       Drivers::HRS3300& hrs,
                        System::SystemTask &systemTask,
                        Pinetime::Controllers::NotificationManager& notificationManager) :
         lcd{lcd},
@@ -42,6 +45,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         watchdog{watchdog},        
         settingsController{settingsController},
         stepCounter{stepCounter},
+        hrs{hrs},
         systemTask{systemTask},
         notificationManager{notificationManager},
         currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) }        
@@ -226,8 +230,6 @@ void DisplayApp::RunningState() {
         onClockApp = true;
         break;
       case Apps::SysInfo: currentScreen.reset(new Screens::SystemInfo(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); break;
-      case Apps::Meter: currentScreen.reset(new Screens::Meter(this)); break;
-      case Apps::Gauge: currentScreen.reset(new Screens::Gauge(this)); break;
       case Apps::Paint: currentScreen.reset(new Screens::InfiniPaint(this, lvgl)); break;
       case Apps::Brightness : currentScreen.reset(new Screens::Brightness(this, brightnessController)); break;
       case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;
@@ -236,6 +238,14 @@ void DisplayApp::RunningState() {
       case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter)); break;
+      case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs)); break;
+
+      // To Do :-)
+      case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;
+      case Apps::Iot: currentScreen.reset(new Screens::ScreensTemplate(this, "Iot")); break;
+      case Apps::MobileApp: currentScreen.reset(new Screens::ScreensTemplate(this, "Mobile App")); break;
+      case Apps::Charging: currentScreen.reset(new Screens::ScreensTemplate(this, "Charging")); break;
+      case Apps::StopWatch: currentScreen.reset(new Screens::ScreensTemplate(this, "Stop Watch")); break;
     }
     nextApp = Apps::None;
   }

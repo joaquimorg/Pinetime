@@ -81,7 +81,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
             {&icon_music,       "Music",      Apps::Music},
             {&icon_game,        "Paint",      Apps::Paint},            
             {&icon_running,     "Steps",      Apps::Steps},
-            {&icon_heart_rate,  "Heart Rate", Apps::Meter}
+            {&icon_heart_rate,  "Heart Rate", Apps::HeartRate}
           }
 
   };
@@ -93,9 +93,9 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
   std::array<Screens::Tile::Applications, 4> applications {
           {                        
             {&icon_folder,      "File",       Apps::FileManager},
-            {&icon_raining,     "Weather",    Apps::Meter},            
-            {&icon_iot,         "Iot",        Apps::Meter},
-            {&icon_qr_code,     "Mobile App", Apps::Meter}
+            {&icon_raining,     "Weather",    Apps::Weather},            
+            {&icon_iot,         "Iot",        Apps::Iot},
+            {&icon_qr_code,     "Mobile App", Apps::MobileApp}
           }
 
   };

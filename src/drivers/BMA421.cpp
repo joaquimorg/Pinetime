@@ -235,9 +235,13 @@ void BMA421::Update() {
 
     /* Converting lsb to meters per seconds square for 12 bit accelerometer at 2G range */
     // pinetime has 90° rotated Accl
-    accelData.y = lsb_to_ms2(sens_data.x, 2, bma.resolution);
+    /*accelData.y = lsb_to_ms2(sens_data.x, 2, bma.resolution);
     accelData.x = lsb_to_ms2(sens_data.y, 2, bma.resolution);
-    accelData.z = lsb_to_ms2(sens_data.z, 2, bma.resolution);
+    accelData.z = lsb_to_ms2(sens_data.z, 2, bma.resolution);*/
+
+    accelData.x = (sens_data.y / 0x10);
+    accelData.y = (sens_data.x / 0x10);
+    accelData.z = (sens_data.z / 0x10);
 
     //accelData = sens_data;
 

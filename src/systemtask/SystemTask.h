@@ -7,13 +7,14 @@
 #include <timers.h>
 
 #include "SystemMonitor.h"
-#include "components/vibration/VibrationController.h"
 #include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/NimbleController.h"
 #include "components/ble/NotificationManager.h"
 #include "displayapp/DisplayApp.h"
 #include "drivers/Watchdog.h"
+#include "drivers/Vibration.h"
+#include "drivers/HRS3300.h"
 
 namespace Pinetime {
   namespace Drivers {
@@ -23,6 +24,8 @@ namespace Pinetime {
     class SpiNorFlash;
     class St7789;
     class TwiMaster;
+    class Vibration;
+    class HRS3300;
   }
   namespace System {
     class SystemTask {
@@ -54,7 +57,7 @@ namespace Pinetime {
 
       private:
         TaskHandle_t taskHandle;
-        Pinetime::Controllers::VibrationController vibration;
+        Pinetime::Drivers::Vibration vibration;
 
         Pinetime::Drivers::SpiMaster& spi;
         Pinetime::Drivers::St7789& lcd;
@@ -74,9 +77,9 @@ namespace Pinetime {
         Pinetime::Controllers::Settings& settingsController;
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Drivers::Watchdog watchdog;
-        Pinetime::Drivers::WatchdogView watchdogView;        
-        Pinetime::Controllers::NimbleController nimbleController;
-        
+        Pinetime::Drivers::WatchdogView watchdogView; 
+        Pinetime::Drivers::HRS3300 hrs3300;       
+        Pinetime::Controllers::NimbleController nimbleController;        
 
         /*
         static constexpr uint8_t pinSpiSck = 2;

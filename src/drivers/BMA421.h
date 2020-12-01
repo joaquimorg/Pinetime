@@ -7,6 +7,12 @@
 namespace Pinetime {
   namespace Drivers {
 
+    struct accl_data_struct {
+      int16_t x;
+      int16_t y;
+      int16_t z;      
+    };
+
     class BMA421 {
         public :
             
@@ -26,7 +32,7 @@ namespace Pinetime {
             uint8_t GetActivity() const { return activity; };
             uint8_t GetTapStatus() const { return tapStatus; };
             float GetTemp() const { return tempC; };
-            bma4_accel GetAccel() const { return accelData; };
+            accl_data_struct GetAccel() const { return accelData; };
 
         private:
 
@@ -38,7 +44,7 @@ namespace Pinetime {
             struct bma4_dev bma;
             struct bma4_accel_config accel_conf;
 
-            struct bma4_accel accelData;
+            struct accl_data_struct accelData;
             uint32_t step_count = 0;
             uint8_t activity = 0;
             uint8_t tapStatus = 0;

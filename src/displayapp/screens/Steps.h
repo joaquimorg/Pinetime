@@ -4,7 +4,8 @@
 #include "Screen.h"
 #include <lvgl/src/lv_core/lv_style.h>
 #include <lvgl/src/lv_core/lv_obj.h>
-#include "bma421/bma4.h"
+//#include "bma421/bma4.h"
+#include "drivers/BMA421.h"
 
 namespace Pinetime {
 
@@ -34,7 +35,7 @@ namespace Pinetime {
           lv_obj_t * lAccel;
           lv_obj_t * lirq;
 
-          struct bma4_accel sens_data;
+          struct Pinetime::Drivers::accl_data_struct sens_data;
 
           bool running = true;
 

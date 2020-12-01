@@ -23,7 +23,7 @@
 #define TP_IRQ 28
 #define TP_RST 10
 
-#define HR_TWI_ADDR 0xff
+#define HR_TWI_ADDR 0x44
 
 #define BMA421_TWI_ADDR 0x18
 #define BMA421_IRQ 8

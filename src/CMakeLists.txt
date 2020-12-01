@@ -313,6 +313,14 @@ set(BMA421_SRC
         libs/bma421/bma421.h
         )
 
+        
+set(HRS3300_SRC
+        libs/hrs3300/hrs3300_reg_init.h
+        libs/hrs3300/hrs3300.h
+        libs/hrs3300/hrs3300.c
+        )
+        
+
 list(APPEND IMAGE_FILES
         displayapp/icons/battery/os_battery_error.c
         displayapp/icons/battery/os_battery_100.c
@@ -350,8 +358,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Screen.cpp
         displayapp/screens/Clock.cpp
         displayapp/screens/Tile.cpp
-        displayapp/screens/Meter.cpp
-        displayapp/screens/Gauge.cpp
+        #displayapp/screens/Meter.cpp
+        #displayapp/screens/Gauge.cpp
         displayapp/screens/InfiniPaint.cpp
         displayapp/screens/Steps.cpp
         displayapp/screens/Settings.cpp
@@ -366,8 +374,10 @@ list(APPEND SOURCE_FILES
         displayapp/screens/FirmwareValidation.cpp
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
-
+        displayapp/screens/HeartRate.cpp
         displayapp/screens/FileManager.cpp
+
+        displayapp/screens/ScreensTemplate.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
@@ -379,7 +389,11 @@ list(APPEND SOURCE_FILES
         displayapp/icons/bg_img_1.c
 
         main.cpp
+
+        #HRS3300 Lib
+        #libs/hrs3300/libheart.a
         drivers/HRS3300.cpp
+
         drivers/BMA421.cpp
         drivers/St7789.cpp
         drivers/FileSystem.cpp
@@ -389,7 +403,7 @@ list(APPEND SOURCE_FILES
         drivers/Watchdog.cpp
         drivers/DebugPins.cpp
         drivers/InternalFlash.cpp
-        components/vibration/VibrationController.cpp
+        drivers/Vibration.cpp
         components/settings/Settings.cpp
         components/battery/BatteryController.cpp
         components/ble/BleController.cpp
@@ -718,6 +732,22 @@ target_compile_options(bma421 PRIVATE
         $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
         )
 
+# HRS3300
+add_library(hrs3300lib STATIC IMPORTED)
+set_property(TARGET hrs3300lib PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/libs/hrs3300/libheart.a)
+
+add_library(hrs3300 STATIC ${HRS3300_SRC})
+#set_property(TARGET hrs3300 PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/libs/hrs3300/libheart.a)
+target_include_directories(hrs3300 SYSTEM PUBLIC . ../)
+target_include_directories(hrs3300 SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
+target_compile_options(hrs3300 PRIVATE
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
+        )
+
 
 # Build autonomous binary (without support for bootloader)
 set(EXECUTABLE_NAME "pinetime-app")
@@ -725,7 +755,7 @@ set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetime_VERSION_MAJOR}.${pinetime
 set(NRF5_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/gcc_nrf52.ld")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_FILE_NAME})
-target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs bma421)
+target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs bma421 hrs3300lib hrs3300)
 target_compile_options(${EXECUTABLE_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
@@ -756,7 +786,7 @@ set(IMAGE_MCUBOOT_FILE_NAME image-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_M
 set(DFU_FILE_NAME dfu-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.zip)
 set(NRF5_LINKER_SCRIPT_MCUBOOT "${CMAKE_SOURCE_DIR}/gcc_nrf52-mcuboot.ld")
 add_executable(${EXECUTABLE_MCUBOOT_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs bma421)
+target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs bma421 hrs3300lib hrs3300)
 set_target_properties(${EXECUTABLE_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_FILE_NAME})
 target_compile_options(${EXECUTABLE_MCUBOOT_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>

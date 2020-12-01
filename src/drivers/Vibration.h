@@ -3,8 +3,8 @@
 #include <cstdint>
 
 namespace Pinetime {
-  namespace Controllers {
-    class VibrationController {
+  namespace Drivers {
+    class Vibration {
     public:
         void Init();
         void Vibrate(uint8_t durationMs);
