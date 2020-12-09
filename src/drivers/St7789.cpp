@@ -179,6 +179,7 @@ void St7789::HardwareReset() {
 
 void St7789::Sleep() {
   SleepIn();
+  nrf_delay_ms(50);
   //nrf_gpio_cfg_default(pinDataCommand);
   NRF_LOG_INFO("[LCD] Sleep");
 }
@@ -189,6 +190,7 @@ void St7789::Wakeup() {
   //HardwareReset();
   //SoftwareReset();
   SleepOut();
+  nrf_delay_ms(50);
   //ColMod();
   //MemoryDataAccessControl();
   //ColumnAddressSet();

@@ -44,6 +44,7 @@ namespace Pinetime {
             const char* title;
             const char* text;
           };
+
           Pinetime::Controllers::NotificationManager& notificationManager;
           Modes mode = Modes::Normal;
           std::unique_ptr<NotificationItem> currentItem;
@@ -54,6 +55,9 @@ namespace Pinetime {
           lv_obj_t* timeoutLine;
           uint32_t timeoutTickCountStart;
           uint32_t timeoutTickCountEnd;
+
+          static char const *CategoriesString[];
+          const char* CategoryToString( Controllers::NotificationManager::Categories category );
       };
     }
   }

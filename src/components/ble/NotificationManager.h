@@ -28,7 +28,7 @@ namespace Pinetime {
       Notification GetPrevious(Notification::Id id);
       bool ClearNewNotificationFlag();
       bool AreNewNotificationsAvailable();
-
+      
       static constexpr size_t MaximumMessageSize() { return MessageSize; };
       size_t NbNotifications() const;
 

@@ -157,7 +157,7 @@ void SystemTask::Work() {
       
       Messages message = static_cast<Messages >(msg);
       switch(message) {
-        case Messages::GoToRunning:
+        case Messages::WakeUp:
           //spi.Wakeup();
           //twiMaster.Wakeup();
           //stepCounter.Wakeup();
@@ -168,11 +168,14 @@ void SystemTask::Work() {
           touchPanel.Wakeup();
           lcd.Wakeup();
 
+          isSleeping = false;
+          isWakingUp = false;
+        break;
+        case Messages::GoToRunning:
+         
           displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning);
           displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
 
-          isSleeping = false;
-          isWakingUp = false;
           break;
         case Messages::GoToSleep:
           isGoingToSleep = true;
@@ -185,9 +188,12 @@ void SystemTask::Work() {
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateDateTime);
           break;
         case Messages::OnNewNotification:
-          if(isSleeping && !isWakingUp) GoToRunning();
-          vibration.Vibrate(25);
-          displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::NewNotification);
+          //vTaskDelay(200);
+          NewNotification();
+          break;
+        case Messages::OnNewCall:
+          if(isSleeping && !isWakingUp) WakeUp();
+          displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::NewCall);
           break;
         case Messages::BleConnected:
           ReloadIdleTimer();
@@ -196,7 +202,7 @@ void SystemTask::Work() {
           break;
         case Messages::BleFirmwareUpdateStarted:
           doNotGoToSleep = true;
-          if(isSleeping && !isWakingUp) GoToRunning();
+          if(isSleeping && !isWakingUp) WakeUp();
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::BleFirmwareUpdateStarted);
           break;
         case Messages::BleFirmwareUpdateFinished:
@@ -214,9 +220,9 @@ void SystemTask::Work() {
         case Messages::ReloadIdleTimer:
           ReloadIdleTimer();
           break;
-        case Messages::OnStepEvent:
+        /*case Messages::OnStepEvent:
           //stepCounter.Update();
-          break;
+          break;*/
         case Messages::OnDisplayTaskSleeping:
           if(BootloaderVersion::IsValid()) {
             // First versions of the bootloader do not expose their version and cannot initialize the SPI NOR FLASH
@@ -266,14 +272,34 @@ void SystemTask::OnButtonPushed() {
   else {
     if(!isWakingUp) {
       NRF_LOG_INFO("[systemtask] Button pushed, waking up");
+      WakeUp();
       GoToRunning();
     }
   }
 }
 
 void SystemTask::GoToRunning() {
-  isWakingUp = true;
+  //isWakingUp = true;
   PushMessage(Messages::GoToRunning);
+}
+
+void SystemTask::WakeUp() {
+  isWakingUp = true;
+  PushMessage(Messages::WakeUp);
+}
+
+void SystemTask::NewNotification() {
+  vibration.Vibrate(35);
+  if(isSleeping && !isWakingUp) {
+    WakeUp();
+    GoToRunning();
+    //NewNotification();
+  } else {
+    displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
+  }
+  //displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning); 
+  //vTaskDelay(500);
+  //displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
 }
 
 void SystemTask::OnTouchEvent() {
@@ -286,12 +312,12 @@ void SystemTask::OnTouchEvent() {
 }
 
 void SystemTask::OnStepEvent() {
+  stepCounter.Update();
   if(isGoingToSleep) return ;
   NRF_LOG_INFO("[systemtask] Step event");
-  if(!isSleeping) {
+  if(!isSleeping) {    
     //PushMessage(Messages::OnStepEvent);
-    //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);
-    stepCounter.Update();
+    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);    
   }
 }
 

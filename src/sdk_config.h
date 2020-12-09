@@ -1326,7 +1326,7 @@
 #endif
 
 #ifndef BLE_ANS_C_LOG_ENABLED
-#define BLE_ANS_C_LOG_ENABLED 1
+#define BLE_ANS_C_LOG_ENABLED 0
 #endif
 
 #ifndef BLE_ANS_C_LOG_LEVEL

@@ -65,14 +65,19 @@ void HRS3300::SetEnable(enum HRS_ENABLE_DISABLE enable,
     charbuf = charbuf | (current & 1) << 6;
     charbuf = charbuf | p_on << 5;
     charbuf = charbuf | 1 << 3; // This bit is set by default. Not sure if it needs to be set.
-    i2c_reg_write(HRS3300_REG_PDRIVER, &charbuf, 1);
-
+    i2c_reg_write(HRS3300_REG_PDRIVER, &charbuf, 1);    
     if ( enable == HRS_ENABLE) {
         Hrs3300_alg_open();
-        Hrs3300_bp_alg_open();
-        xTimerStart(hrTimer, 0);
+        //Hrs3300_bp_alg_open();
+        if ( timerIsRunning == 0 ) {
+            xTimerStart(hrTimer, 0);
+            timerIsRunning = 1;
+        }        
     } else {
-        xTimerStop(hrTimer, 0);
+        if ( timerIsRunning == 1 ) {
+            xTimerStop(hrTimer, 0);
+            timerIsRunning = 0;
+        }
         Hrs3300_alg_close();
     }
 
@@ -151,8 +156,8 @@ uint8_t HRS3300::ReadHeartRate() {
             MSG_SETTLE              = 0x06
         */
 
-        if (alg_results.alg_status == MSG_HR_READY)
-        {
+        //if (alg_results.alg_status == MSG_HR_READY)
+        //{
             heartRate = alg_results.hr_result;
 
             // Not working .... :(
@@ -180,9 +185,9 @@ uint8_t HRS3300::ReadHeartRate() {
             
             return 240 + alg_results.alg_status;
 
-        } else {
-            return 240 + alg_results.alg_status;
-        }
+        //} else {
+        //    return 240 + alg_results.alg_status;
+        //}
 
     }
     return 255;
@@ -192,41 +197,47 @@ void HRS3300::HRReading() {
     
     heartRateStatus = ReadHeartRate();
     if ( heartRateStatus == 244 ) {
-      xTimerStop(hrTimer, 0);
-      for (uint8_t i = 1; i < 8; i++)
+      if ( timerIsRunning == 1 ) {
+        xTimerStop(hrTimer, 0);
+        timerIsRunning = 0;
+      }
+      for (uint8_t i = 1; i < 6; i++)
       {
         heartRateHistory[i - 1] = heartRateHistory[i];
       }
-      heartRateHistory[7] = heartRate;
+      heartRateHistory[5] = heartRate;
     } else if ( heartRateStatus == 245 ) {
-      xTimerStop(hrTimer, 0);
+      if ( timerIsRunning == 1 ) {
+        xTimerStop(hrTimer, 0);
+        timerIsRunning = 0;
+      }
     } else if ( heartRateStatus == 246 ) {
-      xTimerStop(hrTimer, 0);
+      if ( timerIsRunning == 1 ) {
+        xTimerStop(hrTimer, 0);
+        timerIsRunning = 0;
+      }
     } else {
       
     }
 }
 
 /* --------------------------------------------------------------- */
-uint16_t HRS3300::i2c_reg_write(uint8_t reg_addr,
+void HRS3300::i2c_reg_write(uint8_t reg_addr,
                                 uint8_t *reg_data, uint16_t length)
 {
 
     /* Write to registers using I2C. Return 0 for a successful execution. */
 
     twiMaster.Write(HRS3300_I2C_ADDRESS, reg_addr, (const uint8_t *)reg_data, length);
-    return 0;
-   
 }
 
-uint16_t HRS3300::i2c_reg_read(uint8_t reg_addr,
+void HRS3300::i2c_reg_read(uint8_t reg_addr,
                                uint8_t *reg_data, uint16_t length)
 {
 
     /* Read from registers using I2C. Return 0 for a successful execution. */
 
     twiMaster.Read(HRS3300_I2C_ADDRESS, reg_addr, (uint8_t *)reg_data, length);
-    return 0;    
 }
 
 

@@ -114,16 +114,17 @@ namespace Pinetime {
           uint8_t bpHigh = 0;
           uint8_t bpLow = 0;
           uint8_t heartRateStatus = 255;
+          uint8_t timerIsRunning = 0;
 
-          uint8_t heartRateHistory[8] = {0};
+          uint8_t heartRateHistory[6] = {0};
 
           uint16_t timer_index = 0;
           TimerHandle_t hrTimer;
 
           uint8_t ReadHeartRate();
 
-          uint16_t i2c_reg_write(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
-          uint16_t i2c_reg_read(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
+          void i2c_reg_write(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
+          void i2c_reg_read(uint8_t reg_addr, uint8_t *reg_data, uint16_t length);
             
     };
   }

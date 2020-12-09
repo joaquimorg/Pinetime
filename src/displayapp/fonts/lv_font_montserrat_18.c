@@ -6,11 +6,11 @@
  * Opts: 
  ******************************************************************************/
 
-#ifndef LV_FONT_MONTSERRAT_18
-#define LV_FONT_MONTSERRAT_18 1
+#ifndef LV_FONT_MONTSERRAT_18_ICONS
+#define LV_FONT_MONTSERRAT_18_ICONS 1
 #endif
 
-#if LV_FONT_MONTSERRAT_18
+#if LV_FONT_MONTSERRAT_18_ICONS
 
 /*-----------------
  *    BITMAPS
@@ -1170,7 +1170,7 @@ static lv_font_fmt_txt_dsc_t font_dsc = {
  *----------------*/
 
 /*Initialize a public general font descriptor*/
-lv_font_t lv_font_montserrat_18 = {
+lv_font_t lv_font_montserrat_18_icons = {
     .get_glyph_dsc = lv_font_get_glyph_dsc_fmt_txt,    /*Function pointer to get glyph's data*/
     .get_glyph_bitmap = lv_font_get_bitmap_fmt_txt,    /*Function pointer to get glyph's bitmap*/
     .line_height = 20,          /*The maximum line height required by the font*/
@@ -1187,5 +1187,5 @@ lv_font_t lv_font_montserrat_18 = {
 
 
 
-#endif /*#if LV_FONT_MONTSERRAT_18*/
+#endif /*#if LV_FONT_MONTSERRAT_18_ICONS*/
 

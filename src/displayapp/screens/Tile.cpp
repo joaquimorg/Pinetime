@@ -5,7 +5,7 @@
 using namespace Pinetime::Applications::Screens;
 
 typedef struct {
-    lv_btnm_ext_t imgbtn;       
+    lv_imgbtn_ext_t imgbtn;       
     int appNumber;          
 }temp_btnm_ext_t;
 
@@ -28,6 +28,9 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     dateTimeController{dateTimeController},
     settingsController{settingsController} 
 {
+
+  // Set the background to Black
+  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
   settingsController.SetAppMenu(screenID);
   uint8_t hours = dateTimeController.Hours();
@@ -57,8 +60,8 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
       appIndex++;
     else {
       iconsApps[appIndex] = lv_imgbtn_create(lv_scr_act(), NULL);
-      lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_REL, applications[i].icon);
-      lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_PR, applications[i].icon);
+      lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_RELEASED, applications[i].icon);
+      lv_imgbtn_set_src(iconsApps[appIndex], LV_BTN_STATE_PRESSED, applications[i].icon);
       lv_obj_align(iconsApps[appIndex], NULL, LV_ALIGN_CENTER, iconPos[i][0], iconPos[i][1]);
       lv_obj_allocate_ext_attr(iconsApps[appIndex], sizeof(temp_btnm_ext_t));
       iconsApps[appIndex]->user_data = this;

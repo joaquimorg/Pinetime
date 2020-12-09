@@ -110,36 +110,49 @@ void DisplayApp::Refresh() {
         //lcd.DisplayOff();        
         systemTask.PushMessage(System::SystemTask::Messages::OnDisplayTaskSleeping);
         state = States::Idle;
-        currentScreen.reset(nullptr);
-        break;
-      case Messages::GoToRunning:
-        //lcd.DisplayOn();        
-        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));
-        onClockApp = true;
-        brightnessController.Restore();
-        state = States::Running;
-        break;
-       case Messages::StepEvent:
+        onClockApp = false;
+        //currentScreen.reset(nullptr);
+      break;
 
-        break;
-      case Messages::UpdateDateTime:
-//        modal->Show();
-        break;
-      case Messages::UpdateBleConnection:
-//        clockScreen.SetBleConnectionState(bleController.IsConnected() ? Screens::Clock::BleConnectionStates::Connected : Screens::Clock::BleConnectionStates::NotConnected);
-        break;
-      case Messages::UpdateBatteryLevel:
-//        clockScreen.SetBatteryPercentRemaining(batteryController.PercentRemaining());
-        break;
-      case Messages::NewNotification: {
-        if(onClockApp) {
+      case Messages::GoToRunning:
+        //if (state == States::Running) break;
+        //if(!onClockApp) {
+          onClockApp = true;
+          //lcd.DisplayOn();
           currentScreen.reset(nullptr);
-          lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
+          currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
+        //}
+        //if (state != States::Running) {
+          brightnessController.Restore();
+          state = States::Running;
+        //}
+
+      break;
+
+      case Messages::NewCall:
+      break;
+
+      case Messages::NewNotification: 
+        
+        if (state == States::Running) {
           onClockApp = false;
+          lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+          currentScreen.reset(nullptr);
           currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
+        } else {
+          PushMessage(Messages::GoToRunning);
+          //PushMessage(Messages::NewNotification);
         }
-      }
-        break;
+                
+        //currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
+        /*
+        if (state != States::Running) {
+          brightnessController.Restore();
+          state = States::Running;
+        }*/
+        
+      break;
+
       case Messages::TouchEvent: {
         if (state != States::Running) break;
         auto gesture = OnTouchEvent();
@@ -171,7 +184,8 @@ void DisplayApp::Refresh() {
           }
         }
       }
-        break;
+      break;
+      
       case Messages::ButtonPushed:
         if(onClockApp)
             systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
@@ -183,25 +197,27 @@ void DisplayApp::Refresh() {
               lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
           }
         }
+      break;
 
-//        lvgl.SetFullRefresh(components::LittleVgl::FullRefreshDirections::Down);
-//        currentScreen.reset(nullptr);
-//        if(toggle) {
-//          currentScreen.reset(new Screens::Tile(this));
-//          toggle = false;
-//        } else {
-//          currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController));
-//          toggle = true;
-//        }
-
-        break;
       case Messages::BleFirmwareUpdateStarted:
         lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
         currentScreen.reset(nullptr);
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController));
         onClockApp = false;
+      break;
 
-        break;
+      case Messages::StepEvent:
+      break;
+      
+      case Messages::UpdateDateTime:
+      break;
+      
+      case Messages::UpdateBleConnection:
+      break;
+      
+      case Messages::UpdateBatteryLevel:
+      break;
+
     }
   }
 

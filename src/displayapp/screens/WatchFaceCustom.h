@@ -35,6 +35,13 @@ namespace Pinetime {
           bool Refresh() override;
 
         private:
+
+          struct snowPoint
+          {
+              uint8_t x;
+              uint8_t y;
+          };
+          
           uint8_t sHour, sMinute, sSecond;
 
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
@@ -54,6 +61,7 @@ namespace Pinetime {
           lv_obj_t* label_time_min;
           lv_obj_t* label_time_sep;
           lv_obj_t* label_date;
+          lv_obj_t* label_date_shadow;
           lv_obj_t* backgroundLabel;
           lv_obj_t* notificationIcon;
 

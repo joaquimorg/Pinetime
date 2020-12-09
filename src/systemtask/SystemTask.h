@@ -30,7 +30,7 @@ namespace Pinetime {
   namespace System {
     class SystemTask {
       public:
-        enum class Messages {GoToSleep, GoToRunning, OnNewTime, OnNewNotification, BleConnected,
+        enum class Messages {WakeUp, GoToSleep, GoToRunning, OnNewTime, OnNewNotification, OnNewCall, BleConnected,
             BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnStepEvent, OnButtonEvent, OnDisplayTaskSleeping,
             ReloadIdleTimer
         };
@@ -102,6 +102,8 @@ namespace Pinetime {
         bool doNotGoToSleep = false;
 
         void GoToRunning();
+        void WakeUp();
+        void NewNotification();
 
 #if configUSE_TRACE_FACILITY == 1
         SystemMonitor<FreeRtosMonitor> monitor;

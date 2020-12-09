@@ -8,6 +8,7 @@ using namespace Pinetime::Applications::Screens;
 
 LV_IMG_DECLARE(icon_heart_rate);
 extern lv_style_t* LabelStyle42;
+extern lv_style_t* DefaultStyle;
 
 
 void HRTimerCallback(TimerHandle_t xTimer) {
@@ -28,48 +29,56 @@ HeartRate::HeartRate(
   systemTask{systemTask}
 {
 
-  /*Create a chart*/
-  /*lv_obj_t * chart;
-  chart = lv_chart_create(lv_scr_act(), NULL);
+  /*Create a chart*/  
+  /*chart = lv_chart_create(lv_scr_act(), NULL);
   lv_obj_set_size(chart, 220, 50);
   lv_obj_align(chart, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
   lv_chart_set_type(chart, LV_CHART_TYPE_POINT );   
   //lv_chart_set_series_opa(chart, LV_OPA_70);                            
-  //lv_chart_set_series_width(chart, 4);  
-  //lv_chart_set_point_count(chart, 8);                               
+  lv_chart_set_series_width(chart, 4);  
+  lv_chart_set_point_count(chart, 8);                               
 
   lv_chart_set_range(chart, 30, 120);
 
-  lv_chart_series_t * ser1 = lv_chart_add_series(chart, LV_COLOR_RED);
-  for (uint8_t i = 0; i < 8; i++)
-  {
-    ser1->points[i] = hrs.GetHistory(i);
-  }
-  lv_chart_refresh(chart);*/
-  
-  hrs.SetEnable(Drivers::HRS3300::HRS_ENABLE,
-                 Drivers::HRS3300::HRS_WAIT_TIME_75ms);
+  UpdateGraph();*/
  
   llabel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(llabel, true);                     
   lv_label_set_text_fmt(llabel, "#00FF00 %s#", "Reading heart rate"); 
   lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 75);
+  lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 10);
+
+  lhistory = lv_label_create(lv_scr_act(), NULL);
+  lv_label_set_recolor(lhistory, true);                     
+  lv_label_set_text_fmt(lhistory, "#FFFF00 History#\n%02i %02i %02i %02i %02i %02i", hrs.GetHistory(0), hrs.GetHistory(1), hrs.GetHistory(2), hrs.GetHistory(3), hrs.GetHistory(4), hrs.GetHistory(5)); 
+  lv_label_set_align(lhistory, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(lhistory, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, -30);
 
   lv_obj_t * heart_rate = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(heart_rate, &icon_heart_rate);
-  lv_obj_align(heart_rate, NULL, LV_ALIGN_CENTER, 0, -50);
+  lv_img_set_src(heart_rate, &icon_heart_rate);  
+  lv_obj_align(heart_rate, NULL, LV_ALIGN_CENTER, -20, -50);
 
   static lv_style_t heart_rate_style;
-  lv_style_copy(&heart_rate_style, LabelStyle42);
-  heart_rate_style.text.color = lv_color_hex(0xFF0000);  
+  lv_style_init(&heart_rate_style);
+  lv_style_set_text_color(&heart_rate_style, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));  
+  lv_style_set_text_font(&heart_rate_style, LV_STATE_DEFAULT, &lv_font_clock_42);
 
-  lhrs = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_style(lhrs, LV_LABEL_STYLE_MAIN, &heart_rate_style);
+  lhrs = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_add_style(lhrs, LV_LABEL_PART_MAIN, &heart_rate_style);
   lv_label_set_text(lhrs, "--"); 
-  lv_label_set_align(lhrs, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(lhrs, NULL, LV_ALIGN_CENTER, 0, 20);
+  lv_obj_align(lhrs, heart_rate, LV_ALIGN_OUT_RIGHT_MID, 20, -5);
 
+  static lv_style_t bpm_style;
+  lv_style_init(&bpm_style);
+  lv_style_set_text_color(&bpm_style, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
+
+  lv_obj_t* lbpm = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_add_style(lbpm, LV_LABEL_PART_MAIN, &bpm_style);
+  lv_label_set_text(lbpm, "bpm");   
+  lv_obj_align(lbpm, lhrs, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
+
+  hrs.SetEnable(Drivers::HRS3300::HRS_ENABLE,
+                 Drivers::HRS3300::HRS_WAIT_TIME_12_5ms);
   hrTimer = xTimerCreate ("hrTimer", pdMS_TO_TICKS( 20000 ), pdFALSE, this, HRTimerCallback);
   xTimerStart(hrTimer, 0);
   heartRateReading = 1;
@@ -81,6 +90,21 @@ HeartRate::~HeartRate() {
   lv_obj_clean(lv_scr_act());
 }
 
+
+void HeartRate::UpdateGraph() {
+  lv_chart_set_range(chart, 30, 120);
+
+  lv_chart_series_t * ser1 = lv_chart_add_series(chart, LV_COLOR_RED);
+  for (uint8_t i = 0; i < 8; i++)
+  {
+    ser1->points[i] = hrs.GetHistory(i);
+    if ( ser1->points[i] > 120) ser1->points[i] = 120;
+    if ( ser1->points[i] < 30) ser1->points[i] = 30;
+  }
+  lv_chart_refresh(chart);
+}
+
+
 bool HeartRate::Refresh() {
 
   if ( heartRateReading == 1 ) {
@@ -91,6 +115,8 @@ bool HeartRate::Refresh() {
     //bpHigh = hrs.GetBPHigh();
     //bpLow = hrs.GetBPLow();
     
+    //lv_label_set_text_fmt(lhrs, "%02i", heartRate);
+
     if ( hrv == 244 ) {
       lv_label_set_text_fmt(lhrs, "%02i", heartRate); 
       settingsController.SetHeartRate( heartRate );
@@ -107,8 +133,8 @@ bool HeartRate::Refresh() {
       lv_label_set_text_fmt(llabel, "#FF0000 Status# %i", hrv);
     }*/
     
-    lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 60); 
-    lv_obj_align(lhrs, NULL, LV_ALIGN_CENTER, 0, 20);
+    lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 10); 
+    //lv_obj_align(lhrs, NULL, LV_ALIGN_CENTER, 0, 20);
   }
 
   return running;
@@ -119,10 +145,12 @@ void HeartRate::EndHRReading() {
   hrs.SetEnable();
   if ( hrv != 244 ) {
     lv_label_set_text_fmt(llabel, "#FF0000 Error reading sensor# %i", hrv);
-    lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 60); 
+    lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 10); 
   } else {
     lv_label_set_text(llabel, "#00FF00 Done#");
-    lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 60);
+    lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 10);
+    lv_label_set_text_fmt(lhistory, "#FFFF00 History#\n%02i %02i %02i %02i %02i %02i", hrs.GetHistory(0), hrs.GetHistory(1), hrs.GetHistory(2), hrs.GetHistory(3), hrs.GetHistory(4), hrs.GetHistory(5)); 
+    //UpdateGraph();
   }
 }
 

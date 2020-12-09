@@ -41,7 +41,9 @@ namespace Pinetime {
           Pinetime::System::SystemTask& systemTask;
 
           lv_obj_t* llabel;
+          lv_obj_t* lhistory;
           lv_obj_t* lhrs;
+          lv_obj_t* chart;
 
           uint8_t hrv = 0;
           uint8_t heartRateReading = 0;
@@ -52,6 +54,8 @@ namespace Pinetime {
           TimerHandle_t hrTimer;
 
           bool running = true;
+
+          void UpdateGraph();
 
       };
     }

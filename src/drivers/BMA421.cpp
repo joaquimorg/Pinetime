@@ -102,12 +102,18 @@ void BMA421::Init() {
     vTaskDelay(50);
 
     /* Upload the configuration file to enable the features of the sensor. */
-    //rslt = bma421_write_config_file(&bma);
-    //bma4_error_codes_print_result("bma421_write_config", rslt);
+    rslt = bma421_write_config_file(&bma);
+    bma4_error_codes_print_result("bma421_write_config", rslt);    
 
-    /* Enable the accelerometer */
-    rslt = bma4_set_accel_enable(1, &bma);
-    bma4_error_codes_print_result("bma4_set_accel_enable status", rslt);
+    /* Sets the electrical behaviour of interrupt
+    */
+    pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
+    pinConfig.lvl = BMA4_ACTIVE_LOW;
+    pinConfig.od = BMA4_OPEN_DRAIN;
+    pinConfig.output_en = BMA4_OUTPUT_ENABLE;
+    pinConfig.input_en = BMA4_INPUT_DISABLE;
+    rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
+    bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  
 
     /* Accelerometer Configuration Setting */
     /* Output data Rate */
@@ -132,29 +138,22 @@ void BMA421::Init() {
      *  1 -> No averaging
      * For more info on No Averaging mode refer datasheets.
      */
-    accel_conf.perf_mode = BMA4_CIC_AVG_MODE;
+    accel_conf.perf_mode = BMA4_CONTINUOUS_MODE;
 
     /* Set the accel configurations */
     rslt = bma4_set_accel_config(&accel_conf, &bma);
     bma4_error_codes_print_result("bma4_set_accel_config status", rslt);
 
+    /* Enable the accelerometer */
+    rslt = bma4_set_accel_enable(BMA4_ENABLE, &bma);
+    bma4_error_codes_print_result("bma4_set_accel_enable status", rslt);
+
     /* Enable step counter */
-    
-    /* Enable the sensor activity recognition feature can detect following
-     * Stationary
-     * Walking
-     * Running
-     */
-    /* Enable single & double tap feature */
-    rslt = bma421_feature_enable(BMA421_STEP_CNTR | BMA421_STEP_ACT, 1, &bma);
+    rslt = bma421_feature_enable(BMA421_STEP_CNTR, 1, &bma);
     bma4_error_codes_print_result("bma421_feature_enable status", rslt);
 
-    /* Interrupt Mapping
-     */
-    //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, (BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_DOUBLE_TAP_INT | BMA421_WRIST_WEAR_INT), 1, &bma);
-    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT, 1, &bma);
-    bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
-
+    rslt = bma421_step_detector_enable(BMA4_ENABLE, &bma);
+    bma4_error_codes_print_result("bma421_step_detector_enable status", rslt);
 
     /* Set water-mark level 1 to get interrupt after 20 steps.
      * Range of step counter interrupt is 0 to 20460(resolution of 20 steps).
@@ -167,17 +166,26 @@ void BMA421::Init() {
     //rslt = bma4_set_interrupt_mode(BMA4_LATCH_MODE, &bma);
     //bma4_error_codes_print_result("bma4_set_interrupt_mode status", rslt);
 
-    /* Sets the electrical behaviour of interrupt
-    */
-    pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
-    pinConfig.lvl = BMA4_ACTIVE_LOW;
-    pinConfig.od = BMA4_OPEN_DRAIN;
-    pinConfig.output_en = BMA4_OUTPUT_ENABLE;
-    pinConfig.input_en = BMA4_INPUT_DISABLE;
-    //rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
-    //bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  
 
-    Sleep();  
+    // pinetime has 90° rotated Accl
+    struct bma421_axes_remap remap_data;
+    remap_data.x_axis = 0;
+    remap_data.x_axis_sign = 1;
+    remap_data.y_axis = 1;
+    remap_data.y_axis_sign = 1;
+    remap_data.z_axis  = 2;
+    remap_data.z_axis_sign  = 0;
+
+    rslt = bma421_set_remap_axes(&remap_data, &bma);
+    bma4_error_codes_print_result("bma421_set_remap_axes status", rslt);
+
+    /* Interrupt Mapping
+     */
+    //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, (BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_DOUBLE_TAP_INT | BMA421_WRIST_WEAR_INT), 1, &bma);
+    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
+    bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
+
+
 }
 
 /*! @brief Converts raw sensor values(LSB) to meters per seconds square.
@@ -233,14 +241,13 @@ void BMA421::Update() {
     /* Read the accel data */
     rslt = bma4_read_accel_xyz(&sens_data, &bma);
 
-    /* Converting lsb to meters per seconds square for 12 bit accelerometer at 2G range */
-    // pinetime has 90° rotated Accl
-    /*accelData.y = lsb_to_ms2(sens_data.x, 2, bma.resolution);
-    accelData.x = lsb_to_ms2(sens_data.y, 2, bma.resolution);
+    /* Converting lsb to meters per seconds square for 12 bit accelerometer at 2G range */    
+    /*accelData.x = lsb_to_ms2(sens_data.x, 2, bma.resolution);
+    accelData.y = lsb_to_ms2(sens_data.y, 2, bma.resolution);
     accelData.z = lsb_to_ms2(sens_data.z, 2, bma.resolution);*/
 
-    accelData.x = (sens_data.y / 0x10);
-    accelData.y = (sens_data.x / 0x10);
+    accelData.x = (sens_data.x / 0x10);
+    accelData.y = (sens_data.y / 0x10);
     accelData.z = (sens_data.z / 0x10);
 
     //accelData = sens_data;

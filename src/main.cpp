@@ -223,18 +223,19 @@ void BleHost(void *) {
 void nimble_port_init(void) {
   void os_msys_init(void);
   void ble_store_ram_init(void);
+  
+  ble_store_ram_init();
   ble_npl_eventq_init(&g_eventq_dflt);
   os_msys_init();
   ble_hs_init();
-  ble_store_ram_init();
 
   int res;
+  ble_hci_ram_init();
   res = hal_timer_init(5, NULL);
   ASSERT(res == 0);
   res = os_cputime_init(32768);
   ASSERT(res == 0);
   ble_ll_init();
-  ble_hci_ram_init();
   nimble_port_freertos_init(BleHost);
 }
 
