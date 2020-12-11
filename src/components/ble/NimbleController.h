@@ -54,6 +54,7 @@ namespace Pinetime {
         void StartDiscovery();
 
         Pinetime::Controllers::MusicService& music() {return musicService;};
+        Pinetime::Controllers::AlertNotificationService& alertService() {return anService;};
 
         uint16_t connHandle();
 

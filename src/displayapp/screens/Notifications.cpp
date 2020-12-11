@@ -136,10 +136,13 @@ bool Notifications::OnButtonPushed() {
 Notifications::NotificationItem::NotificationItem(const char *title, const char *msg, uint8_t notifNr, uint8_t notifNb, Modes mode)
         : notifNr{notifNr}, notifNb{notifNb}, mode{mode} {
 
+  // Set the background to Black
+  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
+
   container1 = lv_cont_create(lv_scr_act(), NULL);
   lv_obj_set_auto_realign(container1, true);                    /*Auto realign when the size changes*/
   lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);  /*This parametrs will be sued when realigned*/
-  lv_cont_set_fit(container1, LV_FIT_TIGHT);
+  lv_cont_set_fit(container1, LV_FIT_MAX);
   lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_MID);
 
   //container1 = lv_cont_create(lv_scr_act(), nullptr);

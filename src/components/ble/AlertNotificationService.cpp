@@ -61,21 +61,25 @@ AlertNotificationService::AlertNotificationService ( System::SystemTask& systemT
 int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle,
                                                     struct ble_gatt_access_ctxt *ctxt) {
   if (ctxt->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
+
     constexpr size_t stringTerminatorSize = 1; // end of string '\0'
-    constexpr size_t headerSize = 3;
+    constexpr size_t headerSize = 2;
     const auto maxMessageSize {NotificationManager::MaximumMessageSize()};
     const auto maxBufferSize{maxMessageSize + headerSize};
 
     const auto dbgPacketLen = OS_MBUF_PKTLEN(ctxt->om);
-    size_t bufferSize = mynewt_min(dbgPacketLen + stringTerminatorSize, maxBufferSize);
-    auto messageSize = mynewt_min(maxMessageSize, (bufferSize-headerSize));
-    uint8_t* category = new uint8_t[1];
+    size_t bufferSize = std::min(dbgPacketLen + stringTerminatorSize, maxBufferSize);
+    auto messageSize = std::min(maxMessageSize, (bufferSize-headerSize));
 
     NotificationManager::Notification notif;
     os_mbuf_copydata(ctxt->om, headerSize, messageSize-1, notif.message.data());
-    os_mbuf_copydata(ctxt->om, 0, 1, category);
     notif.message[messageSize-1] = '\0';
-    notif.category = Pinetime::Controllers::NotificationManager::Categories::SimpleAlert;
+
+    uint8_t* category = new uint8_t[1];
+
+    os_mbuf_copydata(ctxt->om, 0, 1, category);
+
+    notif.category = Pinetime::Controllers::NotificationManager::Categories::Sms;
     Pinetime::System::SystemTask::Messages event = Pinetime::System::SystemTask::Messages::OnNewNotification;
 
     switch(*category) {
@@ -93,7 +97,7 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
         break;
       case ALERT_INCOMING_CALL:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::IncomingCall;
-        event = Pinetime::System::SystemTask::Messages::OnNewCall;
+        //event = Pinetime::System::SystemTask::Messages::OnNewCall;
         break;
       case ALERT_MISSED_CALL:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::MissedCall;
@@ -117,7 +121,7 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
         notif.category = Pinetime::Controllers::NotificationManager::Categories::Unknown;
         break;
     }
-
+    
     notificationManager.Push(std::move(notif));
     systemTask.PushMessage(event);
   }

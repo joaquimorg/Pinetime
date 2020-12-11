@@ -64,7 +64,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   lv_style_init(&date_style);
 
   label_date_day = lv_label_create(lv_scr_act(), NULL);
-  lv_style_set_text_color(&date_style, LV_STATE_DEFAULT, lv_color_hex(0x3daee9));
+  lv_style_set_text_color(&date_style, LV_STATE_DEFAULT, lv_color_hex(0xf0a500));
   lv_obj_add_style(label_date_day, LV_LABEL_PART_MAIN, &date_style);
   lv_label_set_text_fmt(label_date_day,  "%s\n%02i", "SAT", 1);
   lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
@@ -152,7 +152,7 @@ bool WatchFaceAnalog::Refresh() {
 
     uint8_t hour = dateTimeController.Hours();
     uint8_t minute = dateTimeController.Minutes();
-    uint8_t second = dateTimeController.Seconds();
+    uint8_t second = dateTimeController.Seconds();    
 
     if(sMinute != minute) {
       minute_point[0].x = coordinate_x_relocate(30 * sin(minute * 6 * PI / 180));

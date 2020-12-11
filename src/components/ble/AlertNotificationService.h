@@ -7,8 +7,7 @@
 #undef max
 #undef min
 
-#define mynewt_min(a, b) ((a)<(b)?(a):(b))
-#define mynewt_max(a, b) ((a)>(b)?(a):(b))
+
 namespace Pinetime {
 
   namespace System {
