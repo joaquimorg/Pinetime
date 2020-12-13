@@ -27,9 +27,16 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
                   stepCounter{stepCounter}
 {
   settingsController.SetClockFace(0);
-  sHour = 99;
-  sMinute = 99;
-  sSecond = 99;
+  uint16_t year = dateTimeController.Year();
+  uint8_t day = dateTimeController.Day();
+
+  uint8_t hour = dateTimeController.Hours();
+  uint8_t minute = dateTimeController.Minutes();
+  uint8_t second = dateTimeController.Seconds();
+
+  sHour = hour;
+  sMinute = minute;
+  sSecond = second;
 
   // Set the background to Black
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
@@ -66,8 +73,8 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   //lv_style_set_text_color(&time_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_add_style(label_time, LV_LABEL_PART_MAIN, &time_style);
-  lv_label_set_text_fmt(label_time,  "%02i:%02i", 0, 0);      
+  lv_obj_add_style(label_time, LV_LABEL_PART_MAIN, &time_style);  
+  lv_label_set_text_fmt(label_time,  "%02i:%02i", sHour, sMinute);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -15, 0);
 
@@ -80,7 +87,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   
   lv_style_set_text_color(&seconds_style, LV_STATE_DEFAULT, lv_color_hex(0x444444));  
   lv_obj_add_style(label_time_sec, LV_LABEL_PART_MAIN, &seconds_style);
-  lv_label_set_text_fmt(label_time_sec,  "%02i", 0);
+  lv_label_set_text_fmt(label_time_sec,  "%02i", sSecond);
   lv_label_set_align( label_time_sec, LV_LABEL_ALIGN_CENTER );
   lv_obj_align(label_time_sec, label_time, LV_ALIGN_OUT_RIGHT_TOP, 5, 0);
 
@@ -90,7 +97,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   label_date = lv_label_create(lv_scr_act(), nullptr);
   lv_style_set_text_color(&dateyear_style, LV_STATE_DEFAULT, lv_color_hex(0x8400C2));    
   lv_obj_add_style(label_date, LV_LABEL_PART_MAIN, &dateyear_style);
-  lv_label_set_text_fmt(label_date, "%s %d", "JAN", 2020);
+  lv_label_set_text_fmt(label_date, "%s %d", dateTimeController.MonthToString(), year);
   lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
   lv_obj_align(label_date, label_time, LV_ALIGN_OUT_BOTTOM_RIGHT, 40, 10);
 
@@ -101,8 +108,8 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   label_date_day = lv_label_create(lv_scr_act(), NULL);
 
   lv_style_set_text_color(&date_style, LV_STATE_DEFAULT, lv_color_hex(0xC7B300));    
-  lv_obj_add_style(label_date_day, LV_LABEL_PART_MAIN, &date_style);
-  lv_label_set_text_fmt(label_date_day,  "%s %02i", "SATURDAY", 1);
+  lv_obj_add_style(label_date_day, LV_LABEL_PART_MAIN, &date_style);  
+  lv_label_set_text_fmt(label_date_day,  "%s %02i", dateTimeController.DayOfWeekToString(), day);
   //lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_date_day, label_time, LV_ALIGN_OUT_TOP_LEFT, 0, -12);  
 
@@ -134,7 +141,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
 
   stepValue = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_add_style(stepValue, LV_LABEL_PART_MAIN, &step_style);
-  lv_label_set_text(stepValue, "2500");
+  lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
   lv_obj_align(stepValue, stepIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
 
 

@@ -59,6 +59,7 @@ namespace Pinetime {
 
           static char const *CategoriesString[];
           static void const *CategoriesIcon[];
+          static lv_color_t const CategoriesColor[];
           const char* CategoryToString( Controllers::NotificationManager::Categories category );
       };
     }

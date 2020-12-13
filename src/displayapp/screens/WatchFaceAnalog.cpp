@@ -36,6 +36,9 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
   settingsController.SetClockFace(1);
+  
+  uint8_t day = dateTimeController.Day();
+
   sHour = 99;
   sMinute = 99;
   sSecond = 99;
@@ -66,7 +69,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   label_date_day = lv_label_create(lv_scr_act(), NULL);
   lv_style_set_text_color(&date_style, LV_STATE_DEFAULT, lv_color_hex(0xf0a500));
   lv_obj_add_style(label_date_day, LV_LABEL_PART_MAIN, &date_style);
-  lv_label_set_text_fmt(label_date_day,  "%s\n%02i", "SAT", 1);
+  lv_label_set_text_fmt(label_date_day,  "%s\n%02i", dateTimeController.DayOfWeekShortToString(), day);
   lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_date_day, NULL, LV_ALIGN_CENTER, 50, 0);  
   
@@ -108,8 +111,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   lv_style_set_line_rounded(&hour_line_style_trace, LV_STATE_DEFAULT, false);
   lv_obj_add_style(hour_body_trace, LV_LINE_PART_MAIN, &hour_line_style_trace);
 
-
-
+  UpdateClock();
 
   /*backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -121,6 +123,55 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
 
 WatchFaceAnalog::~WatchFaceAnalog() {
   lv_obj_clean(lv_scr_act());
+}
+
+void WatchFaceAnalog::UpdateClock() {
+
+  uint8_t hour = dateTimeController.Hours();
+  uint8_t minute = dateTimeController.Minutes();
+  uint8_t second = dateTimeController.Seconds();    
+
+  if(sMinute != minute) {
+    minute_point[0].x = coordinate_x_relocate(30 * sin(minute * 6 * PI / 180));
+    minute_point[0].y = coordinate_y_relocate(30 * cos(minute * 6 * PI / 180));
+    minute_point[1].x = coordinate_x_relocate(MINUTE_LENGTH * sin(minute * 6 * PI / 180));
+    minute_point[1].y = coordinate_y_relocate(MINUTE_LENGTH * cos(minute * 6 * PI / 180));
+
+    minute_point_trace[0].x = coordinate_x_relocate(5 * sin(minute * 6 * PI / 180));
+    minute_point_trace[0].y = coordinate_y_relocate(5 * cos(minute * 6 * PI / 180));
+    minute_point_trace[1].x = coordinate_x_relocate(31 * sin(minute * 6 * PI / 180));
+    minute_point_trace[1].y = coordinate_y_relocate(31 * cos(minute * 6 * PI / 180));
+    
+    lv_line_set_points(minute_body, minute_point, 2);
+    lv_line_set_points(minute_body_trace, minute_point_trace, 2);
+  }
+
+  if(sHour != hour || sMinute != minute) {
+    sHour = hour;
+    sMinute = minute;
+    hour_point[0].x   = coordinate_x_relocate(30 * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+    hour_point[0].y   = coordinate_y_relocate(30 * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+    hour_point[1].x   = coordinate_x_relocate(HOUR_LENGTH * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+    hour_point[1].y   = coordinate_y_relocate(HOUR_LENGTH * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+
+    hour_point_trace[0].x   = coordinate_x_relocate(5 * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+    hour_point_trace[0].y   = coordinate_y_relocate(5 * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+    hour_point_trace[1].x   = coordinate_x_relocate(31 * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+    hour_point_trace[1].y   = coordinate_y_relocate(31 * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
+
+    lv_line_set_points(hour_body,   hour_point,   2);
+    lv_line_set_points(hour_body_trace,   hour_point_trace,   2);
+  }
+
+  if(sSecond != second) {      
+    sSecond = second;
+    second_point[0].x = coordinate_x_relocate(20 * sin((180 + second * 6) * PI / 180));
+    second_point[0].y = coordinate_y_relocate(20 * cos((180 + second * 6) * PI / 180));
+    second_point[1].x = coordinate_x_relocate(SECOND_LENGTH * sin(second * 6 * PI / 180));
+    second_point[1].y = coordinate_y_relocate(SECOND_LENGTH * cos(second * 6 * PI / 180));
+    lv_line_set_points(second_body, second_point, 2);
+
+  }
 }
 
 
@@ -145,56 +196,12 @@ bool WatchFaceAnalog::Refresh() {
   currentDateTime = dateTimeController.CurrentDateTime();
 
   if(currentDateTime.IsUpdated()) {
-
+    
     auto month = dateTimeController.Month();
     uint8_t day = dateTimeController.Day();
     auto dayOfWeek = dateTimeController.DayOfWeek();
 
-    uint8_t hour = dateTimeController.Hours();
-    uint8_t minute = dateTimeController.Minutes();
-    uint8_t second = dateTimeController.Seconds();    
-
-    if(sMinute != minute) {
-      minute_point[0].x = coordinate_x_relocate(30 * sin(minute * 6 * PI / 180));
-      minute_point[0].y = coordinate_y_relocate(30 * cos(minute * 6 * PI / 180));
-      minute_point[1].x = coordinate_x_relocate(MINUTE_LENGTH * sin(minute * 6 * PI / 180));
-      minute_point[1].y = coordinate_y_relocate(MINUTE_LENGTH * cos(minute * 6 * PI / 180));
-
-      minute_point_trace[0].x = coordinate_x_relocate(5 * sin(minute * 6 * PI / 180));
-      minute_point_trace[0].y = coordinate_y_relocate(5 * cos(minute * 6 * PI / 180));
-      minute_point_trace[1].x = coordinate_x_relocate(31 * sin(minute * 6 * PI / 180));
-      minute_point_trace[1].y = coordinate_y_relocate(31 * cos(minute * 6 * PI / 180));
-      
-      lv_line_set_points(minute_body, minute_point, 2);
-      lv_line_set_points(minute_body_trace, minute_point_trace, 2);
-    }
-
-    if(sHour != hour || sMinute != minute) {
-      sHour = hour;
-      sMinute = minute;
-      hour_point[0].x   = coordinate_x_relocate(30 * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-      hour_point[0].y   = coordinate_y_relocate(30 * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-      hour_point[1].x   = coordinate_x_relocate(HOUR_LENGTH * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-      hour_point[1].y   = coordinate_y_relocate(HOUR_LENGTH * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-
-      hour_point_trace[0].x   = coordinate_x_relocate(5 * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-      hour_point_trace[0].y   = coordinate_y_relocate(5 * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-      hour_point_trace[1].x   = coordinate_x_relocate(31 * sin((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-      hour_point_trace[1].y   = coordinate_y_relocate(31 * cos((((hour > 12 ? hour - 12 : hour) * 30) + (minute * 0.5)) * PI / 180));
-
-      lv_line_set_points(hour_body,   hour_point,   2);
-      lv_line_set_points(hour_body_trace,   hour_point_trace,   2);
-    }
-
-    if(sSecond != second) {      
-      sSecond = second;
-      second_point[0].x = coordinate_x_relocate(20 * sin((180 + second * 6) * PI / 180));
-      second_point[0].y = coordinate_y_relocate(20 * cos((180 + second * 6) * PI / 180));
-      second_point[1].x = coordinate_x_relocate(SECOND_LENGTH * sin(second * 6 * PI / 180));
-      second_point[1].y = coordinate_y_relocate(SECOND_LENGTH * cos(second * 6 * PI / 180));
-      lv_line_set_points(second_body, second_point, 2);
-
-    }
+    UpdateClock();
   
     if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 

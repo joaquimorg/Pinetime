@@ -143,11 +143,11 @@ void DisplayApp::Refresh() {
           PushMessage(Messages::GoToRunning);
           //PushMessage(Messages::NewNotification);
           //PushMessage(Messages::NewNotification);
-          onClockApp = false;
-          currentScreen.reset(nullptr);
-          currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
-          brightnessController.Restore();
-          state = States::Running;
+          //onClockApp = false;
+          //currentScreen.reset(nullptr);
+          //currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
+          //brightnessController.Restore();
+          //state = States::Running;
         }
                 
         //currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        

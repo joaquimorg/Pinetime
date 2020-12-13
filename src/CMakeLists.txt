@@ -276,7 +276,8 @@ set(LVGL_SRC
         #libs/lvgl/src/lv_font/lv_font_dejavu_16_persian_hebrew.c
         libs/lvgl/src/lv_font/lv_font_fmt_txt.c
         libs/lvgl/src/lv_font/lv_font_loader.c
-        libs/lvgl/src/lv_font/lv_font_montserrat_18.c
+        #libs/lvgl/src/lv_font/lv_font_montserrat_18.c
+        libs/lvgl/src/lv_font/lv_font_montserrat_20.c
         libs/lvgl/src/lv_hal/lv_hal_disp.c
         libs/lvgl/src/lv_hal/lv_hal_indev.c
         libs/lvgl/src/lv_hal/lv_hal_tick.c

@@ -158,8 +158,8 @@ void BMA421::Init() {
     /* Set water-mark level 1 to get interrupt after 20 steps.
      * Range of step counter interrupt is 0 to 20460(resolution of 20 steps).
      */
-    rslt = bma421_step_counter_set_watermark(1, &bma);
-    bma4_error_codes_print_result("bma421_step_counter status", rslt);
+    //rslt = bma421_step_counter_set_watermark(1, &bma);
+    //bma4_error_codes_print_result("bma421_step_counter status", rslt);
 
     /* Set the interrupt mode in the sensor.
     */

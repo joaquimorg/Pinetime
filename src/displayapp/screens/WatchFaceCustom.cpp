@@ -23,9 +23,16 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
   settingsController.SetClockFace(3);
-  sHour = 99;
-  sMinute = 99;
-  sSecond = 99;
+  uint16_t year = dateTimeController.Year();
+  uint8_t day = dateTimeController.Day();
+
+  uint8_t hour = dateTimeController.Hours();
+  uint8_t minute = dateTimeController.Minutes();
+  uint8_t second = dateTimeController.Seconds();
+
+  sHour = hour;
+  sMinute = minute;
+  sSecond = second;
 
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(bg_clock_img, &xmas);
@@ -43,14 +50,14 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
 
   label_time = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_time, LV_LABEL_PART_MAIN, &hour_style);
-  lv_label_set_text_fmt(label_time,  "%02i", 0);      
+  lv_label_set_text_fmt(label_time,  "%02i", hour);      
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -50, 45);
 
   // Minute
   label_time_min = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_add_style(label_time_min, LV_LABEL_PART_MAIN, &hour_style);
-  lv_label_set_text_fmt(label_time_min,  "%02i", 0);
+  lv_label_set_text_fmt(label_time_min,  "%02i", minute);
   //lv_label_set_align( label_time_min, LV_LABEL_ALIGN_CENTER );
   lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 50, 45);
 
@@ -81,7 +88,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   label_date = lv_label_create(lv_scr_act(), nullptr);
   lv_style_set_text_color(&dateyear_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
   lv_obj_add_style(label_date, LV_LABEL_PART_MAIN, &dateyear_style);
-  lv_label_set_text_fmt(label_date, "%s %02i %s", "WED", 18, "NOV");
+  lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToString(), day, dateTimeController.MonthToString());
   lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
   lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_CENTER, 0, 90);
 

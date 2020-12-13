@@ -34,13 +34,13 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
 
     lv_obj_t * not_img = lv_img_create(lv_scr_act(), NULL);
     lv_img_set_src(not_img, &icon_phone);
-    lv_obj_align(not_img, NULL, LV_ALIGN_CENTER, 0, -60);
+    lv_obj_align(not_img, NULL, LV_ALIGN_CENTER, 0, -70);
 
     lv_obj_t* label = lv_label_create(lv_scr_act(), nullptr);   
     lv_label_set_recolor(label, true); 
-    lv_label_set_text(label, "#0000FF Notification#\n\nNo notification\nto display.");
+    lv_label_set_text(label, "#0000FF Notification#\n\nNo notifications\nto display.");
     lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
-    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
+    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 20);
     
   }
 
@@ -68,7 +68,7 @@ Notifications::~Notifications() {
 // Unknown, Email, IncomingCall, MissedCall, Sms, Schedule, InstantMessage
 char const *Notifications::CategoriesString[] = {
         "Unknown",
-        "Email",
+        "e-Mail",
         "Incoming Call",
         "Missed Call",
         "Sms",        
@@ -84,6 +84,16 @@ void const *Notifications::CategoriesIcon[] = {
         &not_sms,        
         &not_schedule,
         &not_instantmessage
+};
+
+lv_color_t const Notifications::CategoriesColor[] = {
+        lv_color_hex(0x8cc44c),
+        lv_color_hex(0x0d89e5),
+        lv_color_hex(0x4aad4d),
+        lv_color_hex(0x4aad4d),
+        lv_color_hex(0x1097f3),
+        lv_color_hex(0x8bc7f9),
+        lv_color_hex(0xfec100)
 };
 
 const char* Notifications::CategoryToString( Controllers::NotificationManager::Categories category ) {
@@ -181,11 +191,11 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
   // Set the background to Black
   //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
-  static lv_style_t style_container;
+  /*static lv_style_t style_container;
   lv_style_init(&style_container);
   lv_style_set_bg_color(&style_container, LV_STATE_DEFAULT, LV_COLOR_BLACK);
   //lv_style_set_radius(&style_container, LV_STATE_DEFAULT, 0);
-  lv_style_set_pad_all(&style_container, LV_STATE_DEFAULT, 20);
+  lv_style_set_pad_all(&style_container, LV_STATE_DEFAULT, 5);
   lv_style_set_border_width(&style_container, LV_STATE_DEFAULT, 0);
 
   lv_obj_t* container1 = lv_cont_create(lv_scr_act(), NULL);
@@ -194,44 +204,57 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
   lv_obj_set_auto_realign(container1, true);                  
   lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);
   lv_cont_set_fit(container1, LV_FIT_MAX);
-  lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_MID);
+  lv_cont_set_layout(container1, LV_LAYOUT_OFF);*/
 
   if ( msg.valid ) {
 
-    lv_obj_t * not_img = lv_img_create(container1, NULL);
+    lv_obj_t * not_img = lv_img_create(lv_scr_act(), NULL);
     lv_img_set_src(not_img, Notifications::CategoriesIcon[(uint8_t)msg.category]);
-    lv_obj_align(not_img, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);
+    lv_obj_align(not_img, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 5);
 
-    lv_obj_t* alert_type = lv_label_create(container1, nullptr);
-    //lv_label_set_body_draw(l1, true);
-    //lv_obj_set_width(alert_type, LV_HOR_RES - 10);
+    /*lv_obj_t* alert_type = lv_label_create(container1, nullptr);
     lv_label_set_recolor(alert_type, true);
-    lv_label_set_text_fmt(alert_type, "#00FF00 %s#", title);
+    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
+    lv_label_set_text_fmt(alert_type, "#999999 %s#", title);*/
 
-    lv_obj_t* alert_subject = lv_label_create(container1, nullptr);
+    static lv_style_t alert_subject_style;
+    lv_style_init(&alert_subject_style);
+    lv_style_set_text_color(&alert_subject_style, LV_STATE_DEFAULT, Notifications::CategoriesColor[(uint8_t)msg.category]);  
+    //lv_style_set_text_font(&alert_subject_style, LV_STATE_DEFAULT, &lv_font_montserrat_18);  
+
+    lv_obj_t* alert_subject = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_add_style(alert_subject, LV_LABEL_PART_MAIN, &alert_subject_style);
     lv_label_set_long_mode(alert_subject, LV_LABEL_LONG_BREAK);
-    //lv_label_set_body_draw(l1, true);
-    lv_obj_set_width(alert_subject, LV_HOR_RES - 20);
-    lv_label_set_recolor(alert_subject, true);
-    lv_label_set_text_fmt(alert_subject, "#AAAAAA %s#", msg.subject.data());
+    lv_obj_set_width(alert_subject, LV_HOR_RES - 40);    
+    lv_label_set_text(alert_subject, msg.subject.data());
+    lv_obj_align(alert_subject, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 20);
 
-    lv_obj_t* alert_body = lv_label_create(container1, nullptr);
+    static lv_style_t alert_body_style;
+    lv_style_init(&alert_body_style);
+    lv_style_set_text_color(&alert_body_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));  
+    lv_style_set_text_font(&alert_body_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
+
+    lv_obj_t* alert_body = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_add_style(alert_body, LV_LABEL_PART_MAIN, &alert_body_style);
     lv_label_set_long_mode(alert_body, LV_LABEL_LONG_BREAK);
-    //lv_label_set_body_draw(l1, true);
     lv_obj_set_width(alert_body, LV_HOR_RES - 20);
     lv_label_set_text(alert_body, msg.message.data());
+    lv_obj_align(alert_body, alert_subject, LV_ALIGN_OUT_BOTTOM_LEFT, -40, 20);
 
-    lv_obj_t* alert_time = lv_label_create(container1, nullptr);
-    //lv_label_set_body_draw(l1, true);
-    //lv_obj_set_width(alert_type, LV_HOR_RES - 10);
-    lv_label_set_recolor(alert_time, true);
-    lv_label_set_text_fmt(alert_time, "#0000FF %s:%s#", msg.hour.data(), msg.minute.data());
+    static lv_style_t alert_time_style;
+    lv_style_init(&alert_time_style);
+    lv_style_set_text_color(&alert_time_style, LV_STATE_DEFAULT, lv_color_hex(0x999999));  
+
+    lv_obj_t* alert_time = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_add_style(alert_time, LV_LABEL_PART_MAIN, &alert_time_style);    
+    lv_label_set_text_fmt(alert_time, "%s:%s   %s", msg.hour.data(), msg.minute.data(), title);
+    lv_obj_align(alert_time, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
 
   } else {
-    lv_obj_t* alert_type = lv_label_create(container1, nullptr);
-    //lv_label_set_body_draw(l1, true);
-    lv_obj_set_width(alert_type, LV_HOR_RES - 20);
+    lv_obj_t* alert_type = lv_label_create(lv_scr_act(), nullptr);
+    //lv_obj_set_width(alert_type, LV_HOR_RES - 20);
     lv_label_set_text_fmt(alert_type, "$s\n\n$s", title, "Invalid alert...");
+    lv_obj_align(alert_type, NULL, LV_ALIGN_CENTER, 0, -20);
   }
 
 }

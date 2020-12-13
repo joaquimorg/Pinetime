@@ -47,7 +47,7 @@
 /* Dot Per Inch: used to initialize default sizes.
  * E.g. a button with width = LV_DPI / 2 -> half inch wide
  * (Not so important, you can adjust it to modify default sizes and spaces)*/
-#define LV_DPI              100     /*[px]*/
+#define LV_DPI              160     /*[px]*/
 
 /* The the real width of the display changes some default values:
  * default object sizes, layout of examples, etc.
@@ -74,7 +74,7 @@ typedef int16_t lv_coord_t;
 #define LV_MEM_CUSTOM      0
 #if LV_MEM_CUSTOM == 0
 /* Size of the memory used by `lv_mem_alloc` in bytes (>= 2kB)*/
-#define LV_MEM_SIZE    (8U * 1024U)
+#define LV_MEM_SIZE    (10U * 1024U)
 
 /* Complier prefix for a big array declaration */
 #define LV_MEM_ATTR
@@ -159,7 +159,7 @@ typedef void* lv_anim_user_data_t;
 #endif
 
 /*1: enable outline drawing on rectangles*/
-#define LV_USE_OUTLINE  1
+#define LV_USE_OUTLINE  0
 
 /*1: enable pattern drawing on rectangles*/
 #define LV_USE_PATTERN  0
@@ -174,7 +174,7 @@ typedef void* lv_anim_user_data_t;
 #define LV_USE_OPA_SCALE        0
 
 /* 1: Use image zoom and rotation*/
-#define LV_USE_IMG_TRANSFORM    1
+#define LV_USE_IMG_TRANSFORM    0
 
 /* 1: Enable object groups (for keyboard/encoder navigation) */
 #define LV_USE_GROUP            1
@@ -217,7 +217,7 @@ typedef void * lv_fs_drv_user_data_t;
 #define LV_USE_PERF_MONITOR     0
 
 /*1: Use the functions and types from the older API if possible */
-#define LV_USE_API_EXTENSION_V6  1
+#define LV_USE_API_EXTENSION_V6  0
 #define LV_USE_API_EXTENSION_V7  1
 
 /*========================
@@ -228,7 +228,7 @@ typedef void * lv_fs_drv_user_data_t;
 #define LV_IMG_CF_INDEXED       1
 
 /* 1: Enable alpha indexed images */
-#define LV_IMG_CF_ALPHA         1
+#define LV_IMG_CF_ALPHA         0
 
 /* Default image cache size. Image caching keeps the images opened.
  * If only the built-in image formats are used there is no real advantage of caching.
@@ -336,7 +336,7 @@ typedef void* lv_indev_drv_user_data_t;            /*Type of user data in the in
  * The behavior of asserts can be overwritten by redefining them here.
  * E.g. #define LV_ASSERT_MEM(p)  <my_assert_code>
  */
-#define LV_USE_DEBUG        1
+#define LV_USE_DEBUG        0
 #if LV_USE_DEBUG
 
 /*Check if the parameter is NULL. (Quite fast) */
@@ -380,7 +380,7 @@ typedef void* lv_indev_drv_user_data_t;            /*Type of user data in the in
 #define LV_FONT_MONTSERRAT_14    0
 #define LV_FONT_MONTSERRAT_16    0
 #define LV_FONT_MONTSERRAT_18    0
-#define LV_FONT_MONTSERRAT_20    0
+#define LV_FONT_MONTSERRAT_20    1
 #define LV_FONT_MONTSERRAT_22    0
 #define LV_FONT_MONTSERRAT_24    0
 #define LV_FONT_MONTSERRAT_26    0
@@ -480,7 +480,7 @@ typedef void* lv_font_user_data_t;
 #define LV_THEME_DEFAULT_FONT_SMALL         &lv_font_montserrat_18_icons
 #define LV_THEME_DEFAULT_FONT_NORMAL        &lv_font_montserrat_18_icons
 #define LV_THEME_DEFAULT_FONT_SUBTITLE      &lv_font_montserrat_18_icons
-#define LV_THEME_DEFAULT_FONT_TITLE         &lv_font_montserrat_18_icons
+#define LV_THEME_DEFAULT_FONT_TITLE         &lv_font_montserrat_20
 
 /*=================
  *  Text settings

@@ -78,6 +78,8 @@ namespace Pinetime {
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
           Controllers::Settings& settingsController;
+
+          void UpdateClock();
       };
     }
   }
