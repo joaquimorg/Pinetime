@@ -165,7 +165,7 @@ void AlertNotificationClient::OnNotification(ble_gap_event *event) {
     NotificationManager::Notification notif;
     os_mbuf_copydata(event->notify_rx.om, headerSize, messageSize - 1, notif.message.data());
     notif.message[messageSize - 1] = '\0';
-    notif.category = Pinetime::Controllers::NotificationManager::Categories::SimpleAlert;
+    notif.category = Pinetime::Controllers::NotificationManager::Categories::Unknown;
     notificationManager.Push(std::move(notif));
 
     systemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnNewNotification);

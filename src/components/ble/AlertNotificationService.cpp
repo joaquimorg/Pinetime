@@ -62,8 +62,63 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
                                                     struct ble_gatt_access_ctxt *ctxt) {
   if (ctxt->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
 
-    constexpr size_t stringTerminatorSize = 1; // end of string '\0'
-    constexpr size_t headerSize = 2;
+    NotificationManager::Notification notif;
+    constexpr size_t headerSize = 9;
+
+    uint8_t* notification = new uint8_t[headerSize];
+    /*
+        notification[0] = 0x01
+        notification[1] = (byte) notification Id
+        notification[2] = 0x02
+        notification[3] = (byte) notification_length
+        notification[4] = (byte) notification_length
+        notification[5] = (byte) category
+        notification[6] = 0x03;
+        notification[7] = (byte) subject_length
+        notification[8] = (byte) body_length
+        subject = (subject_length)
+        body = (body_length)
+        datetime
+        notification[notification_length - 1] = 0x0f
+    
+    */
+
+    // debug = b AlertNotificationService.cpp:87
+    // set $i = 0
+    // p ctxt->om.om_data[$i++]
+
+    os_mbuf_copydata(ctxt->om, 0, headerSize, notification);
+
+    uint8_t subject_length = notification[7];
+    uint8_t body_length = notification[8];    
+    uint8_t category = notification[5];
+
+    notif.alertID = notification[1];    
+
+    // Subject
+    os_mbuf_copydata(ctxt->om, headerSize, subject_length + 1, notif.subject.data());
+    notif.subject[subject_length] = '\0';
+
+    // Body
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length, body_length + 1, notif.message.data());
+    notif.message[body_length] = '\0';
+
+    // Date Time
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length + body_length, 5, notif.year.data());
+    notif.year[4] = '\0';
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length + body_length + 4, 3, notif.month.data());
+    notif.month[2] = '\0';
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length + body_length + 6, 3, notif.day.data());
+    notif.day[2] = '\0';
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length + body_length + 9, 3, notif.hour.data());
+    notif.hour[2] = '\0';
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length + body_length + 11, 3, notif.minute.data());
+    notif.minute[2] = '\0';
+    os_mbuf_copydata(ctxt->om, headerSize + subject_length + body_length + 13, 3, notif.second.data());
+    notif.second[2] = '\0';
+
+    /*constexpr size_t stringTerminatorSize = 1; // end of string '\0'
+    constexpr size_t headerSize = 3;
     const auto maxMessageSize {NotificationManager::MaximumMessageSize()};
     const auto maxBufferSize{maxMessageSize + headerSize};
 
@@ -75,46 +130,44 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
     os_mbuf_copydata(ctxt->om, headerSize, messageSize-1, notif.message.data());
     notif.message[messageSize-1] = '\0';
 
+   
     uint8_t* category = new uint8_t[1];
 
-    os_mbuf_copydata(ctxt->om, 0, 1, category);
+    os_mbuf_copydata(ctxt->om, 0, 1, category);*/
 
-    notif.category = Pinetime::Controllers::NotificationManager::Categories::Sms;
+    notif.category = Pinetime::Controllers::NotificationManager::Categories::Unknown;
     Pinetime::System::SystemTask::Messages event = Pinetime::System::SystemTask::Messages::OnNewNotification;
 
-    switch(*category) {
-      case ALERT_UNKNOWN:
-        notif.category = Pinetime::Controllers::NotificationManager::Categories::Unknown;
-        break;
-      case ALERT_SIMPLE_ALERT:
-        notif.category = Pinetime::Controllers::NotificationManager::Categories::SimpleAlert;
-        break;
-      case ALERT_EMAIL:
+    switch(category) {
+      
+      case NOTIFICATION_EMAIL:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::Email;
         break;
-      case ALERT_NEWS:
-        notif.category = Pinetime::Controllers::NotificationManager::Categories::News;
-        break;
-      case ALERT_INCOMING_CALL:
+      /*case NOTIFICATION_CALL_OFF:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::IncomingCall;
         //event = Pinetime::System::SystemTask::Messages::OnNewCall;
-        break;
-      case ALERT_MISSED_CALL:
+        break;*/
+      case NOTIFICATION_CALL_OFF:
+      case NOTIFICATION_MISSED_CALL:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::MissedCall;
         break;
-      case ALERT_SMS:
+      case NOTIFICATION_SMS:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::Sms;
         break;
-      case ALERT_VOICE_MAIL:
-        notif.category = Pinetime::Controllers::NotificationManager::Categories::VoiceMail;
-        break;
-      case ALERT_SCHEDULE:
+      case NOTIFICATION_CALENDAR:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::Schedule;
         break;
-      case ALERT_HIGH_PRIORITY_ALERT:
-        notif.category = Pinetime::Controllers::NotificationManager::Categories::HighProriotyAlert;
-        break;
-      case ALERT_INSTANT_MESSAGE:
+      case NOTIFICATION_WECHAT:
+      case NOTIFICATION_VIBER:
+      case NOTIFICATION_SNAPCHAT:
+      case NOTIFICATION_WHATSAPP:
+      case NOTIFICATION_FACEBOOK:
+      case NOTIFICATION_MESSENGER:
+      case NOTIFICATION_INSTAGRAM:
+      case NOTIFICATION_TWITTER:
+      case NOTIFICATION_LINKEDIN:
+      case NOTIFICATION_LINE:
+      case NOTIFICATION_SKYPE:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::InstantMessage;
         break;
       default:
@@ -122,6 +175,7 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
         break;
     }
     
+    // debug = b AlertNotificationService.cpp:165
     notificationManager.Push(std::move(notif));
     systemTask.PushMessage(event);
   }

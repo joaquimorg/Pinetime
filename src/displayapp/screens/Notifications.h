@@ -11,7 +11,7 @@ namespace Pinetime {
     namespace Screens {
       class Notifications : public Screen {
         public:
-          enum class Modes {Normal, Preview};
+          enum class Modes {Normal, Preview, Clock};
           explicit Notifications(DisplayApp* app, Pinetime::Controllers::NotificationManager& notificationManager, Modes mode);
           ~Notifications() override;
 
@@ -24,19 +24,20 @@ namespace Pinetime {
 
           class NotificationItem {
             public:
-              NotificationItem(const char* title, const char* msg, uint8_t notifNr, uint8_t notifNb, Modes mode);
+              NotificationItem(const char* title, Controllers::NotificationManager::Notification& msg, uint8_t notifNr, uint8_t notifNb, Modes mode);
               ~NotificationItem();
               bool Refresh() {return false;}
 
             private:
+              Controllers::NotificationManager::Notification& msg;
               uint8_t notifNr = 0;
               uint8_t notifNb = 0;
-              char pageText[4];
+              //char pageText[4];
 
-              lv_obj_t* container1;
-              lv_obj_t* t1;
-              lv_obj_t* l1;
-              lv_obj_t* bottomPlaceholder;
+              //lv_obj_t* container1;
+              //lv_obj_t* t1;
+              //lv_obj_t* l1;
+              //lv_obj_t* bottomPlaceholder;
               Modes mode;
           };
 
@@ -57,6 +58,7 @@ namespace Pinetime {
           uint32_t timeoutTickCountEnd;
 
           static char const *CategoriesString[];
+          static void const *CategoriesIcon[];
           const char* CategoryToString( Controllers::NotificationManager::Categories category );
       };
     }

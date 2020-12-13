@@ -142,6 +142,12 @@ void DisplayApp::Refresh() {
         } else {
           PushMessage(Messages::GoToRunning);
           //PushMessage(Messages::NewNotification);
+          //PushMessage(Messages::NewNotification);
+          onClockApp = false;
+          currentScreen.reset(nullptr);
+          currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
+          brightnessController.Restore();
+          state = States::Running;
         }
                 
         //currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
@@ -159,11 +165,16 @@ void DisplayApp::Refresh() {
         if(!currentScreen->OnTouchEvent(gesture)) {
           switch (gesture) {
             case TouchEvents::SwipeUp:
-              onClockApp = false;
-              //currentScreen->OnButtonPushed();
-              lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
-              currentScreen.reset(nullptr);
-              currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController));
+              if(onClockApp) {
+                onClockApp = false;
+                //currentScreen->OnButtonPushed();
+                lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
+                currentScreen.reset(nullptr);
+                currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController));
+              } else {
+                lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Up);
+                currentScreen->OnButtonPushed();
+              }
               break;
             /*case TouchEvents::SwipeDown:
               currentScreen->OnButtonPushed();
@@ -177,6 +188,11 @@ void DisplayApp::Refresh() {
                 onClockApp = true;*/
                 lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
                 currentScreen->OnButtonPushed();
+              } else {
+                onClockApp = false;
+                lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+                currentScreen.reset(nullptr);
+                currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Clock));
               }
               break;
             default:

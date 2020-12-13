@@ -3,13 +3,23 @@
 
 using namespace Pinetime::Applications::Screens;
 
+LV_IMG_DECLARE(not_email);
+LV_IMG_DECLARE(not_instantmessage);
+LV_IMG_DECLARE(not_missedcall);
+LV_IMG_DECLARE(not_schedule);
+LV_IMG_DECLARE(not_sms);
+LV_IMG_DECLARE(not_unknown);
+
+LV_IMG_DECLARE(icon_phone);
+
+
 Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::NotificationManager &notificationManager, Modes mode) :
         Screen(app), notificationManager{notificationManager}, mode{mode} {
 
   
 
   // Set the background to Black
-  //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
+  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
   notificationManager.ClearNewNotificationFlag();
   
@@ -17,13 +27,24 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
 
   if(notification.valid) {
     currentId = notification.id;
-    currentItem.reset(new NotificationItem(CategoryToString(notification.category), notification.message.data(), notification.index, notificationManager.NbNotifications(), mode));
+    currentItem.reset(new NotificationItem(CategoryToString(notification.category), notification, notification.index, notificationManager.NbNotifications(), mode));
     validDisplay = true;
   } else {
-    currentItem.reset(new NotificationItem("Notification", "No notification to display", 0, notificationManager.NbNotifications(), Modes::Preview));
+    //currentItem.reset(new NotificationItem("Notification", NULL, 0, notificationManager.NbNotifications(), Modes::Preview));
+
+    lv_obj_t * not_img = lv_img_create(lv_scr_act(), NULL);
+    lv_img_set_src(not_img, &icon_phone);
+    lv_obj_align(not_img, NULL, LV_ALIGN_CENTER, 0, -60);
+
+    lv_obj_t* label = lv_label_create(lv_scr_act(), nullptr);   
+    lv_label_set_recolor(label, true); 
+    lv_label_set_text(label, "#0000FF Notification#\n\nNo notification\nto display.");
+    lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
+    lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 0);
+    
   }
 
-  if(mode == Modes::Preview) {
+  /*if(mode == Modes::Preview) {
     static lv_style_t style_line;
     //lv_style_init(&style_line);
     //style_line.line.color = LV_COLOR_WHITE;
@@ -36,7 +57,7 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
     //lv_line_set_points(timeoutLine, timeoutLinePoints, 2);
     //timeoutTickCountStart = xTaskGetTickCount();
     //timeoutTickCountEnd = timeoutTickCountStart + (5*1024);
-  }
+  }*/
 }
 
 Notifications::~Notifications() {
@@ -44,19 +65,25 @@ Notifications::~Notifications() {
 }
 
 
-// Unknown, SimpleAlert, Email, News, IncomingCall, MissedCall, Sms, VoiceMail, Schedule, HighProriotyAlert, InstantMessage
+// Unknown, Email, IncomingCall, MissedCall, Sms, Schedule, InstantMessage
 char const *Notifications::CategoriesString[] = {
         "Unknown",
-        "Simple Alert",
         "Email",
-        "News",
         "Incoming Call",
         "Missed Call",
-        "Sms",
-        "Voice Mail",
+        "Sms",        
         "Schedule",
-        "High Prorioty Alert",
         "Instant Message"
+};
+
+void const *Notifications::CategoriesIcon[] = {
+        &not_unknown,
+        &not_email,
+        &not_missedcall,
+        &not_missedcall,
+        &not_sms,        
+        &not_schedule,
+        &not_instantmessage
 };
 
 const char* Notifications::CategoryToString( Controllers::NotificationManager::Categories category ) {
@@ -91,13 +118,21 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       else
         previousNotification = notificationManager.GetLastNotification();
 
-      if (!previousNotification.valid) return true;
+      if (!previousNotification.valid) {        
+        if(mode == Modes::Clock || mode == Modes::Preview) {
+          running = false;
+          app->StartApp(Apps::Clock);
+        } else {
+          running = false;
+        }
+        return true;
+      }
 
       validDisplay = true;
       currentId = previousNotification.id;
       currentItem.reset(nullptr);
       app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
-      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification.message.data(),  previousNotification.index, notificationManager.NbNotifications(), mode));
+      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications(), mode));
     }
       return true;
     case Pinetime::Applications::TouchEvents::SwipeDown: {
@@ -107,18 +142,25 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       else
         nextNotification = notificationManager.GetLastNotification();
 
-      if (!nextNotification.valid) return true;
+      if (!nextNotification.valid) {
+        /*if(mode == Modes::Normal) {
+          running = false;
+          //app->StartApp(Apps::Launcher);
+        }*/
+        return true;
+      }
 
       validDisplay = true;
       currentId = nextNotification.id;
       currentItem.reset(nullptr);
       app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
-      currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification.message.data(),  nextNotification.index, notificationManager.NbNotifications(), mode));
+      currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications(), mode));
     }
       return true;
       
     case Pinetime::Applications::TouchEvents::SwipeRight : 
-      running = false;
+      //running = false;
+      // delete ???
       return true;
 
     default:
@@ -133,84 +175,65 @@ bool Notifications::OnButtonPushed() {
 }
 
 
-Notifications::NotificationItem::NotificationItem(const char *title, const char *msg, uint8_t notifNr, uint8_t notifNb, Modes mode)
-        : notifNr{notifNr}, notifNb{notifNb}, mode{mode} {
+Notifications::NotificationItem::NotificationItem(const char *title, Controllers::NotificationManager::Notification &msg, uint8_t notifNr, uint8_t notifNb, Modes mode)
+        : msg{msg}, notifNr{notifNr}, notifNb{notifNb}, mode{mode} {
 
   // Set the background to Black
-  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
+  //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
-  container1 = lv_cont_create(lv_scr_act(), NULL);
-  lv_obj_set_auto_realign(container1, true);                    /*Auto realign when the size changes*/
-  lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);  /*This parametrs will be sued when realigned*/
+  static lv_style_t style_container;
+  lv_style_init(&style_container);
+  lv_style_set_bg_color(&style_container, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+  //lv_style_set_radius(&style_container, LV_STATE_DEFAULT, 0);
+  lv_style_set_pad_all(&style_container, LV_STATE_DEFAULT, 20);
+  lv_style_set_border_width(&style_container, LV_STATE_DEFAULT, 0);
+
+  lv_obj_t* container1 = lv_cont_create(lv_scr_act(), NULL);
+  lv_obj_add_style(container1, LV_CONT_PART_MAIN, &style_container);
+
+  lv_obj_set_auto_realign(container1, true);                  
+  lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);
   lv_cont_set_fit(container1, LV_FIT_MAX);
   lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_MID);
 
-  //container1 = lv_cont_create(lv_scr_act(), nullptr);
-  
-  //static lv_style_t contStyle;
-  
-  //lv_style_init(&contStyle, lv_cont_get_style(container1, LV_CONT_STYLE_MAIN));
+  if ( msg.valid ) {
 
-  //contStyle.body.padding.inner = 20;
-  //lv_cont_set_style(container1, LV_CONT_STYLE_MAIN, &contStyle);
-  //lv_obj_set_width(container1, 240);
-  //lv_obj_set_height(container1, 240);
-  //lv_obj_set_pos(container1, 0, 0);
-  //lv_cont_set_layout(container1, LV_LAYOUT_OFF);
-  //lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_MID);
-  //lv_cont_set_fit2(container1, LV_FIT_FLOOD, LV_FIT_FLOOD);
+    lv_obj_t * not_img = lv_img_create(container1, NULL);
+    lv_img_set_src(not_img, Notifications::CategoriesIcon[(uint8_t)msg.category]);
+    lv_obj_align(not_img, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 0);
 
-  t1 = lv_label_create(container1, nullptr);
-  /*static lv_style_t titleStyle;
-  static lv_style_t textStyle;
-  static lv_style_t bottomStyle;
-  lv_style_copy(&titleStyle, lv_label_get_style(t1, LV_LABEL_STYLE_MAIN));
-  lv_style_copy(&textStyle, lv_label_get_style(t1, LV_LABEL_STYLE_MAIN));
-  lv_style_copy(&bottomStyle, lv_label_get_style(t1, LV_LABEL_STYLE_MAIN));
-  titleStyle.body.padding.inner = 5;
-  titleStyle.body.grad_color = LV_COLOR_GRAY;
-  titleStyle.body.main_color = LV_COLOR_GRAY;
-  titleStyle.body.radius = 20;
-  textStyle.body.border.part = LV_BORDER_NONE;
-  textStyle.body.padding.inner = 5;
+    lv_obj_t* alert_type = lv_label_create(container1, nullptr);
+    //lv_label_set_body_draw(l1, true);
+    //lv_obj_set_width(alert_type, LV_HOR_RES - 10);
+    lv_label_set_recolor(alert_type, true);
+    lv_label_set_text_fmt(alert_type, "#00FF00 %s#", title);
 
-  bottomStyle.body.main_color = LV_COLOR_GREEN;
-  bottomStyle.body.grad_color = LV_COLOR_GREEN;
-  bottomStyle.body.border.part = LV_BORDER_TOP;
-  bottomStyle.body.border.color = LV_COLOR_RED;*/
+    lv_obj_t* alert_subject = lv_label_create(container1, nullptr);
+    lv_label_set_long_mode(alert_subject, LV_LABEL_LONG_BREAK);
+    //lv_label_set_body_draw(l1, true);
+    lv_obj_set_width(alert_subject, LV_HOR_RES - 20);
+    lv_label_set_recolor(alert_subject, true);
+    lv_label_set_text_fmt(alert_subject, "#AAAAAA %s#", msg.subject.data());
 
-  //lv_label_set_style(t1, LV_LABEL_STYLE_MAIN, &titleStyle);
-  //lv_label_set_long_mode(t1, LV_LABEL_LONG_BREAK);
-  //lv_label_set_body_draw(t1, true);
-  //lv_obj_set_width(t1, LV_HOR_RES - (titleStyle.body.padding.left + titleStyle.body.padding.right));
-  lv_label_set_text(t1, title);
-  //static constexpr int16_t offscreenOffset = -20 ;
-  //lv_obj_set_pos(t1, titleStyle.body.padding.left, offscreenOffset);
+    lv_obj_t* alert_body = lv_label_create(container1, nullptr);
+    lv_label_set_long_mode(alert_body, LV_LABEL_LONG_BREAK);
+    //lv_label_set_body_draw(l1, true);
+    lv_obj_set_width(alert_body, LV_HOR_RES - 20);
+    lv_label_set_text(alert_body, msg.message.data());
 
-  //auto titleHeight = lv_obj_get_height(t1);
+    lv_obj_t* alert_time = lv_label_create(container1, nullptr);
+    //lv_label_set_body_draw(l1, true);
+    //lv_obj_set_width(alert_type, LV_HOR_RES - 10);
+    lv_label_set_recolor(alert_time, true);
+    lv_label_set_text_fmt(alert_time, "#0000FF %s:%s#", msg.hour.data(), msg.minute.data());
 
-  l1 = lv_label_create(container1, nullptr);
-  //lv_label_set_style(l1, LV_LABEL_STYLE_MAIN, &textStyle);
-  /*lv_obj_set_pos(l1, textStyle.body.padding.left,
-                 titleHeight + offscreenOffset + textStyle.body.padding.bottom +
-                 textStyle.body.padding.top);*/
+  } else {
+    lv_obj_t* alert_type = lv_label_create(container1, nullptr);
+    //lv_label_set_body_draw(l1, true);
+    lv_obj_set_width(alert_type, LV_HOR_RES - 20);
+    lv_label_set_text_fmt(alert_type, "$s\n\n$s", title, "Invalid alert...");
+  }
 
-  //lv_label_set_long_mode(l1, LV_LABEL_LONG_BREAK);
-  //lv_label_set_body_draw(l1, true);
-  //lv_obj_set_width(l1, LV_HOR_RES - (textStyle.body.padding.left + textStyle.body.padding.right));
-  lv_label_set_text(l1, msg);
-
-  /*if(mode == Modes::Normal) {
-    if(notifNr < notifNb) {
-      bottomPlaceholder = lv_label_create(container1, nullptr);
-      //lv_label_set_style(bottomPlaceholder, LV_LABEL_STYLE_MAIN, &titleStyle);
-      lv_label_set_long_mode(bottomPlaceholder, LV_LABEL_LONG_BREAK);
-      //lv_label_set_body_draw(bottomPlaceholder, true);
-      //lv_obj_set_width(bottomPlaceholder, LV_HOR_RES - (titleStyle.body.padding.left + titleStyle.body.padding.right));
-      lv_label_set_text(bottomPlaceholder, " ");
-      //lv_obj_set_pos(bottomPlaceholder, titleStyle.body.padding.left, LV_VER_RES - 5);
-    }
-  }*/
 }
 
 

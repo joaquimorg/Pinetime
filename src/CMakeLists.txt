@@ -509,7 +509,14 @@ list(APPEND SOURCE_FILES
         displayapp/icons/icon_music.c
         displayapp/icons/icon_error.c
         displayapp/icons/icon_folder.c
-                
+
+        #Notification Icons 
+        displayapp/icons/not_email.c
+        displayapp/icons/not_instantmessage.c
+        displayapp/icons/not_missedcall.c
+        displayapp/icons/not_schedule.c
+        displayapp/icons/not_sms.c
+        displayapp/icons/not_unknown.c
         )
 
 list(APPEND GRAPHICS_SOURCE_FILES

@@ -294,12 +294,13 @@ void SystemTask::NewNotification() {
     WakeUp();
     GoToRunning();
     //NewNotification();
-  } else {
+    //displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
+  } /*else {
     displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
-  }
+  }*/
   //displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning); 
   //vTaskDelay(500);
-  //displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
+  displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
 }
 
 void SystemTask::OnTouchEvent() {
