@@ -1,6 +1,7 @@
 #include "BMA421.h"
 #include <FreeRTOS.h>
 #include <legacy/nrf_drv_gpiote.h>
+#include <libraries/delay/nrf_delay.h>
 #include <nrfx_log.h>
 #include <task.h>
 #include "board_config.h"
@@ -32,42 +33,43 @@ void user_delay(uint32_t period_us, void *intf_ptr)
     //TwiMaster *twiMaster = (TwiMaster *)intf_ptr;
     //uint32_t i;
     //for(i = 0; i < (period_us * 64); i++) {}
+    nrf_delay_us(period_us);
 }
 
 /*!
  *  @brief Prints the execution status of the APIs.
  */
-void bma4_error_codes_print_result(const char api_name[], uint16_t rslt)
+void BMA421::bma4_error_codes_print_result(const char api_name[], uint16_t rslt)
 {
     if (rslt != BMA4_OK)
     {
         //printf("%s\t", api_name);
-        NRF_LOG_INFO("[BMA421] %s\t", api_name);
+        //NRF_LOG_INFO("[BMA421] %s\t", api_name);
         if (rslt & BMA4_E_NULL_PTR)
         {
-            //printf("Error [%d] : Null pointer\r\n", rslt);
-            NRF_LOG_INFO("[BMA421] Error [%d] : Null pointer\r\n", rslt);
+            sprintf(status, "Error [%d] : Null pointer\r\n", rslt);
+            //NRF_LOG_INFO("[BMA421] Error [%d] : Null pointer\r\n", rslt);
         }
         else if (rslt & BMA4_E_CONFIG_STREAM_ERROR)
         {
-            //printf("Error [%d] : Invalid configuration stream\r\n", rslt);
-            NRF_LOG_INFO("[BMA421] Error [%d] : Invalid configuration stream\r\n", rslt);
+            sprintf(status, "Error [%d] : Invalid configuration stream\r\n", rslt);
+            //NRF_LOG_INFO("[BMA421] Error [%d] : Invalid configuration stream\r\n", rslt);
         }
         else if (rslt & BMA4_E_SELF_TEST_FAIL)
         {
-            //printf("Error [%d] : Self test failed\r\n", rslt);
-            NRF_LOG_INFO("[BMA421] Error [%d] : Self test failed\r\n", rslt);
+            sprintf(status, "Error [%d] : Self test failed\r\n", rslt);
+            //NRF_LOG_INFO("[BMA421] Error [%d] : Self test failed\r\n", rslt);
         }
         else if (rslt & BMA4_E_INVALID_SENSOR)
         {
-            //printf("Error [%d] : Device not found\r\n", rslt);
-            NRF_LOG_INFO("[BMA421] Error [%d] : Device not found\r\n", rslt);
+            sprintf(status, "Error [%d] : Device not found\r\n", rslt);
+            //NRF_LOG_INFO("[BMA421] Error [%d] : Device not found\r\n", rslt);
         }
         else
         {
             /* For more error codes refer "*_defs.h" */
-            //printf("Error [%d] : Unknown error code\r\n", rslt);
-            NRF_LOG_INFO("[BMA421] Error [%d] : Unknown error code\r\n", rslt);
+            sprintf(status, "Error [%d] : Unknown error code\r\n", rslt);
+            //NRF_LOG_INFO("[BMA421] Error [%d] : Unknown error code\r\n", rslt);
         }
     }
 }
@@ -103,7 +105,34 @@ void BMA421::Init() {
 
     /* Upload the configuration file to enable the features of the sensor. */
     rslt = bma421_write_config_file(&bma);
-    bma4_error_codes_print_result("bma421_write_config", rslt);    
+    bma4_error_codes_print_result("bma421_write_config", rslt);        
+
+    /* Enable the accelerometer */
+    rslt = bma4_set_accel_enable(BMA4_ENABLE, &bma);
+    bma4_error_codes_print_result("bma4_set_accel_enable status", rslt);
+
+    /* Accelerometer Configuration Setting */
+    accel_conf.odr = BMA4_OUTPUT_DATA_RATE_100HZ;
+    accel_conf.range = BMA4_ACCEL_RANGE_2G;
+    accel_conf.bandwidth = BMA4_ACCEL_NORMAL_AVG4;
+    accel_conf.perf_mode = BMA4_CIC_AVG_MODE;
+
+    /* Set the accel configurations */    
+    rslt = bma4_set_accel_config(&accel_conf, &bma);
+    bma4_error_codes_print_result("bma4_set_accel_config status", rslt);    
+
+    /* Enable step counter */
+    rslt = bma421_feature_enable(BMA421_STEP_CNTR, 1, &bma);
+    bma4_error_codes_print_result("bma421_feature_enable status", rslt);
+
+    //rslt = bma421_step_detector_enable(BMA4_ENABLE, &bma);
+    //bma4_error_codes_print_result("bma421_step_detector_enable status", rslt);
+
+    /* Set water-mark level 1 to get interrupt after 20 steps.
+     * Range of step counter interrupt is 0 to 20460(resolution of 20 steps).
+     */
+    //rslt = bma421_step_counter_set_watermark(1, &bma);
+    //bma4_error_codes_print_result("bma421_step_counter status", rslt);
 
     /* Sets the electrical behaviour of interrupt
     */
@@ -112,54 +141,8 @@ void BMA421::Init() {
     pinConfig.od = BMA4_OPEN_DRAIN;
     pinConfig.output_en = BMA4_OUTPUT_ENABLE;
     pinConfig.input_en = BMA4_INPUT_DISABLE;
-    rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
-    bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  
-
-    /* Accelerometer Configuration Setting */
-    /* Output data Rate */
-    accel_conf.odr = BMA4_OUTPUT_DATA_RATE_100HZ;
-
-    /* Gravity range of the sensor (+/- 2G, 4G, 8G, 16G) */
-    accel_conf.range = BMA4_ACCEL_RANGE_2G;
-
-    /* Bandwidth configure number of sensor samples required to average
-     * if value = 2, then 4 samples are averaged
-     * averaged samples = 2^(val(accel bandwidth))
-     * Note1 : More info refer datasheets
-     * Note2 : A higher number of averaged samples will result in a lower noise level of the signal, but since the
-     * performance power mode phase is increased, the power consumption will also rise.
-     */
-    accel_conf.bandwidth = BMA4_ACCEL_NORMAL_AVG4;
-
-    /* Enable the filter performance mode where averaging of samples
-     * will be done based on above set bandwidth and ODR.
-     * There are two modes
-     *  0 -> Averaging samples (Default)
-     *  1 -> No averaging
-     * For more info on No Averaging mode refer datasheets.
-     */
-    accel_conf.perf_mode = BMA4_CONTINUOUS_MODE;
-
-    /* Set the accel configurations */
-    rslt = bma4_set_accel_config(&accel_conf, &bma);
-    bma4_error_codes_print_result("bma4_set_accel_config status", rslt);
-
-    /* Enable the accelerometer */
-    rslt = bma4_set_accel_enable(BMA4_ENABLE, &bma);
-    bma4_error_codes_print_result("bma4_set_accel_enable status", rslt);
-
-    /* Enable step counter */
-    rslt = bma421_feature_enable(BMA421_STEP_CNTR, 1, &bma);
-    bma4_error_codes_print_result("bma421_feature_enable status", rslt);
-
-    rslt = bma421_step_detector_enable(BMA4_ENABLE, &bma);
-    bma4_error_codes_print_result("bma421_step_detector_enable status", rslt);
-
-    /* Set water-mark level 1 to get interrupt after 20 steps.
-     * Range of step counter interrupt is 0 to 20460(resolution of 20 steps).
-     */
-    //rslt = bma421_step_counter_set_watermark(1, &bma);
-    //bma4_error_codes_print_result("bma421_step_counter status", rslt);
+    //rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
+    //bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  
 
     /* Set the interrupt mode in the sensor.
     */
@@ -176,14 +159,14 @@ void BMA421::Init() {
     remap_data.z_axis  = 2;
     remap_data.z_axis_sign  = 0;
 
-    rslt = bma421_set_remap_axes(&remap_data, &bma);
-    bma4_error_codes_print_result("bma421_set_remap_axes status", rslt);
+    //rslt = bma421_set_remap_axes(&remap_data, &bma);
+    //bma4_error_codes_print_result("bma421_set_remap_axes status", rslt);
 
     /* Interrupt Mapping
      */
     //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, (BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_DOUBLE_TAP_INT | BMA421_WRIST_WEAR_INT), 1, &bma);
-    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
-    bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
+    //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
+    //bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
 
 
 }

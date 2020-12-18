@@ -25,7 +25,7 @@ Steps::Steps(Pinetime::Applications::DisplayApp *app, Pinetime::Drivers::BMA421&
 
   lActivity = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(lActivity, true);                      
-  lv_label_set_text_fmt(lActivity,  "Activity #00FF00 %i#", stepCounter.GetActivity()); 
+  lv_label_set_text_fmt(lActivity,  "status #00FF00 %s#", stepCounter.status); 
   lv_label_set_align(lActivity, LV_LABEL_ALIGN_LEFT);
   lv_obj_align(lActivity, NULL, LV_ALIGN_IN_LEFT_MID, 10, -30);
 
@@ -59,7 +59,7 @@ bool Steps::Refresh() {
   
   lv_label_set_text_fmt(lirq,       "IRQ #00FF00 %i#", nrf_gpio_pin_read(BMA421_IRQ)); 
   lv_label_set_text_fmt(lSteps,     "Steps #00FF00 %li#", stepCounter.GetSteps()); 
-  lv_label_set_text_fmt(lActivity,  "Activity #00FF00 %2i#", stepCounter.GetActivity()); 
+  lv_label_set_text_fmt(lActivity,  "status #00FF00 %s#", stepCounter.status); 
   //lv_label_set_text_fmt(lTapStatus, "TapStatus #00FF00 %2i#", stepCounter.GetTapStatus()); 
   lv_label_set_text_fmt(lTemp,      "Temp #00FF00 %.2f#", stepCounter.GetTemp()); 
 

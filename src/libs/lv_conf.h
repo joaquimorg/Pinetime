@@ -47,7 +47,7 @@
 /* Dot Per Inch: used to initialize default sizes.
  * E.g. a button with width = LV_DPI / 2 -> half inch wide
  * (Not so important, you can adjust it to modify default sizes and spaces)*/
-#define LV_DPI              160     /*[px]*/
+#define LV_DPI              120     /*[px]*/
 
 /* The the real width of the display changes some default values:
  * default object sizes, layout of examples, etc.
@@ -380,7 +380,7 @@ typedef void* lv_indev_drv_user_data_t;            /*Type of user data in the in
 #define LV_FONT_MONTSERRAT_14    0
 #define LV_FONT_MONTSERRAT_16    0
 #define LV_FONT_MONTSERRAT_18    0
-#define LV_FONT_MONTSERRAT_20    1
+#define LV_FONT_MONTSERRAT_20    0
 #define LV_FONT_MONTSERRAT_22    0
 #define LV_FONT_MONTSERRAT_24    0
 #define LV_FONT_MONTSERRAT_26    0
@@ -480,7 +480,7 @@ typedef void* lv_font_user_data_t;
 #define LV_THEME_DEFAULT_FONT_SMALL         &lv_font_montserrat_18_icons
 #define LV_THEME_DEFAULT_FONT_NORMAL        &lv_font_montserrat_18_icons
 #define LV_THEME_DEFAULT_FONT_SUBTITLE      &lv_font_montserrat_18_icons
-#define LV_THEME_DEFAULT_FONT_TITLE         &lv_font_montserrat_20
+#define LV_THEME_DEFAULT_FONT_TITLE         &lv_font_montserrat_18_icons
 
 /*=================
  *  Text settings

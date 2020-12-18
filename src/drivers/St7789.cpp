@@ -199,6 +199,6 @@ void St7789::Wakeup() {
   //NormalModeOn();
   VerticalScrollDefinition(0, 320, 0);
   VerticalScrollStartAddress(verticalScrollingStartAddress);
-  //DisplayOn();
+  DisplayOn();
   NRF_LOG_INFO("[LCD] Wakeup")
 }

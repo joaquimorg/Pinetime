@@ -212,43 +212,47 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
     lv_img_set_src(not_img, Notifications::CategoriesIcon[(uint8_t)msg.category]);
     lv_obj_align(not_img, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 5);
 
-    /*lv_obj_t* alert_type = lv_label_create(container1, nullptr);
-    lv_label_set_recolor(alert_type, true);
-    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
-    lv_label_set_text_fmt(alert_type, "#999999 %s#", title);*/
+    static lv_style_t alert_time_style;
+    lv_style_init(&alert_time_style);
+    lv_style_set_text_color(&alert_time_style, LV_STATE_DEFAULT, lv_color_hex(0x888888));  
+
+    lv_obj_t* alert_time = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_add_style(alert_time, LV_LABEL_PART_MAIN, &alert_time_style);    
+    lv_label_set_text_fmt(alert_time, "%s:%s", msg.hour.data(), msg.minute.data());
+    lv_obj_align(alert_time, NULL, LV_ALIGN_IN_TOP_MID, 0, 16);
+
+    lv_obj_t* alert_count = lv_label_create(lv_scr_act(), nullptr);
+    //lv_obj_add_style(alert_count, LV_LABEL_PART_MAIN, &alert_time_style);    
+    lv_label_set_text_fmt(alert_count, "%i/%i", notifNr, notifNb);
+    lv_obj_align(alert_count, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 16);
+
+    lv_obj_t* alert_type = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_add_style(alert_type, LV_LABEL_PART_MAIN, &alert_time_style);    
+    lv_label_set_text(alert_type, title);
+    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
 
     static lv_style_t alert_subject_style;
     lv_style_init(&alert_subject_style);
     lv_style_set_text_color(&alert_subject_style, LV_STATE_DEFAULT, Notifications::CategoriesColor[(uint8_t)msg.category]);  
-    //lv_style_set_text_font(&alert_subject_style, LV_STATE_DEFAULT, &lv_font_montserrat_18);  
 
     lv_obj_t* alert_subject = lv_label_create(lv_scr_act(), nullptr);
     lv_obj_add_style(alert_subject, LV_LABEL_PART_MAIN, &alert_subject_style);
     lv_label_set_long_mode(alert_subject, LV_LABEL_LONG_BREAK);
-    lv_obj_set_width(alert_subject, LV_HOR_RES - 40);    
+    lv_obj_set_width(alert_subject, LV_HOR_RES - 20);    
     lv_label_set_text(alert_subject, msg.subject.data());
-    lv_obj_align(alert_subject, NULL, LV_ALIGN_IN_TOP_LEFT, 50, 20);
+    lv_obj_align(alert_subject, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 50);
 
     static lv_style_t alert_body_style;
     lv_style_init(&alert_body_style);
     lv_style_set_text_color(&alert_body_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));  
-    lv_style_set_text_font(&alert_body_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
+    //lv_style_set_text_font(&alert_body_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
 
     lv_obj_t* alert_body = lv_label_create(lv_scr_act(), nullptr);
     lv_obj_add_style(alert_body, LV_LABEL_PART_MAIN, &alert_body_style);
     lv_label_set_long_mode(alert_body, LV_LABEL_LONG_BREAK);
     lv_obj_set_width(alert_body, LV_HOR_RES - 20);
     lv_label_set_text(alert_body, msg.message.data());
-    lv_obj_align(alert_body, alert_subject, LV_ALIGN_OUT_BOTTOM_LEFT, -40, 20);
-
-    static lv_style_t alert_time_style;
-    lv_style_init(&alert_time_style);
-    lv_style_set_text_color(&alert_time_style, LV_STATE_DEFAULT, lv_color_hex(0x999999));  
-
-    lv_obj_t* alert_time = lv_label_create(lv_scr_act(), nullptr);
-    lv_obj_add_style(alert_time, LV_LABEL_PART_MAIN, &alert_time_style);    
-    lv_label_set_text_fmt(alert_time, "%s:%s   %s", msg.hour.data(), msg.minute.data(), title);
-    lv_obj_align(alert_time, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
+    lv_obj_align(alert_body, alert_subject, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);    
 
   } else {
     lv_obj_t* alert_type = lv_label_create(lv_scr_act(), nullptr);
@@ -256,6 +260,12 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
     lv_label_set_text_fmt(alert_type, "$s\n\n$s", title, "Invalid alert...");
     lv_obj_align(alert_type, NULL, LV_ALIGN_CENTER, 0, -20);
   }
+
+  lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text(backgroundLabel, "");
 
 }
 

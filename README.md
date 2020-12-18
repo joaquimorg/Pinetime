@@ -128,14 +128,9 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 
 ## My Build
 
-- $ mkdir build  
-- $ cd build
-
-### config :
-- $ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
-- $ cmake -DCMAKE_BUILD_TYPE=Debug -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
-
 - $ make -j pinetime-app
+- $ bp.sh
 
 ### upload via remote openocd : 
-- $ arm-none-eabi-gdb.exe -ex="target remote 192.168.1.187:3333" src/pinetime-app-0.9.0.out -ex "load" -ex "det" -ex "q"
+
+$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" -ex "det" src/pinetime-app-0.9.0.out

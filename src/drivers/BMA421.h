@@ -22,6 +22,8 @@ namespace Pinetime {
             BMA421(BMA421&&) = delete;
             BMA421& operator=(BMA421&&) = delete;
 
+            char* status;
+
             void Init();
             void Update();
 
@@ -48,7 +50,9 @@ namespace Pinetime {
             uint32_t step_count = 0;
             uint8_t activity = 0;
             uint8_t tapStatus = 0;
-            float tempC = 0;
+            float tempC = 0;            
+
+            void bma4_error_codes_print_result(const char api_name[], uint16_t rslt);
             
     };
   }

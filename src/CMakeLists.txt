@@ -277,7 +277,7 @@ set(LVGL_SRC
         libs/lvgl/src/lv_font/lv_font_fmt_txt.c
         libs/lvgl/src/lv_font/lv_font_loader.c
         #libs/lvgl/src/lv_font/lv_font_montserrat_18.c
-        libs/lvgl/src/lv_font/lv_font_montserrat_20.c
+        #libs/lvgl/src/lv_font/lv_font_montserrat_20.c
         libs/lvgl/src/lv_hal/lv_hal_disp.c
         libs/lvgl/src/lv_hal/lv_hal_indev.c
         libs/lvgl/src/lv_hal/lv_hal_tick.c
@@ -711,13 +711,13 @@ link_directories(
 
 
 set(COMMON_FLAGS -MP -MD -mthumb -mabi=aapcs -Wall -Wno-unknown-pragmas -g3 -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin --short-enums -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wreturn-type -Werror=return-type)
-add_definitions(-DCONFIG_GPIO_AS_PINRESET)
-add_definitions(-DDEBUG)
+#add_definitions(-DCONFIG_GPIO_AS_PINRESET)
+#add_definitions(-DDEBUG)
 add_definitions(-DNIMBLE_CFG_CONTROLLER)
 add_definitions(-DOS_CPUTIME_FREQ)
 add_definitions(-DNRF52 -DNRF52832 -DNRF52832_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
 add_definitions(-DFREERTOS)
-add_definitions(-DDEBUG_NRF_USER)
+#add_definitions(-DDEBUG_NRF_USER)
 add_definitions(-D__STACK_SIZE=8192)
 add_definitions(-D__HEAP_SIZE=8192)
 
