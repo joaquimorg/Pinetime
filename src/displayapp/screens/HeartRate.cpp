@@ -7,9 +7,6 @@
 using namespace Pinetime::Applications::Screens;
 
 LV_IMG_DECLARE(icon_heart_rate);
-extern lv_style_t* LabelStyle42;
-extern lv_style_t* DefaultStyle;
-
 
 void HRTimerCallback(TimerHandle_t xTimer) {
 
@@ -78,7 +75,7 @@ HeartRate::HeartRate(
   lv_obj_align(lbpm, lhrs, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
 
   hrs.SetEnable(Drivers::HRS3300::HRS_ENABLE,
-                 Drivers::HRS3300::HRS_WAIT_TIME_12_5ms);
+                 Drivers::HRS3300::HRS_WAIT_TIME_100ms);
   hrTimer = xTimerCreate ("hrTimer", pdMS_TO_TICKS( 20000 ), pdFALSE, this, HRTimerCallback);
   xTimerStart(hrTimer, 0);
   heartRateReading = 1;

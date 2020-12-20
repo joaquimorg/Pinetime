@@ -479,13 +479,26 @@ list(APPEND SOURCE_FILES
         displayapp/LittleVgl.cpp
 
         #Fonts
-        #displayapp/fonts/jetbrains_mono_extrabold_compressed.c
-        #displayapp/fonts/jetbrains_mono_bold_20.c
-        displayapp/fonts/lv_font_montserrat_18.c
-        #displayapp/fonts/lv_font_montserrat_20.c
-        displayapp/fonts/lv_font_clock_90.c
-        displayapp/fonts/lv_font_clock_76.c
-        displayapp/fonts/lv_font_clock_42.c
+        displayapp/fonts/lv_font_montserrat_18.c                
+        displayapp/fonts/clock_font/lv_font_clock_90.c
+        displayapp/fonts/clock_font/lv_font_clock_76.c
+        displayapp/fonts/clock_font/lv_font_clock_42.c
+        displayapp/fonts/clock_font/gomarice_80.c
+
+        #no displayapp/fonts/clock_font/space_sport_70.c
+        #no displayapp/fonts/clock_font/bombardment_70.c
+        displayapp/fonts/clock_font/calliope_fun_70.c
+        # tem que ser maior displayapp/fonts/clock_font/college_halo_70.c
+        # tem que ser maior displayapp/fonts/clock_font/evensong_hollow_70.c
+        displayapp/fonts/clock_font/freshman_70.c
+        # no displayapp/fonts/clock_font/huskysta_70.c
+        # tem que ser maior displayapp/fonts/clock_font/incopins_clusters_70.c
+        displayapp/fonts/clock_font/matrix_3d_nc_70.c
+        displayapp/fonts/clock_font/matrix_nc_70.c
+        # não se nota o detalhe displayapp/fonts/clock_font/prisma_70.c
+        # no displayapp/fonts/clock_font/sho_cardcaps_70.c
+        # no displayapp/fonts/clock_font/stripy_reg_70.c
+        displayapp/fonts/clock_font/world_conflict_70.c
 
         #App Icons 
         displayapp/icons/icon_brightness.c

@@ -115,3 +115,75 @@ char const *DateTime::MonthsString[] = {
         "NOV",
         "DEC"
 };
+
+
+const char *DateTime::MonthToStringLow() {
+  return DateTime::MonthsStringLow[(uint8_t)month];
+}
+
+const char *DateTime::MonthsGetLow() {
+  return DateTime::MonthsLow[(uint8_t)month];
+}
+
+const char *DateTime::DayOfWeekToStringLow() {
+  return DateTime::DaysStringLow[(uint8_t)dayOfWeek];
+}
+
+const char *DateTime::DayOfWeekShortToStringLow() {
+  return DateTime::DaysStringShortLow[(uint8_t)dayOfWeek];
+}
+
+
+char const *DateTime::DaysStringLow[] = {
+        "",
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday",
+        "Saturday",
+        "Sunday"
+};
+
+char const *DateTime::DaysStringShortLow[] = {
+        "",
+        "Mon",
+        "Tue",
+        "Wed",
+        "Thu",
+        "Fri",
+        "Sat",
+        "Sun"
+};
+
+char const *DateTime::MonthsStringLow[] = {
+        "",
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+};
+
+char const *DateTime::MonthsLow[] = {
+        "",
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+};

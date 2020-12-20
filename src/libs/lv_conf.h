@@ -414,9 +414,10 @@ typedef void* lv_indev_drv_user_data_t;            /*Type of user data in the in
  */
 
 #define LV_FONT_CUSTOM_DECLARE  LV_FONT_DECLARE(lv_font_clock_42) \
-                                LV_FONT_DECLARE(lv_font_clock_70) \
                                 LV_FONT_DECLARE(lv_font_clock_76) \
                                 LV_FONT_DECLARE(lv_font_clock_90) \
+                                LV_FONT_DECLARE(world_conflict_70) \
+                                LV_FONT_DECLARE(gomarice_80) \
                                 LV_FONT_DECLARE(lv_font_montserrat_18_icons)
 
 /* Enable it if you have fonts with a lot of characters.

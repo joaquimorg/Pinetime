@@ -22,7 +22,7 @@ namespace Pinetime {
             BMA421(BMA421&&) = delete;
             BMA421& operator=(BMA421&&) = delete;
 
-            char* status;
+            //char* status;
 
             void Init();
             void Update();

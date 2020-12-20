@@ -24,16 +24,21 @@ namespace Pinetime {
         const char* DayOfWeekToString();
         const char* DayOfWeekShortToString();
 
+        const char* MonthToStringLow();
+        const char* DayOfWeekToStringLow();
+        const char* DayOfWeekShortToStringLow();
+        const char* MonthsGetLow();
+
         std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> CurrentDateTime() const { return currentDateTime; }
         std::chrono::seconds Uptime() const { return uptime; }
       private:
-        uint16_t year = 0;
-        Months month = Months::Unknown;
-        uint8_t day = 0;
-        Days dayOfWeek = Days::Unknown;
-        uint8_t hour = 0;
-        uint8_t minute = 0;
-        uint8_t second = 0;
+        uint16_t year = 2020;
+        Months month = Months::December;
+        uint8_t day = 7;
+        Days dayOfWeek = Days::Monday;
+        uint8_t hour = 21;
+        uint8_t minute = 17;
+        uint8_t second = 31;
           
         uint32_t previousSystickCounter = 0;
         std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> currentDateTime;
@@ -42,6 +47,11 @@ namespace Pinetime {
         static char const *DaysString[];
         static char const *DaysStringShort[];
         static char const *MonthsString[];
+
+        static char const *DaysStringLow[];
+        static char const *DaysStringShortLow[];
+        static char const *MonthsStringLow[];
+        static char const *MonthsLow[];
     };
   }
 }

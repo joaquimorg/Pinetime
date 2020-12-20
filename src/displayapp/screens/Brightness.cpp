@@ -13,7 +13,7 @@ void slider_event_cb(lv_obj_t * slider, lv_event_t event) {
 Brightness::Brightness(Pinetime::Applications::DisplayApp *app, Controllers::BrightnessController& brightness) : Screen(app), brightness{brightness} {
   slider = lv_slider_create(lv_scr_act(), nullptr);
   lv_obj_set_user_data(slider, this);
-  lv_obj_set_width(slider, LV_DPI * 2);
+  lv_obj_set_width(slider, 220);
   lv_obj_align(slider, nullptr, LV_ALIGN_CENTER, 0, 0);
   lv_obj_set_event_cb(slider, slider_event_cb);
   lv_slider_set_range(slider, 0, 4);

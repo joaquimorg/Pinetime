@@ -29,13 +29,7 @@ namespace Pinetime {
           Pinetime::Drivers::BMA421& stepCounter;
 
           lv_obj_t * lSteps;
-          lv_obj_t * lActivity;
           lv_obj_t * lTapStatus;
-          lv_obj_t * lTemp;
-          lv_obj_t * lAccel;
-          lv_obj_t * lirq;
-
-          struct Pinetime::Drivers::accl_data_struct sens_data;
 
           bool running = true;
 

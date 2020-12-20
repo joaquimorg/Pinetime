@@ -7,46 +7,32 @@
 
 using namespace Pinetime::Applications::Screens;
 
+LV_IMG_DECLARE(icon_running);
+
 Steps::Steps(Pinetime::Applications::DisplayApp *app, Pinetime::Drivers::BMA421& stepCounter) : Screen(app), stepCounter{stepCounter} {
 
-  stepCounter.Update();
+  //stepCounter.Update();
 
-  lirq = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(lirq, true);                      
-  lv_label_set_text_fmt(lirq,     "IRQ #00FF00 %i#", nrf_gpio_pin_read(BMA421_IRQ)); 
-  lv_label_set_align(lirq, LV_LABEL_ALIGN_LEFT);
-  lv_obj_align(lirq, NULL, LV_ALIGN_IN_LEFT_MID, 10, -90);
+  lv_obj_t * steps_icon = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(steps_icon, &icon_running);  
+  lv_obj_align(steps_icon, NULL, LV_ALIGN_CENTER, -40, -50);
+
+  static lv_style_t steps_style;
+  lv_style_init(&steps_style);
+  lv_style_set_text_color(&steps_style, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
+  lv_style_set_text_font(&steps_style, LV_STATE_DEFAULT, &lv_font_clock_42);
 
   lSteps = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(lSteps, true);                      
-  lv_label_set_text_fmt(lSteps,     "Steps #00FF00 %li#", stepCounter.GetSteps()); 
-  lv_label_set_align(lSteps, LV_LABEL_ALIGN_LEFT);
-  lv_obj_align(lSteps, NULL, LV_ALIGN_IN_LEFT_MID, 10, -60);
+  lv_obj_add_style(lSteps, LV_LABEL_PART_MAIN, &steps_style);   
+  lv_label_set_text_fmt(lSteps,"%li", stepCounter.GetSteps()); 
+  lv_obj_align(lSteps, steps_icon, LV_ALIGN_OUT_RIGHT_MID, 20, -5);
 
-  lActivity = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(lActivity, true);                      
-  lv_label_set_text_fmt(lActivity,  "status #00FF00 %s#", stepCounter.status); 
-  lv_label_set_align(lActivity, LV_LABEL_ALIGN_LEFT);
-  lv_obj_align(lActivity, NULL, LV_ALIGN_IN_LEFT_MID, 10, -30);
-
-  /*lTapStatus = lv_label_create(lv_scr_act(), NULL);
+  lTapStatus = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(lTapStatus, true);                      
-  lv_label_set_text_fmt(lTapStatus,  "TapStatus #00FF00 %i#", stepCounter.GetTapStatus()); 
+  lv_label_set_text_fmt(lTapStatus,  "intStatus #00FF00 %i#", stepCounter.GetTapStatus()); 
   lv_label_set_align(lTapStatus, LV_LABEL_ALIGN_LEFT);
-  lv_obj_align(lTapStatus, NULL, LV_ALIGN_IN_LEFT_MID, 10, 0);*/
+  lv_obj_align(lTapStatus, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 10, 0);
 
-  lTemp = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(lTemp, true);                      
-  lv_label_set_text_fmt(lTemp,        "Temp #00FF00 %.2f#", stepCounter.GetTemp()); 
-  lv_label_set_align(lTemp, LV_LABEL_ALIGN_LEFT);
-  lv_obj_align(lTemp, NULL, LV_ALIGN_IN_LEFT_MID, 10, 30);
-
-  sens_data = stepCounter.GetAccel();
-  lAccel = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(lAccel, true);                      
-  lv_label_set_text_fmt(lAccel,       "Accel #00FF00 %i, %i, %i#", sens_data.x, sens_data.y, sens_data.z); 
-  lv_label_set_align(lAccel, LV_LABEL_ALIGN_LEFT);
-  lv_obj_align(lAccel, NULL, LV_ALIGN_IN_LEFT_MID, 10, 60);
 }
 
 Steps::~Steps() {
@@ -56,15 +42,10 @@ Steps::~Steps() {
 bool Steps::Refresh() {
   
   stepCounter.Update();
-  
-  lv_label_set_text_fmt(lirq,       "IRQ #00FF00 %i#", nrf_gpio_pin_read(BMA421_IRQ)); 
-  lv_label_set_text_fmt(lSteps,     "Steps #00FF00 %li#", stepCounter.GetSteps()); 
-  lv_label_set_text_fmt(lActivity,  "status #00FF00 %s#", stepCounter.status); 
-  //lv_label_set_text_fmt(lTapStatus, "TapStatus #00FF00 %2i#", stepCounter.GetTapStatus()); 
-  lv_label_set_text_fmt(lTemp,      "Temp #00FF00 %.2f#", stepCounter.GetTemp()); 
 
-  sens_data = stepCounter.GetAccel();
-  lv_label_set_text_fmt(lAccel,     "Accel #00FF00 %i, %i, %i#", sens_data.x, sens_data.y, sens_data.z); 
+  lv_label_set_text_fmt(lSteps,"%li", stepCounter.GetSteps()); 
+  lv_label_set_text_fmt(lTapStatus, "intStatus #00FF00 %2i#", stepCounter.GetTapStatus()); 
+
   return running;
 }
 

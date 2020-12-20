@@ -54,13 +54,17 @@ namespace Pinetime {
           DirtyValue<bool> notificationState {false};
 
           lv_style_t ble_style;
+          lv_style_t not_style;
           
           lv_obj_t* label_time;
           lv_obj_t* label_time_sec;
           lv_obj_t* label_date;
+          lv_obj_t* label_date_month;
+          lv_obj_t* label_date_year;
           lv_obj_t* label_date_day;
           lv_obj_t* backgroundLabel;
           lv_obj_t* batteryIcon;
+          lv_obj_t* batteryValue;
           lv_obj_t* bleIcon;
           lv_obj_t* batteryPlug;
           lv_obj_t* heartbeatIcon;
@@ -69,6 +73,10 @@ namespace Pinetime {
           lv_obj_t* stepIcon;
           lv_obj_t* stepValue;
           lv_obj_t* notificationIcon;
+          lv_obj_t* second_body;
+
+          lv_point_t second_point[2];
+          lv_point_t div_point[2];
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;

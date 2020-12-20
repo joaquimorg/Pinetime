@@ -45,7 +45,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   // Hour
   static lv_style_t hour_style;
   lv_style_init(&hour_style);
-  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &gomarice_80);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time = lv_label_create(lv_scr_act(), NULL);
@@ -63,7 +63,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
 
   // :  
   lv_style_init(&sep_style);
-  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &gomarice_80);
   lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time_sep = lv_label_create(lv_scr_act(), NULL);
