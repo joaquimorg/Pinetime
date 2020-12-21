@@ -269,7 +269,7 @@ void DisplayApp::RunningState() {
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
       case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
-      case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter)); break;
+      case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
       case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
 
       // To Do :-)

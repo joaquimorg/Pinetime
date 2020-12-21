@@ -67,6 +67,8 @@ void SystemTask::Process(void *instance) {
 }
 
 void SystemTask::Work() {
+  ret_code_t errCode;
+
   watchdog.Setup(7);
   watchdog.Start();
   NRF_LOG_INFO("Last reset reason : %s", Pinetime::Drivers::Watchdog::ResetReasonToString(watchdog.ResetReason()));
@@ -96,6 +98,12 @@ void SystemTask::Work() {
   batteryController.Update();
   displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateBatteryLevel);
 
+  if(!nrf_drv_gpiote_is_init())
+  {
+        errCode = nrf_drv_gpiote_init();                                       
+        APP_ERROR_CHECK(errCode);
+  }
+
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
   nrf_gpio_cfg_output(KEY_ENABLE);
@@ -112,7 +120,7 @@ void SystemTask::Work() {
   //
 
   // Touch IRQ
-  nrf_gpio_cfg_sense_input(TP_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  /*nrf_gpio_cfg_sense_input(TP_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
@@ -120,26 +128,33 @@ void SystemTask::Work() {
   pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
-  nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
+
+  nrf_drv_gpiote_in_config_t pinConfigTouch = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
+  pinConfigTouch.pull = NRF_GPIO_PIN_PULLUP;
+
+  errCode = nrfx_gpiote_in_init(TP_IRQ, &pinConfigTouch, nrfx_gpiote_evt_handler);
+  APP_ERROR_CHECK(errCode);
+  nrf_drv_gpiote_in_event_enable(TP_IRQ, true);
+
   //
 
   // Step Counter IRQ
-  nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  //nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
-  pinConfig.skip_gpio_setup = true;
+  /*pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
   pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
+  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;*/
 
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
-  //nrf_gpio_cfg_input(BMA421_IRQ,NRF_GPIO_PIN_NOPULL);
+  nrf_drv_gpiote_in_config_t pinConfigStep = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
+  pinConfigStep.pull = NRF_GPIO_PIN_PULLUP;
 
-  /*nrf_drv_gpiote_in_config_t inConfig = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
-  inConfig.pull = NRF_GPIO_PIN_PULLUP;                                       
-  nrf_drv_gpiote_in_init(BMA421_IRQ, &inConfig, nrfx_gpiote_evt_handler);
-  nrf_drv_gpiote_in_event_enable(BMA421_IRQ, true);*/
-
+  errCode = nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigStep, nrfx_gpiote_evt_handler);
+  APP_ERROR_CHECK(errCode);
+  nrf_drv_gpiote_in_event_enable(BMA421_IRQ, true);
+  
   //
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(idleTime), pdFALSE, this, IdleTimerCallback);

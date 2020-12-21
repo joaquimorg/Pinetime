@@ -366,36 +366,6 @@ set(HRS3300_SRC
         )
         
 
-list(APPEND IMAGE_FILES
-        displayapp/icons/battery/os_battery_error.c
-        displayapp/icons/battery/os_battery_100.c
-        displayapp/icons/battery/os_battery_090.c
-        displayapp/icons/battery/os_battery_080.c
-        displayapp/icons/battery/os_battery_070.c
-        displayapp/icons/battery/os_battery_060.c
-        displayapp/icons/battery/os_battery_050.c
-        displayapp/icons/battery/os_battery_040.c
-        displayapp/icons/battery/os_battery_030.c
-        displayapp/icons/battery/os_battery_020.c
-        displayapp/icons/battery/os_battery_010.c
-        displayapp/icons/battery/os_battery_005.c
-
-        displayapp/icons/battery/os_batterycharging_100.c
-        displayapp/icons/battery/os_batterycharging_090.c
-        displayapp/icons/battery/os_batterycharging_080.c
-        displayapp/icons/battery/os_batterycharging_070.c
-        displayapp/icons/battery/os_batterycharging_060.c
-        displayapp/icons/battery/os_batterycharging_050.c
-        displayapp/icons/battery/os_batterycharging_040.c
-        displayapp/icons/battery/os_batterycharging_030.c
-        displayapp/icons/battery/os_batterycharging_020.c
-        displayapp/icons/battery/os_batterycharging_010.c
-        displayapp/icons/battery/os_batterycharging_005.c
-
-        displayapp/icons/bluetooth/os_bt_connected.c
-        displayapp/icons/bluetooth/os_bt_disconnected.c
-        )
-
 list(APPEND SOURCE_FILES
         BootloaderVersion.cpp
         logging/NrfLogger.cpp
@@ -481,20 +451,20 @@ list(APPEND SOURCE_FILES
         #Fonts
         displayapp/fonts/lv_font_montserrat_18.c                
         displayapp/fonts/clock_font/lv_font_clock_90.c
-        displayapp/fonts/clock_font/lv_font_clock_76.c
+        #displayapp/fonts/clock_font/lv_font_clock_76.c
         displayapp/fonts/clock_font/lv_font_clock_42.c
         displayapp/fonts/clock_font/gomarice_80.c
 
         #no displayapp/fonts/clock_font/space_sport_70.c
         #no displayapp/fonts/clock_font/bombardment_70.c
-        displayapp/fonts/clock_font/calliope_fun_70.c
+        #displayapp/fonts/clock_font/calliope_fun_70.c
         # tem que ser maior displayapp/fonts/clock_font/college_halo_70.c
         # tem que ser maior displayapp/fonts/clock_font/evensong_hollow_70.c
-        displayapp/fonts/clock_font/freshman_70.c
+        #displayapp/fonts/clock_font/freshman_70.c
         # no displayapp/fonts/clock_font/huskysta_70.c
         # tem que ser maior displayapp/fonts/clock_font/incopins_clusters_70.c
-        displayapp/fonts/clock_font/matrix_3d_nc_70.c
-        displayapp/fonts/clock_font/matrix_nc_70.c
+        #displayapp/fonts/clock_font/matrix_3d_nc_70.c
+        #displayapp/fonts/clock_font/matrix_nc_70.c
         # não se nota o detalhe displayapp/fonts/clock_font/prisma_70.c
         # no displayapp/fonts/clock_font/sho_cardcaps_70.c
         # no displayapp/fonts/clock_font/stripy_reg_70.c
@@ -731,12 +701,12 @@ add_definitions(-DOS_CPUTIME_FREQ)
 add_definitions(-DNRF52 -DNRF52832 -DNRF52832_XXAA -DNRF52_PAN_74 -DNRF52_PAN_64 -DNRF52_PAN_12 -DNRF52_PAN_58 -DNRF52_PAN_54 -DNRF52_PAN_31 -DNRF52_PAN_51 -DNRF52_PAN_36 -DNRF52_PAN_15 -DNRF52_PAN_20 -DNRF52_PAN_55 -DBOARD_PCA10040)
 add_definitions(-DFREERTOS)
 #add_definitions(-DDEBUG_NRF_USER)
-add_definitions(-D__STACK_SIZE=8192)
-add_definitions(-D__HEAP_SIZE=8192)
+add_definitions(-D__STACK_SIZE=0x2000)
+add_definitions(-D__HEAP_SIZE=0x2000)
 
-if (NOT CMAKE_BUILD_TYPE)
+#if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
-endif ()
+#endif ()
 
 # NRF SDK
 add_library(nrf-sdk STATIC ${SDK_SOURCE_FILES})

@@ -74,7 +74,7 @@ typedef int16_t lv_coord_t;
 #define LV_MEM_CUSTOM      0
 #if LV_MEM_CUSTOM == 0
 /* Size of the memory used by `lv_mem_alloc` in bytes (>= 2kB)*/
-#define LV_MEM_SIZE    (10U * 1024U)
+#define LV_MEM_SIZE    (12U * 1024U)
 
 /* Complier prefix for a big array declaration */
 #define LV_MEM_ATTR
@@ -414,7 +414,6 @@ typedef void* lv_indev_drv_user_data_t;            /*Type of user data in the in
  */
 
 #define LV_FONT_CUSTOM_DECLARE  LV_FONT_DECLARE(lv_font_clock_42) \
-                                LV_FONT_DECLARE(lv_font_clock_76) \
                                 LV_FONT_DECLARE(lv_font_clock_90) \
                                 LV_FONT_DECLARE(world_conflict_70) \
                                 LV_FONT_DECLARE(gomarice_80) \

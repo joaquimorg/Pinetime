@@ -191,20 +191,24 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
   // Set the background to Black
   //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
-  /*static lv_style_t style_container;
+  static lv_style_t style_container;
   lv_style_init(&style_container);
-  lv_style_set_bg_color(&style_container, LV_STATE_DEFAULT, LV_COLOR_BLACK);
+  lv_style_set_bg_color(&style_container, LV_STATE_DEFAULT, lv_color_hex(0x222222));
   //lv_style_set_radius(&style_container, LV_STATE_DEFAULT, 0);
-  lv_style_set_pad_all(&style_container, LV_STATE_DEFAULT, 5);
+  lv_style_set_pad_all(&style_container, LV_STATE_DEFAULT, 10);  
+  lv_style_set_pad_inner(&style_container, LV_STATE_DEFAULT, 5);
   lv_style_set_border_width(&style_container, LV_STATE_DEFAULT, 0);
 
   lv_obj_t* container1 = lv_cont_create(lv_scr_act(), NULL);
   lv_obj_add_style(container1, LV_CONT_PART_MAIN, &style_container);
 
-  lv_obj_set_auto_realign(container1, true);                  
-  lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);
-  lv_cont_set_fit(container1, LV_FIT_MAX);
-  lv_cont_set_layout(container1, LV_LAYOUT_OFF);*/
+  lv_obj_set_pos(container1, 0, 50);
+  lv_obj_set_width(container1, 240);
+  lv_obj_set_height(container1, 190);
+  //lv_obj_set_auto_realign(container1, true);                  
+  //lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);
+  //lv_cont_set_fit(container1, LV_FIT_MAX);
+  lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_LEFT);
 
   if ( msg.valid ) {
 
@@ -235,24 +239,24 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
     lv_style_init(&alert_subject_style);
     lv_style_set_text_color(&alert_subject_style, LV_STATE_DEFAULT, Notifications::CategoriesColor[(uint8_t)msg.category]);  
 
-    lv_obj_t* alert_subject = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_t* alert_subject = lv_label_create(container1, nullptr);
     lv_obj_add_style(alert_subject, LV_LABEL_PART_MAIN, &alert_subject_style);
     lv_label_set_long_mode(alert_subject, LV_LABEL_LONG_BREAK);
     lv_obj_set_width(alert_subject, LV_HOR_RES - 20);    
     lv_label_set_text(alert_subject, msg.subject.data());
-    lv_obj_align(alert_subject, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 50);
+    //lv_obj_align(alert_subject, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 50);
 
     static lv_style_t alert_body_style;
     lv_style_init(&alert_body_style);
-    lv_style_set_text_color(&alert_body_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));  
+    lv_style_set_text_color(&alert_body_style, LV_STATE_DEFAULT, lv_color_hex(0xffffff));  
     //lv_style_set_text_font(&alert_body_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
 
-    lv_obj_t* alert_body = lv_label_create(lv_scr_act(), nullptr);
+    lv_obj_t* alert_body = lv_label_create(container1, nullptr);
     lv_obj_add_style(alert_body, LV_LABEL_PART_MAIN, &alert_body_style);
     lv_label_set_long_mode(alert_body, LV_LABEL_LONG_BREAK);
     lv_obj_set_width(alert_body, LV_HOR_RES - 20);
     lv_label_set_text(alert_body, msg.message.data());
-    lv_obj_align(alert_body, alert_subject, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);    
+    //lv_obj_align(alert_body, alert_subject, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 10);    
 
   } else {
     lv_obj_t* alert_type = lv_label_create(lv_scr_act(), nullptr);

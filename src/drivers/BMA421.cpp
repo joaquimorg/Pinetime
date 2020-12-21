@@ -132,13 +132,13 @@ void BMA421::Init() {
 
     /* Sets the electrical behaviour of interrupt
     */
-    /*pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
+    pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
     pinConfig.lvl = BMA4_ACTIVE_LOW;
     pinConfig.od = BMA4_OPEN_DRAIN;
     pinConfig.output_en = BMA4_OUTPUT_ENABLE;
     pinConfig.input_en = BMA4_INPUT_DISABLE;
     rslt = bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
-    bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  */
+    bma4_error_codes_print_result("bma4_set_int_pin_config status", rslt);  
 
     /* Set the interrupt mode in the sensor.
     */
@@ -161,8 +161,8 @@ void BMA421::Init() {
     /* Interrupt Mapping
      */
     //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, (BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT | BMA421_DOUBLE_TAP_INT | BMA421_WRIST_WEAR_INT), 1, &bma);
-    //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
-    //bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
+    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
+    bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
 
     /* Enable step counter */
     rslt = bma421_feature_enable(BMA421_STEP_CNTR, 1, &bma);

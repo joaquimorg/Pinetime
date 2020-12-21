@@ -16,11 +16,13 @@ namespace Pinetime {
 
         void SetHeartRate( uint8_t hr ) { heartRate = hr; };
         uint8_t GetHeartRate() const { return heartRate; };
+        uint32_t GetStepsGoal() const { return stepsGoal; };
 
       private:
         uint8_t clockFace = 0;
         uint8_t appMenu = 0;
         uint8_t heartRate = 0;
+        uint32_t stepsGoal = 0;
     };
   }
 }

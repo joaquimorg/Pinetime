@@ -62,14 +62,12 @@ namespace Pinetime {
           lv_obj_t* label_date_month;
           lv_obj_t* label_date_year;
           lv_obj_t* label_date_day;
-          lv_obj_t* backgroundLabel;
           lv_obj_t* batteryIcon;
           lv_obj_t* batteryValue;
           lv_obj_t* bleIcon;
           lv_obj_t* batteryPlug;
           lv_obj_t* heartbeatIcon;
           lv_obj_t* heartbeatValue;
-          lv_obj_t* heartbeatBpm;
           lv_obj_t* stepIcon;
           lv_obj_t* stepValue;
           lv_obj_t* notificationIcon;
