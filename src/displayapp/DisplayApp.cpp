@@ -109,19 +109,21 @@ void DisplayApp::Refresh() {
         }
         //lcd.DisplayOff();        
         systemTask.PushMessage(System::SystemTask::Messages::OnDisplayTaskSleeping);
-        state = States::Idle;
-        onClockApp = false;
-        //currentScreen.reset(nullptr);
+        state = States::Idle;        
+        if(currentScreen) {
+          currentScreen.reset(nullptr);
+          onClockApp = false;
+        }
       break;
 
       case Messages::GoToRunning:
-        //if (state == States::Running) break;
-        //if(!onClockApp) {
+        if (state == States::Running) break;
+        if(!currentScreen) {
           onClockApp = true;
           //lcd.DisplayOn();
           currentScreen.reset(nullptr);
           currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
-        //}
+        }
         //if (state != States::Running) {
           brightnessController.Restore();
           state = States::Running;
@@ -141,7 +143,7 @@ void DisplayApp::Refresh() {
           currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
         } else {
           PushMessage(Messages::GoToRunning);
-          //PushMessage(Messages::NewNotification);
+          PushMessage(Messages::NewNotification);
           //PushMessage(Messages::NewNotification);
           //onClockApp = false;
           //currentScreen.reset(nullptr);

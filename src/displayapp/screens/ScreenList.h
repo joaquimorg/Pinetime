@@ -31,7 +31,11 @@ namespace Pinetime {
           }
 
           ~ScreenList() override {
-
+            current.reset(nullptr);
+            /*for(uint8_t i = 0; i < screens.size(); i++) {
+              screens[i]().reset(nullptr);
+            }*/            
+            lv_obj_clean(lv_scr_act());
           }
 
           bool Refresh() override {

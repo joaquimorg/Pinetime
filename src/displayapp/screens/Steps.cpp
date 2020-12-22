@@ -5,9 +5,9 @@
 #include "board_config.h"
 #include <libraries/gpiote/app_gpiote.h>
 
-using namespace Pinetime::Applications::Screens;
-
 LV_IMG_DECLARE(icon_running);
+
+using namespace Pinetime::Applications::Screens;
 
 Steps::Steps(
     Pinetime::Applications::DisplayApp *app, 
@@ -17,7 +17,7 @@ Steps::Steps(
       stepCounter{stepCounter},
       settingsController{settingsController} {
 
-  //stepCounter.Update();
+  stepCounter.Update();
 
   static lv_style_t arcbg_style;
   lv_style_init(&arcbg_style);

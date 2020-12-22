@@ -8,10 +8,6 @@
 
 using namespace Pinetime::Applications::Screens;
 
-extern lv_style_t* LabelStyle76;
-extern lv_style_t* LabelStyle42;
-extern lv_style_t* DefaultStyle;
-
 WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,

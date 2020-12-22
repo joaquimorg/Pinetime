@@ -25,11 +25,8 @@ lv_style_t* LabelStyle42 = nullptr;
 lv_style_t* DefaultStyle = nullptr;
 
 static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p) {
-  ulTaskNotifyTake(pdTRUE, 500);
-  // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
-  // which cannot be set/clear during a transfert.
   auto* lvgl = static_cast<LittleVgl*>(disp_drv->user_data);
-  lvgl->FlushDisplay(area, color_p);
+  lvgl->FlushDisplay(area, color_p);  
 }
 
 bool touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data) {
@@ -86,6 +83,11 @@ void LittleVgl::SetFullRefresh(FullRefreshDirections direction) {
 void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
 
   uint16_t y1, y2, width, height = 0;
+  
+  ulTaskNotifyTake(pdTRUE, 320);
+  // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
+  // which cannot be set/clear during a transfert.
+
 
   if( (scrollDirection == LittleVgl::FullRefreshDirections::Down) && (area->y2 == visibleNbLines - 1)) {
     writeOffset = ((writeOffset + totalNbLines) - visibleNbLines) % totalNbLines;
@@ -135,13 +137,12 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
       lcd.VerticalScrollStartAddress(scrollOffset);
     }
   }
-  //ulTaskNotifyTake(pdTRUE, 500);
-  
+
   if (y2 < y1) {
     height = (totalNbLines - 1) - y1;
     lcd.BeginDrawBuffer(area->x1, y1, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
-    ulTaskNotifyTake(pdTRUE, 100);
+    ulTaskNotifyTake(pdTRUE, 320);
     height = y2;
     lcd.BeginDrawBuffer(area->x1, 0, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    

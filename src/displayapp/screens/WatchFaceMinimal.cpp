@@ -7,9 +7,6 @@
 
 using namespace Pinetime::Applications::Screens;
 
-extern lv_style_t* LabelStyle90;
-extern lv_style_t* DefaultStyle;
-
 WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
@@ -21,7 +18,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
                                            settingsController{settingsController} {
                                              
   settingsController.SetClockFace(2);
-  uint16_t year = dateTimeController.Year();
+
   uint8_t day = dateTimeController.Day();
 
   uint8_t hour = dateTimeController.Hours();

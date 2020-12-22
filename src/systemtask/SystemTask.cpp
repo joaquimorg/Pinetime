@@ -182,6 +182,7 @@ void SystemTask::Work() {
           spiNorFlash.Wakeup();
           touchPanel.Wakeup();
           lcd.Wakeup();
+          stepCounter.Update();
 
           isSleeping = false;
           isWakingUp = false;
@@ -235,9 +236,9 @@ void SystemTask::Work() {
         case Messages::ReloadIdleTimer:
           ReloadIdleTimer();
           break;
-        /*case Messages::OnStepEvent:
-          //stepCounter.Update();
-          break;*/
+        case Messages::OnStepEvent:
+          stepCounter.Update();
+          break;
         case Messages::OnDisplayTaskSleeping:
           if(BootloaderVersion::IsValid()) {
             // First versions of the bootloader do not expose their version and cannot initialize the SPI NOR FLASH

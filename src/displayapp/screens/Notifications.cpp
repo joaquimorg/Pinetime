@@ -61,6 +61,7 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
 }
 
 Notifications::~Notifications() {
+  currentItem.reset(nullptr);
   lv_obj_clean(lv_scr_act());
 }
 
@@ -168,9 +169,15 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
     }
       return true;
       
-    case Pinetime::Applications::TouchEvents::SwipeRight : 
-      //running = false;
+    case Pinetime::Applications::TouchEvents::LongTap : 
+      /*if(mode == Modes::Clock || mode == Modes::Preview) {
+        running = false;
+        app->StartApp(Apps::Clock);
+      } else {
+        running = false;
+      }
       // delete ???
+      notificationManager.Delete(currentId);*/
       return true;
 
     default:

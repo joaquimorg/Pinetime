@@ -5,14 +5,14 @@
 #include "Symbols.h"
 #include "NotificationIcon.h"
 
+LV_IMG_DECLARE(bg_clock);
+
 using namespace Pinetime::Applications::Screens;
 
 #define HOUR_LENGTH   70
 #define MINUTE_LENGTH 90
 #define SECOND_LENGTH 110
 #define PI 3.14159265358979323846
-
-LV_IMG_DECLARE(bg_clock);
 
 // ##
 static int16_t coordinate_x_relocate(int16_t x)
@@ -42,7 +42,6 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   sHour = 99;
   sMinute = 99;
   sSecond = 99;
-
   
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(bg_clock_img, &bg_clock);

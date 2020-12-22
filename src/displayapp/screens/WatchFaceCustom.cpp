@@ -5,13 +5,10 @@
 #include "Symbols.h"
 #include "NotificationIcon.h"
 
-using namespace Pinetime::Applications::Screens;
-
+  
 LV_IMG_DECLARE(xmas);
-//LV_FONT_DECLARE(lv_font_clock_76)
 
-//extern lv_style_t* LabelStyle76;
-//extern lv_style_t* DefaultStyle;
+using namespace Pinetime::Applications::Screens;
 
 WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
@@ -23,7 +20,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
   settingsController.SetClockFace(3);
-  uint16_t year = dateTimeController.Year();
+
   uint8_t day = dateTimeController.Day();
 
   uint8_t hour = dateTimeController.Hours();

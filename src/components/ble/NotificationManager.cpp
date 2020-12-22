@@ -67,6 +67,14 @@ NotificationManager::Notification NotificationManager::GetPrevious(NotificationM
   return result;
 }
 
+void NotificationManager::Delete(Notification::Id id) {
+
+  std::remove_if(notifications.begin(), 
+                 notifications.end(),
+                 [id](const Notification& n){return n.valid && n.id == id;});
+
+}
+
 bool NotificationManager::AreNewNotificationsAvailable() {
   return newNotification;
 }
