@@ -113,14 +113,20 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
 }
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
+  lv_mem_monitor_t mon;
+  lv_mem_monitor(&mon);
+
   auto& bleAddr = bleController.Address();
   sprintf(t2, "BLE MAC: \n  %02x:%02x:%02x:%02x:%02x:%02x"
               "\n"
-              "Free heap: %d"
+              "used: %6d (%3d %%)\nfrag: %3d %%\nbiggest free: %6d"
               "\n"
               "Steps: %li",
           bleAddr[5], bleAddr[4], bleAddr[3], bleAddr[2], bleAddr[1], bleAddr[0],
-          xPortGetFreeHeapSize(),
+          (int)mon.total_size - mon.free_size,
+          mon.used_pct,
+          mon.frag_pct,
+          (int)mon.free_biggest_size,
           stepCounter.GetSteps()
           );
 
