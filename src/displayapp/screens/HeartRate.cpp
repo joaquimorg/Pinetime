@@ -55,22 +55,15 @@ HeartRate::HeartRate(
   lv_img_set_src(heart_rate, &icon_heart_rate);  
   lv_obj_align(heart_rate, NULL, LV_ALIGN_CENTER, -20, -50);
 
-  static lv_style_t heart_rate_style;
-  lv_style_init(&heart_rate_style);
-  lv_style_set_text_color(&heart_rate_style, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));  
-  lv_style_set_text_font(&heart_rate_style, LV_STATE_DEFAULT, &lv_font_clock_42);
-
   lhrs = lv_label_create(lv_scr_act(), NULL);  
-  lv_obj_add_style(lhrs, LV_LABEL_PART_MAIN, &heart_rate_style);
+  lv_obj_set_style_local_text_color(lhrs, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
+  lv_obj_set_style_local_text_font(lhrs, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
+
   lv_label_set_text(lhrs, "--"); 
   lv_obj_align(lhrs, heart_rate, LV_ALIGN_OUT_RIGHT_MID, 20, -5);
 
-  static lv_style_t bpm_style;
-  lv_style_init(&bpm_style);
-  lv_style_set_text_color(&bpm_style, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
-
   lv_obj_t* lbpm = lv_label_create(lv_scr_act(), NULL);  
-  lv_obj_add_style(lbpm, LV_LABEL_PART_MAIN, &bpm_style);
+  lv_obj_set_style_local_text_color(lbpm, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
   lv_label_set_text(lbpm, "bpm");   
   lv_obj_align(lbpm, lhrs, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
 

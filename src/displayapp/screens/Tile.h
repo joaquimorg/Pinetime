@@ -33,12 +33,16 @@ namespace Pinetime {
           void OnObjectEvent(lv_obj_t* obj, lv_event_t event, uint32_t buttonId);
 
         private:
+          DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
+
           lv_obj_t * backgroundLabel;
           lv_obj_t * label_time;
           bool running = true;
           
           uint8_t oldHours = 0;
           uint8_t oldMinutes = 0;
+          uint8_t hours;
+          uint8_t minutes;
 
           //std::unique_ptr<Modal> modal;
 

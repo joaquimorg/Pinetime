@@ -39,8 +39,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
   lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
 
-  // Hour
-  static lv_style_t hour_style;
+  // Hour  
   lv_style_init(&hour_style);
   lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &gomarice_80);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
@@ -69,8 +68,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, 45);
   
-
-  static lv_style_t label_shadow_style;
+  
   lv_style_init(&label_shadow_style);
   //lv_style_set_text_opa(&label_shadow_style, LV_STATE_DEFAULT, LV_OPA_50);
   lv_style_set_text_color(&label_shadow_style, LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
@@ -79,8 +77,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   label_date_shadow = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_date_shadow, LV_LABEL_PART_MAIN, &label_shadow_style);
 
-  // Date
-  static lv_style_t dateyear_style;
+  // Date  
   lv_style_init(&dateyear_style);
   label_date = lv_label_create(lv_scr_act(), nullptr);
   lv_style_set_text_color(&dateyear_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
@@ -102,6 +99,12 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
 }
 
 WatchFaceCustom::~WatchFaceCustom() {
+
+  lv_style_reset(&sep_style);
+  lv_style_reset(&hour_style);
+  lv_style_reset(&label_shadow_style);
+  lv_style_reset(&dateyear_style);
+  
   lv_obj_clean(lv_scr_act());
 }
 

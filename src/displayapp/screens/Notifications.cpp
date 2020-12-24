@@ -198,16 +198,12 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
   // Set the background to Black
   //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
-  static lv_style_t style_container;
-  lv_style_init(&style_container);
-  lv_style_set_bg_color(&style_container, LV_STATE_DEFAULT, lv_color_hex(0x222222));
-  //lv_style_set_radius(&style_container, LV_STATE_DEFAULT, 0);
-  lv_style_set_pad_all(&style_container, LV_STATE_DEFAULT, 10);  
-  lv_style_set_pad_inner(&style_container, LV_STATE_DEFAULT, 5);
-  lv_style_set_border_width(&style_container, LV_STATE_DEFAULT, 0);
-
   lv_obj_t* container1 = lv_cont_create(lv_scr_act(), NULL);
-  lv_obj_add_style(container1, LV_CONT_PART_MAIN, &style_container);
+
+  lv_obj_set_style_local_bg_color(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x222222));
+  lv_obj_set_style_local_pad_all(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 10);
+  lv_obj_set_style_local_pad_inner(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 5);
+  lv_obj_set_style_local_border_width(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 0);
 
   lv_obj_set_pos(container1, 0, 50);
   lv_obj_set_width(container1, 240);
@@ -223,43 +219,30 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
     lv_img_set_src(not_img, Notifications::CategoriesIcon[(uint8_t)msg.category]);
     lv_obj_align(not_img, NULL, LV_ALIGN_IN_TOP_LEFT, 5, 5);
 
-    static lv_style_t alert_time_style;
-    lv_style_init(&alert_time_style);
-    lv_style_set_text_color(&alert_time_style, LV_STATE_DEFAULT, lv_color_hex(0x888888));  
-
     lv_obj_t* alert_time = lv_label_create(lv_scr_act(), nullptr);
-    lv_obj_add_style(alert_time, LV_LABEL_PART_MAIN, &alert_time_style);    
+
+    lv_obj_set_style_local_text_color(alert_time, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x888888));
     lv_label_set_text_fmt(alert_time, "%s:%s", msg.hour.data(), msg.minute.data());
     lv_obj_align(alert_time, NULL, LV_ALIGN_IN_TOP_MID, 0, 16);
 
-    lv_obj_t* alert_count = lv_label_create(lv_scr_act(), nullptr);
-    //lv_obj_add_style(alert_count, LV_LABEL_PART_MAIN, &alert_time_style);    
+    lv_obj_t* alert_count = lv_label_create(lv_scr_act(), nullptr);    
     lv_label_set_text_fmt(alert_count, "%i/%i", notifNr, notifNb);
     lv_obj_align(alert_count, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 16);
 
     lv_obj_t* alert_type = lv_label_create(lv_scr_act(), nullptr);
-    lv_obj_add_style(alert_type, LV_LABEL_PART_MAIN, &alert_time_style);    
+    lv_obj_set_style_local_text_color(alert_type, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x888888));   
     lv_label_set_text(alert_type, title);
-    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
-
-    static lv_style_t alert_subject_style;
-    lv_style_init(&alert_subject_style);
-    lv_style_set_text_color(&alert_subject_style, LV_STATE_DEFAULT, Notifications::CategoriesColor[(uint8_t)msg.category]);  
+    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5); 
 
     lv_obj_t* alert_subject = lv_label_create(container1, nullptr);
-    lv_obj_add_style(alert_subject, LV_LABEL_PART_MAIN, &alert_subject_style);
+    lv_obj_set_style_local_text_color(alert_subject, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, Notifications::CategoriesColor[(uint8_t)msg.category]);
     lv_label_set_long_mode(alert_subject, LV_LABEL_LONG_BREAK);
     lv_obj_set_width(alert_subject, LV_HOR_RES - 20);    
     lv_label_set_text(alert_subject, msg.subject.data());
     //lv_obj_align(alert_subject, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 50);
 
-    static lv_style_t alert_body_style;
-    lv_style_init(&alert_body_style);
-    lv_style_set_text_color(&alert_body_style, LV_STATE_DEFAULT, lv_color_hex(0xffffff));  
-    //lv_style_set_text_font(&alert_body_style, LV_STATE_DEFAULT, &lv_font_montserrat_20);
-
-    lv_obj_t* alert_body = lv_label_create(container1, nullptr);
-    lv_obj_add_style(alert_body, LV_LABEL_PART_MAIN, &alert_body_style);
+    lv_obj_t* alert_body = lv_label_create(container1, nullptr);    
+    lv_obj_set_style_local_text_color(alert_body, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xffffff));
     lv_label_set_long_mode(alert_body, LV_LABEL_LONG_BREAK);
     lv_obj_set_width(alert_body, LV_HOR_RES - 20);
     lv_label_set_text(alert_body, msg.message.data());

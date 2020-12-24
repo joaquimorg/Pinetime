@@ -19,19 +19,12 @@ Steps::Steps(
 
   stepCounter.Update();
 
-  static lv_style_t arcbg_style;
-  lv_style_init(&arcbg_style);
-  lv_style_set_bg_opa(&arcbg_style, LV_STATE_DEFAULT, LV_OPA_0);
-  lv_style_set_border_width(&arcbg_style, LV_STATE_DEFAULT, 0);
-  lv_style_set_radius(&arcbg_style, LV_STATE_DEFAULT, 0);
-
-  static lv_style_t arc_style;
-  lv_style_init(&arc_style);
-  lv_style_set_line_color(&arc_style, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));
-
   stepsArc = lv_arc_create(lv_scr_act(), NULL);
-  lv_obj_add_style(stepsArc, LV_ARC_PART_BG, &arcbg_style);   
-  lv_obj_add_style(stepsArc, LV_ARC_PART_INDIC, &arc_style);   
+
+  lv_obj_set_style_local_bg_opa(stepsArc, LV_ARC_PART_BG, LV_STATE_DEFAULT, LV_OPA_0);  
+  lv_obj_set_style_local_border_width(stepsArc, LV_ARC_PART_BG, LV_STATE_DEFAULT, 0);  
+  lv_obj_set_style_local_radius(stepsArc, LV_ARC_PART_BG, LV_STATE_DEFAULT, 0);  
+  lv_obj_set_style_local_text_color(stepsArc, LV_ARC_PART_INDIC, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
   lv_arc_set_end_angle(stepsArc, 200);
   lv_obj_set_size(stepsArc, 220, 220);
   lv_arc_set_range(stepsArc, 0, 500);
@@ -41,13 +34,9 @@ Steps::Steps(
   lv_img_set_src(steps_icon, &icon_running);  
   lv_obj_align(steps_icon, NULL, LV_ALIGN_CENTER, 0, -25);
 
-  static lv_style_t steps_style;
-  lv_style_init(&steps_style);
-  lv_style_set_text_color(&steps_style, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
-  lv_style_set_text_font(&steps_style, LV_STATE_DEFAULT, &lv_font_clock_42);
-
   lSteps = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_add_style(lSteps, LV_LABEL_PART_MAIN, &steps_style);   
+  lv_obj_set_style_local_text_color(lSteps, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));
+  lv_obj_set_style_local_text_font(lSteps, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);   
   lv_label_set_text_fmt(lSteps,"%li", stepCounter.GetSteps()); 
   lv_obj_align(lSteps, steps_icon, LV_ALIGN_OUT_BOTTOM_MID, 0, 20);
 

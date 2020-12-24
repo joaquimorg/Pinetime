@@ -51,7 +51,6 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   lv_label_set_text(batteryIcon, Symbols::batteryHalf);
   lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -8, -4);
 
-  static lv_style_t not_style;
   lv_style_init(&not_style);
 
   notificationIcon = lv_label_create(lv_scr_act(), NULL);
@@ -62,7 +61,6 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   lv_obj_align(notificationIcon, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 8, -4);
 
   // Date - Day / Week day
-  static lv_style_t date_style;
   lv_style_init(&date_style);
 
   label_date_day = lv_label_create(lv_scr_act(), NULL);
@@ -121,14 +119,24 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
 }
 
 WatchFaceAnalog::~WatchFaceAnalog() {
+
+  lv_style_reset(&hour_line_style);
+  lv_style_reset(&hour_line_style_trace);
+  lv_style_reset(&minute_line_style);
+  lv_style_reset(&minute_line_style_trace);
+  lv_style_reset(&second_line_style);
+
+  lv_style_reset(&not_style);
+  lv_style_reset(&date_style);
+          
   lv_obj_clean(lv_scr_act());
 }
 
 void WatchFaceAnalog::UpdateClock() {
-
-  uint8_t hour = dateTimeController.Hours();
-  uint8_t minute = dateTimeController.Minutes();
-  uint8_t second = dateTimeController.Seconds();    
+  
+  hour = dateTimeController.Hours();
+  minute = dateTimeController.Minutes();
+  second = dateTimeController.Seconds();    
 
   if(sMinute != minute) {
     minute_point[0].x = coordinate_x_relocate(30 * sin(minute * 6 * PI / 180));
@@ -196,9 +204,9 @@ bool WatchFaceAnalog::Refresh() {
 
   if(currentDateTime.IsUpdated()) {
     
-    auto month = dateTimeController.Month();
-    uint8_t day = dateTimeController.Day();
-    auto dayOfWeek = dateTimeController.DayOfWeek();
+    month = dateTimeController.Month();
+    day = dateTimeController.Day();
+    dayOfWeek = dateTimeController.DayOfWeek();
 
     UpdateClock();
   

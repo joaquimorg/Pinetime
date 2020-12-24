@@ -26,7 +26,8 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     std::array<Applications, 4>& applications) : 
     Screen(app),
     dateTimeController{dateTimeController},
-    settingsController{settingsController} 
+    settingsController{settingsController},
+    currentDateTime{{}}  
 {
 
   // Set the background to Black
@@ -39,7 +40,7 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
   oldMinutes = minutes;
 
   // Time
-  lv_obj_t* label_time = lv_label_create(lv_scr_act(), NULL);  
+  label_time = lv_label_create(lv_scr_act(), NULL);  
   lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 4);
@@ -100,13 +101,18 @@ Tile::~Tile() {
 
 bool Tile::Refresh() {
 
-  uint8_t hours = dateTimeController.Hours();
-  uint8_t minutes = dateTimeController.Minutes();
+  currentDateTime = dateTimeController.CurrentDateTime();
 
-  if(oldHours != hours || oldMinutes != minutes) {
-    lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
-    oldHours = hours;
-    oldMinutes = minutes;
+  if(currentDateTime.IsUpdated()) {
+
+    hours = dateTimeController.Hours();
+    minutes = dateTimeController.Minutes();
+    
+    if(oldHours != hours || oldMinutes != minutes) {
+      lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
+      oldHours = hours;
+      oldMinutes = minutes;
+    }
   }
 
   return running;

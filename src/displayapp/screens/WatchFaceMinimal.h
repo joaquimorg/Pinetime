@@ -36,6 +36,13 @@ namespace Pinetime {
 
         private:
           uint8_t sHour, sMinute, sSecond;
+          Pinetime::Controllers::DateTime::Months month;
+          uint8_t day;
+          Pinetime::Controllers::DateTime::Days dayOfWeek;
+
+          uint8_t hour;
+          uint8_t minute;
+          uint8_t second;
 
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
           Pinetime::Controllers::DateTime::Days currentDayOfWeek = Pinetime::Controllers::DateTime::Days::Unknown;
@@ -49,6 +56,10 @@ namespace Pinetime {
           DirtyValue<bool> notificationState {false};
           
           lv_style_t sep_style;
+          lv_style_t not_style;
+          lv_style_t hour_style;
+          lv_style_t min_style;
+          lv_style_t dateyear_style;
 
           lv_obj_t* label_time;
           lv_obj_t* label_time_min;

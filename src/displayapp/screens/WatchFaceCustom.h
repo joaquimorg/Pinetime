@@ -56,6 +56,9 @@ namespace Pinetime {
           DirtyValue<bool> notificationState {false};
           
           lv_style_t sep_style;
+          lv_style_t hour_style;
+          lv_style_t label_shadow_style;
+          lv_style_t dateyear_style;
 
           lv_obj_t* label_time;
           lv_obj_t* label_time_min;

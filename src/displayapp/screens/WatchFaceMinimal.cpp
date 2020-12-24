@@ -31,8 +31,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
 
   // Set the background to Black
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
-
-  static lv_style_t not_style;
+  
   lv_style_init(&not_style);
 
   notificationIcon = lv_label_create(lv_scr_act(), NULL);
@@ -41,8 +40,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
   lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_TOP_RIGHT, -10, 10);
 
-  // Hour
-  static lv_style_t hour_style;
+  // Hour  
   lv_style_init(&not_style);
   lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &world_conflict_70);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xb71c1c));  
@@ -53,8 +51,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -65, -20);
 
-  // Minute
-  static lv_style_t min_style;
+  // Minute  
   lv_style_init(&min_style);
   lv_style_set_text_font(&min_style, LV_STATE_DEFAULT, &world_conflict_70);
   lv_style_set_text_color(&min_style, LV_STATE_DEFAULT, lv_color_hex(0x004d40));
@@ -76,8 +73,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, -20);
   
-  // Date
-  static lv_style_t dateyear_style;
+  // Date  
   lv_style_init(&dateyear_style);  
   label_date = lv_label_create(lv_scr_act(), nullptr);
   lv_style_set_text_color(&dateyear_style, LV_STATE_DEFAULT, lv_color_hex(0xab47bc));
@@ -95,6 +91,13 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
 }
 
 WatchFaceMinimal::~WatchFaceMinimal() {
+  
+  lv_style_reset(&sep_style);
+  lv_style_reset(&not_style);
+  lv_style_reset(&hour_style);
+  lv_style_reset(&min_style);
+  lv_style_reset(&dateyear_style);
+  
   lv_obj_clean(lv_scr_act());
 }
 
@@ -114,13 +117,13 @@ bool WatchFaceMinimal::Refresh() {
 
   if(currentDateTime.IsUpdated()) {
 
-    auto month = dateTimeController.Month();
-    uint8_t day = dateTimeController.Day();
-    auto dayOfWeek = dateTimeController.DayOfWeek();
+    month = dateTimeController.Month();
+    day = dateTimeController.Day();
+    dayOfWeek = dateTimeController.DayOfWeek();
 
-    uint8_t hour = dateTimeController.Hours();
-    uint8_t minute = dateTimeController.Minutes();
-    uint8_t second = dateTimeController.Seconds();
+    hour = dateTimeController.Hours();
+    minute = dateTimeController.Minutes();
+    second = dateTimeController.Seconds();
 
     if(sHour != hour || sMinute != minute) {
       sHour = hour;

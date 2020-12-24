@@ -36,6 +36,13 @@ namespace Pinetime {
 
         private:
           uint8_t sHour, sMinute, sSecond;
+          uint8_t hour;
+          uint8_t minute;
+          uint8_t second;
+
+          Pinetime::Controllers::DateTime::Months month;
+          uint8_t day;
+          Pinetime::Controllers::DateTime::Days dayOfWeek;
 
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
           Pinetime::Controllers::DateTime::Days currentDayOfWeek = Pinetime::Controllers::DateTime::Days::Unknown;
@@ -64,6 +71,9 @@ namespace Pinetime {
           lv_style_t minute_line_style;
           lv_style_t minute_line_style_trace;
           lv_style_t second_line_style;
+
+          lv_style_t not_style;
+          lv_style_t date_style;
     
           lv_obj_t* label_date_day;
           lv_obj_t* backgroundLabel;
