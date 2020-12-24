@@ -54,8 +54,8 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     else if ( screenID == 1 ) lv_label_set_text(label_screens, "#606060 .#\n.\n#606060 .#");
     else if ( screenID == 2 ) lv_label_set_text(label_screens, "#606060 .#\n#606060 .#\n.");*/
 
-    if ( screenID == 0 ) lv_label_set_text(label_screens, ".\n#606060 .#");
-    else if ( screenID == 1 ) lv_label_set_text(label_screens, "#606060 .#\n.");
+    if ( screenID == 0 ) lv_label_set_text(label_screens, "\n#606060 #");
+    else if ( screenID == 1 ) lv_label_set_text(label_screens, "#606060 #\n");
 
     lv_obj_align(label_screens, lv_scr_act(), LV_ALIGN_IN_RIGHT_MID, -10, 0);
   }

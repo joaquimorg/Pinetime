@@ -449,7 +449,9 @@ list(APPEND SOURCE_FILES
         displayapp/LittleVgl.cpp
 
         #Fonts
-        displayapp/fonts/lv_font_montserrat_18.c                
+        displayapp/fonts/lv_font_montserrat_18.c
+        displayapp/fonts/lv_font_opensans_18.c
+        displayapp/fonts/lv_font_opensans_20.c
         displayapp/fonts/clock_font/lv_font_clock_90.c
         #displayapp/fonts/clock_font/lv_font_clock_76.c
         displayapp/fonts/clock_font/lv_font_clock_42.c
