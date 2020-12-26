@@ -122,7 +122,7 @@ bool Notifications::Refresh() {
 
 bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   switch (event) {
-    case Pinetime::Applications::TouchEvents::SwipeUp: {
+    case Pinetime::Applications::TouchEvents::SwipeDown: {
       Controllers::NotificationManager::Notification previousNotification;
       if(validDisplay)
         previousNotification = notificationManager.GetPrevious(currentId);
@@ -130,6 +130,30 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
         previousNotification = notificationManager.GetLastNotification();
 
       if (!previousNotification.valid) {        
+        /*if(mode == Modes::Clock || mode == Modes::Preview) {
+          running = false;
+          app->StartApp(Apps::Clock);
+        } else {
+          running = false;
+        }*/
+        return true;
+      }
+
+      validDisplay = true;
+      currentId = previousNotification.id;
+      currentItem.reset(nullptr);
+      app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
+      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications(), mode));
+    }
+      return true;
+    case Pinetime::Applications::TouchEvents::SwipeUp: {
+      Controllers::NotificationManager::Notification nextNotification;
+      if(validDisplay)
+        nextNotification = notificationManager.GetNext(currentId);
+      else
+        nextNotification = notificationManager.GetLastNotification();
+
+      if (!nextNotification.valid) {
         if(mode == Modes::Clock || mode == Modes::Preview) {
           running = false;
           app->StartApp(Apps::Clock);
@@ -140,31 +164,9 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       }
 
       validDisplay = true;
-      currentId = previousNotification.id;
-      currentItem.reset(nullptr);
-      app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
-      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications(), mode));
-    }
-      return true;
-    case Pinetime::Applications::TouchEvents::SwipeDown: {
-      Controllers::NotificationManager::Notification nextNotification;
-      if(validDisplay)
-        nextNotification = notificationManager.GetNext(currentId);
-      else
-        nextNotification = notificationManager.GetLastNotification();
-
-      if (!nextNotification.valid) {
-        /*if(mode == Modes::Normal) {
-          running = false;
-          //app->StartApp(Apps::Launcher);
-        }*/
-        return true;
-      }
-
-      validDisplay = true;
       currentId = nextNotification.id;
       currentItem.reset(nullptr);
-      app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
+      app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
       currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications(), mode));
     }
       return true;

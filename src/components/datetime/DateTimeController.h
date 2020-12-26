@@ -32,13 +32,13 @@ namespace Pinetime {
         std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> CurrentDateTime() const { return currentDateTime; }
         std::chrono::seconds Uptime() const { return uptime; }
       private:
-        uint16_t year = 2020;
-        Months month = Months::December;
-        uint8_t day = 7;
+        uint16_t year = 2021;
+        Months month = Months::January;
+        uint8_t day = 0;
         Days dayOfWeek = Days::Monday;
-        uint8_t hour = 21;
-        uint8_t minute = 17;
-        uint8_t second = 31;
+        uint8_t hour = 0;
+        uint8_t minute = 0;
+        uint8_t second = 0;
           
         uint32_t previousSystickCounter = 0;
         std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds> currentDateTime;

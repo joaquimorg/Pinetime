@@ -6,7 +6,7 @@ void Settings::Init() {
     // default Clock face
     clockFace = 0;
 
-    stepsGoal = 1000;
+    stepsGoal = 5000;
 }
 
 void Settings::SetClockFace( uint8_t face ) {

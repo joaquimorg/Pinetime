@@ -6,7 +6,7 @@
 #include "NotificationIcon.h"
 
   
-LV_IMG_DECLARE(xmas);
+LV_IMG_DECLARE(bg_img_1);
 
 using namespace Pinetime::Applications::Screens;
 
@@ -32,7 +32,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   sSecond = second;
 
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, &xmas);
+  lv_img_set_src(bg_clock_img, &bg_img_1);
   lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
 
   notificationIcon = lv_label_create(lv_scr_act(), NULL);
@@ -41,25 +41,25 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
 
   // Hour  
   lv_style_init(&hour_style);
-  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &gomarice_80);
+  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &freshman_70);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_time, LV_LABEL_PART_MAIN, &hour_style);
   lv_label_set_text_fmt(label_time,  "%02i", hour);      
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -50, 45);
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -55, 45);
 
   // Minute
   label_time_min = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_add_style(label_time_min, LV_LABEL_PART_MAIN, &hour_style);
   lv_label_set_text_fmt(label_time_min,  "%02i", minute);
   //lv_label_set_align( label_time_min, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 50, 45);
+  lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 55, 45);
 
   // :  
   lv_style_init(&sep_style);
-  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &gomarice_80);
+  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &freshman_70);
   lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time_sep = lv_label_create(lv_scr_act(), NULL);
@@ -149,7 +149,7 @@ bool WatchFaceCustom::Refresh() {
         lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
       } else {
         //sep_style.text.color = lv_color_hex(0x000000);
-        lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
+        lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x000000));
       }
       lv_label_set_text(label_time_sep,  ":");   
     }

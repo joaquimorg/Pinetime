@@ -24,7 +24,7 @@ Steps::Steps(
   lv_obj_set_style_local_bg_opa(stepsArc, LV_ARC_PART_BG, LV_STATE_DEFAULT, LV_OPA_0);  
   lv_obj_set_style_local_border_width(stepsArc, LV_ARC_PART_BG, LV_STATE_DEFAULT, 0);  
   lv_obj_set_style_local_radius(stepsArc, LV_ARC_PART_BG, LV_STATE_DEFAULT, 0);  
-  lv_obj_set_style_local_text_color(stepsArc, LV_ARC_PART_INDIC, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
+  lv_obj_set_style_local_line_color(stepsArc, LV_ARC_PART_INDIC, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
   lv_arc_set_end_angle(stepsArc, 200);
   lv_obj_set_size(stepsArc, 220, 220);
   lv_arc_set_range(stepsArc, 0, 500);

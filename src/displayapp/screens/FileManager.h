@@ -19,11 +19,12 @@ namespace Pinetime {
 
           bool Refresh() override;
           bool OnButtonPushed() override;
+          bool OnTouchEvent(TouchEvents event) override;
 
         private:
           //Pinetime::Drivers::FileSystem fs;
 
-          lv_obj_t * list;
+          lv_style_t style_halo;
           bool running = true;
 
       };

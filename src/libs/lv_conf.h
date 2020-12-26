@@ -416,7 +416,7 @@ typedef void* lv_indev_drv_user_data_t;            /*Type of user data in the in
 #define LV_FONT_CUSTOM_DECLARE  LV_FONT_DECLARE(lv_font_clock_42) \
                                 LV_FONT_DECLARE(lv_font_clock_90) \
                                 LV_FONT_DECLARE(world_conflict_70) \
-                                LV_FONT_DECLARE(gomarice_80) \
+                                LV_FONT_DECLARE(freshman_70) \
                                 LV_FONT_DECLARE(lv_font_opensans_20)
 
 /* Enable it if you have fonts with a lot of characters.
@@ -450,7 +450,7 @@ typedef void* lv_font_user_data_t;
 
 /* No theme, you can apply your styles as you need
  * No flags. Set LV_THEME_DEFAULT_FLAG 0 */
-#define LV_USE_THEME_EMPTY       0
+#define LV_USE_THEME_EMPTY       1
 
 /*Simple to the create your theme based on it
  * No flags. Set LV_THEME_DEFAULT_FLAG 0 */
@@ -463,7 +463,7 @@ typedef void* lv_font_user_data_t;
  * LV_THEME_MATERIAL_FLAG_NO_TRANSITION: disable transitions (state change animations)
  * LV_THEME_MATERIAL_FLAG_NO_FOCUS: disable indication of focused state)
  * */
-#define LV_USE_THEME_MATERIAL    1
+#define LV_USE_THEME_MATERIAL    0
 
 /* Mono-color theme for monochrome displays.
  * If LV_THEME_DEFAULT_COLOR_PRIMARY is LV_COLOR_BLACK the
@@ -473,10 +473,10 @@ typedef void* lv_font_user_data_t;
 #define LV_USE_THEME_MONO        0
 
 #define LV_THEME_DEFAULT_INCLUDE            <stdint.h>      /*Include a header for the init. function*/
-#define LV_THEME_DEFAULT_INIT               lv_theme_material_init
+#define LV_THEME_DEFAULT_INIT               lv_theme_empty_init//lv_theme_material_init
 #define LV_THEME_DEFAULT_COLOR_PRIMARY      lv_color_hex(0xffffff)
 #define LV_THEME_DEFAULT_COLOR_SECONDARY    lv_color_hex(0xaaaaaa)
-#define LV_THEME_DEFAULT_FLAG               LV_THEME_MATERIAL_FLAG_DARK
+#define LV_THEME_DEFAULT_FLAG               0//LV_THEME_MATERIAL_FLAG_DARK
 #define LV_THEME_DEFAULT_FONT_SMALL         &lv_font_opensans_20
 #define LV_THEME_DEFAULT_FONT_NORMAL        &lv_font_opensans_20
 #define LV_THEME_DEFAULT_FONT_SUBTITLE      &lv_font_opensans_20

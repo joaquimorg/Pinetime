@@ -6,23 +6,9 @@
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 
+#include "lv_pinetime_theme.h"
+
 using namespace Pinetime::Components;
-
-extern "C" {
-//LV_FONT_DECLARE(jetbrains_mono_extrabold_compressed)
-//LV_FONT_DECLARE(jetbrains_mono_bold_20)
-LV_FONT_DECLARE(lv_font_clock_90)
-LV_FONT_DECLARE(lv_font_clock_76)
-LV_FONT_DECLARE(lv_font_clock_42)
-//LV_FONT_DECLARE(lv_font_montserrat_20)
-LV_FONT_DECLARE(lv_font_montserrat_18)
-}
-
-lv_style_t* LabelStyle90 = nullptr;
-lv_style_t* LabelStyle76 = nullptr;
-lv_style_t* LabelStyle42 = nullptr;
-
-lv_style_t* DefaultStyle = nullptr;
 
 static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p) {
   auto* lvgl = static_cast<LittleVgl*>(disp_drv->user_data);
@@ -299,164 +285,11 @@ bool LittleVgl::GetTouchPadInfo(lv_indev_data_t *ptr) {
 }
 
 void LittleVgl::InitTheme() {
-  /*uint16_t i;
-  lv_style_t ** style_p = (lv_style_t **)&theme.style;
-  for(i = 0; i < LV_THEME_STYLE_COUNT; i++) {
-    *style_p = &def;
-    style_p++;
-  }
-
-  InitBaseTheme();
-  InitThemeContainer();
-  InitThemeButton();
-  InitThemeLabel();
-  InitThemeLine();
-  InitThemeLed();
-  InitThemeImage();
-  InitThemeBar();
-  InitThemeSlider();
-  InitThemeSwitch();
-  InitThemeMeter();
-  InitThemeGauge();
-  InitThemeArc();
-  InitThemePreload();
-  InitThemeChart();
-  InitThemeCalendar();
-  InitThemeCheckBox();
-  InitThemeButtonMatrix();
-  InitThemeKnob();
-  InitThemeMessageBox();
-  InitThemePage();
-  InitThemeTextArea();
-  InitThemeSpinBox();
-  InitThemeList();
-  InitThemeDropDownList();
-  InitThemeRoller();
-  InitThemeTabView();
-  InitThemeTileView();
-  InitThemeTable();
-  InitThemeWindow();
-
-  lv_theme_set_current(&theme);*/
-}
-
-void LittleVgl::InitBaseTheme() {
   
-  
-}
+  lv_theme_t * th = lv_pinetime_theme_init(LV_COLOR_WHITE, LV_COLOR_SILVER,
+            0, &lv_font_opensans_20, &lv_font_opensans_20,
+            &lv_font_opensans_20, &lv_font_opensans_20);
 
-void LittleVgl::InitThemeContainer() {
-  
-}
-
-void LittleVgl::InitThemeButton() {
-
-}
-
-void LittleVgl::InitThemeLabel() {
-  
-}
-
-void LittleVgl::InitThemeLine() {
-  
-}
-
-void LittleVgl::InitThemeLed() {
-  
-}
-
-void LittleVgl::InitThemeImage() {
- 
-}
-
-void LittleVgl::InitThemeBar() {
-  
-}
-
-void LittleVgl::InitThemeSlider() {
-  
-}
-
-void LittleVgl::InitThemeSwitch() {
-  
-}
-
-void LittleVgl::InitThemeMeter() {
-  
-}
-
-void LittleVgl::InitThemeGauge() {
-  
-}
-
-void LittleVgl::InitThemeArc() {
-  
-}
-
-void LittleVgl::InitThemePreload() {
-
-}
-
-void LittleVgl::InitThemeChart() {
-  
-}
-
-void LittleVgl::InitThemeCalendar() {
-
-}
-
-void LittleVgl::InitThemeCheckBox() {
-
-}
-
-void LittleVgl::InitThemeButtonMatrix() {
-
-}
-
-void LittleVgl::InitThemeKnob() {
- 
-}
-
-void LittleVgl::InitThemeMessageBox() {
- 
-}
-
-void LittleVgl::InitThemePage() {
-  
-}
-
-void LittleVgl::InitThemeTextArea() {
-  
-}
-
-void LittleVgl::InitThemeSpinBox() {
-  
-}
-
-void LittleVgl::InitThemeList() {
-
-}
-
-void LittleVgl::InitThemeDropDownList() {
- 
-}
-
-void LittleVgl::InitThemeRoller() {
-  
-}
-
-void LittleVgl::InitThemeTabView() {
-  
-}
-
-void LittleVgl::InitThemeTileView() {
-  
-}
-
-void LittleVgl::InitThemeTable() {
-  
-}
-
-void LittleVgl::InitThemeWindow() {
+  lv_theme_set_act(th);
 
 }

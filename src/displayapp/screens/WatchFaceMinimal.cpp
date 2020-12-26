@@ -41,7 +41,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
   lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_TOP_RIGHT, -10, 10);
 
   // Hour  
-  lv_style_init(&not_style);
+  lv_style_init(&hour_style);
   lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &world_conflict_70);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xb71c1c));  
   
