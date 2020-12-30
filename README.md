@@ -23,7 +23,7 @@ The goal of this project is to design an open-source firmware for the Pinetime s
 
 ## Overview
 
-![Pinetime screens](images/0.7.0/montage.jpg "PinetimeScreens")
+![Pinetime](images/v0.90.1/pinetime_224343.jpg "Pinetime")
 
 As of now, here is the list of achievements of this project:
 
@@ -117,14 +117,23 @@ Here are some people I would like to highlight:
 
 *If you feel like you should appear on this list, just get in touch with me or submit a PR :)*
 
+## Screenshots
+
+![Pinetime](images/v0.90.1/pinetime_224343.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224358.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224415.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224427.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224451.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224509.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224520.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224530.jpg "Pinetime")
+![Pinetime](images/v0.90.1/pinetime_224550.jpg "Pinetime")
+
 ## Screen Mockups
 
 https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=0%3A1
 
 ![Pinetime screen mockup](images/PinetimeClockMockup.png "Pinetime")
-
-![Pinetime screen ](images/Pinetime_Clock.jpg "Pinetime")
-
 
 ## My Build
 
