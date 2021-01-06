@@ -727,7 +727,7 @@ typedef void* lv_obj_user_data_t;
 #define LV_USE_TABLE    1
 #if LV_USE_TABLE
 #define LV_TABLE_COL_MAX    12
-#define LV_TABLE_CELL_STYLE_CNT 4
+#define LV_TABLE_CELL_STYLE_CNT 5
 #endif
 
 

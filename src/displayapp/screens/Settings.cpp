@@ -41,6 +41,12 @@ Settings::Settings(
   lv_label_set_recolor(labelButtonPwrOff, true);
   lv_label_set_text(labelButtonPwrOff, "#ff0000 Reset#");
 
+  lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text(backgroundLabel, "");
+
 }
 
 Settings::~Settings() {

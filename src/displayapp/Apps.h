@@ -23,7 +23,9 @@ namespace Pinetime
       Iot,
       MobileApp,
       Charging,
-      StopWatch
+      StopWatch,
+      Paddle,
+      Twos
     };
   }
 } // namespace Pinetime

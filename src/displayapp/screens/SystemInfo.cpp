@@ -92,7 +92,7 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   uptimeSeconds = uptimeSeconds % secondsInAMinute;
   // TODO handle more than 100 days of uptime
 
-  sprintf(t1, "Pinetime\n"
+  sprintf(t1, "InfiniTime - joaquim.org\n"
               "Version:%ld.%ld.%ld\n"
               "Build: %s\n"
               "       %s\n"
@@ -135,6 +135,13 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
 }
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen3() {
-  strncpy(t3, "Hello from\nthe developer!", 27);
+  sprintf(t3, "Hello from\nthe developer!\n"
+              "Software Licensed\n"
+              "under the terms of\n"
+              "the GNU General\n"
+              "Public License v3\n"
+              "Source code:\n"
+              "https://github.com/\n"
+              " joaquimorg/Pinetime");
   return std::unique_ptr<Screen>(new Screens::Label(app, t3));
 }

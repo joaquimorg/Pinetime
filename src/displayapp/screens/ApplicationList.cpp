@@ -17,9 +17,9 @@
   LV_IMG_DECLARE(icon_heart_rate);
 
   LV_IMG_DECLARE(icon_game);
-  LV_IMG_DECLARE(icon_raining);
+  LV_IMG_DECLARE(icon_two);
   LV_IMG_DECLARE(icon_music);
-  LV_IMG_DECLARE(icon_qr_code);
+  LV_IMG_DECLARE(icon_paddle);
 
 
 using namespace Pinetime::Applications::Screens;
@@ -36,7 +36,7 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
           {
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
-                //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
+                [this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
           },
           Screens::ScreenListModes::UpDown          
         }        
@@ -75,7 +75,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(0, 2, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, 3, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen2() {  
@@ -90,20 +90,21 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(1, 2, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(1, 3, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   std::array<Screens::Tile::Applications, 4> applications {
           {
-            {&icon_raining,     "Weather",    Apps::Weather}, 
+            {&icon_paddle,      "Paddle",     Apps::Paddle}, 
             {&icon_music,       "Music",      Apps::Music},
             {&icon_game,        "Paint",      Apps::Paint},
-            {&icon_qr_code,     "Mobile App", Apps::MobileApp}
+            {&icon_two,         "2048",       Apps::Twos}
           }
 
   };
 
   return std::unique_ptr<Screen>(new Screens::Tile(2, 3, app, dateTimeController, settingsController, applications));
 }
+

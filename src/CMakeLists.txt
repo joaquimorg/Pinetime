@@ -391,6 +391,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Notifications.cpp
         displayapp/screens/HeartRate.cpp
         displayapp/screens/FileManager.cpp
+        displayapp/screens/Twos.cpp
+        displayapp/screens/Paddle.cpp
 
         displayapp/screens/ScreensTemplate.cpp
 
@@ -491,6 +493,8 @@ list(APPEND SOURCE_FILES
         displayapp/icons/icon_music.c
         displayapp/icons/icon_error.c
         displayapp/icons/icon_folder.c
+        displayapp/icons/icon_two.c
+        displayapp/icons/icon_paddle.c
 
         #Notification Icons 
         displayapp/icons/not_email.c
@@ -531,6 +535,7 @@ set(INCLUDE_FILES
         displayapp/screens/Meter.h
         displayapp/screens/Gauge.h
         displayapp/screens/InfiniPaint.h
+        displayapp/screens/Paddle.h
         displayapp/screens/DropDownDemo.h
         displayapp/screens/Modal.h
         displayapp/screens/BatteryIcon.h

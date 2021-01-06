@@ -234,7 +234,7 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
     lv_obj_t* alert_type = lv_label_create(lv_scr_act(), nullptr);
     lv_obj_set_style_local_text_color(alert_type, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x888888));   
     lv_label_set_text(alert_type, title);
-    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5); 
+    lv_obj_align(alert_type, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0); 
 
     lv_obj_t* alert_subject = lv_label_create(container1, nullptr);
     lv_obj_set_style_local_text_color(alert_subject, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, Notifications::CategoriesColor[(uint8_t)msg.category]);
