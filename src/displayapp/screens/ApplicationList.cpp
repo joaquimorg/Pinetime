@@ -67,7 +67,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   std::array<Screens::Tile::Applications, 4> applications {
           {                        
-            {&icon_settings,    "Settings",       Apps::Settings},
+            {&icon_settings,    "Settings",       Apps::FirmwareValidation},
             {&icon_information, "Sysinfo",        Apps::SysInfo},
             {&icon_brightness,  "Brightness",     Apps::Brightness},
             {&icon_iot,         "Iot",            Apps::Iot}            

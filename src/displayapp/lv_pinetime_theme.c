@@ -112,8 +112,8 @@ static void basic_init(void)
     lv_style_set_bg_color(&style_btn, LV_STATE_PRESSED, lv_color_darken(LV_PINETIME_BLUE, LV_OPA_20));
     lv_style_set_text_color(&style_btn, LV_STATE_DEFAULT, LV_PINETIME_WHITE);
     lv_style_set_value_color(&style_btn, LV_STATE_DEFAULT, LV_PINETIME_WHITE);
-    lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
-    lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
+    //lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
+    //lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
 
     lv_style_set_transform_width(&style_btn, LV_STATE_PRESSED, LV_HOR_RES / 100);
     lv_style_set_transform_height(&style_btn, LV_STATE_PRESSED, LV_HOR_RES / 150);
@@ -122,6 +122,14 @@ static void basic_init(void)
     lv_style_set_transition_delay(&style_btn, LV_STATE_DEFAULT, 70);
     lv_style_set_transition_prop_1(&style_btn, LV_STATE_DEFAULT, LV_STYLE_TRANSFORM_WIDTH);
     lv_style_set_transition_prop_2(&style_btn, LV_STATE_DEFAULT, LV_STYLE_TRANSFORM_HEIGHT);
+
+    lv_style_set_pad_left(&style_btn, LV_STATE_DEFAULT, LV_DPX(20));
+    lv_style_set_pad_right(&style_btn, LV_STATE_DEFAULT, LV_DPX(20));
+    lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_DPX(15));
+    lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_DPX(15));
+    lv_style_set_pad_inner(&style_btn, LV_STATE_DEFAULT, LV_DPX(10));
+    lv_style_set_outline_width(&style_btn, LV_STATE_DEFAULT, LV_DPX(2));
+
 
     style_init_reset(&style_btn_border);
     lv_style_set_radius(&style_btn_border, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);

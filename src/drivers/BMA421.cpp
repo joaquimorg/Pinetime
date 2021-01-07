@@ -200,6 +200,16 @@ void BMA421::Sleep() {
     bma4_error_codes_print_result("bma4_set_advance_power_save", rslt);
 }
 
+void BMA421::UpdateAccel() {
+    uint16_t rslt;
+    struct bma4_accel sens_data;
+    
+    rslt = bma4_read_accel_xyz(&sens_data, &bma);
+    accelData.x = (sens_data.x / 0x10);
+    accelData.y = (sens_data.y / 0x10);
+    accelData.z = (sens_data.z / 0x10);
+}
+
 void BMA421::Update() {
     uint16_t rslt;
 

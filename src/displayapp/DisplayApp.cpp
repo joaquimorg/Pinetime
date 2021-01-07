@@ -112,10 +112,10 @@ void DisplayApp::Refresh() {
         //lcd.DisplayOff();        
         systemTask.PushMessage(System::SystemTask::Messages::OnDisplayTaskSleeping);
         state = States::Idle;        
-        if(currentScreen) {
+        /*if(currentScreen) {
           currentScreen.reset(nullptr);
           onClockApp = false;
-        }
+        }*/
       break;
 
       case Messages::GoToRunning:
@@ -126,10 +126,10 @@ void DisplayApp::Refresh() {
           currentScreen.reset(nullptr);
           currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
         }
-        //if (state != States::Running) {
-          brightnessController.Restore();
-          state = States::Running;
-        //}
+        
+        brightnessController.Restore();
+        state = States::Running;
+        
 
       break;
 
@@ -144,14 +144,15 @@ void DisplayApp::Refresh() {
           currentScreen.reset(nullptr);
           currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
         } else {
-          PushMessage(Messages::GoToRunning);
-          PushMessage(Messages::NewNotification);
+          //PushMessage(Messages::GoToRunning);
           //PushMessage(Messages::NewNotification);
-          //onClockApp = false;
-          //currentScreen.reset(nullptr);
-          //currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
-          //brightnessController.Restore();
-          //state = States::Running;
+          //PushMessage(Messages::NewNotification);
+          onClockApp = false;
+          lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+          currentScreen.reset(nullptr);
+          currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
+          brightnessController.Restore();
+          state = States::Running;
         }
                 
         //currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
@@ -267,7 +268,7 @@ void DisplayApp::RunningState() {
         break;
       case Apps::SysInfo: currentScreen.reset(new Screens::SystemInfo(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); break;
       case Apps::Paint: currentScreen.reset(new Screens::InfiniPaint(this, lvgl)); break;
-      case Apps::Paddle: currentScreen.reset(new Screens::Paddle(this, lvgl)); break;
+      case Apps::Paddle: currentScreen.reset(new Screens::Paddle(this, systemTask, stepCounter, settingsController)); break;
       case Apps::Twos: currentScreen.reset(new Screens::Twos(this)); break;
       case Apps::Brightness : currentScreen.reset(new Screens::Brightness(this, brightnessController)); break;
       case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;

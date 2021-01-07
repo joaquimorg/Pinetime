@@ -167,6 +167,12 @@ void SystemTask::Work() {
       
       Messages message = static_cast<Messages >(msg);
       switch(message) {
+        case Messages::EnableSleeping:
+          doNotGoToSleep = false;
+        break;
+        case Messages::DisableSleeping:
+          doNotGoToSleep = true;
+        break;
         case Messages::WakeUp:
           //spi.Wakeup();
           //twiMaster.Wakeup();

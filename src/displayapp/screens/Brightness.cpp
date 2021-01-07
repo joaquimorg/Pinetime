@@ -1,6 +1,8 @@
 #include "Brightness.h"
 #include <lvgl/lvgl.h>
 
+LV_IMG_DECLARE(icon_brightness);
+
 using namespace Pinetime::Applications::Screens;
 
 void slider_event_cb(lv_obj_t * slider, lv_event_t event) {
@@ -11,6 +13,16 @@ void slider_event_cb(lv_obj_t * slider, lv_event_t event) {
 }
 
 Brightness::Brightness(Pinetime::Applications::DisplayApp *app, Controllers::BrightnessController& brightness) : Screen(app), brightness{brightness} {
+
+  lv_obj_t * iBrightness = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(iBrightness, &icon_brightness);  
+  lv_obj_align(iBrightness, NULL, LV_ALIGN_CENTER, -60, -70);
+
+  lv_obj_t* lBrightness = lv_label_create(lv_scr_act(), NULL);
+  lv_obj_set_style_local_text_color(lBrightness, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xffc107));
+  lv_label_set_text(lBrightness, "Brightness");   
+  lv_obj_align(lBrightness, iBrightness, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
+
   slider = lv_slider_create(lv_scr_act(), nullptr);
   lv_obj_set_user_data(slider, this);
   lv_obj_set_width(slider, 220);
@@ -22,7 +34,7 @@ Brightness::Brightness(Pinetime::Applications::DisplayApp *app, Controllers::Bri
   slider_label = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text(slider_label, LevelToString(brightness.Level()));
   lv_obj_set_auto_realign(slider_label, true);
-  lv_obj_align(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
+  lv_obj_align(slider_label, slider, LV_ALIGN_OUT_BOTTOM_MID, 0, 30);
 
   lv_obj_t *backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   //backgroundLabel->user_data = this;

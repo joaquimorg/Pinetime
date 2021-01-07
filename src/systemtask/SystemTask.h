@@ -32,7 +32,7 @@ namespace Pinetime {
       public:
         enum class Messages {WakeUp, GoToSleep, GoToRunning, OnNewTime, OnNewNotification, OnNewCall, BleConnected,
             BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnStepEvent, OnButtonEvent, OnDisplayTaskSleeping,
-            ReloadIdleTimer
+            ReloadIdleTimer, EnableSleeping, DisableSleeping
         };
 
         SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
@@ -97,7 +97,7 @@ namespace Pinetime {
         void ReloadIdleTimer() const;
         bool isBleDiscoveryTimerRunning = false;
         uint8_t bleDiscoveryTimer = 0;
-        static constexpr uint32_t idleTime = 30000;
+        static constexpr uint32_t idleTime = 15000;
         TimerHandle_t idleTimer;
         bool doNotGoToSleep = false;
 
