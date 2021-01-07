@@ -33,6 +33,11 @@ namespace Pinetime {
           void OnObjectEvent(lv_obj_t* obj, lv_event_t event, uint32_t buttonId);
 
         private:
+
+          Controllers::DateTime& dateTimeController;
+          Controllers::Settings& settingsController;
+          Pinetime::Applications::Apps apps[4];
+
           DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
 
           lv_obj_t * backgroundLabel;
@@ -48,10 +53,7 @@ namespace Pinetime {
 
           lv_obj_t * iconsApps[4];
           lv_obj_t * iconsAppsLabel[4];
-
-          Controllers::DateTime& dateTimeController;
-          Controllers::Settings& settingsController;
-          Pinetime::Applications::Apps apps[4];
+         
       };
     }
   }
