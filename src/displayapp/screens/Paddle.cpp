@@ -24,6 +24,7 @@ Paddle::Paddle(Pinetime::Applications::DisplayApp* app,
   ballObj = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_set_style_local_text_color(ballObj, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
   lv_label_set_text(ballObj, "");
+  lv_label_set_align( ballObj, LV_LABEL_ALIGN_CENTER );
   lv_obj_set_pos(ballObj, ballX, ballY);
 
   paddleObj = lv_line_create(lv_scr_act(), NULL);
@@ -88,20 +89,16 @@ void Paddle::DrawGame() {
       dx *= -1; 
     }
   
-    //checks if it is in the position of the paddle	  
-    if(ballY <= (paddlePos + 25) && ballY >= (paddlePos - 25)){ 
-      if(ballX >= 0 && ballX < 7){
-          dx *= -1;
-          dy *= -1;
-          score++;
-        } 
-    }	
-	  
-    //checks if it has gone behind the paddle
-    else if(ballX <= -40){
-      //ballX = 210;
-      //ballY = 120 - (int(rand() % 120) - 60);
-      //score = 0;
+    //checks if it is in the position of the paddle
+    if( ballX >= 0 && ballX < 7) {
+      if( ballY >= (paddlePos - 25) && ballY <= (paddlePos + 25) ) { 
+        dx *= -1;
+        dy *= -1;
+        score++;
+      }
+    } else if( ballX <= -40 ) {
+      //checks if it has gone behind the paddle
+
       lv_obj_set_style_local_line_color(paddleObj, LV_LINE_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_RED);
       gameRunning = false;
       counter = 0;
@@ -137,30 +134,33 @@ void Paddle::GetAccel() {
   accelData = stepCounter.GetAccel();
   int accelX = round(accelData.x / 3);
 
-  if ( lastY != accelX) {
+  //if ( lastY != accelX) {
     int dif = abs(accelX - centerAccelX);
 
     if ( centerAccelX > accelX ) {
-        paddlePos = paddlePos + dif * 2;
+        paddlePos = paddlePos + dif * 4;
     } else {
-        paddlePos = paddlePos - dif * 2;
+        paddlePos = paddlePos - dif * 4;
     }
 
     if ( paddlePos < 25 ) paddlePos = 25;
     if ( paddlePos > 215 ) paddlePos = 215;
     lastY = accelX;
-  }
+  //}
   //lv_label_set_text_fmt(gameInfo, "%i", accelX);
 }
 
 bool Paddle::Refresh() {
 
-  GetAccel();
+  if((counterRefresh++ % 5) == 0){
+    counterRefresh = 0;	
+    GetAccel();
 
-  if ( gameRunning ) {
-    DrawGame();
-  } else {
-    DrawInfo();
+    if ( gameRunning ) {
+      DrawGame();
+    } else {
+      DrawInfo();
+    }
   }
   return running;
 }
@@ -170,25 +170,4 @@ bool Paddle::OnButtonPushed() {
   return true;
 }
 
-bool Paddle::OnTouchEvent(Pinetime::Applications::TouchEvents event) { 
 
-  return true; 
-}
-
-bool Paddle::OnTouchEvent(uint16_t x, uint16_t y) {
-  //lv_obj_set_pos(paddle_image, 0, y - 30);		// sets the center paddle pos. (30px offset) with the the y_coordinate of the finger and defaults the x_coordinate to 0
-  //paddleTopY = y - 30;					// refreshes the upper extreme of the paddle
-  //paddleBottomY = y + 30;					// refreshes the lower extreme of the paddle
-  /*if (lastY != y) {
-    if ( (lastY - y) < 0 ) {
-      paddlePos = paddlePos + 10;
-    } else {
-      paddlePos = paddlePos - 10;
-    }
-  
-    if ( paddlePos < 25 ) paddlePos = 25;
-    if ( paddlePos > 215 ) paddlePos = 215;
-    lastY = y;
-  }*/
-  return true;
-}

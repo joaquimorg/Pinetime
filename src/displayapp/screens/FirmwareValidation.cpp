@@ -51,16 +51,16 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
     labelButtonValidate = lv_label_create(buttonValidate, nullptr);
     lv_label_set_recolor(labelButtonValidate, true);
     lv_label_set_text(labelButtonValidate, "#00ff00 Validate#");
-
-    buttonReset = lv_btn_create(lv_scr_act(), nullptr);
-    buttonReset->user_data = this;
-    lv_obj_align(buttonReset, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
-    lv_obj_set_event_cb(buttonReset, ButtonEventHandler);
-
-    labelButtonReset = lv_label_create(buttonReset, nullptr);
-    lv_label_set_recolor(labelButtonReset, true);
-    lv_label_set_text(labelButtonReset, "#AA0000 Reset#");
   }
+  buttonReset = lv_btn_create(lv_scr_act(), nullptr);
+  buttonReset->user_data = this;
+  lv_obj_align(buttonReset, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
+  lv_obj_set_event_cb(buttonReset, ButtonEventHandler);
+
+  labelButtonReset = lv_label_create(buttonReset, nullptr);
+  lv_label_set_recolor(labelButtonReset, true);
+  lv_label_set_text(labelButtonReset, "#AA0000 Reset#");
+  
 }
 
 

@@ -28,8 +28,6 @@ namespace Pinetime {
 
           bool Refresh() override;
           bool OnButtonPushed() override;
-          bool OnTouchEvent(TouchEvents event) override;
-          bool OnTouchEvent(uint16_t x, uint16_t y) override;
           
         private:  
           
@@ -47,7 +45,8 @@ namespace Pinetime {
           int dx = 4;		            // Velocity of the ball in the x_coordinate
           int dy = 5;		            // Velocity of the ball in the y_coordinate
 
-          int counter = 0;	            // init Frame refresh limit counter
+          int counter = 0;
+          int counterRefresh = 0;
           int score = 0;   
 
           lv_point_t paddlePoint[2];

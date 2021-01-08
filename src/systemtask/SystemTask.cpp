@@ -311,7 +311,8 @@ void SystemTask::NewNotification() {
     WakeUp();
     GoToRunning();
     //NewNotification();
-    //displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
+    //displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning);    
+    displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
   } else {
     displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
   }
