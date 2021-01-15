@@ -99,6 +99,8 @@ jobs:
 
       - name: Checkout source files
         uses: actions/checkout@v2
+        with:
+          submodules: recursive
 
       - name: Show files
         run:  set ; pwd ; ls -l
