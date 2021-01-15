@@ -153,6 +153,10 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 --- back to 15
 - $ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_15.3.0_59ac345 -DUSE_OPENOCD=1 -DOPENOCD_BIN_PATH=/mnt/d/Tools/xpack-openocd-0.10.0-15/bin/openocd.exe ../
 
+
+// Sync time on WSL2
+- $ sudo hwclock -s
+
 - $ make -j pinetime-app
 - $ make -j pinetime-mcuboot-app
 
@@ -160,4 +164,4 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 
 ### upload via remote openocd : 
 
-$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" -ex "det" src/pinetime-app-0.9.1.out
+$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" -ex "det" src/pinetime-app-0.10.1.out

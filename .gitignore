@@ -20,6 +20,9 @@ tools
 *.out
 pinetime*.cbp
 
+# External libs
+!src/libs/hrs3300/libheart.a
+
 # InfiniTime's files
 core
 sdk

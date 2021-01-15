@@ -65,7 +65,7 @@ void BrightnessController::Lower() {
     case Levels::MediumHigh: Set(Levels::Medium); break;
     case Levels::Medium: Set(Levels::LowMedium); break;
     case Levels::LowMedium: Set(Levels::Low); break;
-    case Levels::Low: Set(Levels::Off); break;
+    //case Levels::Low: Set(Levels::Off); break;
     default: break;
   }
 }
