@@ -98,8 +98,11 @@ uint8_t Brightness::LevelToInt(Pinetime::Controllers::BrightnessController::Leve
 
 bool Brightness::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   switch(event) {
-    case TouchEvents::SwipeLeft:
+    case TouchEvents::SwipeLeft:      
       brightness.Lower();
+      if ( brightness.Level() == Pinetime::Controllers::BrightnessController::Levels::Off) {
+        brightness.Set(Controllers::BrightnessController::Levels::Low);
+      }
       SetValue();
       return true;
     case TouchEvents::SwipeRight:
