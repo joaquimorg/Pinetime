@@ -36,7 +36,7 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
           {
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
+                //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
           },
           Screens::ScreenListModes::UpDown          
         }        
@@ -70,12 +70,12 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
             {&icon_settings,    "Settings",       Apps::FirmwareValidation},
             {&icon_information, "Sysinfo",        Apps::SysInfo},
             {&icon_brightness,  "Brightness",     Apps::Brightness},
-            {&icon_iot,         "Iot",            Apps::Iot}            
+            {&icon_iot,         "Iot",            Apps::None}            
           }
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(0, 3, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, 2, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen2() {  
@@ -84,13 +84,13 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
           {                                    
             {&icon_running,     "Steps",      Apps::Steps},
             {&icon_heart_rate,  "Heart Rate", Apps::HeartRate},
-            {&icon_raining,     "Weather",    Apps::Weather},
-            {&icon_folder,      "File",       Apps::FileManager}
+            {&icon_paddle,     "Paddle",    Apps::Paddle},
+            {&icon_two,      "2048",       Apps::Twos}
           }
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(1, 3, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(1, 2, app, dateTimeController, settingsController, applications));
 }
 
 std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
@@ -98,8 +98,8 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
   std::array<Screens::Tile::Applications, 4> applications {
           {
             {&icon_paddle,      "Paddle",     Apps::Paddle}, 
-            {&icon_music,       "Music",      Apps::Music},
-            {&icon_game,        "Paint",      Apps::Paint},
+            {&icon_music,       "Music",      Apps::None},
+            {&icon_game,        "Paint",      Apps::None},
             {&icon_two,         "2048",       Apps::Twos}
           }
 

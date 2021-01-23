@@ -103,7 +103,6 @@ namespace Pinetime {
 
         void GoToRunning();
         void WakeUp();
-        void NewNotification();
 
 #if configUSE_TRACE_FACILITY == 1
         SystemMonitor<FreeRtosMonitor> monitor;

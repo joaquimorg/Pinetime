@@ -144,24 +144,17 @@ void DisplayApp::Refresh() {
           currentScreen.reset(nullptr);
           currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
         } else {
-          PushMessage(Messages::GoToRunning);
-          //PushMessage(Messages::NewNotification);
-          //PushMessage(Messages::NewNotification);
-          //onClockApp = false;
-          //lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
-          //currentScreen.reset(nullptr);
-          //currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
+          //PushMessage(Messages::GoToRunning);
+
+          currentScreen.reset(nullptr);
+          lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+          onClockApp = false;
+          currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Preview));
+
           //brightnessController.Restore();
-          //state = States::Running;
-        }
-                
-        //currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter));        
-        /*
-        if (state != States::Running) {
-          brightnessController.Restore();
-          state = States::Running;
-        }*/
-        
+          //state = States::Running;    
+        }      
+
       break;
 
       case Messages::TouchEvent: {

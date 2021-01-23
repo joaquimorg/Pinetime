@@ -187,6 +187,10 @@ void SystemTask::Work() {
 
           isSleeping = false;
           isWakingUp = false;
+
+          displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning);
+          displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
+
         break;
         case Messages::GoToRunning:
          
@@ -205,8 +209,12 @@ void SystemTask::Work() {
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateDateTime);
           break;
         case Messages::OnNewNotification:
-          //vTaskDelay(200);
-          NewNotification();
+          if(isSleeping && !isWakingUp) {
+            WakeUp();
+          }
+          vibration.Vibrate(35);
+          displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::NewNotification);
+
           break;
         case Messages::OnNewCall:
           if(isSleeping && !isWakingUp) WakeUp();
@@ -290,7 +298,7 @@ void SystemTask::OnButtonPushed() {
     if(!isWakingUp) {
       NRF_LOG_INFO("[systemtask] Button pushed, waking up");
       WakeUp();
-      GoToRunning();
+      //GoToRunning();
     }
   }
 }
@@ -303,22 +311,6 @@ void SystemTask::GoToRunning() {
 void SystemTask::WakeUp() {
   isWakingUp = true;
   PushMessage(Messages::WakeUp);
-}
-
-void SystemTask::NewNotification() {
-  vibration.Vibrate(35);
-  if(isSleeping && !isWakingUp) {
-    WakeUp();
-    GoToRunning();
-    //NewNotification();
-    //displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning);    
-    displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
-  } else {
-    displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
-  }
-  //displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning); 
-  //vTaskDelay(500);
-  //displayApp->PushMessage(Applications::DisplayApp::Messages::NewNotification);
 }
 
 void SystemTask::OnTouchEvent() {
