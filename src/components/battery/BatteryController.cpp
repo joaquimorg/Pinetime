@@ -32,7 +32,7 @@ void Battery::Init() {
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_TOGGLE;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
@@ -44,7 +44,7 @@ void Battery::Init() {
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_TOGGLE;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);

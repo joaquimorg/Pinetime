@@ -325,16 +325,21 @@ void SystemTask::OnStepEvent() {
 
 void SystemTask::OnChargingEvent() {
   if(isGoingToSleep) return ;
-  if(isSleeping && !isWakingUp) {
+  /*if(isSleeping && !isWakingUp) {
     WakeUp();
   }
   //vibration.Vibrate(35);
-  displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::ChargingEvent);
+  displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::ChargingEvent);*/
 }
 
-void SystemTask::OnPowerPresentEvent() {
+void SystemTask::OnPowerPresentEvent() {  
   if(isGoingToSleep) return ;
-  if(!isSleeping) {
+  if(isSleeping && !isWakingUp) {
+    WakeUp();
+  }
+  if ( !batteryController.IsCharging() ) {
+    //vibration.Vibrate(35);
+    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::ChargingEvent);
   }
 }
 

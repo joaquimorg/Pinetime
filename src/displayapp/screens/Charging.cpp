@@ -43,6 +43,12 @@ Charging::Charging(
   lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 60);
 
+  lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text(backgroundLabel, "");
+
   chTimer = xTimerCreate ("chTimer", pdMS_TO_TICKS( 5000 ), pdTRUE, this, CHTimerCallback);
   xTimerStart(chTimer, 0);
 
