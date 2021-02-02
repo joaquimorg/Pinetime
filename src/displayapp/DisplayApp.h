@@ -9,9 +9,8 @@
 #include "TouchEvents.h"
 #include "components/brightness/BrightnessController.h"
 #include "components/firmwarevalidator/FirmwareValidator.h"
-#include "displayapp/screens/Modal.h"
 #include "components/settings/Settings.h"
-
+#include "screens/Screen.h"
 namespace Pinetime {
 
   namespace Drivers {
@@ -38,7 +37,7 @@ namespace Pinetime {
       public:
         enum class States {Idle, Running};
         enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateDateTime, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, StepEvent, ButtonPushed,
-            NewNotification, NewCall, BleFirmwareUpdateStarted };
+            NewNotification, NewCall, BleFirmwareUpdateStarted, ChargingEvent };
 
         enum class FullRefreshDirections { None, Up, Down };
         enum class TouchModes { Gestures, Polling };

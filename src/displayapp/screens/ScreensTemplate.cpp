@@ -1,7 +1,5 @@
 #include "ScreensTemplate.h"
-#include <lvgl/lvgl.h>
 #include "../DisplayApp.h"
-#include "drivers/BMA421.h"
 #include "board_config.h"
 
 using namespace Pinetime::Applications::Screens;

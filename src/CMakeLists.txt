@@ -30,16 +30,16 @@ set(CMAKE_OSX_DEPLOYMENT_TARGET "")
 
 set(SDK_SOURCE_FILES
         # Startup
-        "${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c"
-        "${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52.S"
+        ${NRF5_SDK_PATH}/modules/nrfx/mdk/system_nrf52.c
+        ${NRF5_SDK_PATH}/modules/nrfx/mdk/gcc_startup_nrf52.S
 
         # Base SDK
-        "${NRF5_SDK_PATH}/components/boards/boards.c"
-        "${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_clock.c"
-        "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_clock.c"
-        "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_gpiote.c"
-        "${NRF5_SDK_PATH}/modules/nrfx/soc/nrfx_atomic.c"
-        "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_saadc.c"
+        ${NRF5_SDK_PATH}/components/boards/boards.c
+        ${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_clock.c
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_clock.c
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_gpiote.c
+        ${NRF5_SDK_PATH}/modules/nrfx/soc/nrfx_atomic.c
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_saadc.c
 
         # FreeRTOS
         ${NRF5_SDK_PATH}/external/freertos/source/croutine.c
@@ -53,37 +53,37 @@ set(SDK_SOURCE_FILES
         ${NRF5_SDK_PATH}/components/libraries/timer/app_timer_freertos.c
 
         # Libs
-        "${NRF5_SDK_PATH}/components/libraries/atomic/nrf_atomic.c"
-        "${NRF5_SDK_PATH}/components/libraries/balloc/nrf_balloc.c"
-        "${NRF5_SDK_PATH}/components/libraries/util/nrf_assert.c"
-        "${NRF5_SDK_PATH}/components/libraries/util/app_error.c"
-        "${NRF5_SDK_PATH}/components/libraries/util/app_error_weak.c"
-        "${NRF5_SDK_PATH}/components/libraries/util/app_error_handler_gcc.c"
-        "${NRF5_SDK_PATH}/components/libraries/util/app_util_platform.c"
-        "${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_backend_rtt.c"
-        "${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_backend_serial.c"
-        "${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_default_backends.c"
-        "${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_frontend.c"
-        "${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_str_formatter.c"
-        "${NRF5_SDK_PATH}/components/libraries/memobj/nrf_memobj.c"
-        "${NRF5_SDK_PATH}/components/libraries/ringbuf/nrf_ringbuf.c"
-        "${NRF5_SDK_PATH}/components/libraries/strerror/nrf_strerror.c"
+        ${NRF5_SDK_PATH}/components/libraries/atomic/nrf_atomic.c
+        ${NRF5_SDK_PATH}/components/libraries/balloc/nrf_balloc.c
+        ${NRF5_SDK_PATH}/components/libraries/util/nrf_assert.c
+        ${NRF5_SDK_PATH}/components/libraries/util/app_error.c
+        ${NRF5_SDK_PATH}/components/libraries/util/app_error_weak.c
+        ${NRF5_SDK_PATH}/components/libraries/util/app_error_handler_gcc.c
+        ${NRF5_SDK_PATH}/components/libraries/util/app_util_platform.c
+        ${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_backend_rtt.c
+        ${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_backend_serial.c
+        ${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_default_backends.c
+        ${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_frontend.c
+        ${NRF5_SDK_PATH}/components/libraries/log/src/nrf_log_str_formatter.c
+        ${NRF5_SDK_PATH}/components/libraries/memobj/nrf_memobj.c
+        ${NRF5_SDK_PATH}/components/libraries/ringbuf/nrf_ringbuf.c
+        ${NRF5_SDK_PATH}/components/libraries/strerror/nrf_strerror.c
 
         # Segger RTT
-        "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c"
-        "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT.c"
-        "${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_printf.c"
+        ${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c
+        ${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT.c
+        ${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_printf.c
 
         # Other
-        "${NRF5_SDK_PATH}/external/utf_converter/utf.c"
-        "${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf.c"
-        "${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf_format.c"
+        ${NRF5_SDK_PATH}/external/utf_converter/utf.c
+        ${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf.c
+        ${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf_format.c
 
         # TWI
-        "${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi.c"
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi.c
 
         # GPIOTE
-        "${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c"
+        ${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c
         )
 
 set(TINYCRYPT_SRC
@@ -177,6 +177,12 @@ set(LVGL_SRC
         libs/lvgl/src/lv_core/lv_obj_style_dec.h
         libs/lvgl/src/lv_core/lv_refr.h
         libs/lvgl/src/lv_core/lv_style.h
+        libs/lvgl/src/lv_core/lv_disp.c
+        libs/lvgl/src/lv_core/lv_group.c
+        libs/lvgl/src/lv_core/lv_indev.c
+        libs/lvgl/src/lv_core/lv_obj.c
+        libs/lvgl/src/lv_core/lv_refr.c
+        libs/lvgl/src/lv_core/lv_style.c
         libs/lvgl/src/lv_draw/lv_draw.h
         libs/lvgl/src/lv_draw/lv_draw_arc.h
         libs/lvgl/src/lv_draw/lv_draw_blend.h
@@ -186,6 +192,17 @@ set(LVGL_SRC
         libs/lvgl/src/lv_draw/lv_draw_mask.h
         libs/lvgl/src/lv_draw/lv_draw_rect.h
         libs/lvgl/src/lv_draw/lv_draw_triangle.h
+        libs/lvgl/src/lv_draw/lv_draw_arc.c
+        libs/lvgl/src/lv_draw/lv_draw_blend.c
+        libs/lvgl/src/lv_draw/lv_draw_img.c
+        libs/lvgl/src/lv_draw/lv_draw_label.c
+        libs/lvgl/src/lv_draw/lv_draw_line.c
+        libs/lvgl/src/lv_draw/lv_draw_mask.c
+        libs/lvgl/src/lv_draw/lv_draw_rect.c
+        libs/lvgl/src/lv_draw/lv_draw_triangle.c
+        libs/lvgl/src/lv_draw/lv_img_buf.c
+        libs/lvgl/src/lv_draw/lv_img_cache.c
+        libs/lvgl/src/lv_draw/lv_img_decoder.c        
         libs/lvgl/src/lv_draw/lv_img_buf.h
         libs/lvgl/src/lv_draw/lv_img_cache.h
         libs/lvgl/src/lv_draw/lv_img_decoder.h
@@ -193,10 +210,19 @@ set(LVGL_SRC
         libs/lvgl/src/lv_font/lv_font_fmt_txt.h
         libs/lvgl/src/lv_font/lv_font_loader.h
         libs/lvgl/src/lv_font/lv_symbol_def.h
+        libs/lvgl/src/lv_font/lv_font.c
+        #libs/lvgl/src/lv_font/lv_font_dejavu_16_persian_hebrew.c
+        libs/lvgl/src/lv_font/lv_font_fmt_txt.c
+        libs/lvgl/src/lv_font/lv_font_loader.c
+        #libs/lvgl/src/lv_font/lv_font_montserrat_18.c
+        #libs/lvgl/src/lv_font/lv_font_montserrat_20.c
         libs/lvgl/src/lv_hal/lv_hal.h
         libs/lvgl/src/lv_hal/lv_hal_disp.h
         libs/lvgl/src/lv_hal/lv_hal_indev.h
-        libs/lvgl/src/lv_hal/lv_hal_tick.h
+        libs/lvgl/src/lv_hal/lv_hal_tick.h        
+        libs/lvgl/src/lv_hal/lv_hal_disp.c
+        libs/lvgl/src/lv_hal/lv_hal_indev.c
+        libs/lvgl/src/lv_hal/lv_hal_tick.c
         libs/lvgl/src/lv_misc/lv_anim.h
         libs/lvgl/src/lv_misc/lv_area.h
         libs/lvgl/src/lv_misc/lv_async.h
@@ -215,12 +241,35 @@ set(LVGL_SRC
         libs/lvgl/src/lv_misc/lv_txt.h
         libs/lvgl/src/lv_misc/lv_txt_ap.h
         libs/lvgl/src/lv_misc/lv_types.h
-        libs/lvgl/src/lv_misc/lv_utils.h
+        libs/lvgl/src/lv_misc/lv_utils.h        
+        libs/lvgl/src/lv_misc/lv_anim.c
+        libs/lvgl/src/lv_misc/lv_area.c
+        libs/lvgl/src/lv_misc/lv_async.c
+        libs/lvgl/src/lv_misc/lv_bidi.c
+        libs/lvgl/src/lv_misc/lv_color.c
+        libs/lvgl/src/lv_misc/lv_debug.c
+        libs/lvgl/src/lv_misc/lv_fs.c
+        libs/lvgl/src/lv_misc/lv_gc.c
+        libs/lvgl/src/lv_misc/lv_ll.c
+        libs/lvgl/src/lv_misc/lv_log.c
+        libs/lvgl/src/lv_misc/lv_math.c
+        libs/lvgl/src/lv_misc/lv_mem.c
+        libs/lvgl/src/lv_misc/lv_printf.c
+        libs/lvgl/src/lv_misc/lv_task.c
+        libs/lvgl/src/lv_misc/lv_templ.c
+        libs/lvgl/src/lv_misc/lv_txt.c
+        libs/lvgl/src/lv_misc/lv_txt_ap.c
+        libs/lvgl/src/lv_misc/lv_utils.c
         libs/lvgl/src/lv_themes/lv_theme.h
         libs/lvgl/src/lv_themes/lv_theme_empty.h
         libs/lvgl/src/lv_themes/lv_theme_material.h
         #libs/lvgl/src/lv_themes/lv_theme_mono.h
         #libs/lvgl/src/lv_themes/lv_theme_template.h
+        libs/lvgl/src/lv_themes/lv_theme.c
+        libs/lvgl/src/lv_themes/lv_theme_empty.c
+        libs/lvgl/src/lv_themes/lv_theme_material.c
+        #libs/lvgl/src/lv_themes/lv_theme_mono.c
+        #libs/lvgl/src/lv_themes/lv_theme_template.c
         libs/lvgl/src/lv_widgets/lv_arc.h
         libs/lvgl/src/lv_widgets/lv_bar.h
         libs/lvgl/src/lv_widgets/lv_btn.h
@@ -254,56 +303,7 @@ set(LVGL_SRC
         libs/lvgl/src/lv_widgets/lv_tabview.h
         libs/lvgl/src/lv_widgets/lv_textarea.h
         libs/lvgl/src/lv_widgets/lv_tileview.h
-        libs/lvgl/src/lv_widgets/lv_win.h
-        libs/lvgl/src/lv_core/lv_disp.c
-        libs/lvgl/src/lv_core/lv_group.c
-        libs/lvgl/src/lv_core/lv_indev.c
-        libs/lvgl/src/lv_core/lv_obj.c
-        libs/lvgl/src/lv_core/lv_refr.c
-        libs/lvgl/src/lv_core/lv_style.c
-        libs/lvgl/src/lv_draw/lv_draw_arc.c
-        libs/lvgl/src/lv_draw/lv_draw_blend.c
-        libs/lvgl/src/lv_draw/lv_draw_img.c
-        libs/lvgl/src/lv_draw/lv_draw_label.c
-        libs/lvgl/src/lv_draw/lv_draw_line.c
-        libs/lvgl/src/lv_draw/lv_draw_mask.c
-        libs/lvgl/src/lv_draw/lv_draw_rect.c
-        libs/lvgl/src/lv_draw/lv_draw_triangle.c
-        libs/lvgl/src/lv_draw/lv_img_buf.c
-        libs/lvgl/src/lv_draw/lv_img_cache.c
-        libs/lvgl/src/lv_draw/lv_img_decoder.c
-        libs/lvgl/src/lv_font/lv_font.c
-        #libs/lvgl/src/lv_font/lv_font_dejavu_16_persian_hebrew.c
-        libs/lvgl/src/lv_font/lv_font_fmt_txt.c
-        libs/lvgl/src/lv_font/lv_font_loader.c
-        #libs/lvgl/src/lv_font/lv_font_montserrat_18.c
-        #libs/lvgl/src/lv_font/lv_font_montserrat_20.c
-        libs/lvgl/src/lv_hal/lv_hal_disp.c
-        libs/lvgl/src/lv_hal/lv_hal_indev.c
-        libs/lvgl/src/lv_hal/lv_hal_tick.c
-        libs/lvgl/src/lv_misc/lv_anim.c
-        libs/lvgl/src/lv_misc/lv_area.c
-        libs/lvgl/src/lv_misc/lv_async.c
-        libs/lvgl/src/lv_misc/lv_bidi.c
-        libs/lvgl/src/lv_misc/lv_color.c
-        libs/lvgl/src/lv_misc/lv_debug.c
-        libs/lvgl/src/lv_misc/lv_fs.c
-        libs/lvgl/src/lv_misc/lv_gc.c
-        libs/lvgl/src/lv_misc/lv_ll.c
-        libs/lvgl/src/lv_misc/lv_log.c
-        libs/lvgl/src/lv_misc/lv_math.c
-        libs/lvgl/src/lv_misc/lv_mem.c
-        libs/lvgl/src/lv_misc/lv_printf.c
-        libs/lvgl/src/lv_misc/lv_task.c
-        libs/lvgl/src/lv_misc/lv_templ.c
-        libs/lvgl/src/lv_misc/lv_txt.c
-        libs/lvgl/src/lv_misc/lv_txt_ap.c
-        libs/lvgl/src/lv_misc/lv_utils.c
-        libs/lvgl/src/lv_themes/lv_theme.c
-        libs/lvgl/src/lv_themes/lv_theme_empty.c
-        libs/lvgl/src/lv_themes/lv_theme_material.c
-        #libs/lvgl/src/lv_themes/lv_theme_mono.c
-        #libs/lvgl/src/lv_themes/lv_theme_template.c
+        libs/lvgl/src/lv_widgets/lv_win.h        
         libs/lvgl/src/lv_widgets/lv_arc.c
         libs/lvgl/src/lv_widgets/lv_bar.c
         libs/lvgl/src/lv_widgets/lv_btn.c
@@ -371,10 +371,9 @@ list(APPEND SOURCE_FILES
         logging/NrfLogger.cpp
         displayapp/DisplayApp.cpp
         displayapp/screens/Screen.cpp
+        displayapp/screens/Charging.cpp
         displayapp/screens/Clock.cpp
         displayapp/screens/Tile.cpp
-        #displayapp/screens/Meter.cpp
-        #displayapp/screens/Gauge.cpp
         displayapp/screens/InfiniPaint.cpp
         displayapp/screens/Steps.cpp
         displayapp/screens/Settings.cpp
@@ -390,7 +389,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
         displayapp/screens/HeartRate.cpp
-        displayapp/screens/FileManager.cpp
         displayapp/screens/Twos.cpp
         displayapp/screens/Paddle.cpp
 
@@ -605,8 +603,8 @@ set(INCLUDE_FILES
 include_directories(
         .
         ../
-        libs/
-        FreeRTOS/
+        FreeRTOS
+        libs
         libs/date/includes
         libs/mynewt-nimble/porting/npl/freertos/include
         libs/mynewt-nimble/nimble/include
@@ -621,74 +619,74 @@ include_directories(
         libs/mynewt-nimble/nimble/host/util/include
         libs/mynewt-nimble/nimble/host/store/ram/include
 
-        "${NRF5_SDK_PATH}/components/drivers_nrf/nrf_soc_nosd"
-        "${NRF5_SDK_PATH}/components"
-        "${NRF5_SDK_PATH}/components/boards"
-        "${NRF5_SDK_PATH}/components/softdevice/common"
-        "${NRF5_SDK_PATH}/integration/nrfx"
-        "${NRF5_SDK_PATH}/integration/nrfx/legacy"
-        "${NRF5_SDK_PATH}/modules/nrfx"
-        "${NRF5_SDK_PATH}/modules/nrfx/drivers/include"
-        "${NRF5_SDK_PATH}/modules/nrfx/hal"
-        "${NRF5_SDK_PATH}/modules/nrfx/mdk"
-        "${NRF5_SDK_PATH}/external/freertos/source/include"
-        "${NRF5_SDK_PATH}/components/toolchain/cmsis/include"
-        "${NRF5_SDK_PATH}/components/libraries/atomic"
-        "${NRF5_SDK_PATH}/components/libraries/atomic_fifo"
-        "${NRF5_SDK_PATH}/components/libraries/atomic_flags"
-        "${NRF5_SDK_PATH}/components/libraries/balloc"
-        "${NRF5_SDK_PATH}/components/libraries/bootloader/ble_dfu"
-        "${NRF5_SDK_PATH}/components/libraries/cli"
-        "${NRF5_SDK_PATH}/components/libraries/crc16"
-        "${NRF5_SDK_PATH}/components/libraries/crc32"
-        "${NRF5_SDK_PATH}/components/libraries/crypto"
-        "${NRF5_SDK_PATH}/components/libraries/csense"
-        "${NRF5_SDK_PATH}/components/libraries/csense_drv"
-        "${NRF5_SDK_PATH}/components/libraries/delay"
-        "${NRF5_SDK_PATH}/components/libraries/ecc"
-        "${NRF5_SDK_PATH}/components/libraries/experimental_section_vars"
-        "${NRF5_SDK_PATH}/components/libraries/experimental_task_manager"
-        "${NRF5_SDK_PATH}/components/libraries/fds"
-        "${NRF5_SDK_PATH}/components/libraries/fstorage"
-        "${NRF5_SDK_PATH}/components/libraries/gfx"
-        "${NRF5_SDK_PATH}/components/libraries/gpiote"
-        "${NRF5_SDK_PATH}/components/libraries/hardfault"
-        "${NRF5_SDK_PATH}/components/libraries/hci"
-        "${NRF5_SDK_PATH}/components/libraries/led_softblink"
-        "${NRF5_SDK_PATH}/components/libraries/log"
-        "${NRF5_SDK_PATH}/components/libraries/log/src"
-        "${NRF5_SDK_PATH}/components/libraries/low_power_pwm"
-        "${NRF5_SDK_PATH}/components/libraries/mem_manager"
-        "${NRF5_SDK_PATH}/components/libraries/memobj"
-        "${NRF5_SDK_PATH}/components/libraries/mpu"
-        "${NRF5_SDK_PATH}/components/libraries/mutex"
-        "${NRF5_SDK_PATH}/components/libraries/pwm"
-        "${NRF5_SDK_PATH}/components/libraries/pwr_mgmt"
-        "${NRF5_SDK_PATH}/components/libraries/queue"
-        "${NRF5_SDK_PATH}/components/libraries/ringbuf"
-        "${NRF5_SDK_PATH}/components/libraries/scheduler"
-        "${NRF5_SDK_PATH}/components/libraries/sdcard"
-        "${NRF5_SDK_PATH}/components/libraries/slip"
-        "${NRF5_SDK_PATH}/components/libraries/sortlist"
-        "${NRF5_SDK_PATH}/components/libraries/spi_mngr"
-        "${NRF5_SDK_PATH}/components/libraries/stack_guard"
-        "${NRF5_SDK_PATH}/components/libraries/strerror"
-        "${NRF5_SDK_PATH}/components/libraries/svc"
-        "${NRF5_SDK_PATH}/components/libraries/timer"
-        "${NRF5_SDK_PATH}/components/libraries/usbd"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/audio"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/cdc"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/cdc/acm"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/hid"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/hid/generic"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/hid/kbd"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/hid/mouse"
-        "${NRF5_SDK_PATH}/components/libraries/usbd/class/msc"
-        "${NRF5_SDK_PATH}/components/libraries/util"
-        "${NRF5_SDK_PATH}/external/segger_rtt/"
-        "${NRF5_SDK_PATH}/external/fprintf/"
-        "${NRF5_SDK_PATH}/external/thedotfactory_fonts"
-        "${NRF5_SDK_PATH}/components/libraries/gpiote"
+        ${NRF5_SDK_PATH}/components/drivers_nrf/nrf_soc_nosd
+        ${NRF5_SDK_PATH}/components
+        ${NRF5_SDK_PATH}/components/boards
+        ${NRF5_SDK_PATH}/components/softdevice/common
+        ${NRF5_SDK_PATH}/integration/nrfx
+        ${NRF5_SDK_PATH}/integration/nrfx/legacy
+        ${NRF5_SDK_PATH}/modules/nrfx
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/include
+        ${NRF5_SDK_PATH}/modules/nrfx/hal
+        ${NRF5_SDK_PATH}/modules/nrfx/mdk
+        ${NRF5_SDK_PATH}/external/freertos/source/include
+        ${NRF5_SDK_PATH}/components/toolchain/cmsis/include
+        ${NRF5_SDK_PATH}/components/libraries/atomic
+        ${NRF5_SDK_PATH}/components/libraries/atomic_fifo
+        ${NRF5_SDK_PATH}/components/libraries/atomic_flags
+        ${NRF5_SDK_PATH}/components/libraries/balloc
+        ${NRF5_SDK_PATH}/components/libraries/bootloader/ble_dfu
+        ${NRF5_SDK_PATH}/components/libraries/cli
+        ${NRF5_SDK_PATH}/components/libraries/crc16
+        ${NRF5_SDK_PATH}/components/libraries/crc32
+        ${NRF5_SDK_PATH}/components/libraries/crypto
+        ${NRF5_SDK_PATH}/components/libraries/csense
+        ${NRF5_SDK_PATH}/components/libraries/csense_drv
+        ${NRF5_SDK_PATH}/components/libraries/delay
+        ${NRF5_SDK_PATH}/components/libraries/ecc
+        ${NRF5_SDK_PATH}/components/libraries/experimental_section_vars
+        ${NRF5_SDK_PATH}/components/libraries/experimental_task_manager
+        ${NRF5_SDK_PATH}/components/libraries/fds
+        ${NRF5_SDK_PATH}/components/libraries/fstorage
+        ${NRF5_SDK_PATH}/components/libraries/gfx
+        ${NRF5_SDK_PATH}/components/libraries/gpiote
+        ${NRF5_SDK_PATH}/components/libraries/hardfault
+        ${NRF5_SDK_PATH}/components/libraries/hci
+        ${NRF5_SDK_PATH}/components/libraries/led_softblink
+        ${NRF5_SDK_PATH}/components/libraries/log
+        ${NRF5_SDK_PATH}/components/libraries/log/src
+        ${NRF5_SDK_PATH}/components/libraries/low_power_pwm
+        ${NRF5_SDK_PATH}/components/libraries/mem_manager
+        ${NRF5_SDK_PATH}/components/libraries/memobj
+        ${NRF5_SDK_PATH}/components/libraries/mpu
+        ${NRF5_SDK_PATH}/components/libraries/mutex
+        ${NRF5_SDK_PATH}/components/libraries/pwm
+        ${NRF5_SDK_PATH}/components/libraries/pwr_mgmt
+        ${NRF5_SDK_PATH}/components/libraries/queue
+        ${NRF5_SDK_PATH}/components/libraries/ringbuf
+        ${NRF5_SDK_PATH}/components/libraries/scheduler
+        ${NRF5_SDK_PATH}/components/libraries/sdcard
+        ${NRF5_SDK_PATH}/components/libraries/slip
+        ${NRF5_SDK_PATH}/components/libraries/sortlist
+        ${NRF5_SDK_PATH}/components/libraries/spi_mngr
+        ${NRF5_SDK_PATH}/components/libraries/stack_guard
+        ${NRF5_SDK_PATH}/components/libraries/strerror
+        ${NRF5_SDK_PATH}/components/libraries/svc
+        ${NRF5_SDK_PATH}/components/libraries/timer
+        ${NRF5_SDK_PATH}/components/libraries/usbd
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/audio
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/cdc
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/cdc/acm
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/hid
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/hid/generic
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/hid/kbd
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/hid/mouse
+        ${NRF5_SDK_PATH}/components/libraries/usbd/class/msc
+        ${NRF5_SDK_PATH}/components/libraries/util
+        ${NRF5_SDK_PATH}/external/segger_rtt/
+        ${NRF5_SDK_PATH}/external/fprintf/
+        ${NRF5_SDK_PATH}/external/thedotfactory_fonts
+        ${NRF5_SDK_PATH}/components/libraries/gpiote
 
 )
 

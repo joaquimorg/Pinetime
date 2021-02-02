@@ -1,6 +1,6 @@
 #pragma once
 
-#include <drivers/include/nrfx_saadc.h>
+#include <nrfx_saadc.h>
 
 #define SPI_SCK 2
 #define SPI_MOSI 3
@@ -34,6 +34,7 @@
 #define PWR_CTRL 24             // 3V3 POWER CONTROL
 #define CHARGE_BASE_IRQ 19      // POWER PRESENCE INDICATION
 #define CHARGE_IRQ 12           // CHARGE INDICATION
+
 #define VIBRATOR_CTRL 16        // 
 
 #define BATTERY_VOL NRF_SAADC_INPUT_AIN7   // 31 Analog

@@ -15,7 +15,6 @@ namespace Pinetime
       FirmwareValidation,
       Paint,
       Notifications,
-      FileManager,
       Settings,
       Steps,
       HeartRate,

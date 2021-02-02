@@ -41,23 +41,26 @@ namespace Pinetime {
       public:
         void Init();
         void Update();
-        int PercentRemaining() const { return percentRemainingBuffer.GetAverage(); }
-        float Voltage() const { return voltage; }
+        uint8_t PercentRemaining();// const { return percentRemainingBuffer.GetAverage(); }
+        float Voltage();// const { return voltage; }
         bool IsCharging() const { return isCharging; }
         bool IsPowerPresent() const { return isPowerPresent; }
 
         void TurnOff();
 
       private:
-        //static constexpr uint32_t chargingPin = 12;
-        //static constexpr uint32_t powerPresentPin = 19;
-        //static constexpr nrf_saadc_input_t batteryVoltageAdcInput = NRF_SAADC_INPUT_AIN7;
         static void SaadcEventHandler(nrfx_saadc_evt_t const * p_event);
+
         static constexpr uint8_t percentRemainingSamples = 10;
         CircBuffer<percentRemainingSamples> percentRemainingBuffer {};
-        float voltage = 0.0f;
+        
         bool isCharging = false;
         bool isPowerPresent = false;
+
+        //float voltage = 0.0f;
+        //uint8_t percentRemaining = 0;
+
+        
     };
   }
 }

@@ -129,7 +129,6 @@ void SystemTask::Work() {
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
-
   //
 
   // Step Counter IRQ
@@ -142,14 +141,6 @@ void SystemTask::Work() {
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
-
-  /*nrf_drv_gpiote_in_config_t pinConfigStep = GPIOTE_CONFIG_IN_SENSE_HITOLO(false);
-  pinConfigStep.pull = NRF_GPIO_PIN_PULLUP;
-
-  errCode = nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigStep, nrfx_gpiote_evt_handler);
-  APP_ERROR_CHECK(errCode);
-  nrf_drv_gpiote_in_event_enable(BMA421_IRQ, true);*/
-  
   //
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(idleTime), pdFALSE, this, IdleTimerCallback);
@@ -329,6 +320,21 @@ void SystemTask::OnStepEvent() {
   if(!isSleeping) {    
     //PushMessage(Messages::OnStepEvent);
     displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);    
+  }
+}
+
+void SystemTask::OnChargingEvent() {
+  if(isGoingToSleep) return ;
+  if(isSleeping && !isWakingUp) {
+    WakeUp();
+  }
+  //vibration.Vibrate(35);
+  displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::ChargingEvent);
+}
+
+void SystemTask::OnPowerPresentEvent() {
+  if(isGoingToSleep) return ;
+  if(!isSleeping) {
   }
 }
 

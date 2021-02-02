@@ -10,6 +10,8 @@
 
 The **Pinetime** smartwatch is built around the NRF52832 MCU (512KB Flash, 64KB RAM), a 240*240 LCD display driven by the ST7789 controller, an accelerometer, a heart rate sensor, and a vibration motor.
 
+# Infinitime joaquimorg Fork
+
 # InfiniTime
 ![InfiniTime logo](images/infinitime-logo.jpg "InfiniTime Logo")
 
@@ -165,3 +167,16 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 ### upload via remote openocd : 
 
 $ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" -ex "det" src/pinetime-app-0.10.1.out
+
+### voltage fix
+
+Voltage  | Percentage
+---|---
+3.9V     | 100%
+3.75 V   | 75%
+3.7 V    | 60%
+3.665 V  | 50%
+3.62 V   | 30%
+3.58 V   | 15%
+3.55 V   | 5%
+< 3.55 V | LOW

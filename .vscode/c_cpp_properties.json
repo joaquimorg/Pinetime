@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "pinetime",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/mnt/d/Work/PineTime/nRF5_SDK_15.3.0_59ac345/**"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/arm-none-eabi-g++",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "gcc-arm"
+        }
+    ],
+    "version": 4
+}

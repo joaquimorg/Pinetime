@@ -51,6 +51,8 @@ namespace Pinetime {
         void OnButtonPushed();
         void OnTouchEvent();
         void OnStepEvent();
+        void OnChargingEvent();
+        void OnPowerPresentEvent();
 
         void OnIdle();
 

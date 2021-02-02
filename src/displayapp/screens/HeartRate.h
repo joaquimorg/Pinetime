@@ -43,7 +43,7 @@ namespace Pinetime {
           lv_obj_t* llabel;
           lv_obj_t* lhistory;
           lv_obj_t* lhrs;
-          lv_obj_t* chart;
+          //lv_obj_t* chart;
 
           uint8_t hrv = 0;
           uint8_t heartRateReading = 0;

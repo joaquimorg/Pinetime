@@ -7,17 +7,15 @@
 #include "displayapp/screens/ApplicationList.h"
 #include "displayapp/screens/Brightness.h"
 #include "displayapp/screens/Clock.h"
+#include "displayapp/screens/Charging.h"
 #include "displayapp/screens/FirmwareUpdate.h"
 #include "displayapp/screens/FirmwareValidation.h"
-#include "displayapp/screens/Gauge.h"
 #include "displayapp/screens/InfiniPaint.h"
 #include "displayapp/screens/Paddle.h"
-#include "displayapp/screens/Meter.h"
 #include "displayapp/screens/Music.h"
 #include "displayapp/screens/Notifications.h"
 #include "displayapp/screens/SystemInfo.h"
 #include "displayapp/screens/Tile.h"
-#include "displayapp/screens/FileManager.h"
 #include "displayapp/screens/Settings.h"
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/HeartRate.h"
@@ -232,6 +230,13 @@ void DisplayApp::Refresh() {
       case Messages::UpdateBatteryLevel:
       break;
 
+      case Messages::ChargingEvent :
+          currentScreen.reset(nullptr);
+          lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+          onClockApp = false;
+          currentScreen.reset(new Screens::Charging(this, batteryController));
+      break;
+
     }
   }
 
@@ -267,16 +272,15 @@ void DisplayApp::RunningState() {
       case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;
       case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
-      case Apps::FileManager: currentScreen.reset(new Screens::FileManager(this)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
       case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
+      case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
 
       // To Do :-)
       case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;
       case Apps::Iot: currentScreen.reset(new Screens::ScreensTemplate(this, "Iot")); break;
-      case Apps::MobileApp: currentScreen.reset(new Screens::ScreensTemplate(this, "Mobile App")); break;
-      case Apps::Charging: currentScreen.reset(new Screens::ScreensTemplate(this, "Charging")); break;
+      case Apps::MobileApp: currentScreen.reset(new Screens::ScreensTemplate(this, "Mobile App")); break;      
       case Apps::StopWatch: currentScreen.reset(new Screens::ScreensTemplate(this, "Stop Watch")); break;
     }
     nextApp = Apps::None;

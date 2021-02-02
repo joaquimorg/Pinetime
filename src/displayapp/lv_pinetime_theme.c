@@ -50,6 +50,9 @@ static lv_style_t style_sw_knob;
 static lv_style_t style_arc_bg;
 static lv_style_t style_arc_indic;
 static lv_style_t style_table_cell;
+static lv_style_t style_pad_small;
+static lv_style_t style_bg_grad;
+static lv_style_t style_lmeter;
 
 static bool inited;
 
@@ -82,7 +85,7 @@ static void basic_init(void)
 
     style_init_reset(&style_bg);
     lv_style_set_bg_opa(&style_bg, LV_STATE_DEFAULT, LV_OPA_COVER);
-    lv_style_set_bg_color(&style_bg, LV_STATE_DEFAULT, LV_PINETIME_LIGHT);
+    lv_style_set_bg_color(&style_bg, LV_STATE_DEFAULT, LV_COLOR_BLACK);
     lv_style_set_text_font(&style_bg, LV_STATE_DEFAULT, theme.font_normal);
 
     style_init_reset(&style_box);
@@ -108,12 +111,12 @@ static void basic_init(void)
     style_init_reset(&style_btn);
     lv_style_set_radius(&style_btn, LV_STATE_DEFAULT, 10);
     lv_style_set_bg_opa(&style_btn, LV_STATE_DEFAULT, LV_OPA_COVER);
-    lv_style_set_bg_color(&style_btn, LV_STATE_DEFAULT, LV_PINETIME_BLUE);
-    lv_style_set_bg_color(&style_btn, LV_STATE_PRESSED, lv_color_darken(LV_PINETIME_BLUE, LV_OPA_20));
+    lv_style_set_bg_color(&style_btn, LV_STATE_DEFAULT, LV_PINETIME_GRAY);
+    lv_style_set_bg_color(&style_btn, LV_STATE_PRESSED, lv_color_darken(LV_PINETIME_GRAY, LV_OPA_20));
     lv_style_set_text_color(&style_btn, LV_STATE_DEFAULT, LV_PINETIME_WHITE);
     lv_style_set_value_color(&style_btn, LV_STATE_DEFAULT, LV_PINETIME_WHITE);
-    //lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
-    //lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
+    lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
+    lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_VER_RES / 40);
 
     lv_style_set_transform_width(&style_btn, LV_STATE_PRESSED, LV_HOR_RES / 100);
     lv_style_set_transform_height(&style_btn, LV_STATE_PRESSED, LV_HOR_RES / 150);
@@ -123,11 +126,11 @@ static void basic_init(void)
     lv_style_set_transition_prop_1(&style_btn, LV_STATE_DEFAULT, LV_STYLE_TRANSFORM_WIDTH);
     lv_style_set_transition_prop_2(&style_btn, LV_STATE_DEFAULT, LV_STYLE_TRANSFORM_HEIGHT);
 
-    lv_style_set_pad_left(&style_btn, LV_STATE_DEFAULT, LV_DPX(20));
-    lv_style_set_pad_right(&style_btn, LV_STATE_DEFAULT, LV_DPX(20));
-    lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_DPX(15));
-    lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_DPX(15));
-    lv_style_set_pad_inner(&style_btn, LV_STATE_DEFAULT, LV_DPX(10));
+    lv_style_set_pad_left(&style_btn, LV_STATE_DEFAULT, LV_DPX(15));
+    lv_style_set_pad_right(&style_btn, LV_STATE_DEFAULT, LV_DPX(15));
+    lv_style_set_pad_top(&style_btn, LV_STATE_DEFAULT, LV_DPX(10));
+    lv_style_set_pad_bottom(&style_btn, LV_STATE_DEFAULT, LV_DPX(10));
+    lv_style_set_pad_inner(&style_btn, LV_STATE_DEFAULT, LV_DPX(5));
     lv_style_set_outline_width(&style_btn, LV_STATE_DEFAULT, LV_DPX(2));
 
 
@@ -152,7 +155,7 @@ static void basic_init(void)
     lv_style_set_transition_prop_1(&style_icon, LV_STATE_DEFAULT, LV_STYLE_TRANSFORM_ZOOM);
 
     style_init_reset(&style_back);
-    lv_style_set_value_color(&style_back, LV_STATE_DEFAULT, LV_PINETIME_WHITE);
+    lv_style_set_value_color(&style_back, LV_STATE_DEFAULT, LV_PINETIME_GRAY);
     lv_style_set_value_color(&style_back, LV_STATE_PRESSED, LV_PINETIME_LIGHT_GRAY);
     lv_style_set_value_str(&style_back, LV_STATE_DEFAULT, LV_SYMBOL_LEFT);
     lv_style_set_value_font(&style_back, LV_STATE_DEFAULT, theme.font_subtitle);
@@ -220,9 +223,9 @@ static void basic_init(void)
 
     style_init_reset(&style_slider_knob);
     lv_style_set_bg_opa(&style_slider_knob, LV_STATE_DEFAULT, LV_OPA_COVER);
-    lv_style_set_bg_color(&style_slider_knob, LV_STATE_DEFAULT, LV_PINETIME_BLUE);
-    lv_style_set_border_color(&style_slider_knob, LV_STATE_DEFAULT, LV_PINETIME_WHITE);
-    lv_style_set_border_width(&style_slider_knob, LV_STATE_DEFAULT, 3);
+    lv_style_set_bg_color(&style_slider_knob, LV_STATE_DEFAULT, LV_COLOR_RED);
+    lv_style_set_border_color(&style_slider_knob, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_style_set_border_width(&style_slider_knob, LV_STATE_DEFAULT, 6);
     lv_style_set_radius(&style_slider_knob, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);
     lv_style_set_pad_top(&style_slider_knob, LV_STATE_DEFAULT, 10);
     lv_style_set_pad_bottom(&style_slider_knob, LV_STATE_DEFAULT, 10);
@@ -259,6 +262,32 @@ static void basic_init(void)
     lv_style_set_pad_top(&style_table_cell, LV_STATE_DEFAULT, 12);
     lv_style_set_pad_bottom(&style_table_cell, LV_STATE_DEFAULT, 12);
 
+    style_init_reset(&style_pad_small);
+    lv_style_int_t pad_small_value = 10;
+    lv_style_set_pad_left(&style_pad_small, LV_STATE_DEFAULT,  pad_small_value);
+    lv_style_set_pad_right(&style_pad_small, LV_STATE_DEFAULT, pad_small_value);
+    lv_style_set_pad_top(&style_pad_small, LV_STATE_DEFAULT,  pad_small_value);
+    lv_style_set_pad_bottom(&style_pad_small, LV_STATE_DEFAULT, pad_small_value);
+    lv_style_set_pad_inner(&style_pad_small, LV_STATE_DEFAULT, pad_small_value);
+
+    style_init_reset(&style_bg_grad);
+    lv_style_set_bg_color(&style_bg_grad, LV_STATE_DEFAULT, lv_color_hsv_to_rgb(10, 10, 40));
+    lv_style_set_bg_grad_color(&style_bg_grad, LV_STATE_DEFAULT, lv_color_hsv_to_rgb(10, 10, 20));
+    lv_style_set_bg_grad_dir(&style_bg_grad, LV_STATE_DEFAULT, LV_GRAD_DIR_VER);
+
+    style_init_reset(&style_lmeter);
+    lv_style_set_radius(&style_lmeter, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);
+    lv_style_set_pad_left(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(20));
+    lv_style_set_pad_right(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(20));
+    lv_style_set_pad_top(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(20));
+    lv_style_set_pad_inner(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(30));
+    lv_style_set_scale_width(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(25));
+
+    lv_style_set_line_color(&style_lmeter, LV_STATE_DEFAULT, theme.color_primary);
+    lv_style_set_scale_grad_color(&style_lmeter, LV_STATE_DEFAULT, theme.color_primary);
+    lv_style_set_scale_end_color(&style_lmeter, LV_STATE_DEFAULT, lv_color_hex3(0x888));
+    lv_style_set_line_width(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(10));
+    lv_style_set_scale_end_line_width(&style_lmeter, LV_STATE_DEFAULT, LV_DPX(7));
 
 }
 
@@ -332,6 +361,18 @@ static void theme_apply(lv_obj_t * obj, lv_theme_style_t name)
             lv_obj_clean_style_list(obj, LV_BTN_PART_MAIN);
             list = lv_obj_get_style_list(obj, LV_BTN_PART_MAIN);
             _lv_style_list_add_style(list, &style_btn);
+            _lv_style_list_add_style(list, &style_bg_grad);
+            break;
+
+        case LV_THEME_BTNMATRIX:
+            list = lv_obj_get_style_list(obj, LV_BTNMATRIX_PART_BG);
+            _lv_style_list_add_style(list, &style_bg);
+            _lv_style_list_add_style(list, &style_pad_small);
+
+            list = lv_obj_get_style_list(obj, LV_BTNMATRIX_PART_BTN);
+            _lv_style_list_add_style(list, &style_btn);
+            _lv_style_list_add_style(list, &style_bg_grad);
+            //_lv_style_list_add_style(list, &styles->bg_click);
             break;
 
         case LV_THEME_BAR:
@@ -446,6 +487,12 @@ static void theme_apply(lv_obj_t * obj, lv_theme_style_t name)
                 list = lv_obj_get_style_list(obj, idx);
                 _lv_style_list_add_style(list, &style_table_cell);
             }
+            break;
+
+        case LV_THEME_LINEMETER:
+            list = lv_obj_get_style_list(obj, LV_LINEMETER_PART_MAIN);
+            _lv_style_list_add_style(list, &style_bg);
+            _lv_style_list_add_style(list, &style_lmeter);
             break;
             
 

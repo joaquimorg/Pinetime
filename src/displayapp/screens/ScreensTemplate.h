@@ -2,8 +2,7 @@
 
 #include <cstdint>
 #include "Screen.h"
-#include <lvgl/src/lv_core/lv_style.h>
-#include <lvgl/src/lv_core/lv_obj.h>
+#include <lvgl/lvgl.h>
 
 
 namespace Pinetime {

@@ -82,7 +82,7 @@ HeartRate::~HeartRate() {
 
 
 void HeartRate::UpdateGraph() {
-  lv_chart_set_range(chart, 30, 120);
+  /*lv_chart_set_range(chart, 30, 120);
 
   lv_chart_series_t * ser1 = lv_chart_add_series(chart, LV_COLOR_RED);
   for (uint8_t i = 0; i < 8; i++)
@@ -91,7 +91,7 @@ void HeartRate::UpdateGraph() {
     if ( ser1->points[i] > 120) ser1->points[i] = 120;
     if ( ser1->points[i] < 30) ser1->points[i] = 30;
   }
-  lv_chart_refresh(chart);
+  lv_chart_refresh(chart);*/
 }
 
 

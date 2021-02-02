@@ -70,7 +70,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
             {&icon_settings,    "Settings",       Apps::FirmwareValidation},
             {&icon_information, "Sysinfo",        Apps::SysInfo},
             {&icon_brightness,  "Brightness",     Apps::Brightness},
-            {&icon_iot,         "Iot",            Apps::None}            
+            {&icon_iot,         "Iot",            Apps::Charging}            
           }
 
   };
