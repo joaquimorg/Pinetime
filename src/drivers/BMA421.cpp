@@ -160,8 +160,8 @@ void BMA421::Init() {
 
     /* Interrupt Mapping
      */    
-    rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT, BMA4_ENABLE, &bma);
-    bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
+    //rslt = bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT | BMA421_ACTIVITY_INT, BMA4_ENABLE, &bma);
+    //bma4_error_codes_print_result("bma421_map_interrupt status", rslt);
 
     /* Enable step counter */
     rslt = bma421_feature_enable(BMA421_STEP_CNTR | BMA421_STEP_ACT, 1, &bma);
