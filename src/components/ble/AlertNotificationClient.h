@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <nrf_log.h>
 #include <functional>
 #include <host/ble_gap.h>
 #undef max

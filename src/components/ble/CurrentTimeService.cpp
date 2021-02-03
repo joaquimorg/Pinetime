@@ -25,7 +25,7 @@ void CurrentTimeService::Init() {
 int CurrentTimeService::OnTimeAccessed(uint16_t conn_handle, uint16_t attr_handle,
                                                     struct ble_gatt_access_ctxt *ctxt) {
 
-    NRF_LOG_INFO("Setting time...");
+  NRF_LOG_INFO("Setting time...");
 
   if (ctxt->op == BLE_GATT_ACCESS_OP_WRITE_CHR) {
     CtsData result;

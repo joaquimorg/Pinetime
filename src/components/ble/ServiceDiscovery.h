@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <nrf_log.h>
 
 namespace Pinetime {
   namespace Controllers {

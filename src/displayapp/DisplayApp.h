@@ -54,6 +54,7 @@ namespace Pinetime {
         void PushMessage(Messages msg);
 
         void StartApp(Apps app);
+        void LoadApp(Apps app, DisplayApp::FullRefreshDirections direction);
 
         void SetFullRefresh(FullRefreshDirections direction);
         void SetTouchMode(TouchModes mode);
@@ -85,7 +86,8 @@ namespace Pinetime {
         static constexpr uint8_t itemSize = 1;
         
         Apps nextApp = Apps::None;
-        bool onClockApp = false; // TODO find a better way to know that we should handle gestures and button differently for the Clock app.
+        Apps currentApp = Apps::None;
+        
         TouchModes touchMode = TouchModes::Gestures;
 
         static void Process(void* instance);

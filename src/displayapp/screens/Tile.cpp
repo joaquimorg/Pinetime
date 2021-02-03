@@ -50,12 +50,12 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     lv_obj_t* label_screens = lv_label_create(lv_scr_act(), NULL);  
     lv_label_set_align( label_screens, LV_LABEL_ALIGN_CENTER );
     lv_label_set_recolor(label_screens, true);
-    /*if ( screenID == 0 ) lv_label_set_text(label_screens, "\n#606060 #\n#606060 #");
-    else if ( screenID == 1 ) lv_label_set_text(label_screens, "#606060 #\n\n#606060 #");
-    else if ( screenID == 2 ) lv_label_set_text(label_screens, "#606060 #\n#606060 #\n");*/
+    /*if ( screenID == 0 ) lv_label_set_text_static(label_screens, "\n#606060 #\n#606060 #");
+    else if ( screenID == 1 ) lv_label_set_text_static(label_screens, "#606060 #\n\n#606060 #");
+    else if ( screenID == 2 ) lv_label_set_text_static(label_screens, "#606060 #\n#606060 #\n");*/
 
-    if ( screenID == 0 ) lv_label_set_text(label_screens, "\n#606060 #");
-    else if ( screenID == 1 ) lv_label_set_text(label_screens, "#606060 #\n");
+    if ( screenID == 0 ) lv_label_set_text_static(label_screens, "\n#606060 #");
+    else if ( screenID == 1 ) lv_label_set_text_static(label_screens, "#606060 #\n");
     
     lv_obj_align(label_screens, lv_scr_act(), LV_ALIGN_IN_RIGHT_MID, -10, 0);
   }
@@ -91,7 +91,7 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");
+  lv_label_set_text_static(backgroundLabel, "");
 
 }
 

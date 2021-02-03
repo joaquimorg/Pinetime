@@ -2,11 +2,13 @@
 
 using namespace Pinetime::Applications::Screens;
 
-Label::Label(Pinetime::Applications::DisplayApp *app, const char *text)  : Screen(app), text{text} {
-  label = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_align(label, LV_LABEL_ALIGN_LEFT);
-  lv_obj_set_size(label, 240, 240);
-  lv_label_set_text(label, text);
+Label::Label(Pinetime::Applications::DisplayApp *app, lv_obj_t* labelText)  : 
+  Screen(app), 
+  labelText{labelText} {
+
+  lv_label_set_align(labelText, LV_LABEL_ALIGN_LEFT);
+  lv_obj_set_size(labelText, 240, 240);
+
 }
 
 Label::~Label() {

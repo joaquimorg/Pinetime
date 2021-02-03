@@ -44,10 +44,6 @@ namespace Pinetime {
           Pinetime::Drivers::WatchdogView& watchdog;
           Pinetime::Drivers::BMA421& stepCounter;
 
-          char t1[200];
-          char t2[200];
-          char t3[200];
-
           ScreenList<3> screens;
           std::unique_ptr<Screen> CreateScreen1();
           std::unique_ptr<Screen> CreateScreen2();

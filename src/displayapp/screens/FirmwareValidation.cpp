@@ -22,7 +22,7 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
                                        : Screen{app}, validator{validator} {
   labelVersionInfo = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_align(labelVersionInfo, nullptr, LV_ALIGN_IN_TOP_LEFT, 0, 0);
-  lv_label_set_text(labelVersionInfo, "Version ");
+  lv_label_set_text_static(labelVersionInfo, "Version ");
   lv_label_set_align(labelVersionInfo, LV_LABEL_ALIGN_LEFT);
 
 
@@ -38,9 +38,9 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
   lv_obj_set_width(labelIsValidated, 240);
 
   if(validator.IsValidated())
-    lv_label_set_text(labelIsValidated, "You have already\n#00ff00 validated# this firmware#");
+    lv_label_set_text_static(labelIsValidated, "You have already\n#00ff00 validated# this firmware#");
   else {
-    lv_label_set_text(labelIsValidated,
+    lv_label_set_text_static(labelIsValidated,
                       "Please #00ff00 Validate# this version or\n#ff0000 Reset# to rollback to the previous version.");
 
     buttonValidate = lv_btn_create(lv_scr_act(), nullptr);
@@ -50,7 +50,7 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
 
     labelButtonValidate = lv_label_create(buttonValidate, nullptr);
     lv_label_set_recolor(labelButtonValidate, true);
-    lv_label_set_text(labelButtonValidate, "#00ff00 Validate#");
+    lv_label_set_text_static(labelButtonValidate, "#00ff00 Validate#");
   }
   buttonReset = lv_btn_create(lv_scr_act(), nullptr);
   buttonReset->user_data = this;
@@ -59,7 +59,7 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
 
   labelButtonReset = lv_label_create(buttonReset, nullptr);
   lv_label_set_recolor(labelButtonReset, true);
-  lv_label_set_text(labelButtonReset, "#AA0000 Reset#");
+  lv_label_set_text_static(labelButtonReset, "#AA0000 Reset#");
   
 }
 

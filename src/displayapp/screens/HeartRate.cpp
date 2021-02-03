@@ -64,7 +64,7 @@ HeartRate::HeartRate(
 
   lv_obj_t* lbpm = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_set_style_local_text_color(lbpm, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
-  lv_label_set_text(lbpm, "bpm");   
+  lv_label_set_text_static(lbpm, "bpm");   
   lv_obj_align(lbpm, lhrs, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
 
   hrs.SetEnable(Drivers::HRS3300::HRS_ENABLE,

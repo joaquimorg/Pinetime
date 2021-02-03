@@ -20,7 +20,7 @@ Brightness::Brightness(Pinetime::Applications::DisplayApp *app, Controllers::Bri
 
   lv_obj_t* lBrightness = lv_label_create(lv_scr_act(), NULL);
   lv_obj_set_style_local_text_color(lBrightness, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xffc107));
-  lv_label_set_text(lBrightness, "Brightness");   
+  lv_label_set_text_static(lBrightness, "Brightness");   
   lv_obj_align(lBrightness, iBrightness, LV_ALIGN_OUT_RIGHT_MID, 20, 0);
 
   slider = lv_slider_create(lv_scr_act(), nullptr);
@@ -41,7 +41,7 @@ Brightness::Brightness(Pinetime::Applications::DisplayApp *app, Controllers::Bri
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");
+  lv_label_set_text_static(backgroundLabel, "");
 
 }
 

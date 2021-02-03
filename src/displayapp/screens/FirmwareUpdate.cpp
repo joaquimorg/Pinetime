@@ -12,7 +12,7 @@ FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime
       Screen(app), bleController{bleController} {
 
   titleLabel = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text(titleLabel, "Firmware update");
+  lv_label_set_text_static(titleLabel, "Firmware update");
   lv_obj_set_auto_realign(titleLabel, true);
   lv_obj_align(titleLabel, nullptr, LV_ALIGN_IN_TOP_MID, 0, 50);
 
@@ -24,7 +24,7 @@ FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime
   lv_bar_set_value(bar1, 0, LV_ANIM_OFF);
 
   percentLabel = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text(percentLabel, "");
+  lv_label_set_text_static(percentLabel, "");
   lv_obj_set_auto_realign(percentLabel, true);
   lv_obj_align(percentLabel, bar1, LV_ALIGN_OUT_TOP_MID, 0, 60);
 }
@@ -74,10 +74,10 @@ bool FirmwareUpdate::OnButtonPushed() {
 
 void FirmwareUpdate::UpdateValidated() {
   lv_label_set_recolor(percentLabel, true);
-  lv_label_set_text(percentLabel, "#00ff00 Image Ok!#");
+  lv_label_set_text_static(percentLabel, "#00ff00 Image Ok!#");
 }
 
 void FirmwareUpdate::UpdateError() {
   lv_label_set_recolor(percentLabel, true);
-  lv_label_set_text(percentLabel, "#ff0000 Error!#");
+  lv_label_set_text_static(percentLabel, "#ff0000 Error!#");
 }

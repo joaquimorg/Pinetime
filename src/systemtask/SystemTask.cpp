@@ -209,6 +209,7 @@ void SystemTask::Work() {
           break;
         case Messages::OnNewCall:
           if(isSleeping && !isWakingUp) WakeUp();
+          vibration.Vibrate(35);
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::NewCall);
           break;
         case Messages::BleConnected:

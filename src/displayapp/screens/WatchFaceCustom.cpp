@@ -64,7 +64,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
 
   label_time_sep = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_time_sep, LV_LABEL_PART_MAIN, &sep_style);
-  lv_label_set_text(label_time_sep,  ":");      
+  lv_label_set_text_static(label_time_sep,  ":");      
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, 45);
   
@@ -151,7 +151,7 @@ bool WatchFaceCustom::Refresh() {
         //sep_style.text.color = lv_color_hex(0x000000);
         lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x000000));
       }
-      lv_label_set_text(label_time_sep,  ":");   
+      lv_label_set_text_static(label_time_sep,  ":");   
     }
   
     if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {

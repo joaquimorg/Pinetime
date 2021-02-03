@@ -54,6 +54,7 @@ bool SystemInfo::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   auto batteryPercent = static_cast<uint8_t>(batteryController.PercentRemaining());
+  float batteryVoltage = batteryController.Voltage();
 
   uint8_t brightness = 0;
   switch(brightnessController.Level()) {
@@ -92,36 +93,43 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   uptimeSeconds = uptimeSeconds % secondsInAMinute;
   // TODO handle more than 100 days of uptime
 
-  sprintf(t1, "InfiniTime - joaquim.org\n"
-              "Version:%ld.%ld.%ld\n"
-              "Build: %s\n"
-              "       %s\n"
-              "Date: %02d/%02d/%04d\n"
-              "Time: %02d:%02d:%02d\n"
-              "Uptime: %02lud %02lu:%02lu:%02lu\n"
-              "Battery: %d%%\n"
-              "Backlight: %d/5\n"
-              "Last reset: %s\n",
+  lv_obj_t * label = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_recolor(label, true);
+  lv_label_set_text_fmt(label, 
+              "#FFFF00 InfiniTime - joaquim.org#\n"
+              "#444444 Version# %ld.%ld.%ld\n"
+              "#444444 Build# %s\n"
+              "\t%s\n"
+              "#444444 Date# %02d/%02d/%04d\n"
+              "#444444 Time# %02d:%02d:%02d\n"
+              "#444444 Uptime# %02lud %02lu:%02lu:%02lu\n"
+              "#444444 Battery# %d%% / %.2f v\n"
+              "#444444 Backlight# %d/5\n"
+              "#444444 Last reset# %s\n",
           Version::Major(), Version::Minor(), Version::Patch(),
           __DATE__, __TIME__,
           dateTimeController.Day(), static_cast<uint8_t>(dateTimeController.Month()), dateTimeController.Year(),
           dateTimeController.Hours(), dateTimeController.Minutes(), dateTimeController.Seconds(),
           uptimeDays, uptimeHours, uptimeMinutes, uptimeSeconds,
-          (int) batteryPercent, brightness, resetReason);
+          (int) batteryPercent, batteryVoltage, brightness, resetReason);
 
-  return std::unique_ptr<Screen>(new Screens::Label(app, t1));
+  return std::unique_ptr<Screen>(new Screens::Label(app, label));
 }
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
   lv_mem_monitor_t mon;
   lv_mem_monitor(&mon);
 
+  lv_obj_t * label = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_recolor(label, true);
   auto& bleAddr = bleController.Address();
-  sprintf(t2, "BLE MAC: \n  %02x:%02x:%02x:%02x:%02x:%02x"
+  lv_label_set_text_fmt(label, 
+              "#444444 BLE MAC# \n  %02x:%02x:%02x:%02x:%02x:%02x"
               "\n"
-              "used: %6d (%3d %%)\nfrag: %3d %%\nbiggest free: %6d"
+              "#444444 Memory#\n"
+              " #444444 used# %6d (%3d %%)\n #444444 frag# %3d %%\n #444444 biggest free# %6d"
               "\n"
-              "Steps: %li",
+              "#444444 Steps# %li",
           bleAddr[5], bleAddr[4], bleAddr[3], bleAddr[2], bleAddr[1], bleAddr[0],
           (int)mon.total_size - mon.free_size,
           mon.used_pct,
@@ -131,17 +139,21 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
           );
 
   
-  return std::unique_ptr<Screen>(new Screens::Label(app, t2));
+  return std::unique_ptr<Screen>(new Screens::Label(app, label));
 }
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen3() {
-  sprintf(t3, "Hello from\nthe developer!\n"
+
+  lv_obj_t * label = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_recolor(label, true);
+  lv_label_set_text_static(label, 
+              "Hello from\nthe developer!\n"
               "Software Licensed\n"
               "under the terms of\n"
               "the GNU General\n"
               "Public License v3\n"
-              "Source code:\n"
-              "https://github.com/\n"
-              " joaquimorg/Pinetime");
-  return std::unique_ptr<Screen>(new Screens::Label(app, t3));
+              "#444444 Source code#\n"
+              "#FFFF00 https://github.com/#\n"
+              "#FFFF00 joaquimorg/Pinetime#");
+  return std::unique_ptr<Screen>(new Screens::Label(app, label));
 }

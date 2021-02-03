@@ -9,13 +9,12 @@ namespace Pinetime {
 
       class Label : public Screen {
         public:
-          Label(DisplayApp* app, const char* text);
+          Label( DisplayApp* app, lv_obj_t* labelText );
           ~Label() override;
           bool Refresh() override {return false;}
 
         private:
-          lv_obj_t * label = nullptr;
-          const char* text = nullptr;
+          lv_obj_t * labelText = nullptr;
       };
     }
   }

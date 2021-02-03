@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <array>
-
+#include <nrf_log.h>
 #include "components/datetime/DateTimeController.h"
 #define min // workaround: nimble's min/max macros conflict with libstdc++
 #define max

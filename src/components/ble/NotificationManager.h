@@ -4,6 +4,7 @@
 #include <atomic>
 #include <cstddef>
 #include <cstdint>
+#include <nrf_log.h>
 
 namespace Pinetime {
   namespace Controllers {

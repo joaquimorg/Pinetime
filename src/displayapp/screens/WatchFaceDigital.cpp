@@ -287,7 +287,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");
+  lv_label_set_text_static(backgroundLabel, "");
 
 }
 
@@ -321,19 +321,18 @@ bool WatchFaceDigital::Refresh() {
 
   batteryPercentRemaining = batteryController.PercentRemaining();
   if (batteryPercentRemaining.IsUpdated()) {
-    auto batteryPercent = batteryPercentRemaining.Get();    
-    auto isCharging = batteryController.IsCharging() || batteryController.IsPowerPresent();
-    if (isCharging) {
-      lv_label_set_text(batteryIcon, BatteryIcon::GetPlugIcon(true));
-    } else {
-      lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
-    }    
+    auto batteryPercent = batteryPercentRemaining.Get();
     lv_label_set_text_fmt(batteryValue,  "%d%%", (int) batteryPercent);
+    lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
   }
 
-  bleState = bleController.IsConnected();
+  if (batteryController.IsCharging() || batteryController.IsPowerPresent()) {
+    lv_label_set_text(batteryIcon, BatteryIcon::GetPlugIcon(true));
+  }
+  
+  //bleState = bleController.IsConnected();
   //if (bleState.IsUpdated()) {
-    if(bleState.Get() == true) {
+    if(bleController.IsConnected()) {
       //lv_label_set_text(bleIcon, BleIcon::GetIcon(true));
       lv_style_set_text_color(&ble_style, LV_STATE_DEFAULT, lv_color_hex(0xffffff));  
     } else {
@@ -346,10 +345,10 @@ bool WatchFaceDigital::Refresh() {
   lv_obj_align(batteryPlug, batteryIcon, LV_ALIGN_OUT_LEFT_MID, -5, 0);
   lv_obj_align(bleIcon, batteryPlug, LV_ALIGN_OUT_LEFT_MID, -5, 0);*/
 
-  notificationState = notificatioManager.AreNewNotificationsAvailable();
+  //notificationState = notificatioManager.AreNewNotificationsAvailable();
 
   //if(notificationState.IsUpdated()) {
-    if(notificationState.Get() == true)
+    if(notificatioManager.AreNewNotificationsAvailable())
       //lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
       lv_style_set_text_color(&not_style, LV_STATE_DEFAULT, lv_color_hex(0xffffff));
     else

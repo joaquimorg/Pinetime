@@ -38,7 +38,7 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
 
     lv_obj_t* label = lv_label_create(lv_scr_act(), nullptr);   
     lv_label_set_recolor(label, true); 
-    lv_label_set_text(label, "#0000FF Notification#\n\nNo notifications\nto display.");
+    lv_label_set_text_static(label, "#0000FF Notification#\n\nNo notifications\nto display.");
     lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(label, NULL, LV_ALIGN_CENTER, 0, 20);
     
@@ -261,7 +261,7 @@ Notifications::NotificationItem::NotificationItem(const char *title, Controllers
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");
+  lv_label_set_text_static(backgroundLabel, "");
 
 }
 

@@ -47,7 +47,7 @@ Charging::Charging(
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");
+  lv_label_set_text_static(backgroundLabel, "");
 
   chTimer = xTimerCreate ("chTimer", pdMS_TO_TICKS( 5000 ), pdTRUE, this, CHTimerCallback);
   xTimerStart(chTimer, 0);
@@ -66,10 +66,16 @@ Charging::~Charging() {
 
 bool Charging::Refresh() {
 
-  animation +=1;
+  if ( batteryController.IsCharging() ) {
+    animation +=1;
 
-  if (animation > batteryPercent) {
-    animation = 0;
+    if (animation > batteryPercent) {
+      animation = 0;
+    }
+    lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
+  } else {
+    animation = batteryPercent;
+    lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
   }
 
   lv_bar_set_value(charging_bar, animation, LV_ANIM_OFF);
