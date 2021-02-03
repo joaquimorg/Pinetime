@@ -30,6 +30,7 @@ namespace Pinetime {
             void Wakeup();
             void Sleep();
             void UpdateAccel();
+            void ResetSteps();
 
             uint32_t GetSteps() const { return step_count; };
             uint8_t GetActivity() const { return activity; };

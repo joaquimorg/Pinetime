@@ -119,6 +119,7 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
 std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
   lv_mem_monitor_t mon;
   lv_mem_monitor(&mon);
+  stepCounter.Update();
 
   lv_obj_t * label = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_recolor(label, true);
@@ -129,13 +130,17 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen2() {
               "#444444 Memory#\n"
               " #444444 used# %6d (%3d %%)\n #444444 frag# %3d %%\n #444444 biggest free# %6d"
               "\n"
-              "#444444 Steps# %li",
+              "#444444 Steps# %li\n"
+              "#444444 Temp# %.2f\n"
+              "#444444 Status# %d",
           bleAddr[5], bleAddr[4], bleAddr[3], bleAddr[2], bleAddr[1], bleAddr[0],
           (int)mon.total_size - mon.free_size,
           mon.used_pct,
           mon.frag_pct,
           (int)mon.free_biggest_size,
-          stepCounter.GetSteps()
+          stepCounter.GetSteps(),
+          stepCounter.GetTemp(),
+          stepCounter.GetTapStatus()
           );
 
   
