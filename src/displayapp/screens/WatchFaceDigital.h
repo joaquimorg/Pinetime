@@ -62,12 +62,13 @@ namespace Pinetime {
           lv_style_t powerc_style;
           lv_style_t heartc_style;
           lv_style_t timec_style;
+          lv_style_t datec_style;
           //lv_style_t div_line_style;
           lv_style_t batt_style;
           lv_style_t not_style;
           lv_style_t time_style;
           lv_style_t seconds_style;
-          lv_style_t second_line_style;
+          lv_style_t seconds_line_style;
           lv_style_t dateyear_style;
           lv_style_t dateday_style;
           lv_style_t datemonth_style;
@@ -89,10 +90,9 @@ namespace Pinetime {
           lv_obj_t* stepIcon;
           lv_obj_t* stepValue;
           lv_obj_t* notificationIcon;
-          lv_obj_t* second_body;
+          lv_obj_t* seconds_body;
 
-          lv_point_t second_point[2];
-          //lv_point_t div_point[2];
+          lv_point_t seconds_point[2];
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;
