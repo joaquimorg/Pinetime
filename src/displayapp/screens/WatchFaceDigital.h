@@ -92,7 +92,7 @@ namespace Pinetime {
           lv_obj_t* second_body;
 
           lv_point_t second_point[2];
-          lv_point_t div_point[2];
+          //lv_point_t div_point[2];
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;

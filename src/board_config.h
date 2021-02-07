@@ -31,7 +31,7 @@
 #define KEY_ACTION 13
 #define KEY_ENABLE 15
 
-#define PWR_CTRL 24             // 3V3 POWER CONTROL
+#define PWR_CTRL 24             // 3V3 POWER CONTROL - NC
 #define CHARGE_BASE_IRQ 19      // POWER PRESENCE INDICATION
 #define CHARGE_IRQ 12           // CHARGE INDICATION
 

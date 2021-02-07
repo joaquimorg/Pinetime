@@ -326,7 +326,7 @@ bool WatchFaceDigital::Refresh() {
     lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
   }
 
-  if (batteryController.IsCharging() || batteryController.IsPowerPresent()) {
+  if (batteryController.IsCharging() /*|| batteryController.IsPowerPresent()*/) {
     lv_label_set_text(batteryIcon, BatteryIcon::GetPlugIcon(true));
   }
   

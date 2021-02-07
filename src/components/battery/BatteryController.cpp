@@ -20,8 +20,6 @@ void Battery::Init() {
   nrf_gpio_cfg_output(PWR_CTRL);
   nrf_gpio_pin_clear(PWR_CTRL);
 
-  //nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
-  
   //nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
 
   nrfx_gpiote_in_config_t pinConfig;
@@ -32,22 +30,25 @@ void Battery::Init() {
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_TOGGLE;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
   //
 
-    // CHARGE INDICATION IRQ
-  nrf_gpio_cfg_sense_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  // CHARGE INDICATION IRQ
+  // Need to find how to handle this
+  // TO DO
+  nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+  /*nrf_gpio_cfg_sense_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_TOGGLE;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
-  nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
   //
 
   nrfx_saadc_config_t adcConfig = NRFX_SAADC_DEFAULT_CONFIG;
@@ -72,9 +73,12 @@ void Battery::Init() {
 }
 
 void Battery::Update() {
-  isCharging = !nrf_gpio_pin_read(CHARGE_IRQ);
-  isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
 
+  isCharging = !nrf_gpio_pin_read(CHARGE_IRQ);
+  
+  //isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
+
+  // Non blocking read
   APP_ERROR_CHECK(nrfx_saadc_sample());
 
   //nrf_saadc_value_t value = 0;
@@ -98,8 +102,8 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
   int avg_sample = 0;
   int i;
 
-  const float battery_max = 4.08; //maximum voltage of battery
-  const float battery_min = 3.55;  //minimum voltage of battery before shutdown
+  const float battery_max = 4.05; //maximum voltage of battery
+  const float battery_min = 3.15;  //minimum voltage of battery before shutdown
 
   if (p_event->type == NRFX_SAADC_EVT_DONE) {
     
@@ -134,9 +138,4 @@ uint8_t Battery::PercentRemaining() {
 
 float Battery::Voltage() {
   return voltage;
-}
-
-
-void Battery::TurnOff() {
-  nrf_gpio_pin_set(PWR_CTRL);
 }

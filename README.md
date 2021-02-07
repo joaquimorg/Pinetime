@@ -141,42 +141,41 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 
 - $ gh repo clone joaquimorg/Pinetime
 - $ git submodule update --init --recursive
-- Copy https://github.com/atc1441/HRS3300-Arduino-Library/blob/master/src/cortex-m4/libheart.a to src/libs/hrs3300
 
 - $ mkdir build
 - $ cd build
 
-### config :
+### Config
 
---- nRF5_SDK_17 is causing some boot problems
-- $ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 -DOPENOCD_BIN_PATH=/mnt/d/Tools/xpack-openocd-0.10.0-15/bin/openocd.exe ../
-- $ cmake -DCMAKE_BUILD_TYPE=Debug -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
+##### nRF5_SDK_17 is causing some boot problems
+$ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 -DOPENOCD_BIN_PATH=/mnt/d/Tools/xpack-openocd-0.10.0-15/bin/openocd.exe ../
 
---- back to 15
-- $ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_15.3.0_59ac345 -DUSE_OPENOCD=1 -DOPENOCD_BIN_PATH=/mnt/d/Tools/xpack-openocd-0.10.0-15/bin/openocd.exe ../
+$ cmake -DCMAKE_BUILD_TYPE=Debug -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_17.0.2_d674dde -DUSE_OPENOCD=1 ../
+
+##### back to 15
+$ cmake -DCMAKE_BUILD_TYPE=Release -DARM_NONE_EABI_TOOLCHAIN_PATH=/usr -DNRF5_SDK_PATH=/mnt/d/Work/PineTime/nRF5_SDK_15.3.0_59ac345 -DUSE_OPENOCD=1 -DOPENOCD_BIN_PATH=/mnt/d/Tools/xpack-openocd-0.10.0-15/bin/openocd.exe ../
 
 
-// Sync time on WSL2
-- $ sudo hwclock -s
+##### Sync time on WSL2
+$ sudo hwclock -s
 
-- $ make -j pinetime-app
-- $ make -j pinetime-mcuboot-app
+##### regular build
+$ make -j pinetime-app
 
-- $ bp.sh
+##### mcboot build
+$ make -j pinetime-mcuboot-app
 
-### upload via remote openocd : 
+##### build and upload script
+$ bp.sh
 
-$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" -ex "det" src/pinetime-app-0.10.1.out
+##### upload via remote openocd
 
-### voltage fix
+$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" src/pinetime-app-0.10.1.out
 
-Voltage  | Percentage
----|---
-3.9V     | 100%
-3.75 V   | 75%
-3.7 V    | 60%
-3.665 V  | 50%
-3.62 V   | 30%
-3.58 V   | 15%
-3.55 V   | 5%
-< 3.55 V | LOW
+
+
+
+### Voltage to %
+
+3.11 v = 0%
+4.08 v = 100%
