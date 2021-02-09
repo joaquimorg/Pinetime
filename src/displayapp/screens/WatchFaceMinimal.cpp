@@ -42,7 +42,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
 
   // Hour  
   lv_style_init(&hour_style);
-  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &world_conflict_70);
+  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &lv_font_clock_90);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xb71c1c));  
   
   label_time = lv_label_create(lv_scr_act(), NULL);
@@ -53,7 +53,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
 
   // Minute  
   lv_style_init(&min_style);
-  lv_style_set_text_font(&min_style, LV_STATE_DEFAULT, &world_conflict_70);
+  lv_style_set_text_font(&min_style, LV_STATE_DEFAULT, &lv_font_clock_90);
   lv_style_set_text_color(&min_style, LV_STATE_DEFAULT, lv_color_hex(0x004d40));
 
   label_time_min = lv_label_create(lv_scr_act(), NULL);  
@@ -64,7 +64,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
 
   // :  
   lv_style_init(&sep_style);
-  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &world_conflict_70);
+  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &lv_font_clock_90);
   lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x444444));
 
   label_time_sep = lv_label_create(lv_scr_act(), NULL);

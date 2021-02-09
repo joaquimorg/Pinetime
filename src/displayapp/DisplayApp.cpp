@@ -51,8 +51,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) }*/
 {
   msgQueue = xQueueCreate(queueSize, itemSize);
-  LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
-  //modal.reset(new Screens::Modal(this));
+  LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
 }
 
 void DisplayApp::Start() {
@@ -112,10 +111,10 @@ void DisplayApp::Refresh() {
       case Messages::GoToRunning:
         if (state == States::Running) break;
         if(!currentScreen) {
-          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
         } else {
           if ( currentApp == Apps::Launcher ) {
-            LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+            LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
           }
         }
         
@@ -128,7 +127,7 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::NewNotification: 
-        LoadApp( Apps::NotificationsClock, DisplayApp::FullRefreshDirections::Down );
+        LoadApp( Apps::NotificationsClock, DisplayApp::FullRefreshDirections::None );
       break;
 
       case Messages::TouchEvent: {

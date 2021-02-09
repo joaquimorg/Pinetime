@@ -170,7 +170,9 @@ $ bp.sh
 
 ##### upload via remote openocd
 
-$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" src/pinetime-app-0.10.1.out
+$ arm-none-eabi-gdb.exe --batch -ex="target extended-remote 192.168.1.20:3333" -ex "load" -ex "monitor reset" src/pinetime-app-0.10.1.hex
+
+$ arm-none-eabi-gdb.exe -ex="target extended-remote 192.168.1.20:3333" src/pinetime-app-0.10.1.out
 
 
 

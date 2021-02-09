@@ -460,13 +460,10 @@ list(APPEND SOURCE_FILES
         #displayapp/fonts/clock_font/gomarice_80.c
 
         #displayapp/fonts/clock_font/calliope_fun_70.c
-        # tem que ser maior displayapp/fonts/clock_font/college_halo_70.c
-        # tem que ser maior displayapp/fonts/clock_font/evensong_hollow_70.c
-        displayapp/fonts/clock_font/freshman_70.c
-        # tem que ser maior displayapp/fonts/clock_font/incopins_clusters_70.c
+        #displayapp/fonts/clock_font/freshman_70.c
         #displayapp/fonts/clock_font/matrix_3d_nc_70.c
         #displayapp/fonts/clock_font/matrix_nc_70.c
-        displayapp/fonts/clock_font/world_conflict_70.c
+        #displayapp/fonts/clock_font/world_conflict_70.c
 
         #App Icons 
         displayapp/icons/icon_brightness.c
@@ -696,7 +693,7 @@ link_directories(
 
 
 set(COMMON_FLAGS -MP -MD -mthumb -mabi=aapcs -Wall -Wno-unknown-pragmas -g3 -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin --short-enums -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wreturn-type -Werror=return-type)
-#add_definitions(-DCONFIG_GPIO_AS_PINRESET)
+add_definitions(-DCONFIG_GPIO_AS_PINRESET)
 #add_definitions(-DDEBUG)
 add_definitions(-DNIMBLE_CFG_CONTROLLER)
 add_definitions(-DOS_CPUTIME_FREQ)
