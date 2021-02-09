@@ -20,10 +20,10 @@ cd <project_root> # e.g. cd ./work/Pinetime
 docker run --rm -it -v $(pwd):/sources infinitime-build
 ```
 
-If you only want to build a single CMake target, you can pass it in as the first parameter to the build script. This means calling the script explicitly as it will override the `CMD`. Here's an example For `pinetime-app`:
+If you only want to build a single CMake target, you can pass it in as the first parameter to the build script. This means calling the script explicitly as it will override the `CMD`. Here's an example For `pinetime-lite`:
 
 ```bash
-docker run --rm -it -v $(pwd):/sources infinitime-build /opt/build.sh pinetime-app
+docker run --rm -it -v $(pwd):/sources infinitime-build /opt/build.sh pinetime-lite
 ```
 
 The image is built using 1000:1000 for the user id and group id. If this is different to your user or group ids (run `id -u` and `id -g` to find out what your id values are if you are unsure), you will need to override them via the `--user` parameter in order to prevent permission errors with the output files (and the cmake build cache).

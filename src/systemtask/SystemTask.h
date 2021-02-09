@@ -14,7 +14,6 @@
 #include "displayapp/DisplayApp.h"
 #include "drivers/Watchdog.h"
 #include "drivers/Vibration.h"
-#include "drivers/HRS3300.h"
 
 namespace Pinetime {
   namespace Drivers {
@@ -25,7 +24,6 @@ namespace Pinetime {
     class St7789;
     class TwiMaster;
     class Vibration;
-    class HRS3300;
   }
   namespace System {
     class SystemTask {
@@ -80,19 +78,8 @@ namespace Pinetime {
         Pinetime::Controllers::Settings& settingsController;
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Drivers::Watchdog watchdog;
-        Pinetime::Drivers::WatchdogView watchdogView; 
-        Pinetime::Drivers::HRS3300 hrs3300;       
-        Pinetime::Controllers::NimbleController nimbleController;        
-
-        /*
-        static constexpr uint8_t pinSpiSck = 2;
-        static constexpr uint8_t pinSpiMosi = 3;
-        static constexpr uint8_t pinSpiMiso = 4;
-        static constexpr uint8_t pinSpiCsn = 25;
-        static constexpr uint8_t pinLcdDataCommand = 18;
-        static constexpr uint8_t pinButton = 13;
-        static constexpr uint8_t pinTouchIrq = 28;
-        */
+        Pinetime::Drivers::WatchdogView watchdogView;
+        Pinetime::Controllers::NimbleController nimbleController;
 
         static void Process(void* instance);
         void Work();

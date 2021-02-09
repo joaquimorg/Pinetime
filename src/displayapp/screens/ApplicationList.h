@@ -22,11 +22,11 @@ namespace Pinetime {
 
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
-          ScreenList<2> screens;
+          ScreenList<1> screens;
 
           std::unique_ptr<Screen> CreateScreen1();
-          std::unique_ptr<Screen> CreateScreen2();
-          std::unique_ptr<Screen> CreateScreen3();
+          //std::unique_ptr<Screen> CreateScreen2();
+          //std::unique_ptr<Screen> CreateScreen3();
 
           bool running = true;          
       };

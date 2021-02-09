@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(pinetime-app C CXX ASM)
+project(pinetime-lite C CXX ASM)
 
 # define some variables just for this example to determine file locations
-set(NRF_PROJECT_NAME pinetime-app)
+set(NRF_PROJECT_NAME pinetime-lite)
 set(NRF_BOARD pca10040)
 
 # check if all the necessary tools paths have been provided.
@@ -357,13 +357,13 @@ set(BMA421_SRC
         )
 
         
-set(HRS3300_SRC
-        libs/hrs3300/hrs3300_reg_init.h
-        libs/hrs3300/hrs3300.h
-        libs/hrs3300/hrs3300.c
+#set(HRS3300_SRC
+#        libs/hrs3300/hrs3300_reg_init.h
+#        libs/hrs3300/hrs3300.h
+#        libs/hrs3300/hrs3300.c
         #libs/hrs3300/HRS3300lib.h
         #libs/hrs3300/HRS3300lib.cpp
-        )
+#        )
         
 
 list(APPEND SOURCE_FILES
@@ -374,7 +374,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Charging.cpp
         displayapp/screens/Clock.cpp
         displayapp/screens/Tile.cpp
-        displayapp/screens/InfiniPaint.cpp
+        #displayapp/screens/InfiniPaint.cpp
         displayapp/screens/Steps.cpp
         displayapp/screens/Settings.cpp
         displayapp/screens/BatteryIcon.cpp
@@ -384,15 +384,15 @@ list(APPEND SOURCE_FILES
         displayapp/screens/SystemInfo.cpp
         displayapp/screens/Label.cpp
         displayapp/screens/FirmwareUpdate.cpp
-        displayapp/screens/Music.cpp
+        #displayapp/screens/Music.cpp
         displayapp/screens/FirmwareValidation.cpp
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
-        displayapp/screens/HeartRate.cpp
-        displayapp/screens/Twos.cpp
-        displayapp/screens/Paddle.cpp
+        #displayapp/screens/HeartRate.cpp
+        #displayapp/screens/Twos.cpp
+        #displayapp/screens/Paddle.cpp
 
-        displayapp/screens/ScreensTemplate.cpp
+        #displayapp/screens/ScreensTemplate.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
@@ -408,7 +408,7 @@ list(APPEND SOURCE_FILES
 
         #HRS3300 Lib
         #libs/hrs3300/libheart.a
-        drivers/HRS3300.cpp
+        #drivers/HRS3300.cpp
 
         drivers/BMA421.cpp
         drivers/St7789.cpp
@@ -530,12 +530,12 @@ set(INCLUDE_FILES
         displayapp/screens/Screen.h
         displayapp/screens/Clock.h
         displayapp/screens/Tile.h
-        displayapp/screens/Meter.h
-        displayapp/screens/Gauge.h
-        displayapp/screens/InfiniPaint.h
-        displayapp/screens/Paddle.h
-        displayapp/screens/DropDownDemo.h
-        displayapp/screens/Modal.h
+        #displayapp/screens/Meter.h
+        #displayapp/screens/Gauge.h
+        #displayapp/screens/InfiniPaint.h
+        #displayapp/screens/Paddle.h
+        #displayapp/screens/DropDownDemo.h
+        #displayapp/screens/Modal.h
         displayapp/screens/BatteryIcon.h
         displayapp/screens/BleIcon.h
         displayapp/screens/NotificationIcon.h
@@ -555,7 +555,7 @@ set(INCLUDE_FILES
         displayapp/screens/WatchFaceMinimal.h
         displayapp/screens/WatchFaceCustom.h
 
-        drivers/HRS3300.h
+        #drivers/HRS3300.h
         drivers/BMA421.h
         drivers/St7789.h
         drivers/FileSystem.h
@@ -771,29 +771,29 @@ target_compile_options(bma421 PRIVATE
         )
 
 # HRS3300
-add_library(hrs3300lib STATIC IMPORTED)
-set_property(TARGET hrs3300lib PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/libs/hrs3300/libheart.a)
+#add_library(hrs3300lib STATIC IMPORTED)
+#set_property(TARGET hrs3300lib PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/libs/hrs3300/libheart.a)
 
-add_library(hrs3300 STATIC ${HRS3300_SRC})
+#add_library(hrs3300 STATIC ${HRS3300_SRC})
 #set_property(TARGET hrs3300 PROPERTY IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}/src/libs/hrs3300/libheart.a)
-target_include_directories(hrs3300 SYSTEM PUBLIC . ../)
-target_include_directories(hrs3300 SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
-target_compile_options(hrs3300 PRIVATE
-        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
-        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
-        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
-        )
+#target_include_directories(hrs3300 SYSTEM PUBLIC . ../)
+#target_include_directories(hrs3300 SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
+#target_compile_options(hrs3300 PRIVATE
+#        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+#        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+#        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+#        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+#        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
+#        )
 
 
 # Build autonomous binary (without support for bootloader)
-set(EXECUTABLE_NAME "pinetime-app")
-set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
+set(EXECUTABLE_NAME "pinetime-lite")
+set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH})
 set(NRF5_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/gcc_nrf52.ld")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_FILE_NAME})
-target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs bma421 hrs3300lib hrs3300)
+target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs bma421 )
 target_compile_options(${EXECUTABLE_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
@@ -818,13 +818,13 @@ add_custom_command(TARGET ${EXECUTABLE_NAME}
 
 
 # Build binary intended to be used by bootloader
-set(EXECUTABLE_MCUBOOT_NAME "pinetime-mcuboot-app")
-set(EXECUTABLE_MCUBOOT_FILE_NAME ${EXECUTABLE_MCUBOOT_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
-set(IMAGE_MCUBOOT_FILE_NAME image-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.bin)
-set(DFU_FILE_NAME dfu-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH}.zip)
+set(EXECUTABLE_MCUBOOT_NAME "pinetime-mcuboot-lite")
+set(EXECUTABLE_MCUBOOT_FILE_NAME ${EXECUTABLE_MCUBOOT_NAME}-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH})
+set(IMAGE_MCUBOOT_FILE_NAME image-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH}.bin)
+set(DFU_FILE_NAME dfu-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH}.zip)
 set(NRF5_LINKER_SCRIPT_MCUBOOT "${CMAKE_SOURCE_DIR}/gcc_nrf52-mcuboot.ld")
 add_executable(${EXECUTABLE_MCUBOOT_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs bma421 hrs3300lib hrs3300)
+target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs bma421 )
 set_target_properties(${EXECUTABLE_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_FILE_NAME})
 target_compile_options(${EXECUTABLE_MCUBOOT_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
@@ -851,7 +851,7 @@ add_custom_command(TARGET ${EXECUTABLE_MCUBOOT_NAME}
 
 # Build binary that writes the graphic assets for the bootloader
 set(EXECUTABLE_GRAPHICS_NAME "pinetime-graphics")
-set(EXECUTABLE_GRAPHICS_FILE_NAME ${EXECUTABLE_GRAPHICS_NAME}-${pinetime_VERSION_MAJOR}.${pinetime_VERSION_MINOR}.${pinetime_VERSION_PATCH})
+set(EXECUTABLE_GRAPHICS_FILE_NAME ${EXECUTABLE_GRAPHICS_NAME}-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH})
 add_executable(${EXECUTABLE_GRAPHICS_NAME} ${GRAPHICS_SOURCE_FILES})
 target_link_libraries(${EXECUTABLE_GRAPHICS_NAME} nrf-sdk)
 set_target_properties(${EXECUTABLE_GRAPHICS_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_GRAPHICS_FILE_NAME})

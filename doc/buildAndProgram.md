@@ -45,22 +45,22 @@ cmake -DARM_NONE_EABI_TOOLCHAIN_PATH=... -DNRF5_SDK_PATH=... -DUSE_OPENOCD=1 -DG
 ### Build the project
 During the project generation, CMake created the following targets:
 - FLASH_ERASE : mass erase the flash memory of the NRF52.
-- FLASH_pinetime-app : flash the firmware into the NRF52.
-- pinetime-app : build the standalone (without bootloader support) version of the firmware.
+- FLASH_pinetime-lite : flash the firmware into the NRF52.
+- pinetime-lite : build the standalone (without bootloader support) version of the firmware.
 - pinetime-mcuboot-app : build the firmware with the support of the bootloader (based on MCUBoot).
 - pinetime-graphics : small firmware that writes the boot graphics into the SPI flash.
 
-If you just want to build the project and run it on the Pinetime, using *pinetime-app* is recommanded. See [this page](../bootloader/README.md) for more info about bootloader support.
+If you just want to build the project and run it on the Pinetime, using *pinetime-lite* is recommanded. See [this page](../bootloader/README.md) for more info about bootloader support.
 
 Build:
 ```
-make -j pinetime-app
+make -j pinetime-lite
 ```
 
 List of files generated:
 Binary files are generated into the folder `src`:
- - **pinetime-app.bin, .hex and .out** : standalone firmware in bin, hex and out formats.
- - **pinetime-app.map** : map file
+ - **pinetime-lite.bin, .hex and .out** : standalone firmware in bin, hex and out formats.
+ - **pinetime-lite.map** : map file
  - **pinetime-mcuboot-app.bin, .hex and .out** : firmware with bootloader support in bin, hex and out formats.
  - **pinetime-mcuboot-app.map** : map file
  - **pinetime-graphics.bin, .hex and .out** : firmware for the boot graphic in bin, hex and out formats.
@@ -77,7 +77,7 @@ make FLASH_ERASE
 
 Flash the application:
 ```
-make FLASH_pinetime-app
+make FLASH_pinetime-lite
 ```
 
 ### Using JLink
@@ -125,8 +125,8 @@ J-Link>
 
 Use the command loadfile to program the .hex file:
 ```
-J-Link>loadfile pinetime-app.hex 
-Downloading file [pinetime-app.hex]...
+J-Link>loadfile pinetime-lite.hex 
+Downloading file [pinetime-lite.hex]...
 Comparing flash   [100%] Done.
 Erasing flash     [100%] Done.
 Programming flash [100%] Done.
@@ -168,7 +168,7 @@ Enter the following command into GDB:
 target extended-remote /dev/ttyACM0
 monitor swdp_scan
 attach 1
-file ./pinetime-app-full.hex 
+file ./pinetime-lite-full.hex 
 load
 run
 ```
@@ -191,11 +191,11 @@ Attaching to Remote target
 warning: No executable has been specified and target does not support
 determining executable automatically.  Try using the "file" command.
 0xfffffffe in ?? ()
-(gdb) file ./pinetime-app-full.hex 
+(gdb) file ./pinetime-lite-full.hex 
 A program is being debugged already.
 Are you sure you want to change the file? (y or n) y
-Reading symbols from ./pinetime-app-full.hex...
-(No debugging symbols found in ./pinetime-app-full.hex)
+Reading symbols from ./pinetime-lite-full.hex...
+(No debugging symbols found in ./pinetime-lite-full.hex)
 (gdb) load
 Loading section .sec1, size 0xb00 lma 0x0
 Loading section .sec2, size 0xf000 lma 0x1000

@@ -35,7 +35,7 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
           settingsController.GetAppMenu(),
           {
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
+                //[this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
                 //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
           },
           Screens::ScreenListModes::UpDown          
@@ -70,14 +70,15 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
             {&icon_settings,    "Settings",       Apps::FirmwareValidation},
             {&icon_information, "Sysinfo",        Apps::SysInfo},
             {&icon_brightness,  "Brightness",     Apps::Brightness},
-            {&icon_iot,         "Iot",            Apps::None}            
+            {&icon_running,     "Steps",          Apps::Steps},
           }
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(0, 2, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, 1, app, dateTimeController, settingsController, applications));
 }
 
+/*
 std::unique_ptr<Screen> ApplicationList::CreateScreen2() {  
 
   std::array<Screens::Tile::Applications, 4> applications {
@@ -108,3 +109,4 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
   return std::unique_ptr<Screen>(new Screens::Tile(2, 3, app, dateTimeController, settingsController, applications));
 }
 
+*/

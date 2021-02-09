@@ -116,58 +116,58 @@ jobs:
 
         #########################################################################################
         # Make and Upload DFU Package
-        # pinetime-mcuboot-app.img must be flashed at address 0x8000 in the internal flash memory with OpenOCD:
+        # pinetime-mcuboot-lite.img must be flashed at address 0x8000 in the internal flash memory with OpenOCD:
         # program image.bin 0x8000
 
         # For Debugging Builds: Remove "make" option "-j" for clearer output. Add "--trace" to see details.
         # For Faster Builds: Add "make" option "-j"
 
-      - name: Make pinetime-mcuboot-app
+      - name: Make pinetime-mcuboot-lite
         run:  |
           cd build
-          make pinetime-mcuboot-app
+          make pinetime-mcuboot-lite
 
       - name: Create firmware image
         run:  |
-          # The generated firmware binary looks like "pinetime-mcuboot-app-0.8.2.bin"
-          ls -l build/src/pinetime-mcuboot-app*.bin
-          ${{ runner.temp }}/mcuboot/scripts/imgtool.py create --align 4 --version 1.0.0 --header-size 32 --slot-size 475136 --pad-header build/src/pinetime-mcuboot-app*.bin build/src/pinetime-mcuboot-app-img.bin
-          ${{ runner.temp }}/mcuboot/scripts/imgtool.py verify build/src/pinetime-mcuboot-app-img.bin
+          # The generated firmware binary looks like "pinetime-mcuboot-lite-0.8.2.bin"
+          ls -l build/src/pinetime-mcuboot-lite*.bin
+          ${{ runner.temp }}/mcuboot/scripts/imgtool.py create --align 4 --version 1.0.0 --header-size 32 --slot-size 475136 --pad-header build/src/pinetime-mcuboot-lite*.bin build/src/pinetime-mcuboot-app-img.bin
+          ${{ runner.temp }}/mcuboot/scripts/imgtool.py verify build/src/pinetime-mcuboot-lite-img.bin
 
       - name: Create DFU package
         run:  |
-          ~/.local/bin/adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application build/src/pinetime-mcuboot-app-img.bin build/src/pinetime-mcuboot-app-dfu.zip
-          unzip -v build/src/pinetime-mcuboot-app-dfu.zip
+          ~/.local/bin/adafruit-nrfutil dfu genpkg --dev-type 0x0052 --application build/src/pinetime-mcuboot-lite-img.bin build/src/pinetime-mcuboot-lite-dfu.zip
+          unzip -v build/src/pinetime-mcuboot-lite-dfu.zip
           # Unzip the package because Upload Artifact will zip up the files
-          unzip build/src/pinetime-mcuboot-app-dfu.zip -d build/src/pinetime-mcuboot-app-dfu
+          unzip build/src/pinetime-mcuboot-lite-dfu.zip -d build/src/pinetime-mcuboot-lite-dfu
 
       - name: Upload DFU package
         uses: actions/upload-artifact@v2
         with:
-          name: pinetime-mcuboot-app-dfu
-          path: build/src/pinetime-mcuboot-app-dfu/*
+          name: pinetime-mcuboot-lite-dfu
+          path: build/src/pinetime-mcuboot-lite-dfu/*
 
         #########################################################################################
         # Make and Upload Standalone Firmware
 
-      - name: Make pinetime-app
+      - name: Make pinetime-lite
         run:  |
           cd build
-          make pinetime-app
+          make pinetime-lite
 
       - name: Upload standalone firmware
         uses: actions/upload-artifact@v2
         with:
-          name: pinetime-app.out
-          path: build/src/pinetime-app*.out
+          name: pinetime-lite.out
+          path: build/src/pinetime-lite*.out
 
       #########################################################################################
       # Finish
 
       - name: Find output
         run:  |
-          find . -name "pinetime-app.*" -ls
-          find . -name "pinetime-mcuboot-app.*" -ls
+          find . -name "pinetime-lite.*" -ls
+          find . -name "pinetime-mcuboot-lite.*" -ls
 
 # Embedded Arm Toolchain and nRF5 SDK will only be cached if the build succeeds.
 # So make sure that the first build always succeeds, e.g. comment out the "Make" step.

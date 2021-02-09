@@ -18,7 +18,6 @@ namespace Pinetime {
     class Cst816S;
     class WatchdogView;
     class BMA421;
-    class HRS3300;
   }
   
   namespace Controllers {
@@ -47,7 +46,6 @@ namespace Pinetime {
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
                    Drivers::BMA421 &stepCounter,
-                   Drivers::HRS3300 &hrs,
                    System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager &notificationManager);
         void Start();
@@ -70,7 +68,6 @@ namespace Pinetime {
         Pinetime::Drivers::WatchdogView& watchdog;
         Pinetime::Controllers::Settings& settingsController;
         Pinetime::Drivers::BMA421& stepCounter;
-        Pinetime::Drivers::HRS3300& hrs;
         Pinetime::System::SystemTask& systemTask;
         Pinetime::Controllers::NotificationManager& notificationManager;
         std::unique_ptr<Screens::Screen> currentScreen;

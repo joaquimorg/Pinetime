@@ -11,22 +11,22 @@ namespace Pinetime
       Clock,
       SysInfo,
       Brightness,
-      Music,
+      //Music,
       FirmwareUpdate,
       FirmwareValidation,
-      Paint,
+      //Paint,
       Notifications,
       NotificationsClock,
       Settings,
       Steps,
-      HeartRate,
-      Weather,
-      Iot,
-      MobileApp,
-      Charging,
-      StopWatch,
-      Paddle,
-      Twos
+      //HeartRate,
+      //Weather,
+      //Iot,
+      //MobileApp,      
+      //StopWatch,
+      //Paddle,
+      //Twos,
+      Charging
     };
   }
 } // namespace Pinetime

@@ -33,7 +33,6 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
                        Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                       
                        Controllers::Settings &settingsController,
                        Drivers::BMA421 &stepCounter,
-                       Drivers::HRS3300 &hrs,
                        System::SystemTask &systemTask,
                        Pinetime::Controllers::NotificationManager &notificationManager) :
         lcd{lcd},
@@ -45,14 +44,12 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         watchdog{watchdog},        
         settingsController{settingsController},
         stepCounter{stepCounter},
-        hrs{hrs},
         systemTask{systemTask},
         notificationManager{notificationManager}/*,
         currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) }*/
 {
   msgQueue = xQueueCreate(queueSize, itemSize);
   LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
-  //modal.reset(new Screens::Modal(this));
 }
 
 void DisplayApp::Start() {
@@ -279,25 +276,25 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::Launcher: currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController)); break;
       case Apps::Clock: currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter)); break;
       case Apps::SysInfo: currentScreen.reset(new Screens::SystemInfo(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); break;
-      case Apps::Paint: currentScreen.reset(new Screens::InfiniPaint(this, lvgl)); break;
-      case Apps::Paddle: currentScreen.reset(new Screens::Paddle(this, systemTask, stepCounter, settingsController)); break;
-      case Apps::Twos: currentScreen.reset(new Screens::Twos(this)); break;
+      //case Apps::Paint: currentScreen.reset(new Screens::InfiniPaint(this, lvgl)); break;
+      //case Apps::Paddle: currentScreen.reset(new Screens::Paddle(this, systemTask, stepCounter, settingsController)); break;
+      //case Apps::Twos: currentScreen.reset(new Screens::Twos(this)); break;
       case Apps::Brightness : currentScreen.reset(new Screens::Brightness(this, brightnessController)); break;
-      case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;
+      //case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;
       case Apps::FirmwareUpdate: currentScreen.reset(new Screens::FirmwareUpdate(this, bleController)); break;
       case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
       case Apps::NotificationsClock: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Clock)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
-      case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
+      //case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
       case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
 
       // To Do :-)
-      case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;
-      case Apps::Iot: currentScreen.reset(new Screens::ScreensTemplate(this, "Iot")); break;
-      case Apps::MobileApp: currentScreen.reset(new Screens::ScreensTemplate(this, "Mobile App")); break;      
-      case Apps::StopWatch: currentScreen.reset(new Screens::ScreensTemplate(this, "Stop Watch")); break;
+      //case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;
+      //case Apps::Iot: currentScreen.reset(new Screens::ScreensTemplate(this, "Iot")); break;
+      //case Apps::MobileApp: currentScreen.reset(new Screens::ScreensTemplate(this, "Mobile App")); break;      
+      //case Apps::StopWatch: currentScreen.reset(new Screens::ScreensTemplate(this, "Stop Watch")); break;
     }
 }
 
