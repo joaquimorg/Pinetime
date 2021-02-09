@@ -56,7 +56,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_obj_t * stepc_cont = lv_cont_create(lv_scr_act(), NULL);
   lv_obj_add_style(stepc_cont, LV_CONT_PART_MAIN, &stepc_style);
   lv_cont_set_layout(stepc_cont, LV_LAYOUT_CENTER);
-  lv_obj_set_pos(stepc_cont, 0, 185);
+  lv_obj_set_pos(stepc_cont, 16, 185);
   lv_obj_set_width(stepc_cont, 60);
   lv_obj_set_height(stepc_cont, 50);
 
@@ -72,7 +72,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_obj_t * infoc_cont = lv_cont_create(lv_scr_act(), NULL);  
   lv_obj_add_style(infoc_cont, LV_CONT_PART_MAIN, &infoc_style);
   lv_cont_set_layout(infoc_cont, LV_LAYOUT_CENTER);
-  lv_obj_set_pos(infoc_cont, 60, 185);
+  lv_obj_set_pos(infoc_cont, 90, 185);
   lv_obj_set_width(infoc_cont, 60);
   lv_obj_set_height(infoc_cont, 50);
 
@@ -88,10 +88,11 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_obj_t * powerc_cont = lv_cont_create(lv_scr_act(), NULL);  
   lv_obj_add_style(powerc_cont, LV_CONT_PART_MAIN, &powerc_style);
   lv_cont_set_layout(powerc_cont, LV_LAYOUT_CENTER);
-  lv_obj_set_pos(powerc_cont, 120, 185);
+  lv_obj_set_pos(powerc_cont, 164, 185);
   lv_obj_set_width(powerc_cont, 60);
   lv_obj_set_height(powerc_cont, 50);
 
+  /*
   // Heart Container
   lv_style_init(&heartc_style);
   //lv_style_set_bg_color(&heartc_style, LV_STATE_DEFAULT, lv_color_hex(0xB20048));
@@ -106,7 +107,8 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_cont_set_layout(heartc_cont, LV_LAYOUT_CENTER);
   lv_obj_set_pos(heartc_cont, 180, 185);
   lv_obj_set_width(heartc_cont, 60);
-  lv_obj_set_height(heartc_cont, 50);  
+  lv_obj_set_height(heartc_cont, 50);
+  */  
 
   // Time Container
   lv_style_init(&timec_style);
@@ -259,6 +261,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
   //lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_TOP_LEFT, 10, 0);  
 
+  /*
   // Heart rate -----------------------------------------------------------------------------------------------
   lv_style_init(&heart_style);
   lv_style_set_text_color(&heart_style, LV_STATE_DEFAULT, lv_color_hex(0xCE1B1B));    
@@ -276,7 +279,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
     lv_label_set_text_fmt(heartbeatValue, "%02i", settingsController.GetHeartRate());
 
   //lv_obj_align(heartbeatValue, heartbeatIcon, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
-
+  */
 
   // Steps -----------------------------------------------------------------------------------------------  
   lv_style_init(&step_style);
@@ -308,7 +311,7 @@ WatchFaceDigital::~WatchFaceDigital() {
   lv_style_reset(&stepc_style);
   lv_style_reset(&infoc_style);
   lv_style_reset(&powerc_style);
-  lv_style_reset(&heartc_style);
+  //lv_style_reset(&heartc_style);
   lv_style_reset(&timec_style);
   lv_style_reset(&datec_style);
   //lv_style_reset(&div_line_style);
@@ -322,7 +325,7 @@ WatchFaceDigital::~WatchFaceDigital() {
   lv_style_reset(&dateday_style);
   lv_style_reset(&datemonth_style);
   lv_style_reset(&date_style);
-  lv_style_reset(&heart_style);
+  //lv_style_reset(&heart_style);
   lv_style_reset(&step_style);
 
   lv_obj_clean(lv_scr_act());
