@@ -47,6 +47,7 @@ namespace Pinetime {
         void WriteCommand(uint8_t cmd);
         void WriteSpi(const uint8_t* data, size_t size);
 
+
         enum class Commands : uint8_t {
           SoftwareReset = 0x01,
           SleepIn = 0x10,

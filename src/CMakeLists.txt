@@ -451,22 +451,22 @@ list(APPEND SOURCE_FILES
         displayapp/lv_pinetime_theme.c
 
         #Fonts
-        displayapp/fonts/lv_font_montserrat_18.c
-        displayapp/fonts/lv_font_opensans_18.c
+        #displayapp/fonts/lv_font_montserrat_18.c
+        #displayapp/fonts/lv_font_opensans_18.c
         displayapp/fonts/lv_font_opensans_20.c
         displayapp/fonts/clock_font/lv_font_clock_90.c
-        #displayapp/fonts/clock_font/lv_font_clock_76.c
+        displayapp/fonts/clock_font/lv_font_clock_76.c
         displayapp/fonts/clock_font/lv_font_clock_42.c
         #displayapp/fonts/clock_font/gomarice_80.c
 
         #displayapp/fonts/clock_font/calliope_fun_70.c
         # tem que ser maior displayapp/fonts/clock_font/college_halo_70.c
         # tem que ser maior displayapp/fonts/clock_font/evensong_hollow_70.c
-        displayapp/fonts/clock_font/freshman_70.c
+        #displayapp/fonts/clock_font/freshman_70.c
         # tem que ser maior displayapp/fonts/clock_font/incopins_clusters_70.c
         #displayapp/fonts/clock_font/matrix_3d_nc_70.c
         #displayapp/fonts/clock_font/matrix_nc_70.c
-        displayapp/fonts/clock_font/world_conflict_70.c
+        #displayapp/fonts/clock_font/world_conflict_70.c
 
         #App Icons 
         displayapp/icons/icon_brightness.c

@@ -35,7 +35,7 @@ Clock::Clock(DisplayApp* app,
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); },
-                //[this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen(); }
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen(); }
           },
           Screens::ScreenListModes::LongPress          
         } {

@@ -52,17 +52,6 @@ Pinetime::Logging::NrfLogger logger;
 Pinetime::Logging::DummyLogger logger;
 #endif
 
-/*
-static constexpr uint8_t pinSpiSck = 2;
-static constexpr uint8_t pinSpiMosi = 3;
-static constexpr uint8_t pinSpiMiso = 4;
-static constexpr uint8_t pinSpiFlashCsn = 5;
-static constexpr uint8_t pinLcdCsn = 25;
-static constexpr uint8_t pinLcdDataCommand = 18;
-static constexpr uint8_t pinTwiScl = 7;
-static constexpr uint8_t pinTwiSda = 6;
-static constexpr uint8_t touchPanelTwiAddress = 0x15;
-*/
 
 Pinetime::Controllers::Settings settingsController;
 
@@ -101,7 +90,7 @@ Pinetime::Controllers::Ble bleController;
 Pinetime::Controllers::DateTime dateTimeController;
 void ble_manager_set_ble_connection_callback(void (*connection)());
 void ble_manager_set_ble_disconnection_callback(void (*disconnection)());
-//static constexpr uint8_t pinTouchIrq = 28;
+
 std::unique_ptr<Pinetime::System::SystemTask> systemTask;
 
 Pinetime::Controllers::NotificationManager notificationManager;

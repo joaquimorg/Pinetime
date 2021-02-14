@@ -33,6 +33,7 @@ namespace Pinetime {
           ~WatchFaceMinimal() override;
 
           bool Refresh() override;
+          void UpdateScreen();
 
         private:
           uint8_t sHour, sMinute, sSecond;
@@ -55,18 +56,19 @@ namespace Pinetime {
           DirtyValue<uint8_t> heartbeat  {0};
           DirtyValue<bool> notificationState {false};
           
-          lv_style_t sep_style;
-          lv_style_t not_style;
+          //lv_style_t not_style;
           lv_style_t hour_style;
           lv_style_t min_style;
           lv_style_t dateyear_style;
 
           lv_obj_t* label_time;
           lv_obj_t* label_time_min;
-          lv_obj_t* label_time_sep;
+          lv_obj_t* seconds;
           lv_obj_t* label_date;
-          lv_obj_t* backgroundLabel;
           lv_obj_t* notificationIcon;
+          lv_obj_t* batteryIcon;
+
+          lv_task_t* taskUpdate;
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;

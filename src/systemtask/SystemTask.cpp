@@ -162,8 +162,8 @@ void SystemTask::Work() {
           doNotGoToSleep = true;
         break;
         case Messages::WakeUp:
-          //spi.Wakeup();
-          //twiMaster.Wakeup();
+          spi.Wakeup();
+          twiMaster.Wakeup();
           //stepCounter.Wakeup();
 
           nimbleController.StartAdvertising();
@@ -247,8 +247,8 @@ void SystemTask::Work() {
           lcd.Sleep();
           touchPanel.Sleep();
           //stepCounter.Sleep();
-          //spi.Sleep();
-          //twiMaster.Sleep();
+          spi.Sleep();
+          twiMaster.Sleep();
           isSleeping = true;
           isGoingToSleep = false;
           break;

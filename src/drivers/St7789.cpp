@@ -181,7 +181,7 @@ void St7789::Sleep() {
   SleepIn();
   nrf_delay_ms(50);
   //nrf_gpio_cfg_default(pinDataCommand);
-  NRF_LOG_INFO("[LCD] Sleep");
+  //NRF_LOG_INFO("[LCD] Sleep");
 }
 
 void St7789::Wakeup() {
@@ -190,7 +190,6 @@ void St7789::Wakeup() {
   //HardwareReset();
   //SoftwareReset();
   SleepOut();
-  nrf_delay_ms(50);
   //ColMod();
   //MemoryDataAccessControl();
   //ColumnAddressSet();
@@ -200,5 +199,5 @@ void St7789::Wakeup() {
   VerticalScrollDefinition(0, 320, 0);
   VerticalScrollStartAddress(verticalScrollingStartAddress);
   DisplayOn();
-  NRF_LOG_INFO("[LCD] Wakeup")
+  //NRF_LOG_INFO("[LCD] Wakeup")
 }
