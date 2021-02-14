@@ -49,6 +49,7 @@ namespace Pinetime {
           std::unique_ptr<Screen> WatchFaceDigitalScreen();
           std::unique_ptr<Screen> WatchFaceAnalogScreen();
           std::unique_ptr<Screen> WatchFaceMinimalScreen();
+          std::unique_ptr<Screen> WatchFacePongScreen();
           std::unique_ptr<Screen> WatchFaceCustomScreen();
 
           bool running = true;

@@ -116,6 +116,7 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::NewCall:
+        LoadApp( Apps::NotificationsClock, DisplayApp::FullRefreshDirections::Down );
       break;
 
       case Messages::NewNotification: 
@@ -169,9 +170,6 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::StepEvent:
-      break;
-      
-      case Messages::UpdateDateTime:
       break;
       
       case Messages::UpdateBleConnection:

@@ -398,7 +398,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WatchFaceDigital.cpp
         displayapp/screens/WatchFaceAnalog.cpp
         displayapp/screens/WatchFaceMinimal.cpp
-        displayapp/screens/WatchFaceCustom.cpp        
+        displayapp/screens/WatchFaceCustom.cpp
+        displayapp/screens/WatchFacePong.cpp
         displayapp/icons/bg_clock.c
 
         displayapp/icons/bg_img_1.c
@@ -554,6 +555,7 @@ set(INCLUDE_FILES
         displayapp/screens/WatchFaceAnalog.h
         displayapp/screens/WatchFaceMinimal.h
         displayapp/screens/WatchFaceCustom.h
+        displayapp/screens/WatchFacePong.h
 
         #drivers/HRS3300.h
         drivers/BMA421.h

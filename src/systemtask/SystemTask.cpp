@@ -41,13 +41,11 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        Components::LittleVgl &lvgl,
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController,
-                       Controllers::Settings &settingsController,
-                       Pinetime::Controllers::NotificationManager& notificationManager) :
+                       Controllers::Settings &settingsController) :
                        spi{spi}, lcd{lcd}, spiNorFlash{spiNorFlash},
                        twiMaster{twiMaster}, touchPanel{touchPanel}, stepCounter{stepCounter},
                        lvgl{lvgl}, batteryController{batteryController},
                        bleController{bleController}, dateTimeController{dateTimeController}, settingsController{settingsController},
-                       notificationManager{notificationManager},
                        watchdog{}, watchdogView{watchdog},
                        nimbleController(*this, bleController,dateTimeController, notificationManager, batteryController, spiNorFlash) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
@@ -191,10 +189,6 @@ void SystemTask::Work() {
           NRF_LOG_INFO("[systemtask] Going to sleep");
           xTimerStop(idleTimer, 0);
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::GoToSleep);
-          break;
-        case Messages::OnNewTime:
-          ReloadIdleTimer();
-          displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateDateTime);
           break;
         case Messages::OnNewNotification:
           if(isSleeping && !isWakingUp) {

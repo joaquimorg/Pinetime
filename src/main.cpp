@@ -31,7 +31,6 @@
 #include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
-#include "components/ble/NotificationManager.h"
 #include "components/datetime/DateTimeController.h"
 #include "displayapp/DisplayApp.h"
 #include "displayapp/LittleVgl.h"
@@ -92,8 +91,6 @@ void ble_manager_set_ble_connection_callback(void (*connection)());
 void ble_manager_set_ble_disconnection_callback(void (*disconnection)());
 
 std::unique_ptr<Pinetime::System::SystemTask> systemTask;
-
-Pinetime::Controllers::NotificationManager notificationManager;
 
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
   if(pin == TP_IRQ) {
@@ -251,7 +248,7 @@ int main(void) {
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
   systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
-                                                    dateTimeController, settingsController, notificationManager));
+                                                    dateTimeController, settingsController));
   systemTask->Start();
   nimble_port_init();
 

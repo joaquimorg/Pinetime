@@ -10,6 +10,7 @@ using namespace Pinetime::Controllers;
 constexpr ble_uuid16_t AlertNotificationService::ansUuid;
 constexpr ble_uuid16_t AlertNotificationService::ansCharUuid;
 constexpr ble_uuid16_t AlertNotificationService::ansEventUuid;
+//constexpr ble_uuid128_t AlertNotificationService::notificationEventUuid;
 
 
 int AlertNotificationCallback(uint16_t conn_handle, uint16_t attr_handle, struct ble_gatt_access_ctxt *ctxt, void *arg) {
@@ -41,6 +42,13 @@ AlertNotificationService::AlertNotificationService ( System::SystemTask& systemT
                         .flags = BLE_GATT_CHR_F_NOTIFY,
                         .val_handle = &eventHandle
                 },
+                /*{
+                        .uuid = (ble_uuid_t *) &notificationEventUuid,
+                        .access_cb = AlertNotificationCallback,
+                        .arg = this,
+                        .flags = BLE_GATT_CHR_F_NOTIFY,
+                        .val_handle = &eventHandle
+                },*/
                 {
                   0
                 }
@@ -143,11 +151,11 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
       case NOTIFICATION_EMAIL:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::Email;
         break;
-      /*case NOTIFICATION_CALL_OFF:
-        notif.category = Pinetime::Controllers::NotificationManager::Categories::IncomingCall;
-        //event = Pinetime::System::SystemTask::Messages::OnNewCall;
-        break;*/
       case NOTIFICATION_CALL_OFF:
+        notif.category = Pinetime::Controllers::NotificationManager::Categories::IncomingCall;
+        event = Pinetime::System::SystemTask::Messages::OnNewCall;
+        break;
+      //case NOTIFICATION_CALL_OFF:
       case NOTIFICATION_MISSED_CALL:
         notif.category = Pinetime::Controllers::NotificationManager::Categories::MissedCall;
         break;
@@ -193,3 +201,42 @@ void AlertNotificationService::event(char event) {
 
   ble_gattc_notify_custom(connectionHandle, eventHandle, om);
 }
+
+void AlertNotificationService::AcceptIncomingCall() {
+  auto response = IncomingCallResponses::Answer;
+  auto *om = ble_hs_mbuf_from_flat(&response, 1);
+
+  uint16_t connectionHandle = systemTask.nimble().connHandle();
+
+  if (connectionHandle == 0 || connectionHandle == BLE_HS_CONN_HANDLE_NONE) {
+    return;
+  }
+
+  ble_gattc_notify_custom(connectionHandle, eventHandle, om);
+}
+
+void AlertNotificationService::RejectIncomingCall() {
+  auto response = IncomingCallResponses::Reject;
+  auto *om = ble_hs_mbuf_from_flat(&response, 1);
+
+  uint16_t connectionHandle = systemTask.nimble().connHandle();
+
+  if (connectionHandle == 0 || connectionHandle == BLE_HS_CONN_HANDLE_NONE) {
+    return;
+  }
+
+  ble_gattc_notify_custom(connectionHandle, eventHandle, om);
+}
+
+void AlertNotificationService::MuteIncomingCall() {
+  auto response = IncomingCallResponses::Mute;
+  auto *om = ble_hs_mbuf_from_flat(&response, 1);
+
+  uint16_t connectionHandle = systemTask.nimble().connHandle();
+
+  if (connectionHandle == 0 || connectionHandle == BLE_HS_CONN_HANDLE_NONE) {
+    return;
+  }
+
+  ble_gattc_notify_custom(connectionHandle, eventHandle, om);
+} 

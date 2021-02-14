@@ -28,7 +28,7 @@ namespace Pinetime {
   namespace System {
     class SystemTask {
       public:
-        enum class Messages {WakeUp, GoToSleep, GoToRunning, OnNewTime, OnNewNotification, OnNewCall, BleConnected,
+        enum class Messages {WakeUp, GoToSleep, GoToRunning, OnNewNotification, OnNewCall, BleConnected,
             BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnStepEvent, OnButtonEvent, OnDisplayTaskSleeping,
             ReloadIdleTimer, EnableSleeping, DisableSleeping
         };
@@ -39,8 +39,7 @@ namespace Pinetime {
                    Components::LittleVgl &lvgl,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController,
-                   Controllers::Settings &settingsController,
-                   Pinetime::Controllers::NotificationManager& manager);
+                   Controllers::Settings &settingsController);
 
 
         void Start();
@@ -76,9 +75,9 @@ namespace Pinetime {
         std::atomic<bool> isGoingToSleep{false};
         std::atomic<bool> isWakingUp{false};
         Pinetime::Controllers::Settings& settingsController;
-        Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Drivers::Watchdog watchdog;
         Pinetime::Drivers::WatchdogView watchdogView;
+        Pinetime::Controllers::NotificationManager notificationManager;
         Pinetime::Controllers::NimbleController nimbleController;
 
         static void Process(void* instance);
