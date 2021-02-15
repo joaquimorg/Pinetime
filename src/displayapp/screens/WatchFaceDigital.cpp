@@ -8,6 +8,11 @@
 
 using namespace Pinetime::Applications::Screens;
 
+static void lv_update_task(struct _lv_task_t *task) {  
+  auto user_data = static_cast<WatchFaceDigital *>(task->user_data);
+  user_data->UpdateScreen();
+}
+
 WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
@@ -304,9 +309,12 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
+  taskUpdate = lv_task_create(lv_update_task, 500, LV_TASK_PRIO_MID, this);
 }
 
 WatchFaceDigital::~WatchFaceDigital() {
+
+  lv_task_del(taskUpdate);
 
   lv_style_reset(&stepc_style);
   lv_style_reset(&infoc_style);
@@ -332,29 +340,91 @@ WatchFaceDigital::~WatchFaceDigital() {
 }
 
 
+void WatchFaceDigital::UpdateScreen() {
+  uint8_t batteryPercent = batteryController.PercentRemaining();
+  lv_label_set_text_fmt(batteryValue,  "%d%%", (int) batteryPercent);
+
+  if (batteryController.IsCharging()) {
+    lv_label_set_text(batteryIcon, Symbols::plug);
+  } else {
+    lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
+  }
+
+  if(bleController.IsConnected()) {     
+    lv_style_set_text_color(&ble_style, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
+  } else {  
+    lv_style_set_text_color(&ble_style, LV_STATE_DEFAULT, lv_color_hex(0x2B2B2B));  
+  }
+
+  if(notificatioManager.AreNewNotificationsAvailable()) {      
+    lv_style_set_text_color(&not_style, LV_STATE_DEFAULT, lv_color_hex(0x097500));
+  } else {
+    lv_style_set_text_color(&not_style, LV_STATE_DEFAULT, lv_color_hex(0x2B2B2B));
+  }
+
+  lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
+  //lv_label_set_text_fmt(stepValue, "%lu", settingsController.GetDebugCount());
+
+  // --------------------------------------------------------------------------------------------
+
+  uint16_t year = dateTimeController.Year();
+  auto month = dateTimeController.Month();
+  uint8_t day = dateTimeController.Day();
+  auto dayOfWeek = dateTimeController.DayOfWeek();
+
+  uint8_t hour = dateTimeController.Hours();
+  uint8_t minute = dateTimeController.Minutes();
+  uint8_t second = dateTimeController.Seconds();
+
+  lv_label_set_text_fmt(label_time_sec,  "%02i", second);
+
+  seconds_point[1].x = 240 * second / 59;
+  lv_line_set_points(seconds_body, seconds_point, 2);
+
+  if(sHour != hour || sMinute != minute) {
+    sHour = hour;
+    sMinute = minute;
+    lv_label_set_text_fmt(label_time,  "%02i:%02i", sHour, sMinute);
+  }
+
+  if ((year != currentYear) || (month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
+
+    lv_label_set_text_fmt(label_date_year, "%04i", year);
+    lv_label_set_text(label_date_month, dateTimeController.MonthsGetLow());
+    lv_label_set_text(label_date, dateTimeController.DayOfWeekToStringLow());
+    lv_label_set_text_fmt(label_date_day,  "%02i", day);
+
+    currentYear = year;
+    currentMonth = month;
+    currentDayOfWeek = dayOfWeek;
+    currentDay = day;
+  }
+
+}
+
 
 bool WatchFaceDigital::Refresh() {
 
-  batteryPercentRemaining = batteryController.PercentRemaining();
+  /*batteryPercentRemaining = batteryController.PercentRemaining();
   if (batteryPercentRemaining.IsUpdated()) {
     auto batteryPercent = batteryPercentRemaining.Get();
     lv_label_set_text_fmt(batteryValue,  "%d%%", (int) batteryPercent);
     lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
-  }
+  }*/
 
-  if (batteryController.IsCharging() /*|| batteryController.IsPowerPresent()*/) {
+  /*if (batteryController.IsCharging() || batteryController.IsPowerPresent()) {
     lv_label_set_text(batteryIcon, BatteryIcon::GetPlugIcon(true));
-  }
+  }*/
   
   //bleState = bleController.IsConnected();
   //if (bleState.IsUpdated()) {
-    if(bleController.IsConnected()) {
+    /*if(bleController.IsConnected()) {
       //lv_label_set_text(bleIcon, BleIcon::GetIcon(true));
       lv_style_set_text_color(&ble_style, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));  
     } else {
       //lv_label_set_text(bleIcon, BleIcon::GetIcon(false));
       lv_style_set_text_color(&ble_style, LV_STATE_DEFAULT, lv_color_hex(0x2B2B2B));  
-    }
+    }*/
   //}
 
   /*lv_obj_align(batteryIcon, lv_scr_act(), LV_ALIGN_IN_TOP_RIGHT, -5, 5);
@@ -364,15 +434,18 @@ bool WatchFaceDigital::Refresh() {
   //notificationState = notificatioManager.AreNewNotificationsAvailable();
 
   //if(notificationState.IsUpdated()) {
+    /*
     if(notificatioManager.AreNewNotificationsAvailable())
       //lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
       lv_style_set_text_color(&not_style, LV_STATE_DEFAULT, lv_color_hex(0x097500));
     else
       lv_style_set_text_color(&not_style, LV_STATE_DEFAULT, lv_color_hex(0x2B2B2B));
+      */
       //lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
       //lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
   //}
 
+  /*
   currentDateTime = dateTimeController.CurrentDateTime();
 
   if(currentDateTime.IsUpdated()) {
@@ -411,6 +484,7 @@ bool WatchFaceDigital::Refresh() {
       currentDay = day;
     }
   }
+  */
 
   // TODO heartbeat = heartBeatController.GetValue();
   /*if(heartbeat.IsUpdated()) {    
@@ -420,12 +494,13 @@ bool WatchFaceDigital::Refresh() {
     //lv_obj_align(heartbeatBpm, heartbeatValue, LV_ALIGN_OUT_RIGHT_MID, 5, 0);
   }*/
 
+  /*
   stepCount = stepCounter.GetSteps();
   if(stepCount.IsUpdated()) {        
     lv_label_set_text_fmt(stepValue, "%lu", stepCount.Get());
     //lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_IN_BOTTOM_RIGHT, -5, -2);
     //lv_obj_align(stepIcon, stepValue, LV_ALIGN_OUT_LEFT_MID, -5, 0);
-  }
+  }*/
 
   //return running;
   return true;

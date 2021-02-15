@@ -37,7 +37,8 @@ namespace Pinetime {
           ~WatchFaceDigital() override;
 
           bool Refresh() override;
-
+          void UpdateScreen();
+          
         private:
           uint8_t sHour, sMinute, sSecond;
 
@@ -93,6 +94,8 @@ namespace Pinetime {
           lv_obj_t* seconds_body;
 
           lv_point_t seconds_point[2];
+
+          lv_task_t* taskUpdate;
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;

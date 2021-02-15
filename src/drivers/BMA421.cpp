@@ -237,22 +237,22 @@ void BMA421::Update() {
     tempC = (float)get_temp_C / (float)BMA4_SCALE_TEMP;
 
     /* Read the accel data */
-    rslt = bma4_read_accel_xyz(&sens_data, &bma);
+    //rslt = bma4_read_accel_xyz(&sens_data, &bma);
 
     /* Converting lsb to meters per seconds square for 12 bit accelerometer at 2G range */    
     /*accelData.x = lsb_to_ms2(sens_data.x, 2, bma.resolution);
     accelData.y = lsb_to_ms2(sens_data.y, 2, bma.resolution);
     accelData.z = lsb_to_ms2(sens_data.z, 2, bma.resolution);*/
 
-    accelData.x = (sens_data.x / 0x10);
-    accelData.y = (sens_data.y / 0x10);
-    accelData.z = (sens_data.z / 0x10);
+    //accelData.x = (sens_data.x / 0x10);
+    //accelData.y = (sens_data.y / 0x10);
+    //accelData.z = (sens_data.z / 0x10);
 
     //accelData = sens_data;
 
     /* Read the interrupt register */
-    rslt = bma421_read_int_status(&int_status, &bma);
-    bma4_error_codes_print_result("bma421_read_int_status status", rslt);    
+    //rslt = bma421_read_int_status(&int_status, &bma);
+    //bma4_error_codes_print_result("bma421_read_int_status status", rslt);    
 
     /* Check if step counter interrupt is triggered */
     //if (int_status & BMA421_STEP_CNTR_INT)

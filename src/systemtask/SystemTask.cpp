@@ -29,9 +29,14 @@ using namespace Pinetime::System;
 
 void IdleTimerCallback(TimerHandle_t xTimer) {
 
-  NRF_LOG_INFO("IdleTimerCallback");
+  //NRF_LOG_INFO("IdleTimerCallback");
   auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
   sysTask->OnIdle();
+}
+
+void HardwareTimerCallback(TimerHandle_t xTimer) {
+  auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
+  sysTask->HardwareStatus();
 }
 
 
@@ -63,7 +68,7 @@ void SystemTask::Process(void *instance) {
 }
 
 void SystemTask::Work() {
-  ret_code_t errCode;
+  //ret_code_t errCode;
 
   watchdog.Setup(7);
   watchdog.Start();
@@ -82,6 +87,8 @@ void SystemTask::Work() {
   touchPanel.Init();
   
   batteryController.Init();
+  batteryController.Update();
+
   settingsController.Init();
 
   stepCounter.Init();
@@ -90,14 +97,13 @@ void SystemTask::Work() {
                                                           dateTimeController, watchdogView, settingsController, stepCounter, *this, notificationManager));
   displayApp->Start();
 
-  batteryController.Update();
-  displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateBatteryLevel);
+  //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateBatteryLevel);
 
-  if(!nrf_drv_gpiote_is_init())
+  /*if(!nrf_drv_gpiote_is_init())
   {
         errCode = nrf_drv_gpiote_init();                                       
         APP_ERROR_CHECK(errCode);
-  }
+  }*/
 
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
@@ -127,7 +133,7 @@ void SystemTask::Work() {
   //
 
   // Step Counter IRQ
-  nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
@@ -135,12 +141,16 @@ void SystemTask::Work() {
   pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
   //
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(idleTime), pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
-  
+
+  // Hardware status timer
+  hardwareTimer = xTimerCreate ("hardwareTimer", pdMS_TO_TICKS(hardwareTime), pdTRUE, this, HardwareTimerCallback);
+  xTimerStart(hardwareTimer, 0);
+
   vibration.Init();
 
   // Suppress endless loop diagnostic
@@ -149,7 +159,7 @@ void SystemTask::Work() {
   while(true) {
     uint8_t msg;
     if (xQueueReceive(systemTasksMsgQueue, &msg, isSleeping ? 2500 : 1000)) {
-      batteryController.Update();
+      //batteryController.Update();
       
       Messages message = static_cast<Messages >(msg);
       switch(message) {
@@ -160,34 +170,34 @@ void SystemTask::Work() {
           doNotGoToSleep = true;
         break;
         case Messages::WakeUp:
-          spi.Wakeup();
-          twiMaster.Wakeup();
+          //spi.Wakeup();
+          //twiMaster.Wakeup();
           //stepCounter.Wakeup();
 
           nimbleController.StartAdvertising();
-          xTimerStart(idleTimer, 0);
+          
           spiNorFlash.Wakeup();
           touchPanel.Wakeup();
           lcd.Wakeup();
-          stepCounter.Update();
+          //stepCounter.Update();
 
           isSleeping = false;
           isWakingUp = false;
 
           displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning);
-          displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
+          //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
+
+          xTimerStart(idleTimer, 0);
+          xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareTime), 0);
 
         break;
-        case Messages::GoToRunning:
-         
-          displayApp->PushMessage(Applications::DisplayApp::Messages::GoToRunning);
-          displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
-
-          break;
         case Messages::GoToSleep:
           isGoingToSleep = true;
-          NRF_LOG_INFO("[systemtask] Going to sleep");
+          //NRF_LOG_INFO("[systemtask] Going to sleep");
           xTimerStop(idleTimer, 0);
+          
+          xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareIdleTime), 0);
+
           displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::GoToSleep);
           break;
         case Messages::OnNewNotification:
@@ -241,8 +251,8 @@ void SystemTask::Work() {
           lcd.Sleep();
           touchPanel.Sleep();
           //stepCounter.Sleep();
-          spi.Sleep();
-          twiMaster.Sleep();
+          //spi.Sleep();
+          //twiMaster.Sleep();
           isSleeping = true;
           isGoingToSleep = false;
           break;
@@ -282,14 +292,8 @@ void SystemTask::OnButtonPushed() {
     if(!isWakingUp) {
       NRF_LOG_INFO("[systemtask] Button pushed, waking up");
       WakeUp();
-      //GoToRunning();
     }
   }
-}
-
-void SystemTask::GoToRunning() {
-  //isWakingUp = true;
-  PushMessage(Messages::GoToRunning);
 }
 
 void SystemTask::WakeUp() {
@@ -299,7 +303,7 @@ void SystemTask::WakeUp() {
 
 void SystemTask::OnTouchEvent() {
   if(isGoingToSleep) return ;
-  NRF_LOG_INFO("[systemtask] Touch event");
+  //NRF_LOG_INFO("[systemtask] Touch event");
   if(!isSleeping) {
     PushMessage(Messages::OnTouchEvent);
     displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
@@ -309,7 +313,7 @@ void SystemTask::OnTouchEvent() {
 void SystemTask::OnStepEvent() {
   stepCounter.Update();
   if(isGoingToSleep) return ;
-  NRF_LOG_INFO("[systemtask] Step event");
+  //NRF_LOG_INFO("[systemtask] Step event");
   if(!isSleeping) {    
     //PushMessage(Messages::OnStepEvent);
     displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::StepEvent);    
@@ -358,4 +362,18 @@ void SystemTask::OnIdle() {
 void SystemTask::ReloadIdleTimer() const {
   if(isSleeping || isGoingToSleep) return;
   xTimerReset(idleTimer, 0);
+}
+
+
+void SystemTask::HardwareStatus() {
+
+  // verify the day to reset de counter
+  // ToDo
+  stepCounter.Update();  
+  
+  // verify batt status to alert if is to low
+  // ToDo
+  batteryController.Update();
+
+  //settingsController.AddDebugCount();
 }

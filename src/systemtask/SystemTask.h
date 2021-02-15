@@ -28,7 +28,7 @@ namespace Pinetime {
   namespace System {
     class SystemTask {
       public:
-        enum class Messages {WakeUp, GoToSleep, GoToRunning, OnNewNotification, OnNewCall, BleConnected,
+        enum class Messages {WakeUp, GoToSleep, OnNewNotification, OnNewCall, BleConnected,
             BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnStepEvent, OnButtonEvent, OnDisplayTaskSleeping,
             ReloadIdleTimer, EnableSleeping, DisableSleeping
         };
@@ -52,6 +52,7 @@ namespace Pinetime {
         void OnPowerPresentEvent();
 
         void OnIdle();
+        void HardwareStatus();
 
         Pinetime::Controllers::NimbleController& nimble() {return nimbleController;};
 
@@ -86,10 +87,14 @@ namespace Pinetime {
         bool isBleDiscoveryTimerRunning = false;
         uint8_t bleDiscoveryTimer = 0;
         static constexpr uint32_t idleTime = 15000;
+
+        static constexpr uint32_t hardwareTime = 15000;
+        static constexpr uint32_t hardwareIdleTime = 120000;
+
         TimerHandle_t idleTimer;
+        TimerHandle_t hardwareTimer;
         bool doNotGoToSleep = false;
 
-        void GoToRunning();
         void WakeUp();
 
 #if configUSE_TRACE_FACILITY == 1

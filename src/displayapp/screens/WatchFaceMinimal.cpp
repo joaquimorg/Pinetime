@@ -82,7 +82,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
   notificationIcon = lv_label_create(lv_scr_act(), NULL);
   
   lv_obj_add_style(notificationIcon, LV_LABEL_PART_MAIN, &not_style);  
-  lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
+  lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
   lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, -5, -5);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);

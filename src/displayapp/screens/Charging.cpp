@@ -60,7 +60,7 @@ void Charging::Reading() {
 }
 
 Charging::~Charging() {
-  xTimerStop(chTimer, 0);
+  xTimerDelete(chTimer, 0);
   lv_obj_clean(lv_scr_act());
 }
 

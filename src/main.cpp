@@ -98,20 +98,20 @@ void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action
     return ;
   }
 
-  if(pin == BMA421_IRQ) {
+  /*if(pin == BMA421_IRQ) {
     systemTask->OnStepEvent();
     return ;
-  }
+  }*/
 
   if(pin == CHARGE_BASE_IRQ) {
     systemTask->OnPowerPresentEvent();
-    return ;
+    //return ;
   }
 
-  if(pin == CHARGE_IRQ) {
+  /*if(pin == CHARGE_IRQ) {
     systemTask->OnChargingEvent();
     return ;
-  }
+  }*/
 
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   xTimerStartFromISR(debounceTimer, &xHigherPriorityTaskWoken);

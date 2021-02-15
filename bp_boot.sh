@@ -9,6 +9,5 @@ cp pinetime.bin /mnt/d/Tools/xpack-openocd-0.10.0-15/bin/pinetime_lite_0.1.0.bin
 ## program bootloader.bin 0
 ## program pinetime_lite_0.1.0.bin verify 0x8000
 cd ../build
-#program ./image.bin verify 0x00008000
 :
 #-ex "q"
