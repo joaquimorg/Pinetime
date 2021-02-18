@@ -26,7 +26,8 @@ namespace Pinetime
       //StopWatch,
       //Paddle,
       //Twos,
-      Charging
+      Charging,
+      LowBatt
     };
   }
 } // namespace Pinetime

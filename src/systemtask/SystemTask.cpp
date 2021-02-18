@@ -371,9 +371,19 @@ void SystemTask::HardwareStatus() {
   // ToDo
   stepCounter.Update();  
   
-  // verify batt status to alert if is to low
-  // ToDo
+  
+  // Update Battery status
   batteryController.Update();
 
-  //settingsController.AddDebugCount();
+  // verify batt status to alert if is to low
+  if ( batteryController.PercentRemaining() >= 0 && batteryController.PercentRemaining() < 15 && !batteryController.IsCharging() ) {
+    if(isGoingToSleep) return ;
+    if(isSleeping && !isWakingUp) {
+      WakeUp();
+    }
+    
+    vibration.Vibrate(35);
+    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::LowBattEvent);
+  }
+
 }

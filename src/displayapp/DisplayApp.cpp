@@ -8,6 +8,7 @@
 #include "displayapp/screens/Brightness.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/Charging.h"
+#include "displayapp/screens/LowBatt.h"
 #include "displayapp/screens/FirmwareUpdate.h"
 #include "displayapp/screens/FirmwareValidation.h"
 #include "displayapp/screens/Notifications.h"
@@ -185,6 +186,12 @@ void DisplayApp::Refresh() {
         }
       break;
 
+      case Messages::LowBattEvent :
+        if( currentApp != Apps::LowBatt ) {
+          LoadApp( Apps::LowBatt, DisplayApp::FullRefreshDirections::Down );
+        }
+      break;
+
     }
   }
 
@@ -281,6 +288,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
       //case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
       case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
+      case Apps::LowBatt: currentScreen.reset(new Screens::LowBatt(this, batteryController)); break;
 
       // To Do :-)
       //case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;

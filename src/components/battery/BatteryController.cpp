@@ -13,7 +13,7 @@ using namespace Pinetime::Controllers;
 static nrf_saadc_value_t m_buffer_pool[2][SAMPLES_IN_BUFFER];
 
 float voltage = 0.0f;
-uint8_t percentRemaining = 0;
+int8_t percentRemaining = -1;
 
 void Battery::Init() {
 
@@ -79,7 +79,9 @@ void Battery::Update() {
   //isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
 
   // Non blocking read
-  APP_ERROR_CHECK(nrfx_saadc_sample());
+  for (int i = 0; i < SAMPLES_IN_BUFFER * 2; i++) {
+    APP_ERROR_CHECK(nrfx_saadc_sample());
+  }
 
   //nrf_saadc_value_t value = 0;
   //nrfx_saadc_sample_convert(0, &value);
@@ -128,11 +130,13 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
         percentRemaining = 100;    
     }
 
+  } else {
+    percentRemaining = -1;
   }
 }
 
 
-uint8_t Battery::PercentRemaining() {
+int8_t Battery::PercentRemaining() {
   return percentRemaining;
 }
 

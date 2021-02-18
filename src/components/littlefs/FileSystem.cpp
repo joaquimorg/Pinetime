@@ -1,13 +1,21 @@
 #include <cstring>
 #include "FileSystem.h"
-#include "SpiNorFlash.h"
 
 #include "littlefs/lfs.h"
 
-using namespace Pinetime::Drivers;
+using namespace Pinetime::System;
 
 #define WRITEOFFSET 0x100000
 
+constexpr size_t BLOCK_SIZE_BYTES = 256u;
+constexpr size_t PAGE_SIZE_BYTES = BLOCK_SIZE_BYTES;
+constexpr size_t CACHE_PAGE_COUNT = 1u;
+constexpr size_t CACHE_SIZE_BYTES = (CACHE_PAGE_COUNT * PAGE_SIZE_BYTES);
+constexpr size_t LOOKAHEAD_SIZE_BYTES = (CACHE_PAGE_COUNT * 8u);
+static uint8_t readBuffer[CACHE_SIZE_BYTES];
+static uint8_t progBuffer[CACHE_SIZE_BYTES];
+static uint8_t __attribute__((aligned(32)))
+    lookaheadBuffer[LOOKAHEAD_SIZE_BYTES];
 
 ////// Conversion functions //////
 static int lfs_toerror(int err)
@@ -18,52 +26,58 @@ static int lfs_toerror(int err)
 ////// Block device operations //////
 static int lfs_bd_read(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, void *buffer, lfs_size_t size) {
-    SpiNorFlash *spiNorFlash = (SpiNorFlash *)c->context;    
-    spiNorFlash->Read(WRITEOFFSET + (block*c->block_size + off), static_cast<uint8_t *>(buffer), size);
-    return 0;
+    Pinetime::System::FileSystem& lfs = *(reinterpret_cast<Pinetime::System::FileSystem*>(c->context));
+    const size_t address = WRITEOFFSET + (block * BLOCK_SIZE_BYTES) + off;
+    lfs.spiNorFlash.Read(address, (uint8_t*)buffer, size);
+    return 0u;
 }
 
 static int lfs_bd_prog(const struct lfs_config *c, lfs_block_t block,
         lfs_off_t off, const void *buffer, lfs_size_t size) {
-    SpiNorFlash *spiNorFlash = (SpiNorFlash *)c->context;    
-    spiNorFlash->Write(WRITEOFFSET + (block*c->block_size + off), static_cast<const uint8_t *>(buffer), size);
-    return 0;
+    Pinetime::System::FileSystem& lfs = *(reinterpret_cast<Pinetime::System::FileSystem*>(c->context));
+    const size_t address = WRITEOFFSET + (block * BLOCK_SIZE_BYTES) + off;
+    lfs.spiNorFlash.Write(address, (uint8_t*)buffer, size);
+    return lfs.spiNorFlash.ProgramFailed() ? -1u : 0u;
 }
 
 static int lfs_bd_erase(const struct lfs_config *c, lfs_block_t block)
 {
-    //SpiNorFlash *spiNorFlash = (SpiNorFlash *)c->context;
-    //return spiNorFlash->erase(block*c->block_size, c->block_size);
-    // ????
-    //for (size_t erased = 0; erased < c->block_size; erased += 0x1000) {
-    //    spiNorFlash->SectorErase(WRITEOFFSET + (block*c->block_size) + erased);
-    //}
-    return 0;
+    Pinetime::System::FileSystem& lfs = *(reinterpret_cast<Pinetime::System::FileSystem*>(c->context));
+    const size_t address = WRITEOFFSET + (block * BLOCK_SIZE_BYTES);
+    lfs.spiNorFlash.SectorErase(address);
+    return lfs.spiNorFlash.EraseFailed() ? -1u : 0u;
 }
 
 static int lfs_bd_sync(const struct lfs_config *c)
 {
-    return 0;
+    // no hardware caching used
+    return 0u;
 }
 
-FileSystem::FileSystem(SpiNorFlash& spiNorFlash) : spiNorFlash{spiNorFlash} {
+FileSystem::FileSystem(Pinetime::Drivers::SpiNorFlash& driver) : spiNorFlash{driver} {
 
-    cfg.context = &spiNorFlash;
+    cfg.context = this;
 
-    // block device operations
-	cfg.read  = lfs_bd_read;
-	cfg.prog  = lfs_bd_prog;
-	cfg.erase = lfs_bd_erase;
-	cfg.sync  = lfs_bd_sync;
+	cfg.read = lfs_bd_read;
+    cfg.prog = lfs_bd_prog;
+    cfg.erase = lfs_bd_erase;
+    cfg.sync = lfs_bd_sync;
 
-	// block device configuration
-	cfg.read_size = 128;
-	cfg.prog_size = 128;
-	cfg.block_size = 65535;
-	cfg.block_count = 64;
-    cfg.cache_size = 128;
-    cfg.block_cycles = 500;
-	cfg.lookahead_size = 128;    
+    cfg.read_size = PAGE_SIZE_BYTES;
+    cfg.prog_size = PAGE_SIZE_BYTES;
+    cfg.block_size = BLOCK_SIZE_BYTES;
+    cfg.block_cycles = 500u;
+
+    cfg.cache_size = CACHE_SIZE_BYTES;
+    cfg.lookahead_size = LOOKAHEAD_SIZE_BYTES;
+
+    cfg.read_buffer = readBuffer;
+    cfg.prog_buffer = progBuffer;
+    cfg.lookahead_buffer = lookaheadBuffer;
+
+    cfg.name_max = 0u; /** use LFS default */
+    cfg.file_max = 0u; /** use LFS default */
+    cfg.attr_max = 0u; /** use LFS default */
 
 }
 

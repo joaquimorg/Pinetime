@@ -2,16 +2,18 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "drivers/SpiNorFlash.h"
 #include "littlefs/lfs.h"
 
 namespace Pinetime {
-  namespace Drivers {
-    class Spi;
-    class SpiNorFlash;
+  namespace System {
+
     class FileSystem {
         public:
-            explicit FileSystem(SpiNorFlash& spiNorFlash);
+            explicit FileSystem(Pinetime::Drivers::SpiNorFlash&);
             ~FileSystem();
+
+            Pinetime::Drivers::SpiNorFlash& spiNorFlash;
 
             virtual uint32_t read();
 
@@ -81,8 +83,6 @@ namespace Pinetime {
             //lfs_info info;
 
             struct lfs_config cfg;
-
-            SpiNorFlash& spiNorFlash;
 
     };
   }

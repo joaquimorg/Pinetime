@@ -7,11 +7,11 @@ using namespace Pinetime::Applications::Screens;
 
 LV_IMG_DECLARE(icon_charging);
 
-void CHTimerCallback(TimerHandle_t xTimer) {
-
-  auto charging = static_cast<Charging *>(pvTimerGetTimerID(xTimer));
-  charging->Reading();
+static void lv_update_task(struct _lv_task_t *task) {  
+  auto user_data = static_cast<Charging *>(task->user_data);
+  user_data->UpdateScreen();
 }
+
 
 Charging::Charging(
     Pinetime::Applications::DisplayApp *app, 
@@ -25,12 +25,12 @@ Charging::Charging(
 
   lv_obj_t * charging_ico = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(charging_ico, &icon_charging);  
-  lv_obj_align(charging_ico, NULL, LV_ALIGN_CENTER, 0, -55);
+  lv_obj_align(charging_ico, NULL, LV_ALIGN_CENTER, 0, -65);
 
   charging_bar = lv_bar_create(lv_scr_act(), NULL);
   lv_obj_set_size(charging_bar, 200, 15);
   lv_bar_set_range(charging_bar, 0, 100);
-  lv_obj_align(charging_bar, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(charging_bar, NULL, LV_ALIGN_CENTER, 0, 60);
   lv_bar_set_anim_time(charging_bar, 2000);
   lv_obj_set_style_local_radius(charging_bar, LV_BAR_PART_BG, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);
   lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_BG, LV_STATE_DEFAULT, lv_color_hex(0x222222));
@@ -38,10 +38,26 @@ Charging::Charging(
   lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
   lv_bar_set_value(charging_bar, batteryPercent, LV_ANIM_OFF);
 
-  llabel = lv_label_create(lv_scr_act(), NULL);  
-  lv_label_set_text_fmt(llabel,"(%i)  %i%% / %.2f volts", readc, batteryPercent, batteryVoltage);
-  lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 60);
+  status = lv_label_create(lv_scr_act(), NULL);  
+  lv_label_set_text_static(status,"Reading Battery status");
+  lv_label_set_align(status, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(status, NULL, LV_ALIGN_CENTER, 0, 30);
+  
+  percent = lv_label_create(lv_scr_act(), NULL);
+  lv_obj_set_style_local_text_font(percent, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
+  if ( batteryPercent >= 0) {
+    lv_label_set_text_fmt(percent,"%02i%%", batteryPercent);
+  } else {
+    lv_label_set_text(percent,"--%");
+  }
+  lv_label_set_align(percent, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(percent, NULL, LV_ALIGN_CENTER, 0, -10);
+
+  voltage = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_set_style_local_text_color(voltage, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xC6A600));
+  lv_label_set_text_fmt(voltage,"%.2f volts", batteryVoltage);
+  lv_label_set_align(voltage, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(voltage, NULL, LV_ALIGN_CENTER, 0, 95);
 
   lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -49,44 +65,57 @@ Charging::Charging(
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
-  chTimer = xTimerCreate ("chTimer", pdMS_TO_TICKS( 5000 ), pdTRUE, this, CHTimerCallback);
-  xTimerStart(chTimer, 0);
+  taskUpdate = lv_task_create(lv_update_task, 5000, LV_TASK_PRIO_MID, this);
 
 }
 
-void Charging::Reading() {
-  batteryController.Update();
-  readc++;
-}
 
 Charging::~Charging() {
-  xTimerDelete(chTimer, 0);
+  lv_task_del(taskUpdate);
   lv_obj_clean(lv_scr_act());
 }
 
-bool Charging::Refresh() {
+void Charging::UpdateScreen() {
 
-  if ( batteryController.IsCharging() ) {
-    animation +=1;
+  batteryController.Update();
 
-    if (animation > batteryPercent) {
-      animation = 0;
+  batteryPercent = batteryController.PercentRemaining();
+  batteryVoltage = batteryController.Voltage();
+
+  if ( batteryPercent >= 0 ) {
+    if ( batteryController.IsCharging() ) {
+      animation +=1;
+
+      if (animation > batteryPercent) {
+        animation = 0;
+      }
+      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
+
+      lv_label_set_text_static(status,"Battery charging");
+
+    } else {
+      animation = batteryPercent;
+      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
+
+      lv_label_set_text_static(status,"Battery status");
     }
-    lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
-  } else {
-    animation = batteryPercent;
-    lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
-  }
 
-  lv_bar_set_value(charging_bar, animation, LV_ANIM_OFF);
+    lv_bar_set_value(charging_bar, animation, LV_ANIM_OFF);
     
-  if ( old_readc != readc ) {
-    batteryPercent = batteryController.PercentRemaining();
-    batteryVoltage = batteryController.Voltage();
-    lv_label_set_text_fmt(llabel,"(%i)  %i%% / %.2f volts", readc, batteryPercent, batteryVoltage);
-    old_readc = readc;
+    lv_label_set_text_fmt(percent,"%02i%%", batteryPercent);
+    
+  } else {
+    lv_label_set_text_static(status,"Reading Battery status");
+    lv_label_set_text(percent,"--%");
   }
+      
+  lv_obj_align(status, NULL, LV_ALIGN_CENTER, 0, 30);
+  lv_label_set_text_fmt(voltage,"%.2f volts", batteryVoltage);
+ 
+}
 
+bool Charging::Refresh() {
+  
   return running;
 }
 

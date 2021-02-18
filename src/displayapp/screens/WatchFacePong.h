@@ -44,17 +44,14 @@ namespace Pinetime {
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
           Pinetime::Controllers::DateTime::Days currentDayOfWeek = Pinetime::Controllers::DateTime::Days::Unknown;
           uint8_t currentDay = 0;
-
-          DirtyValue<float> batteryPercentRemaining  {0};
-          DirtyValue<bool> bleState {false};
-          DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
-          DirtyValue<uint32_t> stepCount  {0};
-          DirtyValue<uint8_t> heartbeat  {0};
-          DirtyValue<bool> notificationState {false};
           
           lv_obj_t* time_h;
           lv_obj_t* time_m;
+          lv_obj_t* label_date;
+          lv_obj_t* batteryIcon;
+
           lv_obj_t* ball;
+          lv_obj_t* ball_s;
           lv_obj_t* player1;
           lv_obj_t* player2;
           
@@ -71,6 +68,8 @@ namespace Pinetime {
 
           uint16_t ballx = 120;
           uint16_t bally = 120;
+          static const uint16_t ballyp1 = 180;
+          static const uint16_t ballyp2 = 60;
           uint8_t dirx = 1;
           uint8_t diry = 1;
           int16_t angball = 1;

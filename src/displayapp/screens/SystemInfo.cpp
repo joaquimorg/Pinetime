@@ -53,7 +53,7 @@ bool SystemInfo::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 }
 
 std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
-  auto batteryPercent = static_cast<uint8_t>(batteryController.PercentRemaining());
+  auto batteryPercent = static_cast<int8_t>(batteryController.PercentRemaining());
   float batteryVoltage = batteryController.Voltage();
 
   uint8_t brightness = 0;
@@ -93,6 +93,8 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   uptimeSeconds = uptimeSeconds % secondsInAMinute;
   // TODO handle more than 100 days of uptime
 
+  if (batteryPercent == -1) batteryPercent = 0;
+
   lv_obj_t * label = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_recolor(label, true);
   lv_label_set_text_fmt(label, 
@@ -111,7 +113,7 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
           dateTimeController.Day(), static_cast<uint8_t>(dateTimeController.Month()), dateTimeController.Year(),
           dateTimeController.Hours(), dateTimeController.Minutes(), dateTimeController.Seconds(),
           uptimeDays, uptimeHours, uptimeMinutes, uptimeSeconds,
-          (int) batteryPercent, batteryVoltage, brightness, resetReason);
+          batteryPercent, batteryVoltage, brightness, resetReason);
 
   return std::unique_ptr<Screen>(new Screens::Label(app, label));
 }

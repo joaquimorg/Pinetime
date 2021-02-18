@@ -15,11 +15,11 @@ namespace Pinetime {
   namespace Applications {
     namespace Screens {
 
-      class Charging : public Screen{
+      class LowBatt : public Screen{
         public:
-          Charging(DisplayApp* app, 
+          LowBatt(DisplayApp* app, 
             Pinetime::Controllers::Battery& batteryController);
-          ~Charging() override;
+          ~LowBatt() override;
 
           bool Refresh() override;
           bool OnButtonPushed() override;
@@ -32,12 +32,8 @@ namespace Pinetime {
 
           lv_obj_t* voltage;
           lv_obj_t* percent;
-          lv_obj_t* charging_bar;
-          lv_obj_t* status;
-
           lv_task_t* taskUpdate;
 
-          int8_t animation = 0;
           int8_t batteryPercent = -1;
           float batteryVoltage = 0.0f;
 

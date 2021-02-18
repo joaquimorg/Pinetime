@@ -1,3 +1,4 @@
+#include <math.h>
 #include <libs/lvgl/lvgl.h>
 #include "WatchFacePong.h"
 #include "BatteryIcon.h"
@@ -5,8 +6,12 @@
 #include "Symbols.h"
 #include "NotificationIcon.h"
 
-#define BALLSIZE 6
-#define PLAYERSIZE 20
+#define BALLSIZE 4
+#define PLAYERSIZE 10
+
+LV_IMG_DECLARE(background_16_1);
+LV_IMG_DECLARE(background_16_2);
+LV_FONT_DECLARE(pong_48)
 
 using namespace Pinetime::Applications::Screens;
 
@@ -25,24 +30,26 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
                   Controllers::NotificationManager& notificatioManager,
-                  Controllers::Settings &settingsController) : Screen(app), currentDateTime{{}},
+                  Controllers::Settings &settingsController) : Screen(app),
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
   
   settingsController.SetClockFace(3);
 
-  uint8_t day = dateTimeController.Day();
+  srand(dateTimeController.Seconds());
 
-  uint8_t hour = dateTimeController.Hours();
-  uint8_t minute = dateTimeController.Minutes();
-  uint8_t second = dateTimeController.Seconds();
+  // Set the background to Black
+  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x000b24));
 
-  srand(second);
+  lv_obj_t * bg_clock_img_1 = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(bg_clock_img_1, &background_16_2);
+  lv_obj_align(bg_clock_img_1, NULL, LV_ALIGN_CENTER, 0, 0);
 
-  sHour = hour;
-  sMinute = minute;
-  sSecond = second;
+  lv_obj_t * bg_clock_img_2 = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(bg_clock_img_2, &background_16_1);
+  lv_obj_align(bg_clock_img_2, NULL, LV_ALIGN_CENTER, 0, 0);
+
 
   /*notificationIcon = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
@@ -50,71 +57,59 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   time_h = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_set_style_local_text_font(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
-  lv_label_set_text_fmt(time_h, "%02i", sHour);
-  lv_obj_align(time_h, NULL, LV_ALIGN_IN_TOP_MID, -30, 10);
+  lv_obj_set_style_local_text_font(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_label_set_text_fmt(time_h, "%02i", dateTimeController.Hours());
+  lv_obj_align(time_h, NULL, LV_ALIGN_IN_TOP_MID, -50, 10);
 
   time_m = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_set_style_local_text_font(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
-  lv_label_set_text_fmt(time_m, "%02i", sMinute);
-  lv_obj_align(time_m, NULL, LV_ALIGN_IN_TOP_MID, 30, 10);
+  lv_obj_set_style_local_text_font(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_label_set_text_fmt(time_m, "%02i", dateTimeController.Minutes());
+  lv_obj_align(time_m, NULL, LV_ALIGN_IN_TOP_MID, 50, 10);
 
-  //Line style
-  static lv_style_t line_style;
-  lv_style_init(&line_style);
-  lv_style_set_line_color(&line_style, LV_STATE_DEFAULT, lv_color_hex(0x444444));
-  lv_style_set_line_width(&line_style, LV_STATE_DEFAULT, 3);
-  lv_style_set_line_rounded(&line_style, LV_STATE_DEFAULT, false);
+  label_date = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(label_date, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
+  lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
+  //lv_label_set_align( label_date, LV_LABEL_ALIGN_LEFT );
+  lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 4, -4);
 
-  //Top line
-  static lv_point_t line_points1[] = { {0, 0}, {240, 0} };
-  lv_obj_t *line1 = lv_line_create(lv_scr_act(), NULL);
-  lv_line_set_points(line1, line_points1, 2);
-  lv_obj_add_style(line1, LV_OBJ_PART_MAIN, &line_style);
-
-  //Bottom line
-  static lv_point_t line_points2[] = { {0, 238}, {240, 238} };
-  lv_obj_t *line2 = lv_line_create(lv_scr_act(), NULL);
-  lv_line_set_points(line2, line_points2, 2);
-  lv_obj_add_style(line2, LV_OBJ_PART_MAIN, &line_style);
-
-  //Middle line
-  static lv_point_t line_points3[] = { {120, 2}, {120, 237} };
-  lv_obj_t *line3 = lv_line_create(lv_scr_act(), NULL);
-  lv_line_set_points(line3, line_points3, 2);
-  lv_obj_add_style(line3, LV_OBJ_PART_MAIN, &line_style);
+  batteryIcon = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
+  lv_label_set_text(batteryIcon, Symbols::batteryHalf);
+  lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -8, -4);
 
 
-  //Ball style
-  static lv_style_t ball_style;
-  lv_style_init(&ball_style);
-  lv_style_set_line_color(&ball_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFF00));
-  lv_style_set_line_width(&ball_style, LV_STATE_DEFAULT, BALLSIZE * 2);
-  lv_style_set_line_rounded(&ball_style, LV_STATE_DEFAULT, true);
+  // ------------------------------------------------------------------------------------------------------
+  ball_s = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_set_style_local_text_color(ball_s, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x000000));
+  lv_obj_set_style_local_text_font(ball_s, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
+  lv_label_set_text_static(ball_s, Symbols::dot);
+  lv_label_set_align( ball_s, LV_LABEL_ALIGN_CENTER );
 
-  ball = lv_line_create(lv_scr_act(), NULL);
-  lv_obj_add_style(ball, LV_OBJ_PART_MAIN, &ball_style);
-
-  draw_ball();
-
-
-  //Player style
-  static lv_style_t player_style;
-  lv_style_init(&player_style);
-  lv_style_set_line_color(&player_style, LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
-  lv_style_set_line_width(&player_style, LV_STATE_DEFAULT, 6);
-  lv_style_set_line_rounded(&player_style, LV_STATE_DEFAULT, true);
-
-  player1 = lv_line_create(lv_scr_act(), NULL);
-  lv_obj_add_style(player1, LV_OBJ_PART_MAIN, &player_style);
+  player1 = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_set_style_local_text_color(player1, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFF6600));
+  lv_obj_set_style_local_text_font(player1, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_48);
+  lv_label_set_text_static(player1, Symbols::tennisRacket1);
+  lv_label_set_align( player1, LV_LABEL_ALIGN_LEFT );
 
   draw_player1();
 
-  player2 = lv_line_create(lv_scr_act(), NULL);
-  lv_obj_add_style(player2, LV_OBJ_PART_MAIN, &player_style);
+
+  player2 = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_set_style_local_text_color(player2, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFF6600));
+  lv_obj_set_style_local_text_font(player2, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_48);
+  lv_label_set_text_static(player2, Symbols::tennisRacket);
+  lv_label_set_align( player2, LV_LABEL_ALIGN_RIGHT );
 
   draw_player2();
+
+  ball = lv_label_create(lv_scr_act(), NULL);  
+  lv_obj_set_style_local_text_color(ball, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFF00));
+  lv_obj_set_style_local_text_font(ball, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
+  lv_label_set_text_static(ball, Symbols::dot);
+  lv_label_set_align( ball, LV_LABEL_ALIGN_CENTER );
+
+  draw_ball();
 
   /*lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -122,9 +117,9 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text(backgroundLabel, "");*/
 
-  taskUpdate = lv_task_create(lv_update_task, 500, LV_TASK_PRIO_MID, this);
+  taskUpdate = lv_task_create(lv_update_task, 1000, LV_TASK_PRIO_LOW, this);
 
-  taskPlay = lv_task_create(lv_play_task, 50, LV_TASK_PRIO_MID, this);
+  taskPlay = lv_task_create(lv_play_task, 100, LV_TASK_PRIO_MID, this);
 
 }
 
@@ -133,62 +128,47 @@ WatchFacePong::~WatchFacePong() {
   lv_task_del(taskPlay);
   lv_task_del(taskUpdate);
   lv_obj_clean(lv_scr_act());
+  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 }
 
 
 void WatchFacePong::draw_player1() {
 
-  uint8_t x = 3;
   uint8_t y = player1y;
   
   if ( y < PLAYERSIZE + 3 ) y = PLAYERSIZE + 3;
   if ( y > 240 - (PLAYERSIZE + 3) ) y = 240 - (PLAYERSIZE + 3);
 
-  palyer1_points[0].x = x;
-  palyer1_points[0].y = y - PLAYERSIZE;
-
-  palyer1_points[1].x = x;
-  palyer1_points[1].y = y + PLAYERSIZE;
-
-  lv_line_set_points(player1, palyer1_points, 2);
+  lv_obj_set_pos(player1, -12, y - 12);
 }
 
 void WatchFacePong::draw_player2() {
 
-  uint8_t x = 237;
   uint8_t y = player2y;
   
   if ( y < PLAYERSIZE + 3 ) y = PLAYERSIZE + 3;
   if ( y > 240 - (PLAYERSIZE + 3) ) y = 240 - (PLAYERSIZE + 3);
 
-  palyer2_points[0].x = x;
-  palyer2_points[0].y = y - PLAYERSIZE;
-
-  palyer2_points[1].x = x;
-  palyer2_points[1].y = y + PLAYERSIZE;
-
-  lv_line_set_points(player2, palyer2_points, 2);
+  lv_obj_set_pos(player2, 206, y - 12);
 }
 
 void WatchFacePong::draw_ball() {
 
-  ball_points[0].x = ballx;
-  ball_points[0].y = bally;
+  int8_t ballShadow = 15 - (abs(120 - (ballx - 9)) / 10);
 
-  ball_points[1].x = ballx + 1;
-  ball_points[1].y = bally + 1;
-  lv_line_set_points(ball, ball_points, 2);
+  lv_obj_set_pos(ball, ballx - 9, bally - 12);
+  lv_obj_set_pos(ball_s, (ballx - 9) + ballShadow, (bally - 12) + ballShadow);
 
 }
 
 void WatchFacePong::ball_angle() {
   int16_t ang;
-  ang = rand() % 360; //random(360);
+  ang = rand() % 360;
   if ( ang < 100 ) diry = 0;
   if ( (ang > 100) && (ang < 240) ) diry = 1;
   if ( ang > 240 ) diry = 2;
 
-  angball = rand() % 360; //random(360);
+  angball = rand() % 360;
   angball = angball % 10;
   angball = angball % 5;
   if (angball == 0) angball = 1;
@@ -219,7 +199,6 @@ void WatchFacePong::pong_play() {
   if ( ((bally >= player2y - PLAYERSIZE) && (bally <= player2y + PLAYERSIZE)) && (ballx == 240 - (BALLSIZE * 2)) ) {
     dirx = 0;
     ball_angle();
-    //Serial.println(angball);
   } else if (ballx == 240 - BALLSIZE ) {
     point = 2;
   }
@@ -242,13 +221,13 @@ void WatchFacePong::pong_play() {
     }
   } else {
 
-    if ( player1y > bally ) player1y -= BALLSIZE;
-    if ( player1y < bally ) player1y += BALLSIZE;
+    if ( player1y > ballyp1 ) player1y -= BALLSIZE;
+    if ( player1y < ballyp1 ) player1y += BALLSIZE;
 
     draw_player1();
 
-    if ( player2y > bally ) player2y -= BALLSIZE;
-    if ( player2y < bally ) player2y += BALLSIZE;
+    if ( player2y > ballyp2 ) player2y -= BALLSIZE;
+    if ( player2y < ballyp2 ) player2y += BALLSIZE;
 
     draw_player2();
 
@@ -263,24 +242,28 @@ void WatchFacePong::pong_play() {
   }
 
   if (point == 1 || point == 2) {
+    ball_angle();
     if ( point == 1 ) {
       ballx = 228;
+      bally = ballyp2;
+      diry = 1;
     } else {
       ballx = 12;
-    }
-    point = 0;
-    bally = 120;
-    ball_angle();
-    delaynew = 100;
+      bally = ballyp1;
+      diry = 0;
+    }    
+    point = 0;        
+    delaynew = 70;
   }
 
 }
 
 void WatchFacePong::UpdateScreen() {
-  uint8_t hour = dateTimeController.Hours();
-  uint8_t minute = dateTimeController.Minutes();
-  lv_label_set_text_fmt(time_h, "%02i", hour);
-  lv_label_set_text_fmt(time_m, "%02i", minute);
+
+  lv_label_set_text_fmt(time_h, "%02i", dateTimeController.Hours());
+  lv_label_set_text_fmt(time_m, "%02i", dateTimeController.Minutes());
+  lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
 }
 
 bool WatchFacePong::Refresh() {
