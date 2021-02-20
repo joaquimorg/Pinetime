@@ -45,11 +45,11 @@ namespace Pinetime {
           Controllers::Settings& settingsController;
           Drivers::BMA421& stepCounter;
 
-          ScreenList<3> screens;
+          ScreenList<4> screens;
           std::unique_ptr<Screen> WatchFaceDigitalScreen();
           std::unique_ptr<Screen> WatchFaceAnalogScreen();
           std::unique_ptr<Screen> WatchFaceMinimalScreen();
-          std::unique_ptr<Screen> WatchFaceCustomScreen();
+          std::unique_ptr<Screen> WatchFacePongScreen();
 
           bool running = true;
 

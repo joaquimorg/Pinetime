@@ -204,7 +204,7 @@ float Pinetime::Controllers::MusicService::getPlaybackSpeed() {
 }
 
 void Pinetime::Controllers::MusicService::event(char event) {
-  auto *om = ble_hs_mbuf_from_flat(&event, 1);
+  /*auto *om = ble_hs_mbuf_from_flat(&event, 1);
   
   uint16_t connectionHandle = m_system.nimble().connHandle();
   
@@ -212,7 +212,7 @@ void Pinetime::Controllers::MusicService::event(char event) {
     return;
   }
   
-  ble_gattc_notify_custom(connectionHandle, eventHandle, om);
+  ble_gattc_notify_custom(connectionHandle, eventHandle, om);*/
 }
 
 int Pinetime::Controllers::MusicService::getProgress() {

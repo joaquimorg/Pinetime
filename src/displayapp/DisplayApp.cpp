@@ -8,6 +8,7 @@
 #include "displayapp/screens/Brightness.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/Charging.h"
+#include "displayapp/screens/LowBatt.h"
 #include "displayapp/screens/FirmwareUpdate.h"
 #include "displayapp/screens/FirmwareValidation.h"
 #include "displayapp/screens/Notifications.h"
@@ -47,7 +48,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
 }
 
 void DisplayApp::Start() {
-  if (pdPASS != xTaskCreate(DisplayApp::Process, "displayapp", 512, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(DisplayApp::Process, "displayapp", 640, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 
@@ -78,7 +79,7 @@ void DisplayApp::Refresh() {
       break;
     case States::Running:
       RunningState();
-      queueTimeout = 20;
+      queueTimeout = 5;
       break;
     default:
       queueTimeout = portMAX_DELAY;
@@ -123,6 +124,7 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::TouchEvent: {
+        break;
         if (state != States::Running) break;
         auto gesture = OnTouchEvent();
         if(!currentScreen->OnTouchEvent(gesture)) {
@@ -187,6 +189,12 @@ void DisplayApp::Refresh() {
         }
       break;
 
+      case Messages::LowBattEvent :
+        if( currentApp != Apps::LowBatt ) {
+          LoadApp( Apps::LowBatt, DisplayApp::FullRefreshDirections::Down );
+        }
+      break;
+
     }
   }
 
@@ -227,6 +235,7 @@ void DisplayApp::PushMessage(DisplayApp::Messages msg) {
 }
 
 TouchEvents DisplayApp::OnTouchEvent() {
+  #ifndef P8CLONE
   auto info = touchPanel.GetTouchInfo();
   if(info.isTouch) {
     switch(info.gesture) {
@@ -252,6 +261,10 @@ TouchEvents DisplayApp::OnTouchEvent() {
     }
   }
   return TouchEvents::None;
+  #else
+  lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+  return TouchEvents::LongTap;  
+  #endif
 }
 
 void DisplayApp::StartApp(Apps app) {
@@ -283,6 +296,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
       //case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
       case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
+      case Apps::LowBatt: currentScreen.reset(new Screens::LowBatt(this, batteryController)); break;
 
       // To Do :-)
       //case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;

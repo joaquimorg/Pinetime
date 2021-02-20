@@ -13,25 +13,25 @@ using namespace Pinetime::Controllers;
 static nrf_saadc_value_t m_buffer_pool[2][SAMPLES_IN_BUFFER];
 
 float voltage = 0.0f;
-uint8_t percentRemaining = 0;
+int8_t percentRemaining = -1;
 
 void Battery::Init() {
 
-  nrf_gpio_cfg_output(PWR_CTRL);
-  nrf_gpio_pin_clear(PWR_CTRL);
+  //nrf_gpio_cfg_output(PWR_CTRL);
+  //nrf_gpio_pin_clear(PWR_CTRL);
 
   //nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
 
   nrfx_gpiote_in_config_t pinConfig;
 
   // POWER PRESENCE INDICATION IRQ
-  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
 
   pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
+  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_LOTOHI;
+  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
 
   nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
   //
@@ -39,7 +39,7 @@ void Battery::Init() {
   // CHARGE INDICATION IRQ
   // Need to find how to handle this
   // TO DO
-  nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+  //nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
   /*nrf_gpio_cfg_sense_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
   pinConfig.skip_gpio_setup = true;
@@ -74,12 +74,14 @@ void Battery::Init() {
 
 void Battery::Update() {
 
-  isCharging = !nrf_gpio_pin_read(CHARGE_IRQ);
+  isCharging = 1;//!nrf_gpio_pin_read(CHARGE_IRQ);
   
   //isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
 
   // Non blocking read
-  APP_ERROR_CHECK(nrfx_saadc_sample());
+  for (int i = 0; i < SAMPLES_IN_BUFFER * 2; i++) {
+    APP_ERROR_CHECK(nrfx_saadc_sample());
+  }
 
   //nrf_saadc_value_t value = 0;
   //nrfx_saadc_sample_convert(0, &value);
@@ -128,11 +130,13 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
         percentRemaining = 100;    
     }
 
+  } else {
+    percentRemaining = -1;
   }
 }
 
 
-uint8_t Battery::PercentRemaining() {
+int8_t Battery::PercentRemaining() {
   return percentRemaining;
 }
 

@@ -183,7 +183,7 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
 }
 
 void AlertNotificationService::event(char event) {
-  auto *om = ble_hs_mbuf_from_flat(&event, 1);
+  /*auto *om = ble_hs_mbuf_from_flat(&event, 1);
 
   uint16_t connectionHandle = systemTask.nimble().connHandle();
 
@@ -191,5 +191,5 @@ void AlertNotificationService::event(char event) {
     return;
   }
 
-  ble_gattc_notify_custom(connectionHandle, eventHandle, om);
+  ble_gattc_notify_custom(connectionHandle, eventHandle, om);*/
 }

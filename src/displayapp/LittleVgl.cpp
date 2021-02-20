@@ -286,9 +286,13 @@ bool LittleVgl::GetTouchPadInfo(lv_indev_data_t *ptr) {
 
 void LittleVgl::InitTheme() {
   
-  lv_theme_t * th = lv_pinetime_theme_init(LV_COLOR_WHITE, LV_COLOR_SILVER,
-            0, &lv_font_opensans_20, &lv_font_opensans_20,
-            &lv_font_opensans_20, &lv_font_opensans_20);
+  lv_theme_t * th = lv_pinetime_theme_init(
+      LV_COLOR_WHITE, LV_COLOR_SILVER,
+      0, 
+      &lv_font_robotol_20, 
+      &lv_font_robotol_20,
+      &lv_font_robotol_20, 
+      &lv_font_robotol_20);
 
   lv_theme_set_act(th);
 

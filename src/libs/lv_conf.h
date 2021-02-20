@@ -416,10 +416,11 @@ typedef void * lv_indev_drv_user_data_t;            /*Type of user data in the i
  */
 
 #define LV_FONT_CUSTOM_DECLARE  LV_FONT_DECLARE(lv_font_clock_42) \
+                                LV_FONT_DECLARE(lv_font_clock_76) \
                                 LV_FONT_DECLARE(lv_font_clock_90) \
-                                LV_FONT_DECLARE(world_conflict_70) \
-                                LV_FONT_DECLARE(freshman_70) \
-                                LV_FONT_DECLARE(lv_font_opensans_20)
+                                LV_FONT_DECLARE(lv_font_sys_20) \
+                                LV_FONT_DECLARE(lv_font_sys_48) \
+                                LV_FONT_DECLARE(lv_font_robotol_20)
 
 /* Enable it if you have fonts with a lot of characters.
  * The limit depends on the font size, font face and bpp
@@ -479,10 +480,10 @@ typedef void * lv_font_user_data_t;
 #define LV_THEME_DEFAULT_COLOR_PRIMARY      lv_color_hex(0xffffff)
 #define LV_THEME_DEFAULT_COLOR_SECONDARY    lv_color_hex(0xaaaaaa)
 #define LV_THEME_DEFAULT_FLAG               0//LV_THEME_MATERIAL_FLAG_DARK
-#define LV_THEME_DEFAULT_FONT_SMALL         &lv_font_opensans_20
-#define LV_THEME_DEFAULT_FONT_NORMAL        &lv_font_opensans_20
-#define LV_THEME_DEFAULT_FONT_SUBTITLE      &lv_font_opensans_20
-#define LV_THEME_DEFAULT_FONT_TITLE         &lv_font_opensans_20
+#define LV_THEME_DEFAULT_FONT_SMALL         &lv_font_robotol_20
+#define LV_THEME_DEFAULT_FONT_NORMAL        &lv_font_robotol_20
+#define LV_THEME_DEFAULT_FONT_SUBTITLE      &lv_font_robotol_20
+#define LV_THEME_DEFAULT_FONT_TITLE         &lv_font_robotol_20
 
 /*=================
  *  Text settings

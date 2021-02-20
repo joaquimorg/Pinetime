@@ -68,6 +68,7 @@ set(SDK_SOURCE_FILES
         ${NRF5_SDK_PATH}/components/libraries/memobj/nrf_memobj.c
         ${NRF5_SDK_PATH}/components/libraries/ringbuf/nrf_ringbuf.c
         ${NRF5_SDK_PATH}/components/libraries/strerror/nrf_strerror.c
+        ${NRF5_SDK_PATH}/components/libraries/queue/nrf_queue.c        
 
         # Segger RTT
         ${NRF5_SDK_PATH}/external/segger_rtt/SEGGER_RTT_Syscalls_GCC.c
@@ -84,6 +85,7 @@ set(SDK_SOURCE_FILES
 
         # GPIOTE
         ${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c
+
         )
 
 set(TINYCRYPT_SRC
@@ -372,6 +374,7 @@ list(APPEND SOURCE_FILES
         displayapp/DisplayApp.cpp
         displayapp/screens/Screen.cpp
         displayapp/screens/Charging.cpp
+        displayapp/screens/LowBatt.cpp
         displayapp/screens/Clock.cpp
         displayapp/screens/Tile.cpp
         #displayapp/screens/InfiniPaint.cpp
@@ -398,11 +401,11 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WatchFaceDigital.cpp
         displayapp/screens/WatchFaceAnalog.cpp
         displayapp/screens/WatchFaceMinimal.cpp
-        displayapp/screens/WatchFaceCustom.cpp        
+        displayapp/screens/WatchFacePong.cpp        
         displayapp/icons/bg_clock.c
 
-        displayapp/icons/bg_img_1.c
-        displayapp/icons/xmas.c
+        displayapp/icons/background_16_1.c
+        displayapp/icons/background_16_2.c
 
         main.cpp
 
@@ -412,7 +415,6 @@ list(APPEND SOURCE_FILES
 
         drivers/BMA421.cpp
         drivers/St7789.cpp
-        drivers/FileSystem.cpp
         drivers/SpiNorFlash.cpp
         drivers/SpiMaster.cpp
         drivers/Spi.cpp
@@ -450,23 +452,14 @@ list(APPEND SOURCE_FILES
 
         displayapp/lv_pinetime_theme.c
 
-        #Fonts
-        displayapp/fonts/lv_font_montserrat_18.c
-        displayapp/fonts/lv_font_opensans_18.c
-        displayapp/fonts/lv_font_opensans_20.c
+        #Fonts        
+        displayapp/fonts/lv_font_roboto_20.c
+        displayapp/fonts/lv_font_robotol_20.c
+        displayapp/fonts/lv_font_sys_20.c
+        displayapp/fonts/lv_font_sys_48.c
         displayapp/fonts/clock_font/lv_font_clock_90.c
-        #displayapp/fonts/clock_font/lv_font_clock_76.c
-        displayapp/fonts/clock_font/lv_font_clock_42.c
-        #displayapp/fonts/clock_font/gomarice_80.c
-
-        #displayapp/fonts/clock_font/calliope_fun_70.c
-        # tem que ser maior displayapp/fonts/clock_font/college_halo_70.c
-        # tem que ser maior displayapp/fonts/clock_font/evensong_hollow_70.c
-        displayapp/fonts/clock_font/freshman_70.c
-        # tem que ser maior displayapp/fonts/clock_font/incopins_clusters_70.c
-        #displayapp/fonts/clock_font/matrix_3d_nc_70.c
-        #displayapp/fonts/clock_font/matrix_nc_70.c
-        displayapp/fonts/clock_font/world_conflict_70.c
+        displayapp/fonts/clock_font/lv_font_clock_76.c
+        displayapp/fonts/clock_font/lv_font_clock_42.c        
 
         #App Icons 
         displayapp/icons/icon_brightness.c
@@ -553,12 +546,11 @@ set(INCLUDE_FILES
         displayapp/screens/WatchFaceDigital.h
         displayapp/screens/WatchFaceAnalog.h
         displayapp/screens/WatchFaceMinimal.h
-        displayapp/screens/WatchFaceCustom.h
+        displayapp/screens/WatchFacePong.h
 
         #drivers/HRS3300.h
         drivers/BMA421.h
         drivers/St7789.h
-        drivers/FileSystem.h
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h
         drivers/Spi.h
@@ -746,18 +738,7 @@ target_compile_options(lvgl PRIVATE
         $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
         )
 
-# littlefs
-add_library(littlefs STATIC ${LITTLEFS_SRC})
-target_include_directories(littlefs SYSTEM PUBLIC . ../)
-target_include_directories(littlefs SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
-target_compile_options(littlefs PRIVATE
-        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
-        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
-        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
-        )
-        
+  
 # BMA421_SRC
 add_library(bma421 STATIC ${BMA421_SRC})
 target_include_directories(bma421 SYSTEM PUBLIC . ../)
@@ -793,7 +774,7 @@ set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetimelite_VERSION_MAJOR}.${pine
 set(NRF5_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/gcc_nrf52.ld")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_FILE_NAME})
-target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl littlefs bma421 )
+target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl bma421 )
 target_compile_options(${EXECUTABLE_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
@@ -824,7 +805,7 @@ set(IMAGE_MCUBOOT_FILE_NAME image-${pinetimelite_VERSION_MAJOR}.${pinetimelite_V
 set(DFU_FILE_NAME dfu-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH}.zip)
 set(NRF5_LINKER_SCRIPT_MCUBOOT "${CMAKE_SOURCE_DIR}/gcc_nrf52-mcuboot.ld")
 add_executable(${EXECUTABLE_MCUBOOT_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl littlefs bma421 )
+target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl bma421 )
 set_target_properties(${EXECUTABLE_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_FILE_NAME})
 target_compile_options(${EXECUTABLE_MCUBOOT_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>

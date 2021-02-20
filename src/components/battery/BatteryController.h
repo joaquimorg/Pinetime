@@ -11,7 +11,7 @@ namespace Pinetime {
       public:
         void Init();
         void Update();
-        uint8_t PercentRemaining();
+        int8_t PercentRemaining();
         float Voltage();// const { return voltage; }
         bool IsCharging() const { return isCharging; }
         //bool IsPowerPresent() const { return isPowerPresent; }
@@ -23,7 +23,7 @@ namespace Pinetime {
         //bool isPowerPresent = false;
 
         //float voltage = 0.0f;
-        //uint8_t percentRemaining = 0;
+        //int8_t percentRemaining = -1;
 
         
     };

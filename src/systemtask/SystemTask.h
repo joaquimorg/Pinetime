@@ -33,7 +33,7 @@ namespace Pinetime {
             ReloadIdleTimer, EnableSleeping, DisableSleeping
         };
 
-        SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
+        SystemTask(Drivers::SpiMaster &spi, Drivers::SpiMaster &spif, Drivers::St7789 &lcd,
                    Pinetime::Drivers::SpiNorFlash& spiNorFlash,                   
                    Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel, Drivers::BMA421& stepCounter,
                    Components::LittleVgl &lvgl,
@@ -53,14 +53,14 @@ namespace Pinetime {
         void OnPowerPresentEvent();
 
         void OnIdle();
-
-        Pinetime::Controllers::NimbleController& nimble() {return nimbleController;};
+        void HardwareStatus();
 
       private:
         TaskHandle_t taskHandle;
         Pinetime::Drivers::Vibration vibration;
 
         Pinetime::Drivers::SpiMaster& spi;
+        Pinetime::Drivers::SpiMaster& spif;
         Pinetime::Drivers::St7789& lcd;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
         Pinetime::Drivers::TwiMaster& twiMaster;
@@ -79,7 +79,7 @@ namespace Pinetime {
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Drivers::Watchdog watchdog;
         Pinetime::Drivers::WatchdogView watchdogView;
-        Pinetime::Controllers::NimbleController nimbleController;
+        Pinetime::Controllers::NimbleController nimbleController;      
 
         static void Process(void* instance);
         void Work();
@@ -87,7 +87,13 @@ namespace Pinetime {
         bool isBleDiscoveryTimerRunning = false;
         uint8_t bleDiscoveryTimer = 0;
         static constexpr uint32_t idleTime = 15000;
+
+        static constexpr uint32_t hardwareTime = 15000;
+        static constexpr uint32_t hardwareIdleTime = 120000;
+        
         TimerHandle_t idleTimer;
+        TimerHandle_t hardwareTimer;
+
         bool doNotGoToSleep = false;
 
         void GoToRunning();

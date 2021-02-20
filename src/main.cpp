@@ -79,7 +79,17 @@ Pinetime::Drivers::SpiMaster spi{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, 
 Pinetime::Drivers::Spi lcdSpi {spi, LCD_CSN};
 Pinetime::Drivers::St7789 lcd {lcdSpi, LCD_DC};
 
-Pinetime::Drivers::Spi flashSpi {spi, FLASH_CSN};
+Pinetime::Drivers::SpiMaster spif{Pinetime::Drivers::SpiMaster::SpiModule::SPI1, {
+        Pinetime::Drivers::SpiMaster::BitOrder::Msb_Lsb,
+        Pinetime::Drivers::SpiMaster::Modes::Mode3,
+        Pinetime::Drivers::SpiMaster::Frequencies::Freq8Mhz,
+        SPIF_SCK,
+        SPIF_MOSI,
+        SPIF_MISO
+  }
+};
+
+Pinetime::Drivers::Spi flashSpi {spif, FLASH_CSN};
 Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
 
 // The TWI device should work @ up to 400Khz but there is a HW bug which prevent it from
@@ -112,20 +122,20 @@ void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action
     return ;
   }
 
-  if(pin == BMA421_IRQ) {
+  /*if(pin == BMA421_IRQ) {
     systemTask->OnStepEvent();
     return ;
-  }
+  }*/
 
   if(pin == CHARGE_BASE_IRQ) {
     systemTask->OnPowerPresentEvent();
     return ;
   }
 
-  if(pin == CHARGE_IRQ) {
+  /*if(pin == CHARGE_IRQ) {
     systemTask->OnChargingEvent();
     return ;
-  }
+  }*/
 
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   xTimerStartFromISR(debounceTimer, &xHigherPriorityTaskWoken);
@@ -170,9 +180,11 @@ void RADIO_IRQHandler(void) {
   ((void (*)(void)) radio_isr_addr)();
 }
 
+
 void RNG_IRQHandler(void) {
   ((void (*)(void)) rng_isr_addr)();
 }
+
 
 void RTC0_IRQHandler(void) {
   ((void (*)(void)) rtc0_isr_addr)();
@@ -261,7 +273,7 @@ int main(void) {
 
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
+  systemTask.reset(new Pinetime::System::SystemTask(spi, spif, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
                                                     dateTimeController, settingsController, notificationManager));
   systemTask->Start();
   nimble_port_init();

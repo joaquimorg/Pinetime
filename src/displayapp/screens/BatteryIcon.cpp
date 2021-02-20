@@ -8,6 +8,7 @@ const char* BatteryIcon::GetBatteryIcon(int batteryPercent) {
   if(batteryPercent > 75) return Symbols::batteryThreeQuarter;
   if(batteryPercent > 50) return Symbols::batteryHalf;
   if(batteryPercent > 25) return Symbols::batteryOneQuarter;
+  if(batteryPercent == -1) return Symbols::batteryUnknown;
   return Symbols::batteryEmpty;
 }
 

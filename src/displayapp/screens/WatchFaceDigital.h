@@ -53,9 +53,6 @@ namespace Pinetime {
           //DirtyValue<uint8_t> heartbeat  {0};
           DirtyValue<bool> notificationState {false};
 
-          lv_style_t ble_style;
-
-          lv_style_t step_style;
           lv_style_t stepc_style;
 
           lv_style_t infoc_style;
@@ -63,9 +60,6 @@ namespace Pinetime {
           lv_style_t heartc_style;
           lv_style_t timec_style;
           lv_style_t datec_style;
-          //lv_style_t div_line_style;
-          lv_style_t batt_style;
-          lv_style_t not_style;
           lv_style_t time_style;
           lv_style_t seconds_style;
           lv_style_t seconds_line_style;
@@ -73,7 +67,6 @@ namespace Pinetime {
           lv_style_t dateday_style;
           lv_style_t datemonth_style;
           lv_style_t date_style;
-          lv_style_t heart_style;
           
           lv_obj_t* label_time;
           lv_obj_t* label_time_sec;
