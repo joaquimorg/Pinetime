@@ -170,8 +170,8 @@ void SystemTask::Work() {
           doNotGoToSleep = true;
         break;
         case Messages::WakeUp:
-          //spi.Wakeup();
-          //twiMaster.Wakeup();
+          spi.Wakeup();
+          twiMaster.Wakeup();
           //stepCounter.Wakeup();
 
           nimbleController.StartAdvertising();
@@ -380,10 +380,9 @@ void SystemTask::HardwareStatus() {
     if(isGoingToSleep) return ;
     if(isSleeping && !isWakingUp) {
       WakeUp();
+      vibration.Vibrate(35);
+      displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::LowBattEvent);
     }
-    
-    vibration.Vibrate(35);
-    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::LowBattEvent);
   }
 
 }

@@ -373,14 +373,14 @@ list(APPEND SOURCE_FILES
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp
-        displayapp/screens/Brightness.cpp
         displayapp/screens/SystemInfo.cpp
         displayapp/screens/Label.cpp
         displayapp/screens/FirmwareUpdate.cpp
-        #displayapp/screens/Music.cpp
         displayapp/screens/FirmwareValidation.cpp
         displayapp/screens/ApplicationList.cpp
-        displayapp/screens/Notifications.cpp        
+        displayapp/screens/Notifications.cpp     
+        displayapp/screens/QuickSettings.cpp   
+        displayapp/screens/FlashLight.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
@@ -390,8 +390,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WatchFacePong.cpp
         displayapp/icons/bg_clock.c
 
-        displayapp/icons/background_16_1.c
-        displayapp/icons/background_16_2.c
+        #displayapp/icons/background_16_1.c
+        #displayapp/icons/background_16_2.c
 
         main.cpp
 
@@ -517,7 +517,6 @@ set(INCLUDE_FILES
         displayapp/screens/BatteryIcon.h
         displayapp/screens/BleIcon.h
         displayapp/screens/NotificationIcon.h
-        displayapp/screens/Brightness.h
         displayapp/screens/SystemInfo.h
         displayapp/screens/ScreenList.h
         displayapp/screens/Label.h

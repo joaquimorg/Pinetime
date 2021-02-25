@@ -12,6 +12,12 @@ static void lv_update_task(struct _lv_task_t *task) {
   user_data->UpdateScreen();
 }
 
+static void lv_anim_task(struct _lv_task_t *task) {  
+  auto user_data = static_cast<Charging *>(task->user_data);
+  user_data->UpdateAnim();
+}
+
+
 
 Charging::Charging(
     Pinetime::Applications::DisplayApp *app, 
@@ -25,12 +31,12 @@ Charging::Charging(
 
   lv_obj_t * charging_ico = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(charging_ico, &icon_charging);  
-  lv_obj_align(charging_ico, NULL, LV_ALIGN_CENTER, 0, -65);
+  lv_obj_align(charging_ico, NULL, LV_ALIGN_CENTER, -35, -55);
 
   charging_bar = lv_bar_create(lv_scr_act(), NULL);
   lv_obj_set_size(charging_bar, 200, 15);
   lv_bar_set_range(charging_bar, 0, 100);
-  lv_obj_align(charging_bar, NULL, LV_ALIGN_CENTER, 0, 60);
+  lv_obj_align(charging_bar, NULL, LV_ALIGN_CENTER, 0, 10);
   lv_bar_set_anim_time(charging_bar, 2000);
   lv_obj_set_style_local_radius(charging_bar, LV_BAR_PART_BG, LV_STATE_DEFAULT, LV_RADIUS_CIRCLE);
   lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_BG, LV_STATE_DEFAULT, lv_color_hex(0x222222));
@@ -41,7 +47,7 @@ Charging::Charging(
   status = lv_label_create(lv_scr_act(), NULL);  
   lv_label_set_text_static(status,"Reading Battery status");
   lv_label_set_align(status, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(status, NULL, LV_ALIGN_CENTER, 0, 30);
+  lv_obj_align(status, charging_bar, LV_ALIGN_OUT_BOTTOM_MID, 0, 20);
   
   percent = lv_label_create(lv_scr_act(), NULL);
   lv_obj_set_style_local_text_font(percent, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
@@ -50,8 +56,8 @@ Charging::Charging(
   } else {
     lv_label_set_text(percent,"--%");
   }
-  lv_label_set_align(percent, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(percent, NULL, LV_ALIGN_CENTER, 0, -10);
+  lv_label_set_align(percent, LV_LABEL_ALIGN_LEFT);
+  lv_obj_align(percent, charging_ico, LV_ALIGN_OUT_RIGHT_MID, 15, 0);
 
   voltage = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_set_style_local_text_color(voltage, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xC6A600));
@@ -65,14 +71,39 @@ Charging::Charging(
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
-  taskUpdate = lv_task_create(lv_update_task, 5000, LV_TASK_PRIO_MID, this);
-
+  taskUpdate = lv_task_create(lv_update_task, 500000, LV_TASK_PRIO_LOW, this);
+  taskAnim = lv_task_create(lv_anim_task, 1000, LV_TASK_PRIO_LOW, this);
+  UpdateScreen();
 }
 
 
 Charging::~Charging() {
   lv_task_del(taskUpdate);
+  lv_task_del(taskAnim);
   lv_obj_clean(lv_scr_act());
+}
+
+void Charging::UpdateAnim() {
+  batteryPercent = batteryController.PercentRemaining();
+
+  if ( batteryPercent >= 0 ) {
+    if ( batteryController.IsCharging() ) {
+      animation +=1;
+      if (animation >= 100) {
+        animation = 0;
+      }
+
+    } else {
+      if (animation > batteryPercent) {
+        animation--;
+      }
+      if (animation < batteryPercent) {
+        animation++;
+      }
+    }
+
+    lv_bar_set_value(charging_bar, animation, LV_ANIM_OFF);
+  }
 }
 
 void Charging::UpdateScreen() {
@@ -84,23 +115,17 @@ void Charging::UpdateScreen() {
 
   if ( batteryPercent >= 0 ) {
     if ( batteryController.IsCharging() ) {
-      animation +=1;
 
-      if (animation > batteryPercent) {
-        animation = 0;
-      }
       lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
 
       lv_label_set_text_static(status,"Battery charging");
 
     } else {
-      animation = batteryPercent;
+      
       lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
 
-      lv_label_set_text_static(status,"Battery status");
+      lv_label_set_text_static(status,"Battery discharging");
     }
-
-    lv_bar_set_value(charging_bar, animation, LV_ANIM_OFF);
     
     lv_label_set_text_fmt(percent,"%02i%%", batteryPercent);
     
@@ -108,8 +133,8 @@ void Charging::UpdateScreen() {
     lv_label_set_text_static(status,"Reading Battery status");
     lv_label_set_text(percent,"--%");
   }
-      
-  lv_obj_align(status, NULL, LV_ALIGN_CENTER, 0, 30);
+
+  lv_obj_align(status, charging_bar, LV_ALIGN_OUT_BOTTOM_MID, 0, 20);
   lv_label_set_text_fmt(voltage,"%.2f volts", batteryVoltage);
  
 }

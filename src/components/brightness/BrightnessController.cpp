@@ -1,6 +1,7 @@
 #include "BrightnessController.h"
 #include <hal/nrf_gpio.h>
 #include "board_config.h"
+#include "../../displayapp/screens/Symbols.h"
 
 using namespace Pinetime::Controllers;
 
@@ -14,16 +15,7 @@ void BrightnessController::Init() {
 
 void BrightnessController::Set(BrightnessController::Levels level) {
   this->level = level;
-  /*
-      1 2 3
-      0 0 0 - H
-      0 1 0
-      0 0 1 - M
-      1 0 1
-      0 1 1 - L
-      1 1 1 - Off
-  */
-
+  
   switch(level) {
     default:
     case Levels::High:
@@ -31,18 +23,8 @@ void BrightnessController::Set(BrightnessController::Levels level) {
       nrf_gpio_pin_clear(LCD_LIGHT_2);
       nrf_gpio_pin_clear(LCD_LIGHT_3);
       break;
-    case Levels::MediumHigh:
-      nrf_gpio_pin_clear(LCD_LIGHT_1);
-      nrf_gpio_pin_set(LCD_LIGHT_2);
-      nrf_gpio_pin_clear(LCD_LIGHT_3);
-      break;
     case Levels::Medium:
       nrf_gpio_pin_clear(LCD_LIGHT_1);
-      nrf_gpio_pin_clear(LCD_LIGHT_2);
-      nrf_gpio_pin_set(LCD_LIGHT_3);
-      break;
-     case Levels::LowMedium:
-      nrf_gpio_pin_set(LCD_LIGHT_1);
       nrf_gpio_pin_clear(LCD_LIGHT_2);
       nrf_gpio_pin_set(LCD_LIGHT_3);
       break;
@@ -61,10 +43,8 @@ void BrightnessController::Set(BrightnessController::Levels level) {
 
 void BrightnessController::Lower() {
   switch(level) {
-    case Levels::High: Set(Levels::MediumHigh); break;
-    case Levels::MediumHigh: Set(Levels::Medium); break;
-    case Levels::Medium: Set(Levels::LowMedium); break;
-    case Levels::LowMedium: Set(Levels::Low); break;
+    case Levels::High: Set(Levels::Medium); break;
+    case Levels::Medium: Set(Levels::Low); break;
     case Levels::Low: Set(Levels::Off); break;
     default: break;
   }
@@ -73,10 +53,8 @@ void BrightnessController::Lower() {
 void BrightnessController::Higher() {
   switch(level) {
     case Levels::Off: Set(Levels::Low); break;
-    case Levels::Low: Set(Levels::LowMedium); break;
-    case Levels::LowMedium: Set(Levels::Medium); break;
-    case Levels::Medium: Set(Levels::MediumHigh); break;
-    case Levels::MediumHigh: Set(Levels::High); break;
+    case Levels::Low: Set(Levels::Medium); break;
+    case Levels::Medium: Set(Levels::High); break;
     default: break;
   }
 }
@@ -93,3 +71,32 @@ void BrightnessController::Restore() {
   Set(backupLevel);
 }
 
+
+void BrightnessController::Step() {
+  switch(level) {
+    case Levels::Low: Set(Levels::Medium); break;
+    case Levels::Medium: Set(Levels::High); break;
+    case Levels::High: Set(Levels::Low); break;
+    default: break;
+  }
+}
+
+
+const char* BrightnessController::GetIcon() {
+  switch(level) {    
+    case Levels::Medium: return Applications::Screens::Symbols::brightnessMedium;
+    case Levels::High: return Applications::Screens::Symbols::brightnessHigh;
+    default: break;
+  }
+  return Applications::Screens::Symbols::brightnessLow;
+}
+
+const char* BrightnessController::ToString() {
+  switch(level) {
+    case Levels::Off: return "Off";
+    case Levels::Low: return "Low";    
+    case Levels::Medium: return "Medium";    
+    case Levels::High: return "High";
+    default : return "???";
+  }
+}

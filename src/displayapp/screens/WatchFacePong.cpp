@@ -9,9 +9,9 @@
 #define BALLSIZE 4
 #define PLAYERSIZE 10
 
-LV_IMG_DECLARE(background_16_1);
-LV_IMG_DECLARE(background_16_2);
-LV_FONT_DECLARE(pong_48)
+//LV_IMG_DECLARE(background_16_1);
+//LV_IMG_DECLARE(background_16_2);
+//LV_FONT_DECLARE(pong_48)
 
 using namespace Pinetime::Applications::Screens;
 
@@ -39,16 +39,16 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   srand(dateTimeController.Seconds());
 
-  // Set the background to Black
-  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x000b24));
+  // Set the background
+  lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x001020));
 
-  lv_obj_t * bg_clock_img_1 = lv_img_create(lv_scr_act(), NULL);
+  /*lv_obj_t * bg_clock_img_1 = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(bg_clock_img_1, &background_16_2);
   lv_obj_align(bg_clock_img_1, NULL, LV_ALIGN_CENTER, 0, 0);
 
   lv_obj_t * bg_clock_img_2 = lv_img_create(lv_scr_act(), NULL);
   lv_img_set_src(bg_clock_img_2, &background_16_1);
-  lv_obj_align(bg_clock_img_2, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(bg_clock_img_2, NULL, LV_ALIGN_CENTER, 0, 0);*/
 
 
   /*notificationIcon = lv_label_create(lv_scr_act(), NULL);
@@ -117,9 +117,9 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text(backgroundLabel, "");*/
 
-  taskUpdate = lv_task_create(lv_update_task, 1000, LV_TASK_PRIO_LOW, this);
+  taskUpdate = lv_task_create(lv_update_task, 50000, LV_TASK_PRIO_LOW, this);
 
-  taskPlay = lv_task_create(lv_play_task, 100, LV_TASK_PRIO_MID, this);
+  taskPlay = lv_task_create(lv_play_task, 500, LV_TASK_PRIO_MID, this);
 
 }
 

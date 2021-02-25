@@ -86,8 +86,7 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     }
   }
 
-  backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
-  //backgroundLabel->user_data = this;
+  lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
@@ -120,13 +119,13 @@ bool Tile::Refresh() {
 
 void Tile::OnObjectEvent(lv_obj_t *obj, lv_event_t event, uint32_t buttonId) {
   if(event == LV_EVENT_CLICKED) {
-    app->StartApp(apps[buttonId]);
+    app->StartApp(apps[buttonId], DisplayApp::FullRefreshDirections::Down);
     running = false;
   }
 }
 
 bool Tile::OnButtonPushed() {
-  app->StartApp(Apps::Clock);
+  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Down);
   running = false;
   return true;
 }

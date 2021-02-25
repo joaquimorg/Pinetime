@@ -39,7 +39,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   seconds_point[1].x = 240 * sSecond / 59;
   seconds_point[1].y = 162;
 
-  auto batteryPercent = static_cast<uint8_t>(batteryController.PercentRemaining());
+  //auto batteryPercent = static_cast<uint8_t>(batteryController.PercentRemaining());
 
   // Set the background to Black
   //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
@@ -191,7 +191,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_style_set_text_color(&datemonth_style, LV_STATE_DEFAULT, lv_color_hex(0x3077B9)); 
   label_date_month = lv_label_create(date2c_cont, nullptr);  
   lv_obj_add_style(label_date_month, LV_LABEL_PART_MAIN, &datemonth_style);
-  lv_label_set_text(label_date_month, dateTimeController.MonthsGetLow());
+  lv_label_set_text(label_date_month, dateTimeController.MonthToStringLow());
   //lv_label_set_align( label_date_month, LV_LABEL_ALIGN_CENTER);
   //lv_obj_align(label_date_month, nullptr, LV_ALIGN_IN_TOP_RIGHT, 0, 5);
 
@@ -387,7 +387,7 @@ bool WatchFaceDigital::Refresh() {
     if ((year != currentYear) || (month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 
       lv_label_set_text_fmt(label_date_year, "%04i", year);
-      lv_label_set_text(label_date_month, dateTimeController.MonthsGetLow());
+      lv_label_set_text(label_date_month, dateTimeController.MonthToStringLow());
       lv_label_set_text(label_date, dateTimeController.DayOfWeekToStringLow());
       lv_label_set_text_fmt(label_date_day,  "%02i", day);
 

@@ -18,6 +18,7 @@ namespace Pinetime {
 
       private:
         static void SaadcEventHandler(nrfx_saadc_evt_t const * p_event);
+        void SaadcInit();
         
         bool isCharging = false;
         //bool isPowerPresent = false;

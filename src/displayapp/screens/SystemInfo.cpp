@@ -56,15 +56,6 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   auto batteryPercent = static_cast<int8_t>(batteryController.PercentRemaining());
   float batteryVoltage = batteryController.Voltage();
 
-  uint8_t brightness = 0;
-  switch(brightnessController.Level()) {
-    case Controllers::BrightnessController::Levels::Off: brightness = 0; break;
-    case Controllers::BrightnessController::Levels::Low: brightness = 1; break;
-    case Controllers::BrightnessController::Levels::LowMedium: brightness = 2; break;
-    case Controllers::BrightnessController::Levels::Medium: brightness = 3; break;
-    case Controllers::BrightnessController::Levels::MediumHigh: brightness = 4; break;
-    case Controllers::BrightnessController::Levels::High: brightness = 5; break;
-  }
   auto resetReason = [this]() {
     switch (watchdog.ResetReason()) {
       case Drivers::Watchdog::ResetReasons::Watchdog: return "wtdg";
@@ -106,14 +97,14 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
               "#444444 Time# %02d:%02d:%02d\n"
               "#444444 Uptime# %02lud %02lu:%02lu:%02lu\n"
               "#444444 Battery# %d%% / %.2f v\n"
-              "#444444 Backlight# %d/5\n"
+              "#444444 Backlight# %s\n"
               "#444444 Last reset# %s\n",
           Version::Major(), Version::Minor(), Version::Patch(),
           __DATE__, __TIME__,
           dateTimeController.Day(), static_cast<uint8_t>(dateTimeController.Month()), dateTimeController.Year(),
           dateTimeController.Hours(), dateTimeController.Minutes(), dateTimeController.Seconds(),
           uptimeDays, uptimeHours, uptimeMinutes, uptimeSeconds,
-          batteryPercent, batteryVoltage, brightness, resetReason);
+          batteryPercent, batteryVoltage, brightnessController.ToString(), resetReason);
 
   return std::unique_ptr<Screen>(new Screens::Label(app, label));
 }

@@ -39,7 +39,6 @@ namespace Pinetime {
 
           DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
 
-          lv_obj_t * backgroundLabel;
           lv_obj_t * label_time;
           bool running = true;
           

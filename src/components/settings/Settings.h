@@ -14,24 +14,14 @@ namespace Pinetime {
         void SetAppMenu( uint8_t menu );
         uint8_t GetAppMenu();
 
-        void SetHeartRate( uint8_t hr ) { heartRate = hr; };
-        uint8_t GetHeartRate() const { return heartRate; };
         uint32_t GetStepsGoal() const { return stepsGoal; };
 
-
-        uint32_t GetDebugCount() const { return debugCount; };
-        void AddDebugCount() { 
-          debugCount++; 
-          if ( debugCount > 1000 ) debugCount = 0;
-        };
 
       private:
         uint8_t clockFace = 0;
         uint8_t appMenu = 0;
-        uint8_t heartRate = 0;
         uint32_t stepsGoal = 0;
 
-        uint32_t debugCount = 0;
     };
   }
 }

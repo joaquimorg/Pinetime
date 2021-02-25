@@ -156,7 +156,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       if (!nextNotification.valid) {
         if(mode == Modes::Clock || mode == Modes::Preview) {
           running = false;
-          app->StartApp(Apps::Clock);
+          app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Up);
         } else {
           running = false;
         }

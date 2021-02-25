@@ -10,24 +10,16 @@ namespace Pinetime
       Launcher,
       Clock,
       SysInfo,
-      Brightness,
-      //Music,
       FirmwareUpdate,
       FirmwareValidation,
-      //Paint,
       Notifications,
       NotificationsClock,
       Settings,
       Steps,
-      //HeartRate,
-      //Weather,
-      //Iot,
-      //MobileApp,      
-      //StopWatch,
-      //Paddle,
-      //Twos,
       Charging,
-      LowBatt
+      LowBatt,
+      QuickSettings,
+      FlashLight
     };
   }
 } // namespace Pinetime

@@ -51,11 +51,13 @@ namespace Pinetime {
         void Start();
         void PushMessage(Messages msg);
 
-        void StartApp(Apps app);
+        void StartApp(Apps app, DisplayApp::FullRefreshDirections direction);
         void LoadApp(Apps app, DisplayApp::FullRefreshDirections direction);
 
         void SetFullRefresh(FullRefreshDirections direction);
         void SetTouchMode(TouchModes mode);
+
+        void SetBrightness(Controllers::BrightnessController::Levels level);
 
       private:
 
@@ -83,6 +85,7 @@ namespace Pinetime {
         static constexpr uint8_t itemSize = 1;
         
         Apps nextApp = Apps::None;
+        FullRefreshDirections nextDirection = FullRefreshDirections::None;
         Apps currentApp = Apps::None;
         
         TouchModes touchMode = TouchModes::Gestures;

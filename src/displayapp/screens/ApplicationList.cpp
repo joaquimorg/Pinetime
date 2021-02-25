@@ -8,7 +8,7 @@
 
   LV_IMG_DECLARE(icon_settings);
   LV_IMG_DECLARE(icon_information);
-  LV_IMG_DECLARE(icon_iot);
+  LV_IMG_DECLARE(icon_charging);
   LV_IMG_DECLARE(icon_brightness);
 
   LV_IMG_DECLARE(icon_raining);
@@ -55,7 +55,7 @@ bool ApplicationList::Refresh() {
 
 bool ApplicationList::OnButtonPushed() {
   running = false;
-  app->StartApp(Apps::Clock);
+  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Down);
   return true;
 }
 
@@ -69,7 +69,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
           {                        
             {&icon_settings,    "Settings",       Apps::FirmwareValidation},
             {&icon_information, "Sysinfo",        Apps::SysInfo},
-            {&icon_brightness,  "Brightness",     Apps::Brightness},
+            {&icon_charging,     "Batt",        Apps::Charging},
             {&icon_running,     "Steps",          Apps::Steps},
           }
 
