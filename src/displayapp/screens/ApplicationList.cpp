@@ -9,6 +9,9 @@
   LV_IMG_DECLARE(icon_settings);
   LV_IMG_DECLARE(icon_information);
   LV_IMG_DECLARE(icon_charging);
+  LV_IMG_DECLARE(icon_running);
+
+  /*
   LV_IMG_DECLARE(icon_brightness);
 
   LV_IMG_DECLARE(icon_raining);
@@ -20,7 +23,7 @@
   LV_IMG_DECLARE(icon_two);
   LV_IMG_DECLARE(icon_music);
   LV_IMG_DECLARE(icon_paddle);
-
+*/
 
 using namespace Pinetime::Applications::Screens;
 
@@ -69,7 +72,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
           {                        
             {&icon_settings,    "Settings",       Apps::FirmwareValidation},
             {&icon_information, "Sysinfo",        Apps::SysInfo},
-            {&icon_charging,     "Batt",        Apps::Charging},
+            {&icon_charging,    "Batt",           Apps::Charging},
             {&icon_running,     "Steps",          Apps::Steps},
           }
 
@@ -84,16 +87,17 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
   std::array<Screens::Tile::Applications, 4> applications {
           {                                    
             {&icon_running,     "Steps",      Apps::Steps},
-            {&icon_heart_rate,  "Heart Rate", Apps::HeartRate},
-            {&icon_paddle,     "Paddle",    Apps::Paddle},
-            {&icon_two,      "2048",       Apps::Twos}
+            {&icon_heart_rate,  "Heart Rate", Apps::FlashLight},
+            {&icon_paddle,     "Paddle",    Apps::LowBatt},
+            {&icon_two,      "2048",       Apps::FirmwareUpdate}
           }
 
   };
 
   return std::unique_ptr<Screen>(new Screens::Tile(1, 2, app, dateTimeController, settingsController, applications));
 }
-
+*/
+/*
 std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   std::array<Screens::Tile::Applications, 4> applications {

@@ -7,6 +7,8 @@
 #include <lvgl/lvgl.h>
 #include "components/datetime/DateTimeController.h"
 #include "components/brightness/BrightnessController.h"
+#include "components/settings/Settings.h"
+#include "components/battery/BatteryController.h"
 
 
 namespace Pinetime {
@@ -22,7 +24,8 @@ namespace Pinetime {
           QuickSettings(DisplayApp* app, 
             Pinetime::Controllers::Battery& batteryController,
             Controllers::DateTime& dateTimeController,
-            Controllers::BrightnessController& brightness);
+            Controllers::BrightnessController& brightness,
+            Pinetime::Controllers::Settings &settingsController);
 
           ~QuickSettings() override;
 
@@ -38,6 +41,7 @@ namespace Pinetime {
           Pinetime::Controllers::Battery& batteryController;
           Controllers::DateTime& dateTimeController;
           Controllers::BrightnessController& brightness;
+          Controllers::Settings& settingsController;
 
           lv_task_t* taskUpdate;
           lv_obj_t * batteryIcon;

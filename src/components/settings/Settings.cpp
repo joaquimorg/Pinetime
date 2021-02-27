@@ -2,24 +2,17 @@
 
 using namespace Pinetime::Controllers;
 
+
+// TODO (team): 
+// Read and write the settings to Flash
+//
+
 void Settings::Init() {
     // default Clock face
     clockFace = 0;
 
     stepsGoal = 5000;
+
+    clockType = ClockType::H24;
 }
 
-void Settings::SetClockFace( uint8_t face ) {
-    clockFace = face;
-}
-uint8_t Settings::GetClockFace() {
-    return clockFace;
-}
-
-void Settings::SetAppMenu( uint8_t menu ) {
-    appMenu = menu;
-}
-
-uint8_t Settings::GetAppMenu() {
-    return appMenu;
-}

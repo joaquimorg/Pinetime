@@ -7,8 +7,7 @@
 using namespace Pinetime::Applications::Screens;
 
 namespace {
-  static void ButtonEventHandler(lv_obj_t * obj, lv_event_t event)
-  {
+  static void ButtonEventHandler(lv_obj_t * obj, lv_event_t event) {
     FirmwareValidation* screen = static_cast<FirmwareValidation *>(obj->user_data);
     screen->OnButtonEvent(obj, event);
   }
@@ -42,19 +41,21 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
                       "Please #00ff00 Validate# this version or\n#ff0000 Reset# to rollback to the previous version.");
 
     buttonValidate = lv_btn_create(lv_scr_act(), nullptr);
-    lv_obj_align(buttonValidate, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
+    lv_obj_align(buttonValidate, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, -10);
     buttonValidate->user_data = this;
     lv_obj_set_event_cb(buttonValidate, ButtonEventHandler);
     lv_obj_set_style_local_bg_color(buttonValidate, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GREEN);
+    lv_btn_set_fit(buttonValidate, LV_FIT_TIGHT);
 
     labelButtonValidate = lv_label_create(buttonValidate, nullptr);
     lv_label_set_text_static(labelButtonValidate, "Validate");
   }
   buttonReset = lv_btn_create(lv_scr_act(), nullptr);
   buttonReset->user_data = this;
-  lv_obj_align(buttonReset, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
+  lv_obj_align(buttonReset, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, 0, -10);
   lv_obj_set_event_cb(buttonReset, ButtonEventHandler);
   lv_obj_set_style_local_bg_color(buttonReset, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_RED);
+  lv_btn_set_fit(buttonReset, LV_FIT_TIGHT);
 
   labelButtonReset = lv_label_create(buttonReset, nullptr);
   lv_label_set_text_static(labelButtonReset, "Reset");

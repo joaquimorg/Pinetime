@@ -7,6 +7,8 @@ namespace Pinetime {
         static constexpr const char* none = "";
 
         // font sys 20
+        //         
+        //  lv_font_conv --font icons_sys.ttf -r 0xe920 -r 0xe924 -r 0xe921 -r 0xe922 -r 0xe923 -r 0xe906 -r 0xe907 -r 0xe901 -r 0xe903 -r 0xe905 -r 0xe904 -r 0xe902 -r 0xe900 -r 0xe908 -r 0xe909 -r 0xe90a -r 0xe90b -r 0xe90c --size 20 --format lvgl --bpp 2 --no-compress -o lv_font_sys_20.c
         static constexpr const char* batteryFull          = "\xEE\xA4\xA0"; //e920
         static constexpr const char* batteryEmpty         = "\xEE\xA4\xA4"; //e924
         static constexpr const char* batteryThreeQuarter  = "\xEE\xA4\xA1"; //e921
@@ -21,6 +23,10 @@ namespace Pinetime {
         static constexpr const char* dot                  = "\xEE\xA4\x82"; //e902
         static constexpr const char* info                 = "\xEE\xA4\x80"; //e900
         static constexpr const char* phone                = "\xEE\xA4\x88"; //e908
+        static constexpr const char* clock                = "\xEE\xA4\x89"; //e909
+        static constexpr const char* backLight            = "\xEE\xA4\x8A"; //e90a
+        static constexpr const char* firmware             = "\xEE\xA4\x8B"; //e90b
+        static constexpr const char* about                = "\xEE\xA4\x8C"; //e90c
 
         // font sys 48
         // 

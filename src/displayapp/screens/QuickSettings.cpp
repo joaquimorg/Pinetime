@@ -3,7 +3,6 @@
 #include "board_config.h"
 #include "Symbols.h"
 #include "BatteryIcon.h"
-#include "components/battery/BatteryController.h"
 
 
 using namespace Pinetime::Applications::Screens;
@@ -27,11 +26,13 @@ QuickSettings::QuickSettings(
     Pinetime::Applications::DisplayApp *app, 
     Pinetime::Controllers::Battery& batteryController,
     Controllers::DateTime& dateTimeController,
-    Controllers::BrightnessController& brightness) : 
+    Controllers::BrightnessController& brightness,
+    Pinetime::Controllers::Settings &settingsController) : 
   Screen(app),
   batteryController{batteryController},
   dateTimeController{dateTimeController},
-  brightness{brightness}
+  brightness{brightness},
+  settingsController{settingsController}
 {
 
   batteryPercent = batteryController.PercentRemaining();
@@ -51,10 +52,6 @@ QuickSettings::QuickSettings(
   lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
   lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_TOP_RIGHT, -15, 4);
   
-  /*lv_obj_t * status = lv_label_create(lv_scr_act(), NULL);  
-  lv_label_set_text_static(status,"Quick Settings");
-  lv_label_set_align(status, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(status, NULL, LV_ALIGN_CENTER, 0, -10);*/
 
   lv_obj_t * lbl_btn;
 
@@ -94,11 +91,15 @@ QuickSettings::QuickSettings(
   lv_obj_set_style_local_bg_color(btn3, LV_BTN_PART_MAIN, LV_STATE_CHECKED, LV_COLOR_GREEN);
   lv_btn_set_fit2(btn3, LV_FIT_TIGHT, LV_FIT_TIGHT);
 
-  lv_btn_toggle(btn3);
-
   btn3_lvl = lv_label_create(btn3, NULL);
-  lv_obj_set_style_local_text_font(btn3_lvl, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_48);
-  lv_label_set_text_static(btn3_lvl, Symbols::notificationsOn);
+  lv_obj_set_style_local_text_font(btn3_lvl, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_48);  
+
+  if ( settingsController.GetVibrationStatus() == Controllers::Settings::Vibration::ON ) {    
+    lv_obj_add_state(btn3, LV_STATE_CHECKED);
+    lv_label_set_text_static(btn3_lvl, Symbols::notificationsOn);
+  } else {
+    lv_label_set_text_static(btn3_lvl, Symbols::notificationsOff);
+  }
 
   btn4 = lv_btn_create(lv_scr_act(), NULL);
   btn4->user_data = this;
@@ -119,13 +120,14 @@ QuickSettings::QuickSettings(
   lv_label_set_text_static(backgroundLabel, "");
 
   taskUpdate = lv_task_create(lv_update_task, 500000, LV_TASK_PRIO_MID, this);
-
+  
 }
 
 
 QuickSettings::~QuickSettings() {
   lv_task_del(taskUpdate);
   lv_obj_clean(lv_scr_act());
+  
 }
 
 void QuickSettings::UpdateScreen() {
@@ -147,11 +149,30 @@ void QuickSettings::UpdateScreen() {
 
 void QuickSettings::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
   if(object == btn2 && event == LV_EVENT_PRESSED) {
+    
     running = false;
     app->StartApp(Apps::FlashLight, DisplayApp::FullRefreshDirections::None);
+
   } else if(object == btn1 && event == LV_EVENT_PRESSED) {
+    
     brightness.Step();
     lv_label_set_text_static(btn1_lvl, brightness.GetIcon());
+
+  } else if(object == btn3 && event == LV_EVENT_VALUE_CHANGED) {
+    
+    if(lv_obj_get_state(btn3, LV_BTN_PART_MAIN) & LV_STATE_CHECKED) {
+      settingsController.SetVibrationStatus( Controllers::Settings::Vibration::ON );
+      lv_label_set_text_static(btn3_lvl, Symbols::notificationsOn);
+    } else {
+      settingsController.SetVibrationStatus(Controllers::Settings::Vibration::OFF);
+      lv_label_set_text_static(btn3_lvl, Symbols::notificationsOff);
+    }
+
+  } else if(object == btn4 && event == LV_EVENT_PRESSED) {
+    
+    running = false;
+    app->StartApp(Apps::Settings, DisplayApp::FullRefreshDirections::Up);
+
   }
 
 }

@@ -190,6 +190,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 
 bool Notifications::OnButtonPushed() {
   running = false;
+  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Up);
   return true;
 }
 

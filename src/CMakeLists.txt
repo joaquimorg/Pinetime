@@ -368,6 +368,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/LowBatt.cpp
         displayapp/screens/Clock.cpp
         displayapp/screens/Tile.cpp
+        displayapp/screens/List.cpp
         displayapp/screens/Steps.cpp
         displayapp/screens/Settings.cpp
         displayapp/screens/BatteryIcon.cpp
@@ -439,7 +440,7 @@ list(APPEND SOURCE_FILES
         displayapp/lv_pinetime_theme.c
 
         #Fonts
-        displayapp/fonts/lv_font_robotol_20.c
+        displayapp/fonts/lv_font_roboto_20.c
         displayapp/fonts/lv_font_sys_20.c
         displayapp/fonts/lv_font_sys_48.c
         displayapp/fonts/clock_font/lv_font_clock_90.c

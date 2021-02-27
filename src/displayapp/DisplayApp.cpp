@@ -107,7 +107,7 @@ void DisplayApp::Refresh() {
         if(!currentScreen) {
           LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
         } else {
-          if ( currentApp == Apps::Launcher ) {
+          if ( currentApp == Apps::Launcher ||  currentApp == Apps::QuickSettings || currentApp == Apps::Settings ) {
             LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
           }
         }
@@ -287,12 +287,12 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
       case Apps::NotificationsClock: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Clock)); break;
-      case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
       case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
       case Apps::LowBatt: currentScreen.reset(new Screens::LowBatt(this, batteryController)); break;
       case Apps::FlashLight: currentScreen.reset(new Screens::FlashLight(this, brightnessController)); break;
-      case Apps::QuickSettings: currentScreen.reset(new Screens::QuickSettings(this, batteryController, dateTimeController, brightnessController)); break;
+      case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController, dateTimeController, settingsController)); break;
+      case Apps::QuickSettings: currentScreen.reset(new Screens::QuickSettings(this, batteryController, dateTimeController, brightnessController, settingsController)); break;
 
       // To Do :-)
       //case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;

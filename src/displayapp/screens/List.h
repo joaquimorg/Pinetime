@@ -8,34 +8,36 @@
 #include "components/datetime/DateTimeController.h"
 #include "components/settings/Settings.h"
 
+#define MAXLISTITEMS 5
+
 namespace Pinetime {
   namespace Applications {
     namespace Screens {
-      class Tile : public Screen {
+      class List : public Screen {
         public:
           struct Applications {
-            const void * icon;
+            const char* icon;
             const char* name;
             Pinetime::Applications::Apps application;
           };
 
-          explicit Tile(uint8_t screenID, uint8_t numScreens,
+          explicit List(uint8_t screenID, uint8_t numScreens,
               DisplayApp* app, 
               Controllers::DateTime& dateTimeController,
               Controllers::Settings& settingsController, 
-              std::array<Applications, 4>& applications);
-          ~Tile() override;
+              std::array<Applications, MAXLISTITEMS>& applications);
+          ~List() override;
 
           bool Refresh() override;
           bool OnButtonPushed() override;
 
-          void OnObjectEvent(lv_obj_t* obj, lv_event_t event);
+          void OnButtonEvent(lv_obj_t *object, lv_event_t event);
 
         private:
 
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
-          Pinetime::Applications::Apps apps[4];
+          Pinetime::Applications::Apps apps[MAXLISTITEMS];
 
           DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
 
@@ -47,10 +49,8 @@ namespace Pinetime {
           uint8_t hours;
           uint8_t minutes;
 
-          //std::unique_ptr<Modal> modal;
 
-          lv_obj_t * iconsApps[4];
-          lv_obj_t * iconsAppsLabel[4];
+          lv_obj_t * itemApps[MAXLISTITEMS];
 
           lv_point_t pageIndicatorBasePoints[2];
           lv_point_t pageIndicatorPoints[2];
