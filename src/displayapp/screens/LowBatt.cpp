@@ -85,8 +85,3 @@ bool LowBatt::Refresh() {
   
   return running;
 }
-
-bool LowBatt::OnButtonPushed() {
-  running = false;
-  return true;
-}

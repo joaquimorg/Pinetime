@@ -232,6 +232,20 @@ void St7789::VerticalScrollStartAddress(uint16_t line) {
 }
 
 
+void St7789::PartialDisplay(uint8_t mode) 
+{
+  WriteCommand(mode == 1 ? ST7789_PTLON : ST7789_NORON);
+}
+
+void St7789::setPartArea(uint16_t sr, uint16_t er) 
+{
+  WriteCommand(ST7789_PTLAR);
+  WriteData(sr >> 8u);
+  WriteData(sr & 0x00ffu);
+  WriteData(er >> 8u);
+  WriteData(er & 0x00ffu);
+}
+
 void St7789::Uninit() {
 
 }
@@ -275,15 +289,15 @@ void St7789::Wakeup() {
   nrf_gpio_cfg_output(pinDataCommand);
   nrf_delay_ms(50);
   // TODO why do we need to reset the controller?
-  HardwareReset();
-  SoftwareReset();
+  //HardwareReset();
+  //SoftwareReset();
   SleepOut();
-  ColMod();
-  MemoryDataAccessControl();
-  ColumnAddressSet();
-  RowAddressSet();
-  DisplayInversionOn();
-  NormalModeOn();
+  //ColMod();
+  //MemoryDataAccessControl();
+  //ColumnAddressSet();
+  //RowAddressSet();
+  //DisplayInversionOn();
+  //NormalModeOn();
   VerticalScrollDefinition(0, 320, 0);
   VerticalScrollStartAddress(verticalScrollingStartAddress);
   DisplayOn();

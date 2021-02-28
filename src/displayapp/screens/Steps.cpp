@@ -72,7 +72,4 @@ bool Steps::Refresh() {
   return running;
 }
 
-bool Steps::OnButtonPushed() {
-  running = false;
-  return true;
-}
+

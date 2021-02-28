@@ -51,8 +51,8 @@ List::List(uint8_t screenID, uint8_t numScreens,
     lv_line_set_points(pageIndicatorBase, pageIndicatorBasePoints, 2);
 
   
-    uint8_t indicatorSize = 228 / numScreens;
-    uint8_t indicatorPos = indicatorSize / screenID;
+    uint16_t indicatorSize = 228 / numScreens;
+    uint16_t indicatorPos = indicatorSize * screenID;
 
     pageIndicatorPoints[0].x = 240 - 3;
     pageIndicatorPoints[0].y = 6 + indicatorPos;
@@ -94,7 +94,7 @@ List::List(uint8_t screenID, uint8_t numScreens,
       lv_obj_set_style_local_bg_opa(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_OPA_30);
       lv_obj_set_style_local_bg_color(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_PRESSED, LV_COLOR_CYAN);
       lv_obj_set_width(itemApps[i], LV_HOR_RES - 25);
-      lv_obj_set_height(itemApps[i], 40);
+      lv_obj_set_height(itemApps[i], 54);
       lv_obj_set_event_cb(itemApps[i], ButtonEventHandler);
       lv_btn_set_layout(itemApps[i], LV_LAYOUT_ROW_MID);
       itemApps[i]->user_data = this;
@@ -123,20 +123,6 @@ List::~List() {
 
 bool List::Refresh() {
 
-  /*currentDateTime = dateTimeController.CurrentDateTime();
-
-  if(currentDateTime.IsUpdated()) {
-
-    hours = dateTimeController.Hours();
-    minutes = dateTimeController.Minutes();
-    
-    if(oldHours != hours || oldMinutes != minutes) {
-      lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
-      oldHours = hours;
-      oldMinutes = minutes;
-    }
-  }*/
-
   return running;
 }
 
@@ -151,11 +137,4 @@ void List::OnButtonEvent(lv_obj_t * object, lv_event_t event) {
     }
   }
 }
-
-bool List::OnButtonPushed() {
-  app->StartApp(Apps::QuickSettings, DisplayApp::FullRefreshDirections::Down);
-  running = false;
-  return true;
-}
-
 

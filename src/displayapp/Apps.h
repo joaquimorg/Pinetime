@@ -9,7 +9,7 @@ namespace Pinetime
       None,
       Launcher,
       Clock,
-      SysInfo,
+      About,
       FirmwareUpdate,
       FirmwareValidation,
       Notifications,

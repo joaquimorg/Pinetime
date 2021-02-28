@@ -72,11 +72,6 @@ bool FirmwareValidation::Refresh() {
   return running;
 }
 
-bool FirmwareValidation::OnButtonPushed() {
-  running = false;
-  return true;
-}
-
 void FirmwareValidation::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
   if(object == buttonValidate && event == LV_EVENT_PRESSED) {
     validator.Validate();

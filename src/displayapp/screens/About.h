@@ -5,37 +5,26 @@
 #include "ScreenList.h"
 
 namespace Pinetime {
-  namespace Controllers {
-    class DateTime;
-    class Battery;
-    class BrightnessController;
-    class Ble;
-  }
-
-  namespace Drivers {
-    class WatchdogView;
-    //class BMA421;
-  }
 
   namespace Applications {
-    class DisplayApp;
-
+    
     namespace Screens {
-      class SystemInfo : public Screen {
+      class About : public Screen {
         public:
-          explicit SystemInfo(DisplayApp* app,
+          explicit About(DisplayApp* app,
                               Pinetime::Controllers::DateTime& dateTimeController,
                               Pinetime::Controllers::Battery& batteryController,
                               Pinetime::Controllers::BrightnessController& brightnessController,
                               Pinetime::Controllers::Ble& bleController,
                               Pinetime::Drivers::WatchdogView& watchdog,
                               Pinetime::Drivers::BMA421& stepCounter);
-          ~SystemInfo() override;
+          ~About() override;
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
           bool OnTouchEvent(TouchEvents event) override;
         private:
-          bool running = true;
+          
+          lv_obj_t* container1;
 
           Pinetime::Controllers::DateTime& dateTimeController;
           Pinetime::Controllers::Battery& batteryController;
@@ -44,10 +33,13 @@ namespace Pinetime {
           Pinetime::Drivers::WatchdogView& watchdog;
           Pinetime::Drivers::BMA421& stepCounter;
 
-          ScreenList<3> screens;
+          ScreenList<4> screens;
           std::unique_ptr<Screen> CreateScreen1();
           std::unique_ptr<Screen> CreateScreen2();
           std::unique_ptr<Screen> CreateScreen3();
+          std::unique_ptr<Screen> CreateScreen4();
+
+          void CreateContainer();
       };
     }
   }

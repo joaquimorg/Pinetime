@@ -60,7 +60,7 @@ QuickSettings::QuickSettings(
   lv_obj_set_event_cb(btn1, ButtonEventHandler);
   lv_obj_align(btn1, NULL, LV_ALIGN_CENTER, -50, -30);  
   lv_obj_set_style_local_radius(btn1, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 20);
-  lv_obj_set_style_local_bg_color(btn1, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLUE);
+  lv_obj_set_style_local_bg_color(btn1, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x111111));
   lv_btn_set_fit2(btn1, LV_FIT_TIGHT, LV_FIT_TIGHT);  
 
   btn1_lvl = lv_label_create(btn1, NULL);
@@ -73,7 +73,7 @@ QuickSettings::QuickSettings(
   lv_obj_set_event_cb(btn2, ButtonEventHandler);
   lv_obj_align(btn2, NULL, LV_ALIGN_CENTER, 50, -30);  
   lv_obj_set_style_local_radius(btn2, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 20);
-  lv_obj_set_style_local_bg_color(btn2, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLUE);  
+  lv_obj_set_style_local_bg_color(btn2, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x111111));  
   lv_btn_set_fit2(btn2, LV_FIT_TIGHT, LV_FIT_TIGHT);
 
   lbl_btn = lv_label_create(btn2, NULL);
@@ -87,7 +87,7 @@ QuickSettings::QuickSettings(
   lv_obj_align(btn3, NULL, LV_ALIGN_CENTER, -50, 60);
   lv_btn_set_checkable(btn3, true);
   lv_obj_set_style_local_radius(btn3, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 20);
-  lv_obj_set_style_local_bg_color(btn3, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GRAY);
+  lv_obj_set_style_local_bg_color(btn3, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x111111));
   lv_obj_set_style_local_bg_color(btn3, LV_BTN_PART_MAIN, LV_STATE_CHECKED, LV_COLOR_GREEN);
   lv_btn_set_fit2(btn3, LV_FIT_TIGHT, LV_FIT_TIGHT);
 
@@ -106,7 +106,7 @@ QuickSettings::QuickSettings(
   lv_obj_set_event_cb(btn4, ButtonEventHandler);
   lv_obj_align(btn4, NULL, LV_ALIGN_CENTER, 50, 60);  
   lv_obj_set_style_local_radius(btn4, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, 20);
-  lv_obj_set_style_local_bg_color(btn4, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_BLUE);  
+  lv_obj_set_style_local_bg_color(btn4, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x111111));  
   lv_btn_set_fit2(btn4, LV_FIT_TIGHT, LV_FIT_TIGHT);
 
   lbl_btn = lv_label_create(btn4, NULL);
@@ -169,8 +169,8 @@ void QuickSettings::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
     }
 
   } else if(object == btn4 && event == LV_EVENT_PRESSED) {
-    
     running = false;
+    settingsController.SetSettingsMenu(0);
     app->StartApp(Apps::Settings, DisplayApp::FullRefreshDirections::Up);
 
   }
@@ -192,10 +192,4 @@ bool QuickSettings::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 bool QuickSettings::Refresh() {
   
   return running;
-}
-
-bool QuickSettings::OnButtonPushed() {
-  running = false;
-  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::None);
-  return true;
 }

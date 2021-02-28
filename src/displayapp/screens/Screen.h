@@ -32,7 +32,7 @@ namespace Pinetime {
         public:
           explicit Screen(DisplayApp* app) : app{app} {}
           virtual ~Screen() = default;
-
+          
           /**
            * Most of the time, apps only react to events (touch events, for example).
            * In this case you don't need to do anything in this method.
@@ -47,9 +47,9 @@ namespace Pinetime {
            * @return false if the app can be closed, true if it must continue to run
            **/
           virtual bool Refresh() = 0;
-
+      
           /** @return false if the button hasn't been handled by the app, true if it has been handled */
-          virtual bool OnButtonPushed() { return false; }
+          virtual bool OnButtonPushed() { running = false; return false; }
 
           /** @return false if the event hasn't been handled by the app, true if it has been handled */
           virtual bool OnTouchEvent(TouchEvents event) { return false; }
@@ -57,6 +57,8 @@ namespace Pinetime {
 
         protected:
           DisplayApp* app;
+          bool running = true;
+
       };
     }
   }

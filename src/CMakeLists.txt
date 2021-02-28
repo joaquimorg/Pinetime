@@ -362,6 +362,52 @@ set(BMA421_SRC
 list(APPEND SOURCE_FILES
         BootloaderVersion.cpp
         logging/NrfLogger.cpp
+
+        #HRS3300 Lib
+        #libs/hrs3300/libheart.a
+        #drivers/HRS3300.cpp
+
+        drivers/BMA421.cpp
+        drivers/St7789.cpp
+        drivers/SpiNorFlash.cpp
+        drivers/SpiMaster.cpp
+        drivers/Spi.cpp
+        drivers/Watchdog.cpp
+        drivers/DebugPins.cpp
+        drivers/InternalFlash.cpp
+        drivers/Cst816s.cpp
+        drivers/TwiMaster.cpp
+
+        components/motor/Motor.cpp
+        components/settings/Settings.cpp
+        components/battery/BatteryController.cpp
+        components/datetime/DateTimeController.cpp
+        components/brightness/BrightnessController.cpp
+        components/firmwarevalidator/FirmwareValidator.cpp
+
+        components/ble/BleController.cpp
+        components/ble/NotificationManager.cpp        
+        components/ble/NimbleController.cpp
+        components/ble/DeviceInformationService.cpp
+        components/ble/CurrentTimeClient.cpp
+        components/ble/AlertNotificationClient.cpp
+        components/ble/DfuService.cpp
+        components/ble/CurrentTimeService.cpp
+        components/ble/AlertNotificationService.cpp
+        components/ble/MusicService.cpp
+        components/ble/BatteryInformationService.cpp
+        components/ble/ImmediateAlertService.cpp
+        components/ble/ServiceDiscovery.cpp        
+        
+        FreeRTOS/port.c
+        FreeRTOS/port_cmsis_systick.c
+        FreeRTOS/port_cmsis.c
+
+        systemtask/SystemTask.cpp
+
+        displayapp/LittleVgl.cpp
+        displayapp/lv_pinetime_theme.c
+
         displayapp/DisplayApp.cpp
         displayapp/screens/Screen.cpp
         displayapp/screens/Charging.cpp
@@ -374,7 +420,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp
-        displayapp/screens/SystemInfo.cpp
+        displayapp/screens/About.cpp
         displayapp/screens/Label.cpp
         displayapp/screens/FirmwareUpdate.cpp
         displayapp/screens/FirmwareValidation.cpp
@@ -393,51 +439,6 @@ list(APPEND SOURCE_FILES
 
         #displayapp/icons/background_16_1.c
         #displayapp/icons/background_16_2.c
-
-        main.cpp
-
-        #HRS3300 Lib
-        #libs/hrs3300/libheart.a
-        #drivers/HRS3300.cpp
-
-        drivers/BMA421.cpp
-        drivers/St7789.cpp
-        drivers/SpiNorFlash.cpp
-        drivers/SpiMaster.cpp
-        drivers/Spi.cpp
-        drivers/Watchdog.cpp
-        drivers/DebugPins.cpp
-        drivers/InternalFlash.cpp
-        drivers/Vibration.cpp
-        components/settings/Settings.cpp
-        components/battery/BatteryController.cpp
-        components/ble/BleController.cpp
-        components/ble/NotificationManager.cpp
-        components/datetime/DateTimeController.cpp
-        components/brightness/BrightnessController.cpp
-        components/ble/NimbleController.cpp
-        components/ble/DeviceInformationService.cpp
-        components/ble/CurrentTimeClient.cpp
-        components/ble/AlertNotificationClient.cpp
-        components/ble/DfuService.cpp
-        components/ble/CurrentTimeService.cpp
-        components/ble/AlertNotificationService.cpp
-        components/ble/MusicService.cpp
-        components/ble/BatteryInformationService.cpp
-        components/ble/ImmediateAlertService.cpp
-        components/ble/ServiceDiscovery.cpp
-        components/firmwarevalidator/FirmwareValidator.cpp
-        drivers/Cst816s.cpp
-        FreeRTOS/port.c
-        FreeRTOS/port_cmsis_systick.c
-        FreeRTOS/port_cmsis.c
-
-        systemtask/SystemTask.cpp
-        drivers/TwiMaster.cpp
-
-        displayapp/LittleVgl.cpp
-
-        displayapp/lv_pinetime_theme.c
 
         #Fonts
         displayapp/fonts/lv_font_roboto_20.c
@@ -480,60 +481,18 @@ list(APPEND SOURCE_FILES
         displayapp/icons/not_schedule.c
         displayapp/icons/not_sms.c
         displayapp/icons/not_unknown.c
+
+        main.cpp
+        
         )
 
-list(APPEND GRAPHICS_SOURCE_FILES
-        # FreeRTOS
-        FreeRTOS/port.c
-        FreeRTOS/port_cmsis_systick.c
-        FreeRTOS/port_cmsis.c
-
-        drivers/SpiNorFlash.cpp
-        drivers/SpiMaster.cpp
-        drivers/Spi.cpp
-        logging/NrfLogger.cpp
-
-        components/gfx/Gfx.cpp
-        drivers/St7789.cpp
-        components/brightness/BrightnessController.cpp
-
-        graphics.cpp
-        )
 
 set(INCLUDE_FILES
         BootloaderVersion.h
         logging/Logger.h
         logging/NrfLogger.h
-        displayapp/DisplayApp.h
-        displayapp/TouchEvents.h
-        displayapp/screens/Screen.h
-        displayapp/screens/Clock.h
-        displayapp/screens/Tile.h
-        #displayapp/screens/Meter.h
-        #displayapp/screens/Gauge.h
-        #displayapp/screens/InfiniPaint.h
-        #displayapp/screens/Paddle.h
-        #displayapp/screens/DropDownDemo.h
-        #displayapp/screens/Modal.h
-        displayapp/screens/BatteryIcon.h
-        displayapp/screens/BleIcon.h
-        displayapp/screens/NotificationIcon.h
-        displayapp/screens/SystemInfo.h
-        displayapp/screens/ScreenList.h
-        displayapp/screens/Label.h
-        displayapp/screens/FirmwareUpdate.h
-        displayapp/screens/FirmwareValidation.h
-        displayapp/screens/ApplicationList.h
-        displayapp/Apps.h
-        displayapp/screens/Notifications.h
-        
-        #Watch Faces
-        displayapp/screens/WatchFaceDigital.h
-        displayapp/screens/WatchFaceAnalog.h
-        displayapp/screens/WatchFaceMinimal.h
-        displayapp/screens/WatchFaceCustom.h
-        displayapp/screens/WatchFacePong.h
 
+        drivers/TwiMaster.h
         #drivers/HRS3300.h
         drivers/BMA421.h
         drivers/St7789.h        
@@ -543,6 +502,7 @@ set(INCLUDE_FILES
         drivers/Watchdog.h
         drivers/DebugPins.h
         drivers/InternalFlash.h
+        drivers/Cst816s.h
         components/settings/Settings.h
         components/battery/BatteryController.h
         components/ble/BleController.h
@@ -559,7 +519,7 @@ set(INCLUDE_FILES
         components/ble/ImmediateAlertService.h
         components/ble/ServiceDiscovery.h
         components/ble/BleClient.h
-        drivers/Cst816s.h
+
         FreeRTOS/portmacro.h
         FreeRTOS/portmacro_cmsis.h
         libs/date/includes/date/tz.h
@@ -570,12 +530,36 @@ set(INCLUDE_FILES
         libs/date/includes/date/julian.h
         libs/date/includes/date/ptz.h
         libs/date/includes/date/tz_private.h
-        displayapp/LittleVgl.h
+        displayapp/LittleVgl.h        
+        displayapp/screens/Symbols.h        
+        displayapp/lv_pinetime_theme.h
+
         systemtask/SystemTask.h
         systemtask/SystemMonitor.h
-        displayapp/screens/Symbols.h
-        drivers/TwiMaster.h
-        displayapp/lv_pinetime_theme.h
+
+        displayapp/DisplayApp.h
+        displayapp/TouchEvents.h
+        displayapp/screens/Screen.h
+        displayapp/screens/Clock.h
+        displayapp/screens/Tile.h
+        displayapp/screens/BatteryIcon.h
+        displayapp/screens/BleIcon.h
+        displayapp/screens/NotificationIcon.h
+        displayapp/screens/About.h
+        displayapp/screens/ScreenList.h
+        displayapp/screens/Label.h
+        displayapp/screens/FirmwareUpdate.h
+        displayapp/screens/FirmwareValidation.h
+        displayapp/screens/ApplicationList.h
+        displayapp/Apps.h
+        displayapp/screens/Notifications.h
+        
+        #Watch Faces
+        displayapp/screens/WatchFaceDigital.h
+        displayapp/screens/WatchFaceAnalog.h
+        displayapp/screens/WatchFaceMinimal.h
+        displayapp/screens/WatchFaceCustom.h
+        displayapp/screens/WatchFacePong.h        
         )
 
 include_directories(

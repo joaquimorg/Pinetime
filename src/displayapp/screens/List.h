@@ -8,7 +8,7 @@
 #include "components/datetime/DateTimeController.h"
 #include "components/settings/Settings.h"
 
-#define MAXLISTITEMS 5
+#define MAXLISTITEMS 4
 
 namespace Pinetime {
   namespace Applications {
@@ -29,7 +29,7 @@ namespace Pinetime {
           ~List() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
 
           void OnButtonEvent(lv_obj_t *object, lv_event_t event);
 
@@ -42,7 +42,6 @@ namespace Pinetime {
           DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
 
           lv_obj_t * label_time;
-          bool running = true;
           
           uint8_t oldHours = 0;
           uint8_t oldMinutes = 0;

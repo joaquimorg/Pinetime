@@ -17,12 +17,11 @@ namespace Pinetime {
           ~FlashLight() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
           bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
 
         private:          
           Controllers::BrightnessController& brightness;
-          bool running = true;
 
       };
     }

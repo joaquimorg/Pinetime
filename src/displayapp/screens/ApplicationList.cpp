@@ -30,10 +30,12 @@ using namespace Pinetime::Applications::Screens;
 
 ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app, 
         Pinetime::Controllers::DateTime& dateTimeController,
-        Pinetime::Controllers::Settings &settingsController) :
+        Pinetime::Controllers::Settings &settingsController,
+        Pinetime::Controllers::Battery& batteryController) :
         Screen(app),
         dateTimeController{dateTimeController},
         settingsController{settingsController},
+        batteryController{batteryController},
         screens{app, 
           settingsController.GetAppMenu(),
           {
@@ -47,19 +49,13 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
 
 
 ApplicationList::~ApplicationList() {
-  lv_obj_clean(lv_scr_act());  
+  lv_obj_clean(lv_scr_act());
 }
 
 bool ApplicationList::Refresh() {
   if(running)
     running = screens.Refresh();
   return running;
-}
-
-bool ApplicationList::OnButtonPushed() {
-  running = false;
-  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Down);
-  return true;
 }
 
 bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
@@ -69,16 +65,16 @@ bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   std::array<Screens::Tile::Applications, 4> applications {
-          {                        
-            {&icon_settings,    "Settings",       Apps::FirmwareValidation},
-            {&icon_information, "Sysinfo",        Apps::SysInfo},
-            {&icon_charging,    "Batt",           Apps::Charging},
-            {&icon_running,     "Steps",          Apps::Steps},
+          { 
+            {&icon_running,     "Steps",          Apps::Steps},                       
+            {&icon_information, "Settings",       Apps::None},
+            {&icon_information, "Sysinfo",        Apps::None},
+            {&icon_charging,    "Batt",           Apps::None},
           }
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(0, 1, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, 1, app, dateTimeController, settingsController, batteryController, applications));
 }
 
 /*
@@ -110,7 +106,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(2, 3, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(2 3, app, dateTimeController, settingsController, applications));
 }
 
 */

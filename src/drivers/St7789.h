@@ -17,6 +17,9 @@ namespace Pinetime {
         void Uninit();
         void DrawPixel(uint16_t x, uint16_t y, uint32_t color);
 
+        void PartialDisplay(uint8_t mode);
+        void setPartArea(uint16_t sr, uint16_t er);
+
         void VerticalScrollDefinition(uint16_t topFixedLines, uint16_t scrollLines, uint16_t bottomFixedLines);
         void VerticalScrollStartAddress(uint16_t line);
 

@@ -1,6 +1,7 @@
 #include "Tile.h"
 #include "../DisplayApp.h"
 #include "Symbols.h"
+#include "BatteryIcon.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -12,6 +13,12 @@ namespace {
     screen->OnObjectEvent(obj, event);
 
   }
+
+}
+
+static void lv_update_task(struct _lv_task_t *task) {  
+  auto user_data = static_cast<Tile *>(task->user_data);
+  user_data->UpdateScreen();
 }
 
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
@@ -19,18 +26,21 @@ static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50
 Tile::Tile(uint8_t screenID, uint8_t numScreens,
     DisplayApp* app, 
     Controllers::DateTime& dateTimeController, 
-    Controllers::Settings &settingsController, 
+    Controllers::Settings &settingsController,
+    Pinetime::Controllers::Battery& batteryController,
     std::array<Applications, 4>& applications) : 
     Screen(app),
     dateTimeController{dateTimeController},
     settingsController{settingsController},
-    currentDateTime{{}}  
+    batteryController{batteryController}
 {
 
   // Set the background to Black
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
   settingsController.SetAppMenu(screenID);
+
+  batteryPercent = batteryController.PercentRemaining();
   uint8_t hours = dateTimeController.Hours();
   uint8_t minutes = dateTimeController.Minutes();
   oldHours = hours;
@@ -41,6 +51,11 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
   lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 4);
+
+  batteryIcon = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
+  lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_TOP_RIGHT, -15, 4);
 
   if ( numScreens > 1 ) {
     pageIndicatorBasePoints[0].x = 240 - 3;
@@ -55,8 +70,8 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     lv_line_set_points(pageIndicatorBase, pageIndicatorBasePoints, 2);
 
   
-    uint8_t indicatorSize = 228 / numScreens;
-    uint8_t indicatorPos = indicatorSize / screenID;
+    uint16_t indicatorSize = 228 / numScreens;
+    uint16_t indicatorPos = indicatorSize * screenID;
 
     pageIndicatorPoints[0].x = 240 - 3;
     pageIndicatorPoints[0].y = 6 + indicatorPos;
@@ -95,27 +110,32 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
+  taskUpdate = lv_task_create(lv_update_task, 500000, LV_TASK_PRIO_MID, this);
+
 }
 
 Tile::~Tile() {
+  lv_task_del(taskUpdate);
   lv_obj_clean(lv_scr_act());
 }
 
-bool Tile::Refresh() {
 
-  currentDateTime = dateTimeController.CurrentDateTime();
+void Tile::UpdateScreen() {
 
-  if(currentDateTime.IsUpdated()) {
-
-    hours = dateTimeController.Hours();
-    minutes = dateTimeController.Minutes();
-    
-    if(oldHours != hours || oldMinutes != minutes) {
-      lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
-      oldHours = hours;
-      oldMinutes = minutes;
-    }
+  hours = dateTimeController.Hours();
+  minutes = dateTimeController.Minutes();
+  
+  if(oldHours != hours || oldMinutes != minutes) {
+    lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
+    oldHours = hours;
+    oldMinutes = minutes;
   }
+
+  batteryPercent = batteryController.PercentRemaining();
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
+}
+
+bool Tile::Refresh() {
 
   return running;
 }
@@ -130,12 +150,6 @@ void Tile::OnObjectEvent(lv_obj_t *obj, lv_event_t event) {
       }
     }
   }
-}
-
-bool Tile::OnButtonPushed() {
-  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Down);
-  running = false;
-  return true;
 }
 
 

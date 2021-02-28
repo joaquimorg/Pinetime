@@ -102,20 +102,6 @@ const char* Notifications::CategoryToString( Controllers::NotificationManager::C
 }
 
 bool Notifications::Refresh() {
-  /*if (mode == Modes::Preview) {
-    auto tick = xTaskGetTickCount();
-    int32_t pos = 240 - ((tick - timeoutTickCountStart) / ((timeoutTickCountEnd - timeoutTickCountStart) / 240));
-    if (pos < 0)
-      running = false;
-
-    timeoutLinePoints[1].x = pos;
-    lv_line_set_points(timeoutLine, timeoutLinePoints, 2);
-
-    if (!running) {
-      // Start clock app when exiting this one
-      app->StartApp(Apps::Clock);
-    }
-  }*/
 
   return running;
 }
@@ -186,14 +172,6 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       return false;
   }
 }
-
-
-bool Notifications::OnButtonPushed() {
-  running = false;
-  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Up);
-  return true;
-}
-
 
 Notifications::NotificationItem::NotificationItem(const char *title, Controllers::NotificationManager::Notification &msg, uint8_t notifNr, uint8_t notifNb, Modes mode)
         : msg{msg}, notifNr{notifNr}, notifNb{notifNb}, mode{mode} {

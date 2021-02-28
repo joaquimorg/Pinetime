@@ -87,6 +87,9 @@ namespace Pinetime {
         Apps nextApp = Apps::None;
         FullRefreshDirections nextDirection = FullRefreshDirections::None;
         Apps currentApp = Apps::None;
+
+        Apps returnToApp = Apps::None;
+        FullRefreshDirections returnDirection = FullRefreshDirections::None;
         
         TouchModes touchMode = TouchModes::Gestures;
 
@@ -95,7 +98,9 @@ namespace Pinetime {
         void Refresh();
         void RunningState();
         void IdleState();
-        TouchEvents OnTouchEvent();        
+        TouchEvents OnTouchEvent();    
+
+        void returnApp(Apps app, DisplayApp::FullRefreshDirections direction);
                 
     };
   }

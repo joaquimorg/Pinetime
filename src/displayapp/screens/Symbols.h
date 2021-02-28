@@ -7,7 +7,8 @@ namespace Pinetime {
         static constexpr const char* none = "";
 
         // font sys 20
-        //         
+        // lv_font_sys_20.c
+        //         
         //  lv_font_conv --font icons_sys.ttf -r 0xe920 -r 0xe924 -r 0xe921 -r 0xe922 -r 0xe923 -r 0xe906 -r 0xe907 -r 0xe901 -r 0xe903 -r 0xe905 -r 0xe904 -r 0xe902 -r 0xe900 -r 0xe908 -r 0xe909 -r 0xe90a -r 0xe90b -r 0xe90c --size 20 --format lvgl --bpp 2 --no-compress -o lv_font_sys_20.c
         static constexpr const char* batteryFull          = "\xEE\xA4\xA0"; //e920
         static constexpr const char* batteryEmpty         = "\xEE\xA4\xA4"; //e924
@@ -18,7 +19,8 @@ namespace Pinetime {
         static constexpr const char* batteryUnknown       = "\xEE\xA4\x87"; //e907
         static constexpr const char* heartBeat            = "\xEE\xA4\x81"; //e901
         static constexpr const char* bluetooth            = "\xEE\xA4\x83"; //e903
-        static constexpr const char* plug                 = "\xEE\xA4\x85"; //e905
+        static constexpr const char* plug2                = "\xEE\xA4\x85"; //e905
+        static constexpr const char* plug                 = "\xEE\xA4\x8D"; //e90d
         static constexpr const char* shoe                 = "\xEE\xA4\x84"; //e904
         static constexpr const char* dot                  = "\xEE\xA4\x82"; //e902
         static constexpr const char* info                 = "\xEE\xA4\x80"; //e900
@@ -27,8 +29,10 @@ namespace Pinetime {
         static constexpr const char* backLight            = "\xEE\xA4\x8A"; //e90a
         static constexpr const char* firmware             = "\xEE\xA4\x8B"; //e90b
         static constexpr const char* about                = "\xEE\xA4\x8C"; //e90c
+        static constexpr const char* wface                = "\xEE\xA4\x8E"; //e90e
 
         // font sys 48
+        // lv_font_sys_48.c
         // 
         static constexpr const char* tennisRacket1        = "\xEE\xA4\x81";//e901
         static constexpr const char* settings             = "\xEE\xA4\x82";//e902

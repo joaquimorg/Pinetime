@@ -22,7 +22,7 @@ namespace Pinetime {
           ~Charging() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
 
           void UpdateScreen();
           void UpdateAnim();
@@ -43,7 +43,6 @@ namespace Pinetime {
           int8_t batteryPercent = -1;
           float batteryVoltage = 0.0f;
 
-          bool running = true;
 
       };
     }

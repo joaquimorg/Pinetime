@@ -41,8 +41,3 @@ bool FlashLight::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   return true;
 }
 
-bool FlashLight::OnButtonPushed() {
-  running = false;
-  app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::None);
-  return true;
-}

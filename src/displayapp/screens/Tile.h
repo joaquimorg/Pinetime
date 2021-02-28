@@ -7,6 +7,8 @@
 #include "../Apps.h"
 #include "components/datetime/DateTimeController.h"
 #include "components/settings/Settings.h"
+#include "components/datetime/DateTimeController.h"
+#include "components/battery/BatteryController.h"
 
 namespace Pinetime {
   namespace Applications {
@@ -23,11 +25,13 @@ namespace Pinetime {
               DisplayApp* app, 
               Controllers::DateTime& dateTimeController,
               Controllers::Settings& settingsController, 
+              Pinetime::Controllers::Battery& batteryController,
               std::array<Applications, 4>& applications);
           ~Tile() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          void UpdateScreen();
+          
 
           void OnObjectEvent(lv_obj_t* obj, lv_event_t event);
 
@@ -35,19 +39,20 @@ namespace Pinetime {
 
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
+          Pinetime::Controllers::Battery& batteryController;
           Pinetime::Applications::Apps apps[4];
 
-          DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
+          lv_task_t* taskUpdate;
 
           lv_obj_t * label_time;
-          bool running = true;
+          lv_obj_t * batteryIcon;
           
           uint8_t oldHours = 0;
           uint8_t oldMinutes = 0;
           uint8_t hours;
           uint8_t minutes;
-
-          //std::unique_ptr<Modal> modal;
+          int8_t batteryPercent = -1;
+          
 
           lv_obj_t * iconsApps[4];
           lv_obj_t * iconsAppsLabel[4];

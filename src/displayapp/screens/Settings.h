@@ -19,7 +19,7 @@ namespace Pinetime {
           ~Settings() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
           void OnButtonEvent(lv_obj_t *object, lv_event_t event);
           bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
 
@@ -29,12 +29,11 @@ namespace Pinetime {
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
           
-          ScreenList<1> screens;
+          ScreenList<2> screens;
 
           std::unique_ptr<Screen> CreateScreen1();
-          //std::unique_ptr<Screen> CreateScreen2();
+          std::unique_ptr<Screen> CreateScreen2();
 
-          bool running = true;
 
       };
     }
