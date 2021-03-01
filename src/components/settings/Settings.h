@@ -30,6 +30,8 @@ namespace Pinetime {
         void SetVibrationStatus( Vibration status ) { vibrationStatus = status; };
         Vibration GetVibrationStatus() const { return vibrationStatus; };
 
+        void SetScreenTimeOut( uint32_t timeout ) { screenTimeOut = timeout; };
+        uint32_t GetScreenTimeOut() const { return screenTimeOut; };
 
       private:
         ClockType clockType = ClockType::H24;
@@ -40,6 +42,7 @@ namespace Pinetime {
         uint8_t settingsMenu = 0;
 
         uint32_t stepsGoal = 0;
+        uint32_t screenTimeOut = 15000;
 
     };
   }

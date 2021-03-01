@@ -416,7 +416,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Tile.cpp
         displayapp/screens/List.cpp
         displayapp/screens/Steps.cpp
-        displayapp/screens/Settings.cpp
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp
@@ -428,6 +427,9 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Notifications.cpp     
         displayapp/screens/QuickSettings.cpp   
         displayapp/screens/FlashLight.cpp
+
+        displayapp/screens/Settings.cpp
+        displayapp/screens/SettingDisplay.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp

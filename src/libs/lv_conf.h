@@ -476,7 +476,7 @@ typedef void * lv_font_user_data_t;
 #define LV_USE_THEME_MONO        0
 
 #define LV_THEME_DEFAULT_INCLUDE            <stdint.h>      /*Include a header for the init. function*/
-#define LV_THEME_DEFAULT_INIT               lv_theme_empty_init//lv_theme_material_init
+#define LV_THEME_DEFAULT_INIT               lv_theme_empty_init // lv_theme_material_init
 #define LV_THEME_DEFAULT_COLOR_PRIMARY      lv_color_hex(0xffffff)
 #define LV_THEME_DEFAULT_COLOR_SECONDARY    lv_color_hex(0xaaaaaa)
 #define LV_THEME_DEFAULT_FLAG               0//LV_THEME_MATERIAL_FLAG_DARK
@@ -594,7 +594,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Canvas (dependencies: lv_img)*/
-#define LV_USE_CANVAS   1
+#define LV_USE_CANVAS   0
 
 /*Check box (dependencies: lv_btn, lv_label)*/
 #define LV_USE_CHECKBOX       1
@@ -612,7 +612,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_CPICKER   0
 
 /*Drop down list (dependencies: lv_page, lv_label, lv_symbol_def.h)*/
-#define LV_USE_DROPDOWN    1
+#define LV_USE_DROPDOWN    0
 #if LV_USE_DROPDOWN != 0
 /*Open and close default animation time [ms] (0: no animation)*/
 #  define LV_DROPDOWN_DEF_ANIM_TIME     200
@@ -714,13 +714,13 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_SLIDER    1
 
 /*Spinbox (dependencies: lv_ta)*/
-#define LV_USE_SPINBOX       1
+#define LV_USE_SPINBOX       0
 
 /*Switch (dependencies: lv_slider)*/
 #define LV_USE_SWITCH       1
 
 /*Text area (dependencies: lv_label, lv_page)*/
-#define LV_USE_TEXTAREA       1
+#define LV_USE_TEXTAREA       0
 #if LV_USE_TEXTAREA != 0
 #  define LV_TEXTAREA_DEF_CURSOR_BLINK_TIME 400     /*ms*/
 #  define LV_TEXTAREA_DEF_PWD_SHOW_TIME     1500    /*ms*/

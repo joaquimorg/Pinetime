@@ -14,12 +14,14 @@ namespace Pinetime
       FirmwareValidation,
       Notifications,
       NotificationsClock,
-      Settings,
       Steps,
       Charging,
       LowBatt,
       QuickSettings,
-      FlashLight
+      FlashLight,
+
+      Settings,
+      SettingDisplay,
     };
   }
 } // namespace Pinetime

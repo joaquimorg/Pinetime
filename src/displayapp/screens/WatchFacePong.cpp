@@ -98,7 +98,7 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
   player2 = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_set_style_local_text_color(player2, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFF6600));
   lv_obj_set_style_local_text_font(player2, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_48);
-  lv_label_set_text_static(player2, Symbols::tennisRacket);
+  lv_label_set_text_static(player2, Symbols::tennisRacket2);
   lv_label_set_align( player2, LV_LABEL_ALIGN_RIGHT );
 
   draw_player2();

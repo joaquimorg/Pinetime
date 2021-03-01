@@ -145,7 +145,7 @@ void SystemTask::Work() {
   nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
   //
 
-  idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(idleTime), pdFALSE, this, IdleTimerCallback);
+  idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
 
   // Hardware status timer
@@ -169,6 +169,9 @@ void SystemTask::Work() {
         break;
         case Messages::DisableSleeping:
           doNotGoToSleep = true;
+        break;
+        case Messages::UpdateTimeOut:
+          xTimerChangePeriod(idleTimer, pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), 0);
         break;
         case Messages::WakeUp:
           spi.Wakeup();

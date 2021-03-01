@@ -1,9 +1,11 @@
 #include "DisplayApp.h"
 #include <libraries/log/nrf_log.h>
+
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "components/datetime/DateTimeController.h"
 #include "components/ble/NotificationManager.h"
+
 #include "displayapp/screens/ApplicationList.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/Charging.h"
@@ -13,10 +15,13 @@
 #include "displayapp/screens/Notifications.h"
 #include "displayapp/screens/About.h"
 #include "displayapp/screens/Tile.h"
-#include "displayapp/screens/Settings.h"
 #include "displayapp/screens/QuickSettings.h"
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
+
+#include "displayapp/screens/Settings.h"
+#include "displayapp/screens/SettingDisplay.h"
+
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/Watchdog.h"
@@ -115,6 +120,10 @@ void DisplayApp::Refresh() {
         brightnessController.Restore();
         state = States::Running;
         
+      break;
+
+      case Messages::UpdateTimeOut:
+        systemTask.PushMessage(System::SystemTask::Messages::UpdateTimeOut);
       break;
 
       case Messages::NewCall:
@@ -312,13 +321,19 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         currentScreen.reset(new Screens::Settings(this, batteryController, dateTimeController, settingsController));
         returnApp(Apps::QuickSettings, FullRefreshDirections::Down);
         break;
+
+      case Apps::SettingDisplay: 
+        currentScreen.reset(new Screens::SettingDisplay(this, settingsController));
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
       case Apps::About: 
         currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
       case Apps::FirmwareUpdate: 
-        currentScreen.reset(new Screens::FirmwareUpdate(this, bleController)); 
-        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        returnApp(currentApp, currentDirection);
+        currentScreen.reset(new Screens::FirmwareUpdate(this, bleController));
         break;
       case Apps::FirmwareValidation: 
         currentScreen.reset(new Screens::FirmwareValidation(this, validator)); 
@@ -326,17 +341,18 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         break;
 
       case Apps::Charging: 
-        returnApp(currentApp, FullRefreshDirections::Down);
+        returnApp(currentApp, currentDirection);
         currentScreen.reset(new Screens::Charging(this, batteryController));
         break;
-      case Apps::LowBatt: 
-        currentScreen.reset(new Screens::LowBatt(this, batteryController)); 
-        returnApp(Apps::Clock, FullRefreshDirections::Down);
+      case Apps::LowBatt:
+        returnApp(currentApp, currentDirection);
+        currentScreen.reset(new Screens::LowBatt(this, batteryController));
         break;
       
     }
 
     currentApp = app;
+    currentDirection = direction;
 }
 
 void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {

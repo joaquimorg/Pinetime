@@ -36,7 +36,7 @@ namespace Pinetime {
       public:
         enum class States {Idle, Running};
         enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, StepEvent, ButtonPushed,
-            NewNotification, NewCall, BleFirmwareUpdateStarted, ChargingEvent, LowBattEvent };
+            NewNotification, NewCall, BleFirmwareUpdateStarted, ChargingEvent, LowBattEvent, UpdateTimeOut };
 
         enum class FullRefreshDirections { None, Up, Down };
         enum class TouchModes { Gestures, Polling };
@@ -86,7 +86,9 @@ namespace Pinetime {
         
         Apps nextApp = Apps::None;
         FullRefreshDirections nextDirection = FullRefreshDirections::None;
+
         Apps currentApp = Apps::None;
+        FullRefreshDirections currentDirection = FullRefreshDirections::None;
 
         Apps returnToApp = Apps::None;
         FullRefreshDirections returnDirection = FullRefreshDirections::None;

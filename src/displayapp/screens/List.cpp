@@ -94,7 +94,7 @@ List::List(uint8_t screenID, uint8_t numScreens,
       lv_obj_set_style_local_bg_opa(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_OPA_30);
       lv_obj_set_style_local_bg_color(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_PRESSED, LV_COLOR_CYAN);
       lv_obj_set_width(itemApps[i], LV_HOR_RES - 25);
-      lv_obj_set_height(itemApps[i], 54);
+      lv_obj_set_height(itemApps[i], 52);
       lv_obj_set_event_cb(itemApps[i], ButtonEventHandler);
       lv_btn_set_layout(itemApps[i], LV_LAYOUT_ROW_MID);
       itemApps[i]->user_data = this;
