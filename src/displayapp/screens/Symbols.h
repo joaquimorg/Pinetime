@@ -8,8 +8,10 @@ namespace Pinetime {
 
         // font sys 20
         // lv_font_sys_20.c
-        //         
         //  lv_font_conv --font icons_sys.ttf -r 0xe920 -r 0xe924 -r 0xe921 -r 0xe922 -r 0xe923 -r 0xe906 -r 0xe907 -r 0xe901 -r 0xe903 -r 0xe905 -r 0xe904 -r 0xe902 -r 0xe900 -r 0xe908 -r 0xe909 -r 0xe90a -r 0xe90b -r 0xe90c --size 20 --format lvgl --bpp 2 --no-compress -o lv_font_sys_20.c
+        /*
+        0xe90d, 0xe902, 0xe909, 0xe906, 0xe907, 0xe903, 0xe90a, 0xe900, 0xe90b, 0xe90c, 0xe904, 0xe910, 0xe911, 0xe908, 0xe905, 0xe901, 0xe90d, 0xe920, 0xe921, 0xe922, 0xe923, 0xe924
+        */
         static constexpr const char* batteryFull          = "\xEE\xA4\xA0"; //e920
         static constexpr const char* batteryEmpty         = "\xEE\xA4\xA4"; //e924
         static constexpr const char* batteryThreeQuarter  = "\xEE\xA4\xA1"; //e921
@@ -19,8 +21,7 @@ namespace Pinetime {
         static constexpr const char* batteryUnknown       = "\xEE\xA4\x87"; //e907
         static constexpr const char* heartBeat            = "\xEE\xA4\x81"; //e901
         static constexpr const char* bluetooth            = "\xEE\xA4\x83"; //e903
-        static constexpr const char* plug2                = "\xEE\xA4\x85"; //e905
-        static constexpr const char* plug                 = "\xEE\xA4\x8D"; //e90d
+        static constexpr const char* plug                 = "\xEE\xA4\x85"; //e905
         static constexpr const char* shoe                 = "\xEE\xA4\x84"; //e904
         static constexpr const char* dot                  = "\xEE\xA4\x82"; //e902
         static constexpr const char* info                 = "\xEE\xA4\x80"; //e900
