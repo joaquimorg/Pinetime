@@ -1,68 +1,32 @@
 #include "Settings.h"
 #include <lvgl/lvgl.h>
-#include "../DisplayApp.h"
-#include "drivers/BMA421.h"
-#include "board_config.h"
-#include "components/battery/BatteryController.h"
+#include <array>
 #include "Symbols.h"
+#include "List.h"
+#include "Tile.h"
+#include "displayapp/Apps.h"
+#include "../DisplayApp.h"
 
 using namespace Pinetime::Applications::Screens;
 
-  LV_IMG_DECLARE(not_email);
-
-static void event_handler(lv_obj_t * obj, lv_event_t event)
-{
-    if(event == LV_EVENT_CLICKED) {
-        //printf("Clicked: %s\n", lv_list_get_btn_text(obj));
-    }
-}
-
 Settings::Settings(
   Pinetime::Applications::DisplayApp *app, 
-  Controllers::Battery& batteryController) : 
-  Screen(app), 
-  batteryController{batteryController}
-{
-
-   /*Create a list*/
-    lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
-    lv_obj_set_size(list1, 160, 200);
-    lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
-    //lv_obj_set_style_local_text_font(list1, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
-
-    /*Add buttons to the list*/
-    lv_obj_t * list_btn;
-
-    list_btn = lv_list_add_btn(list1, &not_email, "New");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-    list_btn = lv_list_add_btn(list1, LV_SYMBOL_DIRECTORY, "Open");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-    list_btn = lv_list_add_btn(list1, LV_SYMBOL_CLOSE, "Delete");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-    list_btn = lv_list_add_btn(list1, LV_SYMBOL_EDIT, "Edit");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-    list_btn = lv_list_add_btn(list1, LV_SYMBOL_SAVE, "Save");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-    list_btn = lv_list_add_btn(list1, LV_SYMBOL_BELL, "Notify");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-    list_btn = lv_list_add_btn(list1, LV_SYMBOL_BATTERY_FULL, "Battery");
-    lv_obj_set_event_cb(list_btn, event_handler);
-
-
-
-  lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
-  lv_obj_set_size(backgroundLabel, 240, 240);
-  lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text_static(backgroundLabel, "");
-
-}
+  Controllers::Battery& batteryController, 
+  Pinetime::Controllers::DateTime& dateTimeController,
+  Pinetime::Controllers::Settings &settingsController) :
+    Screen(app), 
+    batteryController{batteryController},
+    dateTimeController{dateTimeController},
+    settingsController{settingsController},
+    screens{app, 
+      settingsController.GetSettingsMenu(),
+      {
+        [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
+        [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); }
+        //[this]() -> std::unique_ptr<Screen> { return CreateScreen3(); }
+      },
+      Screens::ScreenListModes::UpDown          
+    } {}
 
 Settings::~Settings() {
   lv_obj_clean(lv_scr_act());
@@ -70,11 +34,42 @@ Settings::~Settings() {
 
 bool Settings::Refresh() {
   
+  if(running)
+    running = screens.Refresh();
   return running;
 }
 
-bool Settings::OnButtonPushed() {
-  running = false;
-  return true;
+bool Settings::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
+  return screens.OnTouchEvent(event);
 }
 
+std::unique_ptr<Screen> Settings::CreateScreen1() {
+
+  std::array<Screens::List::Applications, 4> applications {
+          {                        
+            {Symbols::backLight,        "Display",       Apps::SettingDisplay},
+            {Symbols::shoe,             "Steps",         Apps::Clock},
+            {Symbols::clock,            "Time format",   Apps::Clock},
+            {Symbols::wface,            "Watch face",    Apps::Clock},
+          }
+
+  };
+
+  return std::unique_ptr<Screen>(new Screens::List(0, 2, app, dateTimeController, settingsController, applications));
+}
+
+
+std::unique_ptr<Screen> Settings::CreateScreen2() {
+
+  std::array<Screens::List::Applications, 4> applications {
+          {                        
+            {Symbols::batteryUnknown,   "Battery",   Apps::Charging},
+            {Symbols::firmware,         "Firmware",  Apps::FirmwareValidation},
+            {Symbols::about,            "About",     Apps::About},
+            {Symbols::none,             "None",      Apps::None},
+          }
+
+  };
+
+  return std::unique_ptr<Screen>(new Screens::List(1, 2, app, dateTimeController, settingsController, applications));
+}

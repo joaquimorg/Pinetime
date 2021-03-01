@@ -35,8 +35,8 @@ namespace Pinetime {
     class DisplayApp {
       public:
         enum class States {Idle, Running};
-        enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateDateTime, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, StepEvent, ButtonPushed,
-            NewNotification, NewCall, BleFirmwareUpdateStarted, ChargingEvent, LowBattEvent };
+        enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, StepEvent, ButtonPushed,
+            NewNotification, NewCall, BleFirmwareUpdateStarted, ChargingEvent, LowBattEvent, UpdateTimeOut };
 
         enum class FullRefreshDirections { None, Up, Down };
         enum class TouchModes { Gestures, Polling };
@@ -51,11 +51,13 @@ namespace Pinetime {
         void Start();
         void PushMessage(Messages msg);
 
-        void StartApp(Apps app);
+        void StartApp(Apps app, DisplayApp::FullRefreshDirections direction);
         void LoadApp(Apps app, DisplayApp::FullRefreshDirections direction);
 
         void SetFullRefresh(FullRefreshDirections direction);
         void SetTouchMode(TouchModes mode);
+
+        void SetBrightness(Controllers::BrightnessController::Levels level);
 
       private:
 
@@ -83,7 +85,13 @@ namespace Pinetime {
         static constexpr uint8_t itemSize = 1;
         
         Apps nextApp = Apps::None;
+        FullRefreshDirections nextDirection = FullRefreshDirections::None;
+
         Apps currentApp = Apps::None;
+        FullRefreshDirections currentDirection = FullRefreshDirections::None;
+
+        Apps returnToApp = Apps::None;
+        FullRefreshDirections returnDirection = FullRefreshDirections::None;
         
         TouchModes touchMode = TouchModes::Gestures;
 
@@ -92,7 +100,9 @@ namespace Pinetime {
         void Refresh();
         void RunningState();
         void IdleState();
-        TouchEvents OnTouchEvent();        
+        TouchEvents OnTouchEvent();    
+
+        void returnApp(Apps app, DisplayApp::FullRefreshDirections direction);
                 
     };
   }

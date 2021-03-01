@@ -8,7 +8,10 @@
 
   LV_IMG_DECLARE(icon_settings);
   LV_IMG_DECLARE(icon_information);
-  LV_IMG_DECLARE(icon_iot);
+  LV_IMG_DECLARE(icon_charging);
+  LV_IMG_DECLARE(icon_running);
+
+  /*
   LV_IMG_DECLARE(icon_brightness);
 
   LV_IMG_DECLARE(icon_raining);
@@ -20,17 +23,19 @@
   LV_IMG_DECLARE(icon_two);
   LV_IMG_DECLARE(icon_music);
   LV_IMG_DECLARE(icon_paddle);
-
+*/
 
 using namespace Pinetime::Applications::Screens;
 
 
 ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app, 
         Pinetime::Controllers::DateTime& dateTimeController,
-        Pinetime::Controllers::Settings &settingsController) :
+        Pinetime::Controllers::Settings &settingsController,
+        Pinetime::Controllers::Battery& batteryController) :
         Screen(app),
         dateTimeController{dateTimeController},
         settingsController{settingsController},
+        batteryController{batteryController},
         screens{app, 
           settingsController.GetAppMenu(),
           {
@@ -44,19 +49,13 @@ ApplicationList::ApplicationList(Pinetime::Applications::DisplayApp *app,
 
 
 ApplicationList::~ApplicationList() {
-  lv_obj_clean(lv_scr_act());  
+  lv_obj_clean(lv_scr_act());
 }
 
 bool ApplicationList::Refresh() {
   if(running)
     running = screens.Refresh();
   return running;
-}
-
-bool ApplicationList::OnButtonPushed() {
-  running = false;
-  app->StartApp(Apps::Clock);
-  return true;
 }
 
 bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
@@ -66,16 +65,16 @@ bool ApplicationList::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   std::array<Screens::Tile::Applications, 4> applications {
-          {                        
-            {&icon_settings,    "Settings",       Apps::FirmwareValidation},
-            {&icon_information, "Sysinfo",        Apps::SysInfo},
-            {&icon_brightness,  "Brightness",     Apps::Brightness},
-            {&icon_running,     "Steps",          Apps::Steps},
+          { 
+            {&icon_running,     "Steps",          Apps::Steps},                       
+            {&icon_information, "Settings",       Apps::None},
+            {&icon_information, "Sysinfo",        Apps::None},
+            {&icon_charging,    "Batt",           Apps::None},
           }
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(0, 1, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(0, 1, app, dateTimeController, settingsController, batteryController, applications));
 }
 
 /*
@@ -84,16 +83,17 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen2() {
   std::array<Screens::Tile::Applications, 4> applications {
           {                                    
             {&icon_running,     "Steps",      Apps::Steps},
-            {&icon_heart_rate,  "Heart Rate", Apps::HeartRate},
-            {&icon_paddle,     "Paddle",    Apps::Paddle},
-            {&icon_two,      "2048",       Apps::Twos}
+            {&icon_heart_rate,  "Heart Rate", Apps::FlashLight},
+            {&icon_paddle,     "Paddle",    Apps::LowBatt},
+            {&icon_two,      "2048",       Apps::FirmwareUpdate}
           }
 
   };
 
   return std::unique_ptr<Screen>(new Screens::Tile(1, 2, app, dateTimeController, settingsController, applications));
 }
-
+*/
+/*
 std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   std::array<Screens::Tile::Applications, 4> applications {
@@ -106,7 +106,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen3() {
 
   };
 
-  return std::unique_ptr<Screen>(new Screens::Tile(2, 3, app, dateTimeController, settingsController, applications));
+  return std::unique_ptr<Screen>(new Screens::Tile(2 3, app, dateTimeController, settingsController, applications));
 }
 
 */

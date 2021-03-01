@@ -31,7 +31,6 @@
 #include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
-#include "components/ble/NotificationManager.h"
 #include "components/datetime/DateTimeController.h"
 #include "displayapp/DisplayApp.h"
 #include "displayapp/LittleVgl.h"
@@ -52,17 +51,6 @@ Pinetime::Logging::NrfLogger logger;
 Pinetime::Logging::DummyLogger logger;
 #endif
 
-/*
-static constexpr uint8_t pinSpiSck = 2;
-static constexpr uint8_t pinSpiMosi = 3;
-static constexpr uint8_t pinSpiMiso = 4;
-static constexpr uint8_t pinSpiFlashCsn = 5;
-static constexpr uint8_t pinLcdCsn = 25;
-static constexpr uint8_t pinLcdDataCommand = 18;
-static constexpr uint8_t pinTwiScl = 7;
-static constexpr uint8_t pinTwiSda = 6;
-static constexpr uint8_t touchPanelTwiAddress = 0x15;
-*/
 
 Pinetime::Controllers::Settings settingsController;
 
@@ -111,10 +99,8 @@ Pinetime::Controllers::Ble bleController;
 Pinetime::Controllers::DateTime dateTimeController;
 void ble_manager_set_ble_connection_callback(void (*connection)());
 void ble_manager_set_ble_disconnection_callback(void (*disconnection)());
-//static constexpr uint8_t pinTouchIrq = 28;
-std::unique_ptr<Pinetime::System::SystemTask> systemTask;
 
-Pinetime::Controllers::NotificationManager notificationManager;
+std::unique_ptr<Pinetime::System::SystemTask> systemTask;
 
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
   if(pin == TP_IRQ) {
@@ -282,8 +268,8 @@ int main(void) {
 
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi, spif, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
-                                                    dateTimeController, settingsController, notificationManager));
+  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
+                                                    dateTimeController, settingsController));
   systemTask->Start();
   nimble_port_init();
 

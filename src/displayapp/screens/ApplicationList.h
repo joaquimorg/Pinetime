@@ -4,6 +4,9 @@
 
 #include "Screen.h"
 #include "ScreenList.h"
+#include "components/datetime/DateTimeController.h"
+#include "components/settings/Settings.h"
+#include "components/battery/BatteryController.h"
 
 namespace Pinetime {
   namespace Applications {
@@ -12,23 +15,25 @@ namespace Pinetime {
         public:
           explicit ApplicationList(DisplayApp* app, 
             Pinetime::Controllers::DateTime& dateTimeController,
-            Pinetime::Controllers::Settings &settingsController
+            Pinetime::Controllers::Settings &settingsController,
+            Pinetime::Controllers::Battery& batteryController
             );
           ~ApplicationList() override;
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
           bool OnTouchEvent(TouchEvents event) override;
         private:
 
           Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
+          Pinetime::Controllers::Battery& batteryController;
           ScreenList<1> screens;
 
           std::unique_ptr<Screen> CreateScreen1();
           //std::unique_ptr<Screen> CreateScreen2();
           //std::unique_ptr<Screen> CreateScreen3();
 
-          bool running = true;          
+
       };
     }
   }

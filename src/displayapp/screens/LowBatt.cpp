@@ -2,7 +2,6 @@
 #include "../DisplayApp.h"
 #include "board_config.h"
 #include "components/battery/BatteryController.h"
-#include <hal/nrf_gpio.h>
 
 using namespace Pinetime::Applications::Screens;
 
@@ -85,9 +84,4 @@ void LowBatt::UpdateScreen() {
 bool LowBatt::Refresh() {
   
   return running;
-}
-
-bool LowBatt::OnButtonPushed() {
-  running = false;
-  return true;
 }

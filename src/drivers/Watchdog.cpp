@@ -44,17 +44,17 @@ Watchdog::ResetReasons Watchdog::ActualResetReason() const {
   return ResetReasons::HardReset;
 }
 
-const char *Watchdog::ResetReasonToString(Watchdog::ResetReasons reason) {
+const char *WatchdogView::ResetReasonToString(Watchdog::ResetReasons reason) {
   switch(reason) {
-    case ResetReasons::ResetPin: return "Reset pin";
-    case ResetReasons::Watchdog: return "Watchdog";
-    case ResetReasons::DebugInterface: return "Debug interface";
-    case ResetReasons::LpComp: return "LPCOMP";
-    case ResetReasons::SystemOff: return "System OFF";
-    case ResetReasons::CpuLockup: return "CPU Lock-up";
-    case ResetReasons::SoftReset: return "Soft reset";
-    case ResetReasons::NFC: return "NFC";
-    case ResetReasons::HardReset: return "Hard reset";
+    case Watchdog::ResetReasons::ResetPin: return "Reset pin";
+    case Watchdog::ResetReasons::Watchdog: return "Watchdog";
+    case Watchdog::ResetReasons::DebugInterface: return "Debug interface";
+    case Watchdog::ResetReasons::LpComp: return "LPCOMP";
+    case Watchdog::ResetReasons::SystemOff: return "System OFF";
+    case Watchdog::ResetReasons::CpuLockup: return "CPU Lock-up";
+    case Watchdog::ResetReasons::SoftReset: return "Soft reset";
+    case Watchdog::ResetReasons::NFC: return "NFC";
+    case Watchdog::ResetReasons::HardReset: return "Hard reset";
     default: return "Unknown";
   }
 }

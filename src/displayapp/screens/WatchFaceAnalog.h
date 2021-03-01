@@ -72,16 +72,11 @@ namespace Pinetime {
           lv_style_t minute_line_style_trace;
           lv_style_t second_line_style;
 
-          lv_style_t not_style;
-          lv_style_t date_style;
     
           lv_obj_t* label_date_day;
-          lv_obj_t* backgroundLabel;
           lv_obj_t* batteryIcon;
           lv_obj_t* notificationIcon;
-
-          lv_color_t needle_colors[3];
-          lv_obj_t * clock;          
+         
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;

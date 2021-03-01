@@ -8,6 +8,8 @@
 #undef max
 #undef min
 
+//00020001-78fc-48fe-8e23-433b3a1942d0
+#define NOTIFICATION_EVENT_SERVICE_UUID_BASE {0xd0, 0x42, 0x19, 0x3a, 0x3b, 0x43, 0x23, 0x8e, 0xfe, 0x48, 0xfc, 0x78, 0x01, 0x00, 0x02, 0x00}
 
 namespace Pinetime {
 
@@ -26,10 +28,17 @@ namespace Pinetime {
         int OnAlert(uint16_t conn_handle, uint16_t attr_handle,
                                     struct ble_gatt_access_ctxt *ctxt);
 
-        void event(char event);
+        void AcceptIncomingCall();
+        void RejectIncomingCall();
+        void MuteIncomingCall();
 
-        static const uint8_t EVENT_HANG_UP_CALL = 0x00;
-        static const uint8_t EVENT_ANSWER_CALL = 0x01;
+        enum class IncomingCallResponses : uint8_t {
+          Reject = 0x00,
+          Answer = 0x01,
+          Mute = 0x02
+        };
+
+        void event(char event);
 
 
       private:
@@ -73,6 +82,11 @@ namespace Pinetime {
                 .u { .type = BLE_UUID_TYPE_16 },
                 .value = ansEventCharId
         };
+
+        /*static constexpr ble_uuid128_t notificationEventUuid {
+                .u { .type = BLE_UUID_TYPE_128 },
+                .value = NOTIFICATION_EVENT_SERVICE_UUID_BASE
+        };*/
 
         struct ble_gatt_chr_def characteristicDefinition[3];
         struct ble_gatt_svc_def serviceDefinition[2];

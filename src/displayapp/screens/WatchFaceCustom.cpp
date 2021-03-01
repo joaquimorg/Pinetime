@@ -82,7 +82,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
   label_date = lv_label_create(lv_scr_act(), nullptr);
   lv_style_set_text_color(&dateyear_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
   lv_obj_add_style(label_date, LV_LABEL_PART_MAIN, &dateyear_style);
-  lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToString(), day, dateTimeController.MonthToString());
+  lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToString(), day, dateTimeController.MonthToStringLow());
   lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
   lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_CENTER, 0, 90);
 
@@ -156,7 +156,7 @@ bool WatchFaceCustom::Refresh() {
   
     if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 
-      lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToString(), day, dateTimeController.MonthToString());
+      lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToString(), day, dateTimeController.MonthToStringLow());
       lv_label_set_text(label_date_shadow, lv_label_get_text(label_date));
       lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
       lv_label_set_align( label_date_shadow, LV_LABEL_ALIGN_CENTER );

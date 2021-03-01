@@ -1,23 +1,27 @@
 #include "DisplayApp.h"
 #include <libraries/log/nrf_log.h>
+
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "components/datetime/DateTimeController.h"
 #include "components/ble/NotificationManager.h"
+
 #include "displayapp/screens/ApplicationList.h"
-#include "displayapp/screens/Brightness.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/Charging.h"
 #include "displayapp/screens/LowBatt.h"
 #include "displayapp/screens/FirmwareUpdate.h"
 #include "displayapp/screens/FirmwareValidation.h"
 #include "displayapp/screens/Notifications.h"
-#include "displayapp/screens/SystemInfo.h"
+#include "displayapp/screens/About.h"
 #include "displayapp/screens/Tile.h"
-#include "displayapp/screens/Settings.h"
-#include "displayapp/screens/Steps.h"
 #include "displayapp/screens/QuickSettings.h"
+#include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
+
+#include "displayapp/screens/Settings.h"
+#include "displayapp/screens/SettingDisplay.h"
+
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/Watchdog.h"
@@ -106,10 +110,10 @@ void DisplayApp::Refresh() {
       case Messages::GoToRunning:
         if (state == States::Running) break;
         if(!currentScreen) {
-          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
         } else {
-          if ( currentApp == Apps::Launcher ) {
-            LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+          if ( currentApp == Apps::Launcher || currentApp == Apps::QuickSettings || currentApp == Apps::Settings ) {
+            LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
           }
         }
         
@@ -118,7 +122,12 @@ void DisplayApp::Refresh() {
         
       break;
 
+      case Messages::UpdateTimeOut:
+        systemTask.PushMessage(System::SystemTask::Messages::UpdateTimeOut);
+      break;
+
       case Messages::NewCall:
+        LoadApp( Apps::NotificationsClock, DisplayApp::FullRefreshDirections::Down );
       break;
 
       case Messages::NewNotification: 
@@ -135,17 +144,20 @@ void DisplayApp::Refresh() {
               if(currentApp == Apps::Clock) {
                 LoadApp( Apps::Launcher, DisplayApp::FullRefreshDirections::Up );
               } else {
-                SetFullRefresh( DisplayApp::FullRefreshDirections::Up );
-                currentScreen->OnButtonPushed();
+                LoadApp( returnToApp, DisplayApp::FullRefreshDirections::Up );
               }
               break;
 
             case TouchEvents::SwipeDown:
-              if( currentApp != Apps::Clock ) {
-                SetFullRefresh( DisplayApp::FullRefreshDirections::Down );
-                currentScreen->OnButtonPushed();
-              } else {
+              if( currentApp == Apps::Clock ) {
                 LoadApp( Apps::NotificationsClock, DisplayApp::FullRefreshDirections::Down );
+              } else {
+                LoadApp( returnToApp, DisplayApp::FullRefreshDirections::Down );
+              }
+              break;
+            case TouchEvents::SwipeRight:
+              if(currentApp == Apps::Clock) {
+                LoadApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::None );
               }
               break;
             case TouchEvents::SwipeRight:
@@ -165,13 +177,9 @@ void DisplayApp::Refresh() {
         if( currentApp == Apps::Clock ) {
           //systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
         } else {
-          /*auto buttonUsedByApp = currentScreen->OnButtonPushed();
-          if (!buttonUsedByApp) {
-            //systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
-          //} else {              
-            SetFullRefresh( DisplayApp::FullRefreshDirections::Up );
-          }*/
-          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+          if ( !currentScreen->OnButtonPushed() ) {
+            StartApp( returnToApp, returnDirection );
+          }
         }
       break;
 
@@ -180,9 +188,6 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::StepEvent:
-      break;
-      
-      case Messages::UpdateDateTime:
       break;
       
       case Messages::UpdateBleConnection:
@@ -199,6 +204,7 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::LowBattEvent :
+        SetBrightness(Controllers::BrightnessController::Levels::Low);
         if( currentApp != Apps::LowBatt ) {
           LoadApp( Apps::LowBatt, DisplayApp::FullRefreshDirections::Down );
         }
@@ -221,9 +227,10 @@ void DisplayApp::RunningState() {
 
   if(!currentScreen->Refresh()) {
 
-    LoadApp( nextApp, DisplayApp::FullRefreshDirections::Up );
+    LoadApp( nextApp, nextDirection );
     
     nextApp = Apps::None;
+    nextDirection = DisplayApp::FullRefreshDirections::None;
   }
 
   lv_task_handler();
@@ -278,45 +285,88 @@ TouchEvents DisplayApp::OnTouchEvent() {
   #endif
 }
 
-void DisplayApp::StartApp(Apps app) {
+void DisplayApp::returnApp(Apps app, DisplayApp::FullRefreshDirections direction) {
+  returnToApp = app;
+  returnDirection = direction;
+}
+
+void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction) {
   nextApp = app;
+  nextDirection = direction;
 }
 
 void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) {
-  currentApp = app;
-
+  
   currentScreen.reset(nullptr);
   
   SetFullRefresh( direction );
 
-  switch(currentApp) {
+  switch(app) {
       case Apps::None:
-      case Apps::Launcher: currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController)); break;
-      case Apps::Clock: currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter)); break;
-      case Apps::SysInfo: currentScreen.reset(new Screens::SystemInfo(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); break;
-      //case Apps::Paint: currentScreen.reset(new Screens::InfiniPaint(this, lvgl)); break;
-      //case Apps::Paddle: currentScreen.reset(new Screens::Paddle(this, systemTask, stepCounter, settingsController)); break;
-      //case Apps::Twos: currentScreen.reset(new Screens::Twos(this)); break;
-      case Apps::Brightness : currentScreen.reset(new Screens::Brightness(this, brightnessController)); break;
-      //case Apps::Music : currentScreen.reset(new Screens::Music(this, systemTask.nimble().music())); break;
-      case Apps::FirmwareUpdate: currentScreen.reset(new Screens::FirmwareUpdate(this, bleController)); break;
-      case Apps::FirmwareValidation: currentScreen.reset(new Screens::FirmwareValidation(this, validator)); break;
-      case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
-      case Apps::NotificationsClock: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Clock)); break;
-      case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
-      case Apps::QuickSettings: currentScreen.reset(new Screens::QuickSettings(this, batteryController, dateTimeController, brightnessController, settingsController)); break;
-      case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
-      //case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
-      case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
-      case Apps::LowBatt: currentScreen.reset(new Screens::LowBatt(this, batteryController)); break;
-      case Apps::FlashLight: currentScreen.reset(new Screens::FlashLight(this, brightnessController)); break;
+      case Apps::Launcher: 
+        currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController, batteryController)); 
+        returnApp(Apps::Clock, FullRefreshDirections::Down);
+        break;
+      case Apps::Clock: 
+        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter)); 
+        break;
+      case Apps::Notifications: 
+        currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); 
+        returnApp(Apps::Clock, FullRefreshDirections::Down);
+        break;
+      case Apps::NotificationsClock: 
+        currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Clock));
+        returnApp(Apps::Clock, FullRefreshDirections::Up);
+        break;
+      case Apps::Steps: 
+        currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController));
+        returnApp(Apps::Launcher, FullRefreshDirections::Down); 
+        break;
+      case Apps::FlashLight: 
+        currentScreen.reset(new Screens::FlashLight(this, brightnessController)); 
+        returnApp(Apps::Clock, FullRefreshDirections::Down);
+        break;
+      case Apps::QuickSettings: 
+        currentScreen.reset(new Screens::QuickSettings(this, batteryController, dateTimeController, brightnessController, settingsController)); 
+        returnApp(Apps::Clock, FullRefreshDirections::None);
+        break;
 
-      // To Do :-)
-      //case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;
-      //case Apps::Iot: currentScreen.reset(new Screens::ScreensTemplate(this, "Iot")); break;
-      //case Apps::MobileApp: currentScreen.reset(new Screens::ScreensTemplate(this, "Mobile App")); break;      
-      //case Apps::StopWatch: currentScreen.reset(new Screens::ScreensTemplate(this, "Stop Watch")); break;
+      case Apps::Settings: 
+        currentScreen.reset(new Screens::Settings(this, batteryController, dateTimeController, settingsController));
+        returnApp(Apps::QuickSettings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::SettingDisplay: 
+        currentScreen.reset(new Screens::SettingDisplay(this, settingsController));
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::About: 
+        currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); 
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+      case Apps::FirmwareUpdate: 
+        returnApp(currentApp, currentDirection);
+        currentScreen.reset(new Screens::FirmwareUpdate(this, bleController));
+        break;
+      case Apps::FirmwareValidation: 
+        currentScreen.reset(new Screens::FirmwareValidation(this, validator)); 
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::Charging: 
+        returnApp(currentApp, currentDirection);
+        currentScreen.reset(new Screens::Charging(this, batteryController));
+        break;
+      case Apps::LowBatt:
+        returnApp(currentApp, currentDirection);
+        currentScreen.reset(new Screens::LowBatt(this, batteryController));
+        break;
+      
     }
+
+    currentApp = app;
+    currentDirection = direction;
 }
 
 void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {
@@ -334,5 +384,9 @@ void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {
 
 void DisplayApp::SetTouchMode(DisplayApp::TouchModes mode) {
   touchMode = mode;
+}
+
+void DisplayApp::SetBrightness(Controllers::BrightnessController::Levels level) {
+  brightnessController.Set(level);
 }
 

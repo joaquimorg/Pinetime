@@ -19,13 +19,13 @@ namespace Pinetime {
   namespace Applications {
     namespace Screens {
 
-      class Steps : public Screen{
+      class Steps : public Screen {
         public:
           Steps(DisplayApp* app, Pinetime::Drivers::BMA421& stepCounter, Controllers::Settings &settingsController);
           ~Steps() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
 
         private:          
 
@@ -37,7 +37,6 @@ namespace Pinetime {
           lv_obj_t * lSteps;
           lv_obj_t * stepsArc;
 
-          bool running = true;
 
       };
     }

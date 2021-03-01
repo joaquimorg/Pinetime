@@ -34,7 +34,7 @@ namespace Pinetime {
             current.reset(nullptr);
             /*for(uint8_t i = 0; i < screens.size(); i++) {
               screens[i]().reset(nullptr);
-            }*/            
+            }*/
             lv_obj_clean(lv_scr_act());
           }
 
@@ -43,10 +43,10 @@ namespace Pinetime {
             return running;
           }
 
-          bool OnButtonPushed() override {
+          /*bool OnButtonPushed() override {
             running = false;
             return true;
-          }
+          }*/
 
           bool OnTouchEvent(TouchEvents event) override {
 
@@ -122,7 +122,6 @@ namespace Pinetime {
           uint8_t screenIndex = 0;          
           std::unique_ptr<Screen> current;
 
-          bool running = true;
       };
     }
   }

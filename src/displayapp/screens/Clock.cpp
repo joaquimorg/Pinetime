@@ -15,6 +15,7 @@
 #include "WatchFaceAnalog.h"
 #include "WatchFaceMinimal.h"
 #include "WatchFacePong.h"
+#include "WatchFaceCustom.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -35,7 +36,8 @@ Clock::Clock(DisplayApp* app,
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); },
-                [this]() -> std::unique_ptr<Screen> { return WatchFacePongScreen(); }
+                [this]() -> std::unique_ptr<Screen> { return WatchFacePongScreen(); },
+                //[this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen(); }
           },
           Screens::ScreenListModes::LongPress          
         } {
@@ -50,11 +52,6 @@ Clock::~Clock() {
 bool Clock::Refresh() {  
   screens.Refresh();  
   return running;
-}
-
-bool Clock::OnButtonPushed() {
-  running = false;
-  return false;
 }
 
 bool Clock::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
@@ -75,4 +72,8 @@ std::unique_ptr<Screen> Clock::WatchFaceMinimalScreen() {
 
 std::unique_ptr<Screen> Clock::WatchFacePongScreen() {  
   return std::unique_ptr<Screen>(new Screens::WatchFacePong(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceCustomScreen() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceCustom(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
 }

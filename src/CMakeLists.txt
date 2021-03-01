@@ -342,13 +342,6 @@ set(LVGL_SRC
         libs/lvgl/src/lv_widgets/lv_win.c
         )
 
-set(LITTLEFS_SRC        
-        libs/littlefs/lfs_util.h
-        libs/littlefs/lfs_util.c
-        libs/littlefs/lfs.h
-        libs/littlefs/lfs.c
-        )
-
 set(BMA421_SRC        
         libs/bma421/bma4_defs.h
         libs/bma421/bma4.c
@@ -371,44 +364,6 @@ set(BMA421_SRC
 list(APPEND SOURCE_FILES
         BootloaderVersion.cpp
         logging/NrfLogger.cpp
-        displayapp/DisplayApp.cpp
-        displayapp/screens/Screen.cpp
-        displayapp/screens/Charging.cpp
-        displayapp/screens/LowBatt.cpp
-        displayapp/screens/Clock.cpp
-        displayapp/screens/Tile.cpp
-        displayapp/screens/FlashLight.cpp
-        displayapp/screens/Steps.cpp
-        displayapp/screens/Settings.cpp
-        displayapp/screens/QuickSettings.cpp
-        displayapp/screens/BatteryIcon.cpp
-        displayapp/screens/BleIcon.cpp
-        displayapp/screens/NotificationIcon.cpp
-        displayapp/screens/Brightness.cpp
-        displayapp/screens/SystemInfo.cpp
-        displayapp/screens/Label.cpp
-        displayapp/screens/FirmwareUpdate.cpp
-        #displayapp/screens/Music.cpp
-        displayapp/screens/FirmwareValidation.cpp
-        displayapp/screens/ApplicationList.cpp
-        displayapp/screens/Notifications.cpp
-        #displayapp/screens/HeartRate.cpp
-        #displayapp/screens/Twos.cpp
-        #displayapp/screens/Paddle.cpp
-
-        #displayapp/screens/ScreensTemplate.cpp
-
-        #Watch Faces
-        displayapp/screens/WatchFaceDigital.cpp
-        displayapp/screens/WatchFaceAnalog.cpp
-        displayapp/screens/WatchFaceMinimal.cpp
-        displayapp/screens/WatchFacePong.cpp        
-        displayapp/icons/bg_clock.c
-
-        displayapp/icons/background_16_1.c
-        displayapp/icons/background_16_2.c
-
-        main.cpp
 
         #HRS3300 Lib
         #libs/hrs3300/libheart.a
@@ -422,13 +377,18 @@ list(APPEND SOURCE_FILES
         drivers/Watchdog.cpp
         drivers/DebugPins.cpp
         drivers/InternalFlash.cpp
-        drivers/Vibration.cpp
+        drivers/Cst816s.cpp
+        drivers/TwiMaster.cpp
+
+        components/motor/Motor.cpp
         components/settings/Settings.cpp
         components/battery/BatteryController.cpp
-        components/ble/BleController.cpp
-        components/ble/NotificationManager.cpp
         components/datetime/DateTimeController.cpp
         components/brightness/BrightnessController.cpp
+        components/firmwarevalidator/FirmwareValidator.cpp
+
+        components/ble/BleController.cpp
+        components/ble/NotificationManager.cpp        
         components/ble/NimbleController.cpp
         components/ble/DeviceInformationService.cpp
         components/ble/CurrentTimeClient.cpp
@@ -439,28 +399,58 @@ list(APPEND SOURCE_FILES
         components/ble/MusicService.cpp
         components/ble/BatteryInformationService.cpp
         components/ble/ImmediateAlertService.cpp
-        components/ble/ServiceDiscovery.cpp
-        components/firmwarevalidator/FirmwareValidator.cpp
-        drivers/Cst816s.cpp
+        components/ble/ServiceDiscovery.cpp        
+        
         FreeRTOS/port.c
         FreeRTOS/port_cmsis_systick.c
         FreeRTOS/port_cmsis.c
 
         systemtask/SystemTask.cpp
-        drivers/TwiMaster.cpp
 
         displayapp/LittleVgl.cpp
-
         displayapp/lv_pinetime_theme.c
 
-        #Fonts        
+        displayapp/DisplayApp.cpp
+        displayapp/screens/Screen.cpp
+        displayapp/screens/Charging.cpp
+        displayapp/screens/LowBatt.cpp
+        displayapp/screens/Clock.cpp
+        displayapp/screens/Tile.cpp
+        displayapp/screens/List.cpp
+        displayapp/screens/Steps.cpp
+        displayapp/screens/BatteryIcon.cpp
+        displayapp/screens/BleIcon.cpp
+        displayapp/screens/NotificationIcon.cpp
+        displayapp/screens/About.cpp
+        displayapp/screens/Label.cpp
+        displayapp/screens/FirmwareUpdate.cpp
+        displayapp/screens/FirmwareValidation.cpp
+        displayapp/screens/ApplicationList.cpp
+        displayapp/screens/Notifications.cpp     
+        displayapp/screens/QuickSettings.cpp   
+        displayapp/screens/FlashLight.cpp
+
+        displayapp/screens/Settings.cpp
+        displayapp/screens/SettingDisplay.cpp
+
+        #Watch Faces
+        displayapp/screens/WatchFaceDigital.cpp
+        displayapp/screens/WatchFaceAnalog.cpp
+        displayapp/screens/WatchFaceMinimal.cpp
+        displayapp/screens/WatchFaceCustom.cpp
+        displayapp/screens/WatchFacePong.cpp
+        displayapp/icons/bg_clock.c
+
+        #displayapp/icons/background_16_1.c
+        #displayapp/icons/background_16_2.c
+
+        #Fonts
         displayapp/fonts/lv_font_roboto_20.c
-        displayapp/fonts/lv_font_robotol_20.c
         displayapp/fonts/lv_font_sys_20.c
         displayapp/fonts/lv_font_sys_48.c
         displayapp/fonts/clock_font/lv_font_clock_90.c
         displayapp/fonts/clock_font/lv_font_clock_76.c
-        displayapp/fonts/clock_font/lv_font_clock_42.c        
+        displayapp/fonts/clock_font/lv_font_clock_42.c 
 
         #App Icons 
         displayapp/icons/icon_brightness.c
@@ -495,69 +485,28 @@ list(APPEND SOURCE_FILES
         displayapp/icons/not_schedule.c
         displayapp/icons/not_sms.c
         displayapp/icons/not_unknown.c
+
+        main.cpp
+        
         )
 
-list(APPEND GRAPHICS_SOURCE_FILES
-        # FreeRTOS
-        FreeRTOS/port.c
-        FreeRTOS/port_cmsis_systick.c
-        FreeRTOS/port_cmsis.c
-
-        drivers/SpiNorFlash.cpp
-        drivers/SpiMaster.cpp
-        drivers/Spi.cpp
-        logging/NrfLogger.cpp
-
-        components/gfx/Gfx.cpp
-        drivers/St7789.cpp
-        components/brightness/BrightnessController.cpp
-
-        graphics.cpp
-        )
 
 set(INCLUDE_FILES
         BootloaderVersion.h
         logging/Logger.h
         logging/NrfLogger.h
-        displayapp/DisplayApp.h
-        displayapp/TouchEvents.h
-        displayapp/screens/Screen.h
-        displayapp/screens/Clock.h
-        displayapp/screens/Tile.h
-        #displayapp/screens/Meter.h
-        #displayapp/screens/Gauge.h
-        #displayapp/screens/InfiniPaint.h
-        #displayapp/screens/Paddle.h
-        #displayapp/screens/DropDownDemo.h
-        #displayapp/screens/Modal.h
-        displayapp/screens/BatteryIcon.h
-        displayapp/screens/BleIcon.h
-        displayapp/screens/NotificationIcon.h
-        displayapp/screens/Brightness.h
-        displayapp/screens/SystemInfo.h
-        displayapp/screens/ScreenList.h
-        displayapp/screens/Label.h
-        displayapp/screens/FirmwareUpdate.h
-        displayapp/screens/FirmwareValidation.h
-        displayapp/screens/ApplicationList.h
-        displayapp/Apps.h
-        displayapp/screens/Notifications.h
-        
-        #Watch Faces
-        displayapp/screens/WatchFaceDigital.h
-        displayapp/screens/WatchFaceAnalog.h
-        displayapp/screens/WatchFaceMinimal.h
-        displayapp/screens/WatchFacePong.h
 
+        drivers/TwiMaster.h
         #drivers/HRS3300.h
         drivers/BMA421.h
-        drivers/St7789.h
+        drivers/St7789.h        
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h
         drivers/Spi.h
         drivers/Watchdog.h
         drivers/DebugPins.h
         drivers/InternalFlash.h
+        drivers/Cst816s.h
         components/settings/Settings.h
         components/battery/BatteryController.h
         components/ble/BleController.h
@@ -574,7 +523,7 @@ set(INCLUDE_FILES
         components/ble/ImmediateAlertService.h
         components/ble/ServiceDiscovery.h
         components/ble/BleClient.h
-        drivers/Cst816s.h
+
         FreeRTOS/portmacro.h
         FreeRTOS/portmacro_cmsis.h
         libs/date/includes/date/tz.h
@@ -585,12 +534,36 @@ set(INCLUDE_FILES
         libs/date/includes/date/julian.h
         libs/date/includes/date/ptz.h
         libs/date/includes/date/tz_private.h
-        displayapp/LittleVgl.h
+        displayapp/LittleVgl.h        
+        displayapp/screens/Symbols.h        
+        displayapp/lv_pinetime_theme.h
+
         systemtask/SystemTask.h
         systemtask/SystemMonitor.h
-        displayapp/screens/Symbols.h
-        drivers/TwiMaster.h
-        displayapp/lv_pinetime_theme.h
+
+        displayapp/DisplayApp.h
+        displayapp/TouchEvents.h
+        displayapp/screens/Screen.h
+        displayapp/screens/Clock.h
+        displayapp/screens/Tile.h
+        displayapp/screens/BatteryIcon.h
+        displayapp/screens/BleIcon.h
+        displayapp/screens/NotificationIcon.h
+        displayapp/screens/About.h
+        displayapp/screens/ScreenList.h
+        displayapp/screens/Label.h
+        displayapp/screens/FirmwareUpdate.h
+        displayapp/screens/FirmwareValidation.h
+        displayapp/screens/ApplicationList.h
+        displayapp/Apps.h
+        displayapp/screens/Notifications.h
+        
+        #Watch Faces
+        displayapp/screens/WatchFaceDigital.h
+        displayapp/screens/WatchFaceAnalog.h
+        displayapp/screens/WatchFaceMinimal.h
+        displayapp/screens/WatchFaceCustom.h
+        displayapp/screens/WatchFacePong.h        
         )
 
 include_directories(
@@ -831,34 +804,6 @@ add_custom_command(TARGET ${EXECUTABLE_MCUBOOT_NAME}
         COMMENT "post build steps for ${EXECUTABLE_MCUBOOT_FILE_NAME}"
         )
 
-# Build binary that writes the graphic assets for the bootloader
-set(EXECUTABLE_GRAPHICS_NAME "pinetime-graphics")
-set(EXECUTABLE_GRAPHICS_FILE_NAME ${EXECUTABLE_GRAPHICS_NAME}-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH})
-add_executable(${EXECUTABLE_GRAPHICS_NAME} ${GRAPHICS_SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_GRAPHICS_NAME} nrf-sdk)
-set_target_properties(${EXECUTABLE_GRAPHICS_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_GRAPHICS_FILE_NAME})
-target_compile_options(${EXECUTABLE_GRAPHICS_NAME} PUBLIC
-        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
-        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
-        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
-        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -std=c99 -x assembler-with-cpp>
-        )
-
-set_target_properties(${EXECUTABLE_GRAPHICS_NAME} PROPERTIES
-        SUFFIX ".out"
-        LINK_FLAGS "-mthumb -mabi=aapcs -std=gnu++98 -std=c99 -L ${NRF5_SDK_PATH}/modules/nrfx/mdk -T${NRF5_LINKER_SCRIPT} -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16 -Wl,--gc-sections --specs=nano.specs -lc -lnosys -lm -Wl,-Map=${EXECUTABLE_GRAPHICS_FILE_NAME}.map"
-        CXX_STANDARD 11
-        C_STANDARD 99
-        )
-
-add_custom_command(TARGET ${EXECUTABLE_GRAPHICS_NAME}
-        POST_BUILD
-        COMMAND ${CMAKE_SIZE_UTIL} ${EXECUTABLE_GRAPHICS_FILE_NAME}.out
-        COMMAND ${CMAKE_OBJCOPY} -O binary ${EXECUTABLE_GRAPHICS_FILE_NAME}.out "${EXECUTABLE_GRAPHICS_FILE_NAME}.bin"
-        COMMAND ${CMAKE_OBJCOPY} -O ihex ${EXECUTABLE_GRAPHICS_FILE_NAME}.out "${EXECUTABLE_GRAPHICS_FILE_NAME}.hex"
-        COMMENT "post build steps for ${EXECUTABLE_GRAPHICS_FILE_NAME}"
-        )
 
 # FLASH
 if (USE_JLINK)

@@ -39,7 +39,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   seconds_point[1].x = 240 * sSecond / 59;
   seconds_point[1].y = 162;
 
-  auto batteryPercent = static_cast<uint8_t>(batteryController.PercentRemaining());
+  //auto batteryPercent = static_cast<uint8_t>(batteryController.PercentRemaining());
 
   // Set the background to Black
   //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
@@ -138,7 +138,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
 
   lv_obj_t * date1c_cont = lv_cont_create(lv_scr_act(), NULL);  
   lv_obj_add_style(date1c_cont, LV_CONT_PART_MAIN, &datec_style);
-  lv_cont_set_layout(date1c_cont, LV_LAYOUT_PRETTY_MID);
+  lv_cont_set_layout(date1c_cont, LV_LAYOUT_COLUMN_MID);
   lv_obj_set_pos(date1c_cont, 0, 0);
   lv_obj_set_width(date1c_cont, 120);
   lv_obj_set_height(date1c_cont, 70);
@@ -191,7 +191,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_style_set_text_color(&datemonth_style, LV_STATE_DEFAULT, lv_color_hex(0x3077B9)); 
   label_date_month = lv_label_create(date2c_cont, nullptr);  
   lv_obj_add_style(label_date_month, LV_LABEL_PART_MAIN, &datemonth_style);
-  lv_label_set_text(label_date_month, dateTimeController.MonthsGetLow());
+  lv_label_set_text(label_date_month, dateTimeController.MonthToStringLow());
   //lv_label_set_align( label_date_month, LV_LABEL_ALIGN_CENTER);
   //lv_obj_align(label_date_month, nullptr, LV_ALIGN_IN_TOP_RIGHT, 0, 5);
 
@@ -209,7 +209,8 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   // Day of week ---------------------------------------------------------------------------------------
   lv_style_init(&dateday_style);
   lv_style_set_text_color(&dateday_style, LV_STATE_DEFAULT, lv_color_hex(0xFFE600)); 
-  label_date = lv_label_create(date1c_cont, nullptr);  
+  label_date = lv_label_create(date1c_cont, nullptr);
+  //lv_obj_set_width(date1c_cont, 120);
   lv_obj_add_style(label_date, LV_LABEL_PART_MAIN, &dateday_style);
   lv_label_set_text(label_date, dateTimeController.DayOfWeekToStringLow());
   //lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER);
@@ -221,6 +222,7 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
   lv_style_set_text_font(&date_style, LV_STATE_DEFAULT, &lv_font_clock_42); 
 
   label_date_day = lv_label_create(date1c_cont, nullptr);
+  //lv_obj_set_width(label_date_day, 120);
   lv_obj_add_style(label_date_day, LV_LABEL_PART_MAIN, &date_style);
   lv_label_set_text_fmt(label_date_day,  "%02i", day);
   //lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER);
@@ -387,7 +389,7 @@ bool WatchFaceDigital::Refresh() {
     if ((year != currentYear) || (month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 
       lv_label_set_text_fmt(label_date_year, "%04i", year);
-      lv_label_set_text(label_date_month, dateTimeController.MonthsGetLow());
+      lv_label_set_text(label_date_month, dateTimeController.MonthToStringLow());
       lv_label_set_text(label_date, dateTimeController.DayOfWeekToStringLow());
       lv_label_set_text_fmt(label_date_day,  "%02i", day);
 

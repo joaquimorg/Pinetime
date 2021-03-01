@@ -144,7 +144,3 @@ bool Charging::Refresh() {
   return running;
 }
 
-bool Charging::OnButtonPushed() {
-  running = false;
-  return true;
-}

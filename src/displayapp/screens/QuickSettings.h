@@ -12,9 +12,6 @@
 
 
 namespace Pinetime {
-  namespace Controllers {
-    class Battery;
-  }
 
   namespace Applications {
     namespace Screens {
@@ -30,7 +27,7 @@ namespace Pinetime {
           ~QuickSettings() override;
 
           bool Refresh() override;
-          bool OnButtonPushed() override;
+          
           bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
           void OnButtonEvent(lv_obj_t *object, lv_event_t event);
 
@@ -61,7 +58,6 @@ namespace Pinetime {
           
           int8_t batteryPercent = -1;
 
-          bool running = true;
 
       };
     }
