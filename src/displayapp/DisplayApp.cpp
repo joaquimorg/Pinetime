@@ -16,6 +16,8 @@
 #include "displayapp/screens/Tile.h"
 #include "displayapp/screens/Settings.h"
 #include "displayapp/screens/Steps.h"
+#include "displayapp/screens/QuickSettings.h"
+#include "displayapp/screens/FlashLight.h"
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/Watchdog.h"
@@ -44,7 +46,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) }*/
 {
   msgQueue = xQueueCreate(queueSize, itemSize);
-  LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+  LoadApp( Apps::Settings, DisplayApp::FullRefreshDirections::Down );
 }
 
 void DisplayApp::Start() {
@@ -79,7 +81,7 @@ void DisplayApp::Refresh() {
       break;
     case States::Running:
       RunningState();
-      queueTimeout = 5;
+      queueTimeout = 20;
       break;
     default:
       queueTimeout = portMAX_DELAY;
@@ -127,8 +129,8 @@ void DisplayApp::Refresh() {
         break;
         if (state != States::Running) break;
         auto gesture = OnTouchEvent();
-        if(!currentScreen->OnTouchEvent(gesture)) {
-          switch (gesture) {
+        /*if(!currentScreen->OnTouchEvent(gesture)) {
+         switch (gesture) {
             case TouchEvents::SwipeUp:
               if(currentApp == Apps::Clock) {
                 LoadApp( Apps::Launcher, DisplayApp::FullRefreshDirections::Up );
@@ -146,23 +148,30 @@ void DisplayApp::Refresh() {
                 LoadApp( Apps::NotificationsClock, DisplayApp::FullRefreshDirections::Down );
               }
               break;
+            case TouchEvents::SwipeRight:
+              if(currentApp == Apps::Clock) {
+                LoadApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::None );
+              }
+              break;
+
             default:
               break;
           }
-        }
+        }*/
       }
       break;
       
       case Messages::ButtonPushed:
         if( currentApp == Apps::Clock ) {
-          systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
+          //systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
         } else {
-          auto buttonUsedByApp = currentScreen->OnButtonPushed();
+          /*auto buttonUsedByApp = currentScreen->OnButtonPushed();
           if (!buttonUsedByApp) {
-            systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
-          } else {              
+            //systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
+          //} else {              
             SetFullRefresh( DisplayApp::FullRefreshDirections::Up );
-          }
+          }*/
+          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
         }
       break;
 
@@ -198,14 +207,14 @@ void DisplayApp::Refresh() {
     }
   }
 
-  if(state != States::Idle && touchMode == TouchModes::Polling) {
+  /*if(state != States::Idle && touchMode == TouchModes::Polling) {
     auto info = touchPanel.GetTouchInfo();
     if(info.action == 2) {// 2 = contact
       if(!currentScreen->OnTouchEvent(info.x, info.y)) {
         lvgl.SetNewTapEvent(info.x, info.y);
       }
     }
-  }
+  }*/
 }
 
 void DisplayApp::RunningState() {
@@ -228,10 +237,11 @@ void DisplayApp::PushMessage(DisplayApp::Messages msg) {
   BaseType_t xHigherPriorityTaskWoken;
   xHigherPriorityTaskWoken = pdFALSE;
   xQueueSendFromISR(msgQueue, &msg, &xHigherPriorityTaskWoken);
-  if (xHigherPriorityTaskWoken) {
+  portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+  //if (xHigherPriorityTaskWoken) {
     /* Actual macro used here is port specific. */
     // TODO : should I do something here?
-  }
+  //}
 }
 
 TouchEvents DisplayApp::OnTouchEvent() {
@@ -262,8 +272,9 @@ TouchEvents DisplayApp::OnTouchEvent() {
   }
   return TouchEvents::None;
   #else
-  lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
-  return TouchEvents::LongTap;  
+  //lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Down);
+  lvgl.SetNewTapEvent(120, 120);
+  return TouchEvents::Tap;  
   #endif
 }
 
@@ -293,10 +304,12 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::Notifications: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Normal)); break;
       case Apps::NotificationsClock: currentScreen.reset(new Screens::Notifications(this, notificationManager, Screens::Notifications::Modes::Clock)); break;
       case Apps::Settings: currentScreen.reset(new Screens::Settings(this, batteryController)); break;
+      case Apps::QuickSettings: currentScreen.reset(new Screens::QuickSettings(this, batteryController, dateTimeController, brightnessController, settingsController)); break;
       case Apps::Steps: currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController)); break;
       //case Apps::HeartRate: currentScreen.reset(new Screens::HeartRate(this, hrs, settingsController, systemTask)); break;
       case Apps::Charging: currentScreen.reset(new Screens::Charging(this, batteryController)); break;
       case Apps::LowBatt: currentScreen.reset(new Screens::LowBatt(this, batteryController)); break;
+      case Apps::FlashLight: currentScreen.reset(new Screens::FlashLight(this, brightnessController)); break;
 
       // To Do :-)
       //case Apps::Weather: currentScreen.reset(new Screens::ScreensTemplate(this, "Weather")); break;

@@ -62,9 +62,7 @@ const char *Brightness::LevelToString(Pinetime::Controllers::BrightnessControlle
   switch(level) {
     case Pinetime::Controllers::BrightnessController::Levels::Off: return "Off";
     case Pinetime::Controllers::BrightnessController::Levels::Low: return "Low";
-    case Pinetime::Controllers::BrightnessController::Levels::LowMedium: return "Low Medium";
     case Pinetime::Controllers::BrightnessController::Levels::Medium: return "Medium";
-    case Pinetime::Controllers::BrightnessController::Levels::MediumHigh: return "Medium High";
     case Pinetime::Controllers::BrightnessController::Levels::High: return "High";
     default : return "???";
   }
@@ -77,10 +75,8 @@ void Brightness::OnValueChanged() {
 void Brightness::SetValue(uint8_t value) {
   switch(value) {
     case 0: brightness.Set(Controllers::BrightnessController::Levels::Low); break;
-    case 1: brightness.Set(Controllers::BrightnessController::Levels::LowMedium); break;
-    case 2: brightness.Set(Controllers::BrightnessController::Levels::Medium); break;
-    case 3: brightness.Set(Controllers::BrightnessController::Levels::MediumHigh); break;
-    case 4: brightness.Set(Controllers::BrightnessController::Levels::High); break;
+    case 1: brightness.Set(Controllers::BrightnessController::Levels::Medium); break;
+    case 2: brightness.Set(Controllers::BrightnessController::Levels::High); break;
   }
   lv_label_set_text(slider_label, LevelToString(brightness.Level()));
 }
@@ -88,10 +84,8 @@ void Brightness::SetValue(uint8_t value) {
 uint8_t Brightness::LevelToInt(Pinetime::Controllers::BrightnessController::Levels level) {
   switch(level) {    
     case Pinetime::Controllers::BrightnessController::Levels::Low: return 0;
-    case Pinetime::Controllers::BrightnessController::Levels::LowMedium: return 1;
-    case Pinetime::Controllers::BrightnessController::Levels::Medium: return 2;
-    case Pinetime::Controllers::BrightnessController::Levels::MediumHigh: return 3;
-    case Pinetime::Controllers::BrightnessController::Levels::High: return 4;
+    case Pinetime::Controllers::BrightnessController::Levels::Medium: return 1;
+    case Pinetime::Controllers::BrightnessController::Levels::High: return 2;
     default : return 0;
   }
 }

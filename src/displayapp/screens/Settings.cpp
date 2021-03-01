@@ -3,20 +3,18 @@
 #include "../DisplayApp.h"
 #include "drivers/BMA421.h"
 #include "board_config.h"
-#include <libraries/gpiote/app_gpiote.h>
 #include "components/battery/BatteryController.h"
-#include <mdk/nrf.h>
+#include "Symbols.h"
 
 using namespace Pinetime::Applications::Screens;
 
+  LV_IMG_DECLARE(not_email);
 
-namespace {
-  static void ButtonEventHandler(lv_obj_t * obj, lv_event_t event)
-  {
-    Settings* screen = static_cast<Settings *>(obj->user_data);
-    screen->OnButtonEvent(obj, event);
-  }
-
+static void event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+        //printf("Clicked: %s\n", lv_list_get_btn_text(obj));
+    }
 }
 
 Settings::Settings(
@@ -26,20 +24,37 @@ Settings::Settings(
   batteryController{batteryController}
 {
 
-  llabel = lv_label_create(lv_scr_act(), NULL);
-  lv_label_set_recolor(llabel, true);                      /*Enable re-coloring by commands in the text*/
-  lv_label_set_text_fmt(llabel,     "#0000FF Screen# %s", "Settings"); 
-  lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 0);
+   /*Create a list*/
+    lv_obj_t * list1 = lv_list_create(lv_scr_act(), NULL);
+    lv_obj_set_size(list1, 160, 200);
+    lv_obj_align(list1, NULL, LV_ALIGN_CENTER, 0, 0);
+    //lv_obj_set_style_local_text_font(list1, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
 
-  buttonPwrOff = lv_btn_create(lv_scr_act(), nullptr);
-  buttonPwrOff->user_data = this;
-  lv_obj_align(buttonPwrOff, nullptr, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
-  lv_obj_set_event_cb(buttonPwrOff, ButtonEventHandler);
+    /*Add buttons to the list*/
+    lv_obj_t * list_btn;
 
-  lv_obj_t* labelButtonPwrOff = lv_label_create(buttonPwrOff, nullptr);
-  lv_label_set_recolor(labelButtonPwrOff, true);
-  lv_label_set_text_static(labelButtonPwrOff, "#ff0000 Reset#");
+    list_btn = lv_list_add_btn(list1, &not_email, "New");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+    list_btn = lv_list_add_btn(list1, LV_SYMBOL_DIRECTORY, "Open");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+    list_btn = lv_list_add_btn(list1, LV_SYMBOL_CLOSE, "Delete");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+    list_btn = lv_list_add_btn(list1, LV_SYMBOL_EDIT, "Edit");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+    list_btn = lv_list_add_btn(list1, LV_SYMBOL_SAVE, "Save");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+    list_btn = lv_list_add_btn(list1, LV_SYMBOL_BELL, "Notify");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+    list_btn = lv_list_add_btn(list1, LV_SYMBOL_BATTERY_FULL, "Battery");
+    lv_obj_set_event_cb(list_btn, event_handler);
+
+
 
   lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -63,9 +78,3 @@ bool Settings::OnButtonPushed() {
   return true;
 }
 
-
-void Settings::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
-  if(object == buttonPwrOff && event == LV_EVENT_PRESSED) {
-    NVIC_SystemReset();
-  }
-}

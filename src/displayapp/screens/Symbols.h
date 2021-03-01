@@ -23,7 +23,9 @@ namespace Pinetime {
         static constexpr const char* phone                = "\xEE\xA4\x88"; //e908
 
         // font sys 48
+        // 
         static constexpr const char* tennisRacket1        = "\xEE\xA4\x81";//e901
+        static constexpr const char* settings             = "\xEE\xA4\x82";//e902
         static constexpr const char* tennisRacket         = "\xEE\xA4\x80";//e900
         static constexpr const char* ringVolume           = "\xEE\xA4\x83";//e903
         static constexpr const char* brightnessHigh       = "\xEE\xA4\x84";//e904

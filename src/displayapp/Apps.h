@@ -18,6 +18,7 @@ namespace Pinetime
       Notifications,
       NotificationsClock,
       Settings,
+      QuickSettings,
       Steps,
       //HeartRate,
       //Weather,
@@ -27,7 +28,8 @@ namespace Pinetime
       //Paddle,
       //Twos,
       Charging,
-      LowBatt
+      LowBatt,
+      FlashLight
     };
   }
 } // namespace Pinetime

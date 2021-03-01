@@ -9,7 +9,7 @@
 
 using namespace Pinetime::Controllers;
 
-#define SAMPLES_IN_BUFFER 5
+#define SAMPLES_IN_BUFFER 1
 static nrf_saadc_value_t m_buffer_pool[2][SAMPLES_IN_BUFFER];
 
 float voltage = 0.0f;
@@ -20,20 +20,31 @@ void Battery::Init() {
   //nrf_gpio_cfg_output(PWR_CTRL);
   //nrf_gpio_pin_clear(PWR_CTRL);
 
-  //nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+  //nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Disabled);
 
-  nrfx_gpiote_in_config_t pinConfig;
+  //nrfx_gpiote_in_config_t pinConfig;
 
   // POWER PRESENCE INDICATION IRQ
-  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
+  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
 
-  pinConfig.skip_gpio_setup = true;
+  static nrfx_gpiote_in_config_t const pinConfig = {
+      .sense = NRF_GPIOTE_POLARITY_TOGGLE,
+      .pull = NRF_GPIO_PIN_NOPULL,
+      .is_watcher = false,
+      .hi_accuracy = false,
+      .skip_gpio_setup = true,
+    };
+  
+  nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+
+  /*pinConfig.skip_gpio_setup = true;
   pinConfig.hi_accuracy = false;
   pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_LOTOHI;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
+  pinConfig.sense = NRF_GPIOTE_POLARITY_LOTOHI;
+  pinConfig.pull = NRF_GPIO_PIN_NOPULL;
 
-  nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
+
   //
 
   // CHARGE INDICATION IRQ
@@ -50,7 +61,10 @@ void Battery::Init() {
 
   nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
   //
+  
+}
 
+void Battery::SaadcInit() {
   nrfx_saadc_config_t adcConfig = NRFX_SAADC_DEFAULT_CONFIG;
   APP_ERROR_CHECK(nrfx_saadc_init(&adcConfig, SaadcEventHandler));
 
@@ -74,14 +88,17 @@ void Battery::Init() {
 
 void Battery::Update() {
 
-  isCharging = 1;//!nrf_gpio_pin_read(CHARGE_IRQ);
+  //isCharging = 1;//!nrf_gpio_pin_read(CHARGE_IRQ);
+  isCharging = nrf_gpio_pin_read(CHARGE_BASE_IRQ);
   
   //isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
 
   // Non blocking read
-  for (int i = 0; i < SAMPLES_IN_BUFFER * 2; i++) {
-    APP_ERROR_CHECK(nrfx_saadc_sample());
-  }
+  //for (int i = 0; i < SAMPLES_IN_BUFFER * 2; i++) {
+  SaadcInit();
+
+  APP_ERROR_CHECK(nrfx_saadc_sample());
+  //}
 
   //nrf_saadc_value_t value = 0;
   //nrfx_saadc_sample_convert(0, &value);
@@ -129,6 +146,8 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
     if (percentRemaining > 100) {
         percentRemaining = 100;    
     }
+
+    nrfx_saadc_uninit();
 
   } else {
     percentRemaining = -1;

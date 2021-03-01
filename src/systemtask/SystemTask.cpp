@@ -72,7 +72,7 @@ void SystemTask::Process(void *instance) {
 }
 
 void SystemTask::Work() {
-  ret_code_t errCode;
+  
    
   watchdog.Setup(7);
   watchdog.Start();
@@ -92,8 +92,9 @@ void SystemTask::Work() {
   nimbleController.StartAdvertising();
   lcd.Init();
   
-  #ifndef P8CLONE
   twiMaster.Init();
+  
+  #ifndef P8CLONE
   touchPanel.Init();
   stepCounter.Init();
   #endif
@@ -106,12 +107,6 @@ void SystemTask::Work() {
 
   batteryController.Update();
   //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::UpdateBatteryLevel);
-
-  /*if(!nrf_drv_gpiote_is_init())
-  {
-        errCode = nrf_drv_gpiote_init();                                       
-        APP_ERROR_CHECK(errCode);
-  }*/
 
   nrfx_gpiote_in_config_t pinConfig;
 
@@ -155,7 +150,7 @@ void SystemTask::Work() {
   //
   #endif
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(idleTime), pdFALSE, this, IdleTimerCallback);
-  //xTimerStart(idleTimer, 0);
+  xTimerStart(idleTimer, 0);
 
   // Hardware status timer
   hardwareTimer = xTimerCreate ("hardwareTimer", pdMS_TO_TICKS(hardwareTime), pdTRUE, this, HardwareTimerCallback);
@@ -181,13 +176,14 @@ void SystemTask::Work() {
         break;
         case Messages::WakeUp:
           spi.Wakeup();
-          //twiMaster.Wakeup();
+          twiMaster.Wakeup();
           //stepCounter.Wakeup();
 
           nimbleController.StartAdvertising();
           //xTimerStart(idleTimer, 0);
           
           //spiNorFlash.Wakeup();
+          
           #ifndef P8CLONE
           touchPanel.Wakeup(); 
           stepCounter.Update();
@@ -247,13 +243,13 @@ void SystemTask::Work() {
             NVIC_SystemReset();
           break;
         case Messages::OnTouchEvent:
-          //ReloadIdleTimer();
+          ReloadIdleTimer();
           break;
         case Messages::OnButtonEvent:
           //ReloadIdleTimer();
           break;
         case Messages::ReloadIdleTimer:
-          //ReloadIdleTimer();
+          ReloadIdleTimer();
           break;
         case Messages::OnStepEvent:
           vibration.Vibrate(25);
@@ -331,7 +327,8 @@ void SystemTask::OnTouchEvent() {
   NRF_LOG_INFO("[systemtask] Touch event");
   if(!isSleeping) {
     PushMessage(Messages::OnTouchEvent);
-    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+    //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::ButtonPushed);
   }
 }
 
@@ -372,10 +369,11 @@ void SystemTask::PushMessage(SystemTask::Messages msg) {
   BaseType_t xHigherPriorityTaskWoken;
   xHigherPriorityTaskWoken = pdFALSE;
   xQueueSendFromISR(systemTasksMsgQueue, &msg, &xHigherPriorityTaskWoken);
-  if (xHigherPriorityTaskWoken) {
+  portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+  //if (xHigherPriorityTaskWoken) {
     /* Actual macro used here is port specific. */
     // TODO: should I do something here?
-  }
+  //}
 }
 
 void SystemTask::OnIdle() {
@@ -385,14 +383,15 @@ void SystemTask::OnIdle() {
   NRF_LOG_INFO("Idle timeout -> Going to sleep")
   PushMessage(Messages::GoToSleep);
   #else
-  //xTimerReset(idleTimer, 0);
+  xTimerReset(idleTimer, 0);
   //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+  
   #endif
 }
 
 void SystemTask::ReloadIdleTimer() const {
   if(isSleeping || isGoingToSleep) return;
-  //xTimerReset(idleTimer, 0);
+  xTimerReset(idleTimer, 0);
 }
 
 

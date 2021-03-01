@@ -377,9 +377,10 @@ list(APPEND SOURCE_FILES
         displayapp/screens/LowBatt.cpp
         displayapp/screens/Clock.cpp
         displayapp/screens/Tile.cpp
-        #displayapp/screens/InfiniPaint.cpp
+        displayapp/screens/FlashLight.cpp
         displayapp/screens/Steps.cpp
         displayapp/screens/Settings.cpp
+        displayapp/screens/QuickSettings.cpp
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp

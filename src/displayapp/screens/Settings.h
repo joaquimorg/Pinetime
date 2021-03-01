@@ -31,8 +31,6 @@ namespace Pinetime {
 
         private:          
 
-          lv_obj_t* llabel;
-          lv_obj_t* buttonPwrOff;
 
           bool running = true;
 

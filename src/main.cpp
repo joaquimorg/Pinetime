@@ -267,6 +267,15 @@ void nimble_port_ll_task_func(void *args) {
 }
 
 int main(void) {
+
+  ret_code_t errCode;
+
+  if(!nrf_drv_gpiote_is_init())
+  {
+        errCode = nrf_drv_gpiote_init();                                       
+        APP_ERROR_CHECK(errCode);
+  }
+
   logger.Init();
 
   nrf_drv_clock_init();

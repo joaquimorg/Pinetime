@@ -39,8 +39,6 @@ namespace Pinetime {
 
           bool running = true;
 
-          uint8_t pin = 3;
-
       };
     }
   }

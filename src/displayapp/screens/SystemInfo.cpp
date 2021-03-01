@@ -60,10 +60,8 @@ std::unique_ptr<Screen> SystemInfo::CreateScreen1() {
   switch(brightnessController.Level()) {
     case Controllers::BrightnessController::Levels::Off: brightness = 0; break;
     case Controllers::BrightnessController::Levels::Low: brightness = 1; break;
-    case Controllers::BrightnessController::Levels::LowMedium: brightness = 2; break;
-    case Controllers::BrightnessController::Levels::Medium: brightness = 3; break;
-    case Controllers::BrightnessController::Levels::MediumHigh: brightness = 4; break;
-    case Controllers::BrightnessController::Levels::High: brightness = 5; break;
+    case Controllers::BrightnessController::Levels::Medium: brightness = 2; break;
+    case Controllers::BrightnessController::Levels::High: brightness = 3; break;
   }
   auto resetReason = [this]() {
     switch (watchdog.ResetReason()) {
