@@ -312,7 +312,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Launcher, FullRefreshDirections::Down); 
         break;
       case Apps::FlashLight: 
-        currentScreen.reset(new Screens::FlashLight(this, brightnessController)); 
+        currentScreen.reset(new Screens::FlashLight(this, systemTask, brightnessController)); 
         returnApp(Apps::Clock, FullRefreshDirections::Down);
         break;
       case Apps::QuickSettings: 
