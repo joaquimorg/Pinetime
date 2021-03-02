@@ -22,6 +22,9 @@ namespace Pinetime
 
       Settings,
       SettingDisplay,
+      SettingTimeFormat,
+      SettingWatchFace,
+      SettingSteps,
     };
   }
 } // namespace Pinetime

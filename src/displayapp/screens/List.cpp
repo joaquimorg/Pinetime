@@ -92,7 +92,7 @@ List::List(uint8_t screenID, uint8_t numScreens,
 
       itemApps[i] = lv_btn_create(container1, nullptr);
       lv_obj_set_style_local_bg_opa(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_DEFAULT, LV_OPA_30);
-      lv_obj_set_style_local_bg_color(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_PRESSED, LV_COLOR_CYAN);
+      //lv_obj_set_style_local_bg_color(itemApps[i], LV_BTN_PART_MAIN, LV_STATE_PRESSED, LV_COLOR_CYAN);
       lv_obj_set_width(itemApps[i], LV_HOR_RES - 25);
       lv_obj_set_height(itemApps[i], 52);
       lv_obj_set_event_cb(itemApps[i], ButtonEventHandler);
@@ -100,6 +100,7 @@ List::List(uint8_t screenID, uint8_t numScreens,
       itemApps[i]->user_data = this;
 
       labelBtIco = lv_label_create(itemApps[i], nullptr);
+      lv_obj_set_style_local_text_color(labelBtIco, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
       lv_obj_set_style_local_text_font(labelBtIco, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);  
       lv_label_set_text_static(labelBtIco, applications[i].icon);
 

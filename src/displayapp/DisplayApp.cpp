@@ -21,6 +21,9 @@
 
 #include "displayapp/screens/Settings.h"
 #include "displayapp/screens/SettingDisplay.h"
+#include "displayapp/screens/SettingTimeFormat.h"
+#include "displayapp/screens/SettingWatchFace.h"
+#include "displayapp/screens/SettingSteps.h"
 
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
@@ -317,6 +320,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Clock, FullRefreshDirections::None);
         break;
 
+      // -----------------------------------------------------------------------------------------------------------------------------------------
       case Apps::Settings: 
         currentScreen.reset(new Screens::Settings(this, batteryController, dateTimeController, settingsController));
         returnApp(Apps::QuickSettings, FullRefreshDirections::Down);
@@ -324,6 +328,21 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
 
       case Apps::SettingDisplay: 
         currentScreen.reset(new Screens::SettingDisplay(this, settingsController));
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::SettingTimeFormat: 
+        currentScreen.reset(new Screens::SettingTimeFormat(this, settingsController));
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::SettingWatchFace: 
+        currentScreen.reset(new Screens::SettingWatchFace(this, settingsController));
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::SettingSteps: 
+        currentScreen.reset(new Screens::SettingSteps(this, settingsController));
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
 
@@ -340,6 +359,8 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
 
+      // -----------------------------------------------------------------------------------------------------------------------------------------
+      
       case Apps::Charging: 
         returnApp(currentApp, currentDirection);
         currentScreen.reset(new Screens::Charging(this, batteryController));

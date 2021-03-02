@@ -430,6 +430,9 @@ list(APPEND SOURCE_FILES
 
         displayapp/screens/Settings.cpp
         displayapp/screens/SettingDisplay.cpp
+        displayapp/screens/SettingTimeFormat.cpp
+        displayapp/screens/SettingWatchFace.cpp
+        displayapp/screens/SettingSteps.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
