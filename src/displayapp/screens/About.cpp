@@ -170,7 +170,7 @@ std::unique_ptr<Screen> About::CreateScreen4() {
               "Public License v3\n"
               "#444444 Source code#\n"
               "#FFFF00 https://github.com/#\n"
-              "#FFFF00 joaquimorg/Pinetime#");
+              "#FFFF00 joaquimorg/PinetimeLite#");
   lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
   return std::unique_ptr<Screen>(new Screens::Label(3, 4, app, label));
 }
