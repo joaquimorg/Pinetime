@@ -10,7 +10,7 @@ namespace Pinetime {
         // lv_font_sys_20.c
         //  lv_font_conv --font icons_sys.ttf -r 0xe920 -r 0xe924 -r 0xe921 -r 0xe922 -r 0xe923 -r 0xe906 -r 0xe907 -r 0xe901 -r 0xe903 -r 0xe905 -r 0xe904 -r 0xe902 -r 0xe900 -r 0xe908 -r 0xe909 -r 0xe90a -r 0xe90b -r 0xe90c --size 20 --format lvgl --bpp 2 --no-compress -o lv_font_sys_20.c
         /*
-        0xe90d, 0xe902, 0xe909, 0xe906, 0xe907, 0xe903, 0xe90a, 0xe900, 0xe90b, 0xe90c, 0xe904, 0xe910, 0xe911, 0xe908, 0xe905, 0xe901, 0xe90d, 0xe920, 0xe921, 0xe922, 0xe923, 0xe924
+        0xe90d, 0xe902, 0xe909, 0xe906, 0xe907, 0xe903, 0xe90a, 0xe900, 0xe90b, 0xe90c, 0xe904, 0xe910, 0xe911, 0xe908, 0xe905, 0xe901, 0xe90d, 0xe920, 0xe921, 0xe922, 0xe923, 0xe924, 0xe90f
         */
         static constexpr const char* batteryFull          = "\xEE\xA4\xA0"; //e920
         static constexpr const char* batteryEmpty         = "\xEE\xA4\xA4"; //e924
@@ -34,21 +34,31 @@ namespace Pinetime {
 
         // font sys 48
         // lv_font_sys_48.c
-        // 
+        // 
+        /*
+        0xe908, 0xe901, 0xe900, 0xe903, 0xe909, 0xe904, 0xe905, 0xe906, 0xe907, 0xe90b, 0xe90c, 0xe902, 0xe910, 0xe914
+        */
         static constexpr const char* tennisRacket1        = "\xEE\xA4\x81";//e901
         static constexpr const char* tennisRacket2        = "\xEE\xA4\x80";//e900
         static constexpr const char* tennisRacket3        = "\xEE\xA4\x88";//e908
+
         static constexpr const char* settings             = "\xEE\xA4\x82";//e902
-        static constexpr const char* ringVolume           = "\xEE\xA4\x83";//e903
+
         static constexpr const char* brightnessHigh       = "\xEE\xA4\x84";//e904
         static constexpr const char* brightnessLow        = "\xEE\xA4\x85";//e905
         static constexpr const char* brightnessMedium     = "\xEE\xA4\x86";//e906
-        static constexpr const char* highlight            = "\xEE\xA4\x87";//e907
-        static constexpr const char* phoneInTalk          = "\xEE\xA4\x89";//e909
+
         static constexpr const char* notificationsOff     = "\xEE\xA4\x8B";//e90b
         static constexpr const char* notificationsOn      = "\xEE\xA4\x8C";//e90c
-        static constexpr const char* phoneDisabled        = "\xEE\xA4\x90";//e910
+
+        static constexpr const char* highlight            = "\xEE\xA4\x87";//e907
+
         static constexpr const char* qrCode               = "\xEE\xA4\x94";//e914
+
+        static constexpr const char* PhoneOff             = "\xEE\xA4\x83";//e903        
+        static constexpr const char* phoneOn              = "\xEE\xA4\x89";//e909
+        static constexpr const char* phoneDisabled        = "\xEE\xA4\x90";//e910
+        
       }
     }
   }

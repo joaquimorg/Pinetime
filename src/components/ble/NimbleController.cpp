@@ -17,20 +17,24 @@
 
 using namespace Pinetime::Controllers;
 
-NimbleController::NimbleController(Pinetime::System::SystemTask& systemTask,
-                                   Pinetime::Controllers::Ble& bleController,
+NimbleController::NimbleController(
+        Pinetime::System::SystemTask& systemTask,
+        Pinetime::Controllers::Ble& bleController,
         DateTime& dateTimeController,
         Pinetime::Controllers::NotificationManager& notificationManager,
+        Pinetime::Controllers::CallNotificationManager& callNotificationManager,
         Controllers::Battery& batteryController,
         Pinetime::Drivers::SpiNorFlash& spiNorFlash) :
+
         systemTask{systemTask},
         bleController{bleController},
         dateTimeController{dateTimeController},
         notificationManager{notificationManager},
+        callNotificationManager{callNotificationManager},
         spiNorFlash{spiNorFlash},
         dfuService{systemTask, bleController, spiNorFlash},
         currentTimeClient{dateTimeController},
-        anService{systemTask, notificationManager},
+        anService{systemTask, notificationManager, callNotificationManager},
         alertNotificationClient{systemTask, notificationManager},
         currentTimeService{dateTimeController},
         musicService{systemTask},

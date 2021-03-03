@@ -386,7 +386,8 @@ list(APPEND SOURCE_FILES
         components/firmwarevalidator/FirmwareValidator.cpp
 
         components/ble/BleController.cpp
-        components/ble/NotificationManager.cpp        
+        components/ble/NotificationManager.cpp
+        components/ble/CallNotificationManager.cpp
         components/ble/NimbleController.cpp
         components/ble/DeviceInformationService.cpp
         components/ble/CurrentTimeClient.cpp
@@ -419,6 +420,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp
+        displayapp/screens/IncomingCall.cpp
         displayapp/screens/About.cpp
         displayapp/screens/Label.cpp
         displayapp/screens/FirmwareUpdate.cpp

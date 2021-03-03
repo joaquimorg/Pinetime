@@ -29,9 +29,9 @@ namespace Pinetime {
         static constexpr const char* manufacturerName = "PINE64";
         static constexpr const char* modelNumber = "PineTime";
         static constexpr const char* hwRevision = "1.0.0";
-        static constexpr const char* serialNumber = "0";
+        static constexpr const char* serialNumber = "2021";
         static constexpr const char* fwRevision =  Version::VersionString();
-        static constexpr const char* swRevision = "InfiniTime";
+        static constexpr const char* swRevision = "Pinetime-Lite";
 
 
         static constexpr ble_uuid16_t deviceInfoUuid {

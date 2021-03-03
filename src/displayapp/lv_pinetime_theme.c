@@ -265,10 +265,11 @@ static void basic_init(void)
     lv_style_set_bg_color(&styles->btn, LV_STATE_CHECKED | LV_STATE_PRESSED, COLOR_BTN_CHK_PR);
     lv_style_set_bg_color(&styles->btn, LV_STATE_DISABLED, COLOR_BTN);
     lv_style_set_bg_color(&styles->btn, LV_STATE_DISABLED | LV_STATE_CHECKED, COLOR_BTN_DIS);
-    lv_style_set_border_color(&styles->btn, LV_STATE_DEFAULT, COLOR_BTN_BORDER);
-    lv_style_set_border_color(&styles->btn, LV_STATE_PRESSED, COLOR_BTN_BORDER_PR);
-    lv_style_set_border_color(&styles->btn, LV_STATE_DISABLED, COLOR_BTN_BORDER_INA);
-    lv_style_set_border_width(&styles->btn, LV_STATE_DEFAULT, BORDER_WIDTH);
+    //lv_style_set_border_color(&styles->btn, LV_STATE_DEFAULT, COLOR_BTN_BORDER);
+    //lv_style_set_border_color(&styles->btn, LV_STATE_PRESSED, COLOR_BTN_BORDER_PR);
+    //lv_style_set_border_color(&styles->btn, LV_STATE_DISABLED, COLOR_BTN_BORDER_INA);
+    //lv_style_set_border_width(&styles->btn, LV_STATE_DEFAULT, BORDER_WIDTH);
+    lv_style_set_border_width(&styles->btn, LV_STATE_DEFAULT, 0);
     lv_style_set_border_opa(&styles->btn, LV_STATE_CHECKED, LV_OPA_TRANSP);
 
     lv_style_set_text_color(&styles->btn, LV_STATE_DEFAULT, IS_LIGHT ? lv_color_hex(0x31404f) : lv_color_hex(0xffffff));

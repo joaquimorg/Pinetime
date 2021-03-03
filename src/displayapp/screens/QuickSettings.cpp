@@ -45,7 +45,7 @@ QuickSettings::QuickSettings(
   label_time = lv_label_create(lv_scr_act(), NULL);  
   lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 4);
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 15, 4);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);

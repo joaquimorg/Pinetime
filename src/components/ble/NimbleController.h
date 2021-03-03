@@ -31,12 +31,15 @@ namespace Pinetime {
     class Ble;
     class DateTime;
     class NotificationManager;
+    class CallNotificationManager;
 
     class NimbleController {
 
       public:
         NimbleController(Pinetime::System::SystemTask& systemTask, Pinetime::Controllers::Ble& bleController,
-                DateTime& dateTimeController, Pinetime::Controllers::NotificationManager& notificationManager,
+                DateTime& dateTimeController, 
+                Pinetime::Controllers::NotificationManager& notificationManager,
+                Pinetime::Controllers::CallNotificationManager &callNotificationManager,
                 Controllers::Battery& batteryController, Pinetime::Drivers::SpiNorFlash& spiNorFlash);
         void Init();
         void StartAdvertising();
@@ -59,11 +62,12 @@ namespace Pinetime {
         uint16_t connHandle();
 
       private:
-        static constexpr const char* deviceName = "InfiniTime";
+        static constexpr const char* deviceName = "Pinetime-Lite";
         Pinetime::System::SystemTask& systemTask;
         Pinetime::Controllers::Ble& bleController;
         DateTime& dateTimeController;
         Pinetime::Controllers::NotificationManager& notificationManager;
+        Pinetime::Controllers::CallNotificationManager& callNotificationManager;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
         Pinetime::Controllers::DfuService dfuService;
 

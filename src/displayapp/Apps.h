@@ -13,7 +13,7 @@ namespace Pinetime
       FirmwareUpdate,
       FirmwareValidation,
       Notifications,
-      NotificationsClock,
+      IncomingCall,
       Steps,
       Charging,
       LowBatt,
