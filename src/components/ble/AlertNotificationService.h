@@ -18,11 +18,13 @@ namespace Pinetime {
   }
   namespace Controllers {
     class NotificationManager;
+    class CallNotificationManager;
 
     class AlertNotificationService {
       public:
         AlertNotificationService(Pinetime::System::SystemTask &systemTask,
-                                         Pinetime::Controllers::NotificationManager &notificationManager);
+                                 Pinetime::Controllers::NotificationManager &notificationManager,
+                                 Pinetime::Controllers::CallNotificationManager &callNotificationManager);
         void Init();
 
         int OnAlert(uint16_t conn_handle, uint16_t attr_handle,
@@ -94,6 +96,7 @@ namespace Pinetime {
 
         Pinetime::System::SystemTask &systemTask;
         NotificationManager &notificationManager;
+        CallNotificationManager &callNotificationManager;
 
         uint16_t eventHandle;
     };

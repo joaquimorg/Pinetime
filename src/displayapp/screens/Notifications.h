@@ -11,7 +11,7 @@ namespace Pinetime {
     namespace Screens {
       class Notifications : public Screen {
         public:
-
+          
           explicit Notifications(DisplayApp* app, Pinetime::Controllers::NotificationManager& notificationManager);
           ~Notifications() override;
 
@@ -40,7 +40,7 @@ namespace Pinetime {
           };
 
           Pinetime::Controllers::NotificationManager& notificationManager;
-          
+         
           std::unique_ptr<NotificationItem> currentItem;
           Controllers::NotificationManager::Notification::Id currentId;
           bool validDisplay = false;

@@ -45,7 +45,6 @@ SettingDisplay::SettingDisplay(
   lv_label_set_text_static(icon, Symbols::backLight);
   lv_label_set_align(icon, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(icon, title, LV_ALIGN_OUT_LEFT_MID, -10, 0);
-
   
   cbTimeOut[0] = lv_checkbox_create(container1, NULL);
   lv_checkbox_set_text_static(cbTimeOut[0], "\t  5 seconds");
@@ -100,6 +99,7 @@ void SettingDisplay::UpdateSelected(lv_obj_t *object, lv_event_t event) {
         if ( i == 1 ) { settingsController.SetScreenTimeOut(15000); };
         if ( i == 2 ) { settingsController.SetScreenTimeOut(20000); };
         if ( i == 3 ) { settingsController.SetScreenTimeOut(30000); };
+        
         app->PushMessage(Applications::DisplayApp::Messages::UpdateTimeOut);
 
       } else {

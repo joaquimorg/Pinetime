@@ -12,7 +12,7 @@ The **Pinetime** smartwatch is built around the NRF52832 MCU (512KB Flash, 64KB 
 
 # PinetimeLite
 
-This project is a fork of [Infinitime](https://github.com/JF002/Pinetime)
+This project is a fork of [Infinitime](https://github.com/JF002/InfiniTime)
 
 The purpose of **PinetimeLite** is to build firmware for Pinetime that is lightweight and maximizes battery life.
 The functionalities to be implemented are:
@@ -48,7 +48,7 @@ https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=
 ----
 ## Build PinetimeLite
 
-- $ gh repo clone joaquimorg/Pinetime
+- $ gh repo clone joaquimorg/PinetimeLite
 - $ git submodule update --init --recursive
 
 - $ mkdir build

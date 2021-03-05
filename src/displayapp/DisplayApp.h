@@ -26,6 +26,7 @@ namespace Pinetime {
     class Ble;
     class DateTime;
     class NotificationManager;
+    class CallNotificationManager;
   }
 
   namespace System {
@@ -47,7 +48,8 @@ namespace Pinetime {
                    Controllers::Settings &settingsController,
                    Drivers::BMA421 &stepCounter,
                    System::SystemTask &systemTask,
-                   Pinetime::Controllers::NotificationManager &notificationManager);
+                   Pinetime::Controllers::NotificationManager &notificationManager,
+                   Pinetime::Controllers::CallNotificationManager &callNotificationManager);
         void Start();
         void PushMessage(Messages msg);
 
@@ -72,6 +74,7 @@ namespace Pinetime {
         Pinetime::Drivers::BMA421& stepCounter;
         Pinetime::System::SystemTask& systemTask;
         Pinetime::Controllers::NotificationManager& notificationManager;
+        Pinetime::Controllers::CallNotificationManager& callNotificationManager;
         std::unique_ptr<Screens::Screen> currentScreen;
 
         Pinetime::Controllers::FirmwareValidator validator;

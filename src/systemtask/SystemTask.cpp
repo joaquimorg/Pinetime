@@ -54,7 +54,7 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        watchdog{}, 
                        watchdogView{watchdog},
 
-                       nimbleController(*this, bleController, dateTimeController, notificationManager, batteryController, spiNorFlash),
+                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash),
                        vrMotor( settingsController ) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
 }
@@ -108,7 +108,7 @@ void SystemTask::Work() {
   settingsController.Init();  
 
   displayApp.reset(new Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController,
-                                                          dateTimeController, watchdogView, settingsController, stepCounter, *this, notificationManager));
+                                                          dateTimeController, watchdogView, settingsController, stepCounter, *this, notificationManager, callNotificationManager));
   displayApp->Start();
 
   //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);

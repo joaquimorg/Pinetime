@@ -22,7 +22,7 @@ namespace Pinetime {
 
           Controllers::Settings& settingsController;
 
-          lv_obj_t * cbTimeOut[4];
+          lv_obj_t * cbTimeOut[2];
           
       };
     }

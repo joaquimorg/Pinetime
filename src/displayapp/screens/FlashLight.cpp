@@ -8,8 +8,10 @@ using namespace Pinetime::Applications::Screens;
 
 FlashLight::FlashLight(
     Pinetime::Applications::DisplayApp *app,
+    System::SystemTask &systemTask,
     Controllers::BrightnessController& brightness) : 
   Screen(app),
+  systemTask{systemTask},
   brightness{brightness}
   
 {
@@ -23,6 +25,7 @@ FlashLight::FlashLight(
   lv_obj_set_style_local_text_font(flashLight, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_48);
   lv_label_set_text_static(flashLight, Symbols::highlight);
   lv_obj_align(flashLight, NULL, LV_ALIGN_CENTER, 0, 0);
+  systemTask.PushMessage(Pinetime::System::SystemTask::Messages::DisableSleeping);
 }
 
 
@@ -30,6 +33,7 @@ FlashLight::~FlashLight() {
   lv_obj_clean(lv_scr_act());
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x000000));
   brightness.Restore();
+  systemTask.PushMessage(Pinetime::System::SystemTask::Messages::EnableSleeping);
 }
 
 

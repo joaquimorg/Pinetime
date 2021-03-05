@@ -16,6 +16,7 @@
 #include "components/ble/BleController.h"
 #include "components/ble/NimbleController.h"
 #include "components/ble/NotificationManager.h"
+#include "components/ble/CallNotificationManager.h"
 
 #include "drivers/Watchdog.h"
 #include "drivers/BMA421.h"
@@ -90,6 +91,7 @@ namespace Pinetime {
         Pinetime::Drivers::Watchdog watchdog;
         Pinetime::Drivers::WatchdogView watchdogView;
         Controllers::NotificationManager notificationManager;
+        Controllers::CallNotificationManager callNotificationManager;
         Controllers::NimbleController nimbleController;
 
         Pinetime::Controllers::Motor vrMotor;

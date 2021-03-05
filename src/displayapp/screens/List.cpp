@@ -101,7 +101,7 @@ List::List(uint8_t screenID, uint8_t numScreens,
 
       labelBtIco = lv_label_create(itemApps[i], nullptr);
       lv_obj_set_style_local_text_color(labelBtIco, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
-      lv_obj_set_style_local_text_font(labelBtIco, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
+      lv_obj_set_style_local_text_font(labelBtIco, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);  
       lv_label_set_text_static(labelBtIco, applications[i].icon);
 
       labelBt = lv_label_create(itemApps[i], nullptr);

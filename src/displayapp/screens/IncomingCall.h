@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <lvgl/lvgl.h>
 #include "Screen.h"
-#include "components/ble/NotificationManager.h"
+#include "components/ble/CallNotificationManager.h"
 #include "components/ble/AlertNotificationService.h"
 
 namespace Pinetime {
@@ -14,7 +14,7 @@ namespace Pinetime {
       class IncomingCall : public Screen{
         public:
           IncomingCall(DisplayApp* app, 
-            Pinetime::Controllers::NotificationManager& notificationManager, 
+            Pinetime::Controllers::CallNotificationManager& callNotificationManager, 
             Pinetime::Controllers::AlertNotificationService& alertNotificationService);
 
           ~IncomingCall() override;
@@ -24,7 +24,7 @@ namespace Pinetime {
          
         private:          
 
-          Pinetime::Controllers::NotificationManager& notificationManager;
+          Pinetime::Controllers::CallNotificationManager& callNotificationManager;
           Pinetime::Controllers::AlertNotificationService& alertNotificationService;
 
           lv_obj_t * btn1;

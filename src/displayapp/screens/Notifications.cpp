@@ -94,45 +94,48 @@ bool Notifications::Refresh() {
 bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   switch (event) {
     case Pinetime::Applications::TouchEvents::SwipeDown: {
-      Controllers::NotificationManager::Notification previousNotification;
-      if(validDisplay)
-        previousNotification = notificationManager.GetPrevious(currentId);
-      else
-        previousNotification = notificationManager.GetLastNotification();
+        Controllers::NotificationManager::Notification previousNotification;
+        if(validDisplay)
+          previousNotification = notificationManager.GetPrevious(currentId);
+        else
+          previousNotification = notificationManager.GetLastNotification();
 
-      if (!previousNotification.valid) {
-        return true;
+        if (!previousNotification.valid) {        
+          
+          return true;
+        }
+
+        validDisplay = true;
+        currentId = previousNotification.id;
+        currentItem.reset(nullptr);
+        app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
+        currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications()));
       }
-
-      validDisplay = true;
-      currentId = previousNotification.id;
-      currentItem.reset(nullptr);
-      app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
-      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications()));
-    }
       return true;
     case Pinetime::Applications::TouchEvents::SwipeUp: {
-      Controllers::NotificationManager::Notification nextNotification;
-      if(validDisplay)
-        nextNotification = notificationManager.GetNext(currentId);
-      else
-        nextNotification = notificationManager.GetLastNotification();
+        Controllers::NotificationManager::Notification nextNotification;
+        if(validDisplay)
+          nextNotification = notificationManager.GetNext(currentId);
+        else
+          nextNotification = notificationManager.GetLastNotification();
 
-      if (!nextNotification.valid) {
-        running = false;
-        return true;
+        if (!nextNotification.valid) {
+          running = false;
+          return false;
+        }
+
+        validDisplay = true;
+        currentId = nextNotification.id;
+        currentItem.reset(nullptr);
+        app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
+        currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications()));
       }
-
-      validDisplay = true;
-      currentId = nextNotification.id;
-      currentItem.reset(nullptr);
-      app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
-      currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications()));
-    }
       return true;
       
     case Pinetime::Applications::TouchEvents::LongTap : 
-      
+      /*
+      // delete ???
+      notificationManager.Delete(currentId);*/
       return true;
 
     default:

@@ -15,23 +15,31 @@ namespace {
 
 IncomingCall::IncomingCall(
   Pinetime::Applications::DisplayApp *app, 
-  Pinetime::Controllers::NotificationManager &notificationManager,
+  Pinetime::Controllers::CallNotificationManager& callNotificationManager,
   Pinetime::Controllers::AlertNotificationService& alertNotificationService) : 
   Screen(app),
-  notificationManager{notificationManager},
+  callNotificationManager{callNotificationManager},
   alertNotificationService{alertNotificationService}
 {
 
+  Controllers::CallNotificationManager::Notification notifCall = callNotificationManager.Get();
+
+  lv_obj_t * callNumber = lv_label_create(lv_scr_act(), NULL);                     /*Enable re-coloring by commands in the text*/
+  lv_label_set_text_fmt(callNumber, "%s", notifCall.number.data()); 
+  lv_obj_set_style_local_text_color(callNumber, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
+  lv_label_set_align(callNumber, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(callNumber, NULL, LV_ALIGN_CENTER, 0, -75);
+
   lv_obj_t * callName = lv_label_create(lv_scr_act(), NULL);                     /*Enable re-coloring by commands in the text*/
-  lv_label_set_text_fmt(callName, "Joaquim Pereira"); 
+  lv_label_set_text_fmt(callName, "%s", notifCall.callername.data()); 
   lv_label_set_align(callName, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(callName, NULL, LV_ALIGN_CENTER, 0, -65);
+  lv_obj_align(callName, NULL, LV_ALIGN_CENTER, 0, -40);
 
   lv_obj_t * callInfo = lv_label_create(lv_scr_act(), NULL);                     /*Enable re-coloring by commands in the text*/
   lv_label_set_text_fmt(callInfo, "Incoming call"); 
   lv_obj_set_style_local_text_color(callInfo, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GREEN);
   lv_label_set_align(callInfo, LV_LABEL_ALIGN_CENTER);
-  lv_obj_align(callInfo, NULL, LV_ALIGN_CENTER, 0, -20);
+  lv_obj_align(callInfo, NULL, LV_ALIGN_CENTER, 0, -10);
 
 
   lv_obj_t * lbl_btn;

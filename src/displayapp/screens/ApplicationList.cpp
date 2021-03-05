@@ -6,12 +6,13 @@
 #include "displayapp/Apps.h"
 #include "../DisplayApp.h"
 
-  LV_IMG_DECLARE(icon_settings);
-  LV_IMG_DECLARE(icon_information);
-  LV_IMG_DECLARE(icon_charging);
+  LV_IMG_DECLARE(icon_running);
+  LV_IMG_DECLARE(icon_raining);
+  
+  /*LV_IMG_DECLARE(icon_charging);
   LV_IMG_DECLARE(icon_running);
 
-  /*
+  
   LV_IMG_DECLARE(icon_brightness);
 
   LV_IMG_DECLARE(icon_raining);
@@ -66,10 +67,10 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
 
   std::array<Screens::Tile::Applications, 4> applications {
           { 
-            {&icon_running,     "Steps",          Apps::Steps},                       
-            {&icon_information, "Settings",       Apps::None},
-            {&icon_information, "Sysinfo",        Apps::None},
-            {&icon_charging,    "Batt",           Apps::None},
+            {&icon_running,     "Steps",      Apps::Steps},                       
+            {&icon_running,     "--",         Apps::None},
+            {&icon_raining,     "Weather",    Apps::Clock},
+            {&icon_running,     "--",         Apps::None},
           }
 
   };
