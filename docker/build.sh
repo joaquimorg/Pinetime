@@ -58,7 +58,8 @@ CmakeGenerate() {
   # once we go to newer CMake (Ubuntu 18.10 gives us CMake 3.10)
   cd "$BUILD_DIR"
 
-  cmake -G "Unix Makefiles" \
+  #cmake -G "Unix Makefiles" \
+  cmake -G "Ninja" \
     -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
     -DUSE_OPENOCD=1 \
     -DARM_NONE_EABI_TOOLCHAIN_PATH="$TOOLS_DIR/$GCC_ARM_VER" \
