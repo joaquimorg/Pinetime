@@ -44,7 +44,7 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
     lv_obj_align(buttonValidate, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, -10);
     buttonValidate->user_data = this;
     lv_obj_set_event_cb(buttonValidate, ButtonEventHandler);
-    lv_obj_set_style_local_bg_color(buttonValidate, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GREEN);
+    lv_obj_set_style_local_bg_color(buttonValidate, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x009900));
     lv_btn_set_fit(buttonValidate, LV_FIT_TIGHT);
 
     labelButtonValidate = lv_label_create(buttonValidate, nullptr);
@@ -54,7 +54,7 @@ FirmwareValidation::FirmwareValidation(Pinetime::Applications::DisplayApp *app,
   buttonReset->user_data = this;
   lv_obj_align(buttonReset, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, 0, -10);
   lv_obj_set_event_cb(buttonReset, ButtonEventHandler);
-  lv_obj_set_style_local_bg_color(buttonReset, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_RED);
+  lv_obj_set_style_local_bg_color(buttonReset, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x990000));
   lv_btn_set_fit(buttonReset, LV_FIT_TIGHT);
 
   labelButtonReset = lv_label_create(buttonReset, nullptr);

@@ -13,8 +13,8 @@ LV_IMG_DECLARE(not_unknown);
 LV_IMG_DECLARE(icon_phone);
 
 
-Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::NotificationManager &notificationManager, Modes mode) :
-        Screen(app), notificationManager{notificationManager}, mode{mode} {
+Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::NotificationManager &notificationManager) :
+        Screen(app), notificationManager{notificationManager} {
 
   
 
@@ -27,10 +27,9 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
 
   if(notification.valid) {
     currentId = notification.id;
-    currentItem.reset(new NotificationItem(CategoryToString(notification.category), notification, notification.index, notificationManager.NbNotifications(), mode));
+    currentItem.reset(new NotificationItem(CategoryToString(notification.category), notification, notification.index, notificationManager.NbNotifications()));
     validDisplay = true;
   } else {
-    //currentItem.reset(new NotificationItem("Notification", NULL, 0, notificationManager.NbNotifications(), Modes::Preview));
 
     lv_obj_t * not_img = lv_img_create(lv_scr_act(), NULL);
     lv_img_set_src(not_img, &icon_phone);
@@ -44,20 +43,6 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
     
   }
 
-  /*if(mode == Modes::Preview) {
-    static lv_style_t style_line;
-    //lv_style_init(&style_line);
-    //style_line.line.color = LV_COLOR_WHITE;
-    //style_line.line.width = 3;
-    //style_line.line.rounded = 0;
-
-
-    //timeoutLine = lv_line_create(lv_scr_act(), nullptr);
-    //lv_line_set_style(timeoutLine, LV_LINE_PART_MAIN, &style_line);
-    //lv_line_set_points(timeoutLine, timeoutLinePoints, 2);
-    //timeoutTickCountStart = xTaskGetTickCount();
-    //timeoutTickCountEnd = timeoutTickCountStart + (5*1024);
-  }*/
 }
 
 Notifications::~Notifications() {
@@ -115,13 +100,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       else
         previousNotification = notificationManager.GetLastNotification();
 
-      if (!previousNotification.valid) {        
-        /*if(mode == Modes::Clock || mode == Modes::Preview) {
-          running = false;
-          app->StartApp(Apps::Clock);
-        } else {
-          running = false;
-        }*/
+      if (!previousNotification.valid) {
         return true;
       }
 
@@ -129,7 +108,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       currentId = previousNotification.id;
       currentItem.reset(nullptr);
       app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
-      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications(), mode));
+      currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications()));
     }
       return true;
     case Pinetime::Applications::TouchEvents::SwipeUp: {
@@ -140,12 +119,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
         nextNotification = notificationManager.GetLastNotification();
 
       if (!nextNotification.valid) {
-        if(mode == Modes::Clock || mode == Modes::Preview) {
-          running = false;
-          app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::Up);
-        } else {
-          running = false;
-        }
+        running = false;
         return true;
       }
 
@@ -153,19 +127,12 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
       currentId = nextNotification.id;
       currentItem.reset(nullptr);
       app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
-      currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications(), mode));
+      currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications()));
     }
       return true;
       
     case Pinetime::Applications::TouchEvents::LongTap : 
-      /*if(mode == Modes::Clock || mode == Modes::Preview) {
-        running = false;
-        app->StartApp(Apps::Clock);
-      } else {
-        running = false;
-      }
-      // delete ???
-      notificationManager.Delete(currentId);*/
+      
       return true;
 
     default:
@@ -173,8 +140,8 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   }
 }
 
-Notifications::NotificationItem::NotificationItem(const char *title, Controllers::NotificationManager::Notification &msg, uint8_t notifNr, uint8_t notifNb, Modes mode)
-        : msg{msg}, notifNr{notifNr}, notifNb{notifNb}, mode{mode} {
+Notifications::NotificationItem::NotificationItem(const char *title, Controllers::NotificationManager::Notification &msg, uint8_t notifNr, uint8_t notifNb)
+        : msg{msg}, notifNr{notifNr}, notifNb{notifNb} {
 
   // Set the background to Black
   //lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));

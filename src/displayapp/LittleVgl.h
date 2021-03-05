@@ -41,10 +41,10 @@ namespace Pinetime {
         lv_point_t previousClick;
 
         bool firstTouch = true;
-        static constexpr uint8_t nbWriteLines = 4;
+        //static constexpr uint8_t nbWriteLines = 4;
         static constexpr uint16_t totalNbLines = 320;
         static constexpr uint16_t visibleNbLines = 240;
-        static constexpr uint8_t MaxScrollOffset() { return LV_VER_RES_MAX - nbWriteLines; }
+        //static constexpr uint8_t MaxScrollOffset() { return LV_VER_RES_MAX - nbWriteLines; }
         FullRefreshDirections scrollDirection = FullRefreshDirections::None;
         uint16_t writeOffset = 0;
         uint16_t scrollOffset = 0;

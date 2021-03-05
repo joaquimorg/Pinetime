@@ -13,7 +13,8 @@ RUN apt-get update -qq \
       python3-pip \
       tar \
       unzip \
-      wget \ 
+      wget \
+      ninja-build \
 # aarch64 packages
       libffi-dev \
       libssl-dev \

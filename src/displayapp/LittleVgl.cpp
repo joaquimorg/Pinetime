@@ -68,13 +68,9 @@ void LittleVgl::SetFullRefresh(FullRefreshDirections direction) {
 
 void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
 
-  uint16_t y1, y2, width, height = 0;
-  
-  ulTaskNotifyTake(pdTRUE, 320);
-  // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
-  // which cannot be set/clear during a transfert.
+  uint16_t y1, y2, width, height = 0;  
 
-
+  ulTaskNotifyTake(pdTRUE, 500);
   if( (scrollDirection == LittleVgl::FullRefreshDirections::Down) && (area->y2 == visibleNbLines - 1)) {
     writeOffset = ((writeOffset + totalNbLines) - visibleNbLines) % totalNbLines;
   } else if( (scrollDirection == FullRefreshDirections::Up) && (area->y1 == 0) ) {
@@ -128,15 +124,25 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
     height = (totalNbLines - 1) - y1;
     lcd.BeginDrawBuffer(area->x1, y1, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
-    ulTaskNotifyTake(pdTRUE, 320);
+    /*ulTaskNotifyTake(pdTRUE, 200);
     height = y2;
     lcd.BeginDrawBuffer(area->x1, 0, width, height);
-    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    
+    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    */
   } else {
     lcd.BeginDrawBuffer(area->x1, y1, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
   }
   
+/*
+  ulTaskNotifyTake(pdTRUE, 50);
+  // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
+  // which cannot be set/clear during a transfert.
+  width = (area->x2 - area->x1 + 1);
+  height = (area->y2 - area->y1 + 1);
+
+  lcd.BeginDrawBuffer(area->x1, area->y1, width, height);
+  lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
+*/
   // IMPORTANT!!!
   // Inform the graphics library that you are ready with the flushing
   lv_disp_flush_ready(&disp_drv);

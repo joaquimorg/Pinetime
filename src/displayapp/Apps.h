@@ -14,6 +14,7 @@ namespace Pinetime
       FirmwareValidation,
       Notifications,
       NotificationsClock,
+      IncomingCall,
       Steps,
       Charging,
       LowBatt,
@@ -22,6 +23,9 @@ namespace Pinetime
 
       Settings,
       SettingDisplay,
+      SettingTimeFormat,
+      SettingWatchFace,
+      SettingSteps,
     };
   }
 } // namespace Pinetime

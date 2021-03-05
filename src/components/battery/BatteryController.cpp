@@ -52,7 +52,6 @@ void Battery::Init() {
   
 }
 
-}
 
 void Battery::SaadcInit() {
   nrfx_saadc_config_t adcConfig = NRFX_SAADC_DEFAULT_CONFIG;

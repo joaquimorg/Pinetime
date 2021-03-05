@@ -48,9 +48,9 @@ std::unique_ptr<Screen> Settings::CreateScreen1() {
   std::array<Screens::List::Applications, 4> applications {
           {                        
             {Symbols::backLight,        "Display",       Apps::SettingDisplay},
-            {Symbols::shoe,             "Steps",         Apps::Clock},
-            {Symbols::clock,            "Time format",   Apps::Clock},
-            {Symbols::wface,            "Watch face",    Apps::Clock},
+            {Symbols::shoe,             "Steps",         Apps::SettingSteps},
+            {Symbols::clock,            "Time format",   Apps::SettingTimeFormat},
+            {Symbols::wface,            "Watch face",    Apps::SettingWatchFace},
           }
 
   };

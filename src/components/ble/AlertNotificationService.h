@@ -45,11 +45,12 @@ namespace Pinetime {
 
         // from PineTimeJFConstants in Gadgetbridge
 
+        static const uint8_t NOTIFICATION_MISSED_CALL = 0x00;
         static const uint8_t NOTIFICATION_SMS         = 0x01;
         static const uint8_t NOTIFICATION_SOCIAL      = 0x02;
         static const uint8_t NOTIFICATION_EMAIL       = 0x03;
         static const uint8_t NOTIFICATION_CALENDAR    = 0x04;
-        static const uint8_t NOTIFICATION_MISSED_CALL = 0x05;
+        static const uint8_t NOTIFICATION_INCOME_CALL = 0x05;
         static const uint8_t NOTIFICATION_CALL_OFF    = 0x06;
         static const uint8_t NOTIFICATION_WECHAT      = 0x07;
         static const uint8_t NOTIFICATION_VIBER       = 0x08;
@@ -66,7 +67,7 @@ namespace Pinetime {
 
         static constexpr uint16_t ansId {0x1811};
         static constexpr uint16_t ansCharId {0x2a46};
-        static constexpr uint16_t ansEventCharId = {0x2a47};
+        //static constexpr uint16_t ansEventCharId = {0x2a47};
 
         static constexpr ble_uuid16_t ansUuid {
                 .u { .type = BLE_UUID_TYPE_16 },
@@ -78,15 +79,15 @@ namespace Pinetime {
                 .value = ansCharId
         };
 
-        static constexpr ble_uuid16_t ansEventUuid {
+        /*static constexpr ble_uuid16_t ansEventUuid {
                 .u { .type = BLE_UUID_TYPE_16 },
                 .value = ansEventCharId
-        };
+        };*/
 
-        /*static constexpr ble_uuid128_t notificationEventUuid {
+        static constexpr ble_uuid128_t notificationEventUuid {
                 .u { .type = BLE_UUID_TYPE_128 },
                 .value = NOTIFICATION_EVENT_SERVICE_UUID_BASE
-        };*/
+        };
 
         struct ble_gatt_chr_def characteristicDefinition[3];
         struct ble_gatt_svc_def serviceDefinition[2];

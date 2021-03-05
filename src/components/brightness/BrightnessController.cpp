@@ -20,13 +20,13 @@ void BrightnessController::Set(BrightnessController::Levels level) {
     default:
     case Levels::High:
       nrf_gpio_pin_clear(LCD_LIGHT_1);
-      nrf_gpio_pin_clear(LCD_LIGHT_2);
-      nrf_gpio_pin_clear(LCD_LIGHT_3);
+      //nrf_gpio_pin_clear(LCD_LIGHT_2);
+      //nrf_gpio_pin_clear(LCD_LIGHT_3);
       break;
     case Levels::Medium:
       nrf_gpio_pin_clear(LCD_LIGHT_1);
-      nrf_gpio_pin_clear(LCD_LIGHT_2);
-      nrf_gpio_pin_set(LCD_LIGHT_3);
+      //nrf_gpio_pin_clear(LCD_LIGHT_2);
+      //nrf_gpio_pin_set(LCD_LIGHT_3);
       break;
     case Levels::Low:
       nrf_gpio_pin_clear(LCD_LIGHT_1);

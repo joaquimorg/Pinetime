@@ -76,7 +76,6 @@ namespace Pinetime {
       private:
         
         Pinetime::Drivers::SpiMaster& spi;
-        Pinetime::Drivers::SpiMaster& spif;
         Pinetime::Drivers::St7789& lcd;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
         Pinetime::Drivers::TwiMaster& twiMaster;

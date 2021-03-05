@@ -421,6 +421,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/BatteryIcon.cpp
         displayapp/screens/BleIcon.cpp
         displayapp/screens/NotificationIcon.cpp
+        displayapp/screens/IncomingCall.cpp
         displayapp/screens/About.cpp
         displayapp/screens/Label.cpp
         displayapp/screens/FirmwareUpdate.cpp
@@ -432,6 +433,9 @@ list(APPEND SOURCE_FILES
 
         displayapp/screens/Settings.cpp
         displayapp/screens/SettingDisplay.cpp
+        displayapp/screens/SettingTimeFormat.cpp
+        displayapp/screens/SettingWatchFace.cpp
+        displayapp/screens/SettingSteps.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp

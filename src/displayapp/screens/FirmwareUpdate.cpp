@@ -22,11 +22,12 @@ FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime
   lv_bar_set_anim_time(bar1, 10);
   lv_bar_set_range(bar1, 0, 100);
   lv_bar_set_value(bar1, 0, LV_ANIM_OFF);
+  lv_obj_set_style_local_bg_color(bar1, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
 
   percentLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text_static(percentLabel, "");
   lv_obj_set_auto_realign(percentLabel, true);
-  lv_obj_align(percentLabel, bar1, LV_ALIGN_OUT_TOP_MID, 0, 60);
+  lv_obj_align(percentLabel, bar1, LV_ALIGN_OUT_TOP_MID, 0, 70);
 }
 
 FirmwareUpdate::~FirmwareUpdate() {
@@ -60,8 +61,8 @@ bool FirmwareUpdate::DisplayProgression() const {
   float current = bleController.FirmwareUpdateCurrentBytes() / 1024.0f;
   float total = bleController.FirmwareUpdateTotalBytes() / 1024.0f;
   int16_t pc = (current / total) * 100.0f;
-  sprintf(percentStr, "%d %%", pc);
-  lv_label_set_text(percentLabel, percentStr);
+
+  lv_label_set_text_fmt(percentLabel, "%d %%", pc);
 
   lv_bar_set_value(bar1, pc, LV_ANIM_OFF);
   return running;
@@ -75,4 +76,5 @@ void FirmwareUpdate::UpdateValidated() {
 void FirmwareUpdate::UpdateError() {
   lv_label_set_recolor(percentLabel, true);
   lv_label_set_text_static(percentLabel, "#ff0000 Error!#");
+  lv_obj_set_style_local_bg_color(bar1, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
 }

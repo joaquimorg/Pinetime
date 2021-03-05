@@ -9,7 +9,7 @@ using namespace Pinetime::Controllers;
 
 void Settings::Init() {
     // default Clock face
-    clockFace = 0;
+    clockFace = 3;
 
     stepsGoal = 5000;
 

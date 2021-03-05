@@ -102,8 +102,8 @@ void SystemTask::Work() {
 
   settingsController.Init();
 
-  stepCounter.Init();
-  #endif
+  //stepCounter.Init();
+  
   batteryController.Init();
   settingsController.Init();  
 
@@ -112,6 +112,7 @@ void SystemTask::Work() {
   displayApp->Start();
 
   //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
+  nrfx_gpiote_in_config_t pinConfig;
 
   #ifndef P8CLONE
   // Button
@@ -139,7 +140,7 @@ void SystemTask::Work() {
 
   nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
   //
-  #ifndef P8CLONE
+ 
   // Step Counter IRQ
   /*nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
@@ -151,7 +152,7 @@ void SystemTask::Work() {
 
   nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
   //
-
+  
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
 
@@ -375,7 +376,7 @@ void SystemTask::OnIdle() {
   PushMessage(Messages::GoToSleep);
   #else
   xTimerReset(idleTimer, 0);
-  //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+  displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
   
   #endif
 }
