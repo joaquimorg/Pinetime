@@ -46,22 +46,27 @@ SettingSteps::SettingSteps(
   lv_label_set_align(icon, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(icon, title, LV_ALIGN_OUT_LEFT_MID, -10, 0);
 
-  
-  /*cbTimeOut[0] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[0], "\t12-hour format");
-  cbTimeOut[0]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[0], event_handler);  
-  if (settingsController.GetClockType() == Controllers::Settings::ClockType::H12 ) {
-    lv_checkbox_set_checked(cbTimeOut[0], true);
-  }
 
-  cbTimeOut[1] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[1], "\t24-hour format");
-  cbTimeOut[1]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[1], event_handler);  
-  if (settingsController.GetClockType() == Controllers::Settings::ClockType::H24 ) {
-    lv_checkbox_set_checked(cbTimeOut[1], true);
-  }*/
+  stepValue = lv_label_create(lv_scr_act(), NULL);
+  lv_obj_set_style_local_text_font(stepValue, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
+  lv_label_set_text_fmt(stepValue,"%i", settingsController.GetStepsGoal());
+  lv_label_set_align(stepValue, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+
+  btnPlus = lv_btn_create(lv_scr_act(), NULL);
+  btnPlus->user_data = this;
+  lv_obj_set_size(btnPlus, 60, 40);
+  lv_obj_align(btnPlus, lv_scr_act(), LV_ALIGN_CENTER, 50, 80);
+  lv_obj_set_style_local_value_str(btnPlus, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, "+");
+  lv_obj_set_event_cb(btnPlus, event_handler);
+
+  btnMinus = lv_btn_create(lv_scr_act(), NULL);
+  btnMinus->user_data = this;
+  lv_obj_set_size(btnMinus, 60, 40);
+  lv_obj_set_event_cb(btnMinus, event_handler);
+  lv_obj_align(btnMinus, lv_scr_act(), LV_ALIGN_CENTER, -50, 80);
+  lv_obj_set_style_local_value_str(btnMinus, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, "-");
+
 
 }
 
@@ -75,17 +80,23 @@ bool SettingSteps::Refresh() {
 
 
 void SettingSteps::UpdateSelected(lv_obj_t *object, lv_event_t event) {
-  /*if(event == LV_EVENT_VALUE_CHANGED) {
-    for(int i = 0; i < 4; i++) {
-      if ( object == cbTimeOut[i] ) {
-        lv_checkbox_set_checked(cbTimeOut[i], true);
-        
-        if ( i == 0 ) { settingsController.SetClockType(Controllers::Settings::ClockType::H12); };
-        if ( i == 1 ) { settingsController.SetClockType(Controllers::Settings::ClockType::H24); };
-        
-      } else {
-        lv_checkbox_set_checked(cbTimeOut[i], false);
-      }
+  uint32_t value = settingsController.GetStepsGoal();
+  if(object == btnPlus && (event == LV_EVENT_PRESSED)) {
+    value += 1000;
+    if ( value <= 500000 ) {
+      settingsController.SetStepsGoal(value);
+      lv_label_set_text_fmt(stepValue,"%i", settingsController.GetStepsGoal());
+      lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
     }
-  }*/
+  }
+
+  if(object == btnMinus && (event == LV_EVENT_PRESSED)) {
+    value -= 1000;
+    if ( value >= 1000 ) {
+      settingsController.SetStepsGoal(value);
+      lv_label_set_text_fmt(stepValue,"%i", settingsController.GetStepsGoal());
+      lv_obj_align(stepValue, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
+    }
+  }
+
 }

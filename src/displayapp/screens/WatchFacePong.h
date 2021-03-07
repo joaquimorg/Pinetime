@@ -1,9 +1,10 @@
 #pragma once
 
-#include <lvgl/src/lv_core/lv_obj.h>
+
 #include <chrono>
 #include <cstdint>
 #include <memory>
+#include <lvgl/lvgl.h>
 #include "Screen.h"
 #include "ScreenList.h"
 #include "components/datetime/DateTimeController.h"

@@ -42,7 +42,8 @@ Steps::Steps(
   lv_arc_set_value(stepsArc, int16_t(500 * accelerometer.GetSteps() / settingsController.GetStepsGoal()));
 
   lv_obj_t * lstepsL = lv_label_create(lv_scr_act(), NULL);  
-  lv_label_set_text_fmt(lstepsL,"Steps\n/ %i", settingsController.GetStepsGoal()); 
+  lv_label_set_text_fmt(lstepsL,"Steps\n%i", settingsController.GetStepsGoal()); 
+  lv_label_set_align(lstepsL, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(lstepsL, lSteps, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 
   lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);

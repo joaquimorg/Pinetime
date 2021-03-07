@@ -20,6 +20,7 @@
 #include "displayapp/screens/QuickSettings.h"
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
+#include "displayapp/screens/Weather.h"
 
 #include "displayapp/screens/Settings.h"
 #include "displayapp/screens/SettingDisplay.h"
@@ -320,6 +321,10 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         break;
       case Apps::Steps: 
         currentScreen.reset(new Screens::Steps(this, accelerometer, settingsController));
+        returnApp(Apps::Launcher, FullRefreshDirections::Down); 
+        break;
+      case Apps::Weather: 
+        currentScreen.reset(new Screens::Weather(this));
         returnApp(Apps::Launcher, FullRefreshDirections::Down); 
         break;
       case Apps::FlashLight: 
