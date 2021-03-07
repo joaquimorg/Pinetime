@@ -38,7 +38,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                       
                        Controllers::Settings &settingsController,
-                       Drivers::BMA421 &stepCounter,
+                       Controllers::Accelerometer& accelerometer,
                        System::SystemTask &systemTask,
                        Pinetime::Controllers::NotificationManager &notificationManager,
                        Pinetime::Controllers::CallNotificationManager &callNotificationManager) :
@@ -50,11 +50,11 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         dateTimeController{dateTimeController},
         watchdog{watchdog},        
         settingsController{settingsController},
-        stepCounter{stepCounter},
+        accelerometer{accelerometer},
         systemTask{systemTask},
         notificationManager{notificationManager},
         callNotificationManager{callNotificationManager}/*,
-        currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter) }*/
+        currentScreen{new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, accelerometer) }*/
 {
   msgQueue = xQueueCreate(queueSize, itemSize);
   LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
@@ -308,7 +308,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Clock, FullRefreshDirections::Down);
         break;
       case Apps::Clock: 
-        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, stepCounter)); 
+        currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, accelerometer)); 
         break;
       case Apps::Notifications:
         currentScreen.reset(new Screens::Notifications(this, notificationManager));
@@ -319,7 +319,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Clock, FullRefreshDirections::Down);
         break;
       case Apps::Steps: 
-        currentScreen.reset(new Screens::Steps(this, stepCounter, settingsController));
+        currentScreen.reset(new Screens::Steps(this, accelerometer, settingsController));
         returnApp(Apps::Launcher, FullRefreshDirections::Down); 
         break;
       case Apps::FlashLight: 
@@ -357,7 +357,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
       case Apps::About: 
-        currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, stepCounter)); 
+        currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, accelerometer)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
       case Apps::FirmwareUpdate:

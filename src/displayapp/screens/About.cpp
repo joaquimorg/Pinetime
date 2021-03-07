@@ -8,7 +8,6 @@
 #include "components/brightness/BrightnessController.h"
 #include "components/datetime/DateTimeController.h"
 #include "drivers/Watchdog.h"
-#include "drivers/BMA421.h"
 #include "displayapp/Apps.h"
 
 using namespace Pinetime::Applications::Screens;
@@ -19,11 +18,11 @@ About::About(Pinetime::Applications::DisplayApp *app,
                        Pinetime::Controllers::BrightnessController& brightnessController,
                        Pinetime::Controllers::Ble& bleController,
                        Pinetime::Drivers::WatchdogView& watchdog,
-                       Pinetime::Drivers::BMA421& stepCounter) :
+                       Pinetime::Controllers::Accelerometer& accelerometer) :
         Screen(app),
         dateTimeController{dateTimeController}, batteryController{batteryController},
         brightnessController{brightnessController}, bleController{bleController}, watchdog{watchdog},
-        stepCounter{stepCounter},
+        accelerometer{accelerometer},
         screens{app, 
           0,
           {
@@ -130,7 +129,7 @@ std::unique_ptr<Screen> About::CreateScreen2() {
 std::unique_ptr<Screen> About::CreateScreen3() {
   lv_mem_monitor_t mon;
   lv_mem_monitor(&mon);
-  stepCounter.Update();
+  accelerometer.Update();
   CreateContainer();
 
   lv_obj_t * label = lv_label_create(container1, nullptr);
@@ -152,8 +151,8 @@ std::unique_ptr<Screen> About::CreateScreen3() {
           mon.used_pct,
           mon.frag_pct,
           (int)mon.free_biggest_size,
-          stepCounter.GetSteps(),
-          stepCounter.GetTemp()
+          accelerometer.GetSteps(),
+          accelerometer.GetTemp()
           );
 
   return std::unique_ptr<Screen>(new Screens::Label(2, 4, app, label));

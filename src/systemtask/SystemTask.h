@@ -17,9 +17,9 @@
 #include "components/ble/NimbleController.h"
 #include "components/ble/NotificationManager.h"
 #include "components/ble/CallNotificationManager.h"
+#include "components/accelerometer/Accelerometer.h"
 
 #include "drivers/Watchdog.h"
-#include "drivers/BMA421.h"
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
 #include "drivers/InternalFlash.h"
@@ -30,7 +30,6 @@
 namespace Pinetime {
 
   namespace Drivers {
-    class BMA421;
     class Cst816S;
     class SpiMaster;
     class SpiNorFlash;
@@ -51,7 +50,7 @@ namespace Pinetime {
                     Pinetime::Drivers::SpiNorFlash& spiNorFlash,                   
                     Pinetime::Drivers::TwiMaster& twiMaster, 
                     Pinetime::Drivers::Cst816S &touchPanel, 
-                    Pinetime::Drivers::BMA421& stepCounter,
+                    Controllers::Accelerometer &accelerometer,
                     Components::LittleVgl &lvgl,
                     Controllers::Battery &batteryController, 
                     Controllers::Ble &bleController,
@@ -81,7 +80,7 @@ namespace Pinetime {
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
         Pinetime::Drivers::TwiMaster& twiMaster;
         Pinetime::Drivers::Cst816S& touchPanel;
-        Pinetime::Drivers::BMA421& stepCounter;
+        Controllers::Accelerometer& accelerometer;
         Components::LittleVgl& lvgl;
         Controllers::Battery& batteryController;
         Controllers::Ble& bleController;

@@ -374,11 +374,7 @@ list(APPEND SOURCE_FILES
         BootloaderVersion.cpp
         logging/NrfLogger.cpp
 
-        #HRS3300 Lib
-        #libs/hrs3300/libheart.a
-        #drivers/HRS3300.cpp
-
-        drivers/BMA421.cpp
+        
         drivers/St7789.cpp
         drivers/SpiNorFlash.cpp
         drivers/SpiMaster.cpp
@@ -395,6 +391,7 @@ list(APPEND SOURCE_FILES
         components/datetime/DateTimeController.cpp
         components/brightness/BrightnessController.cpp
         components/firmwarevalidator/FirmwareValidator.cpp
+        components/accelerometer/Accelerometer.cpp
 
         components/ble/BleController.cpp
         components/ble/NotificationManager.cpp
@@ -511,8 +508,6 @@ set(INCLUDE_FILES
         logging/NrfLogger.h
 
         drivers/TwiMaster.h
-        #drivers/HRS3300.h
-        drivers/BMA421.h
         drivers/St7789.h        
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h

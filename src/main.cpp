@@ -32,6 +32,8 @@
 #include "components/battery/BatteryController.h"
 #include "components/ble/BleController.h"
 #include "components/datetime/DateTimeController.h"
+#include "components/accelerometer/Accelerometer.h"
+
 #include "displayapp/DisplayApp.h"
 #include "displayapp/LittleVgl.h"
 #include "drivers/Spi.h"
@@ -40,7 +42,6 @@
 #include "drivers/St7789.h"
 #include "drivers/TwiMaster.h"
 #include "drivers/Cst816s.h"
-#include "drivers/BMA421.h"
 #include "systemtask/SystemTask.h"
 
 #if NRF_LOG_ENABLED
@@ -80,7 +81,7 @@ Pinetime::Drivers::TwiMaster twiMaster{Pinetime::Drivers::TwiMaster::Modules::TW
 Pinetime::Drivers::Cst816S touchPanel {twiMaster, TP_TWI_ADDR};
 Pinetime::Components::LittleVgl lvgl {lcd, touchPanel};
 
-Pinetime::Drivers::BMA421 stepCounter {twiMaster};
+Pinetime::Controllers::Accelerometer accelerometer {twiMaster};
 
 
 TimerHandle_t debounceTimer;
@@ -247,7 +248,7 @@ int main(void) {
 
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, stepCounter, lvgl, batteryController, bleController,
+  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
                                                     dateTimeController, settingsController));
   systemTask->Start();
   nimble_port_init();

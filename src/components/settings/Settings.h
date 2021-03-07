@@ -1,9 +1,18 @@
 #pragma once
 
 #include <cstdint>
+#include "components/datetime/DateTimeController.h"
+#include "components/accelerometer/Accelerometer.h"
 
 namespace Pinetime {
   namespace Controllers {
+
+    struct history_step_struct {
+      uint32_t steps;
+      uint8_t day;
+      DateTime::Months month;
+      uint16_t year;
+    };
     class Settings {
       public:
         
@@ -33,6 +42,8 @@ namespace Pinetime {
         void SetScreenTimeOut( uint32_t timeout ) { screenTimeOut = timeout; };
         uint32_t GetScreenTimeOut() const { return screenTimeOut; };
 
+        void SetHistorySteps( Accelerometer steps, DateTime date );
+
       private:
         ClockType clockType = ClockType::H24;
         Vibration vibrationStatus = Vibration::ON;
@@ -43,6 +54,9 @@ namespace Pinetime {
 
         uint32_t stepsGoal = 0;
         uint32_t screenTimeOut = 15000;
+
+        history_step_struct stepHistory[8];
+        uint8_t stepHistoryPos = 0;
 
     };
   }

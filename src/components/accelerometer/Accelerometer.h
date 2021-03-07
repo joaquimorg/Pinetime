@@ -1,27 +1,23 @@
 #pragma once
 
-#include "TwiMaster.h"
+#include "../../drivers/TwiMaster.h"
 #include "bma421/bma4.h"
 #include "bma421/bma421.h"
 
+struct accl_data_struct {
+  int16_t x;
+  int16_t y;
+  int16_t z;
+};
+
 namespace Pinetime {
-  namespace Drivers {
-
-    struct accl_data_struct {
-      int16_t x;
-      int16_t y;
-      int16_t z;      
-    };
-
-    class BMA421 {
+  namespace Controllers {
+    
+    class Accelerometer {
         public :
             
-            BMA421(TwiMaster& twiMaster);
-            BMA421(const BMA421&) = delete;
-            BMA421& operator=(const BMA421&) = delete;
-            BMA421(BMA421&&) = delete;
-            BMA421& operator=(BMA421&&) = delete;
-
+            Accelerometer(Pinetime::Drivers::TwiMaster& twiMaster);
+           
             //char* status;
 
             void Init();
@@ -40,7 +36,7 @@ namespace Pinetime {
 
         private:
 
-            TwiMaster& twiMaster;
+            Pinetime::Drivers::TwiMaster& twiMaster;
             uint8_t twiAddress;
 
             uint8_t deviceReady = 0;

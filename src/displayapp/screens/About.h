@@ -17,7 +17,7 @@ namespace Pinetime {
                               Pinetime::Controllers::BrightnessController& brightnessController,
                               Pinetime::Controllers::Ble& bleController,
                               Pinetime::Drivers::WatchdogView& watchdog,
-                              Pinetime::Drivers::BMA421& stepCounter);
+                              Pinetime::Controllers::Accelerometer& accelerometer);
           ~About() override;
           bool Refresh() override;
           
@@ -31,7 +31,7 @@ namespace Pinetime {
           Pinetime::Controllers::BrightnessController& brightnessController;
           Pinetime::Controllers::Ble& bleController;
           Pinetime::Drivers::WatchdogView& watchdog;
-          Pinetime::Drivers::BMA421& stepCounter;
+          Pinetime::Controllers::Accelerometer& accelerometer;
 
           ScreenList<4> screens;
           std::unique_ptr<Screen> CreateScreen1();

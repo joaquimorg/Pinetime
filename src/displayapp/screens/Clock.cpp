@@ -25,11 +25,11 @@ Clock::Clock(DisplayApp* app,
         Controllers::Ble& bleController,
         Controllers::NotificationManager& notificatioManager,
         Controllers::Settings &settingsController,
-        Drivers::BMA421& stepCounter) : Screen(app),
+        Controllers::Accelerometer& accelerometer) : Screen(app),
         dateTimeController{dateTimeController}, batteryController{batteryController},
         bleController{bleController}, notificatioManager{notificatioManager},
         settingsController{settingsController},
-        stepCounter{stepCounter},
+        accelerometer{accelerometer},
         screens{app, 
           settingsController.GetClockFace(),
           {
@@ -61,7 +61,7 @@ bool Clock::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 }
 
 std::unique_ptr<Screen> Clock::WatchFaceDigitalScreen() {  
-  return std::unique_ptr<Screen>(new Screens::WatchFaceDigital(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController, stepCounter));
+  return std::unique_ptr<Screen>(new Screens::WatchFaceDigital(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController, accelerometer));
 }
 
 std::unique_ptr<Screen> Clock::WatchFaceAnalogScreen() {  
