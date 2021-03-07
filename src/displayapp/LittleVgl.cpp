@@ -70,7 +70,7 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
 
   uint16_t y1, y2, width, height = 0;
   
-  ulTaskNotifyTake(pdTRUE, 320);
+  ulTaskNotifyTake(pdTRUE, 500);
   // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
   // which cannot be set/clear during a transfert.
 
@@ -128,10 +128,10 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
     height = (totalNbLines - 1) - y1;
     lcd.BeginDrawBuffer(area->x1, y1, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
-    ulTaskNotifyTake(pdTRUE, 320);
+    /*ulTaskNotifyTake(pdTRUE, 320);
     height = y2;
     lcd.BeginDrawBuffer(area->x1, 0, width, height);
-    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    
+    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    */
   } else {
     lcd.BeginDrawBuffer(area->x1, y1, width, height);
     lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
