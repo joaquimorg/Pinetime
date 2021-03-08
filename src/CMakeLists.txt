@@ -376,11 +376,7 @@ list(APPEND SOURCE_FILES
         BootloaderVersion.cpp
         logging/NrfLogger.cpp
 
-        #HRS3300 Lib
-        #libs/hrs3300/libheart.a
-        #drivers/HRS3300.cpp
-
-        drivers/BMA421.cpp
+        
         drivers/St7789.cpp
         drivers/SpiNorFlash.cpp
         drivers/SpiMaster.cpp
@@ -397,6 +393,7 @@ list(APPEND SOURCE_FILES
         components/datetime/DateTimeController.cpp
         components/brightness/BrightnessController.cpp
         components/firmwarevalidator/FirmwareValidator.cpp
+        components/accelerometer/Accelerometer.cpp
 
         components/ble/BleController.cpp
         components/ble/NotificationManager.cpp
@@ -442,6 +439,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Notifications.cpp     
         displayapp/screens/QuickSettings.cpp   
         displayapp/screens/FlashLight.cpp
+        displayapp/screens/Weather.cpp
 
         displayapp/screens/Settings.cpp
         displayapp/screens/SettingDisplay.cpp
@@ -469,30 +467,30 @@ list(APPEND SOURCE_FILES
         displayapp/fonts/clock_font/lv_font_clock_42.c 
 
         #App Icons 
-        displayapp/icons/icon_brightness.c
-        displayapp/icons/icon_calc.c
+        #displayapp/icons/icon_brightness.c
+        #displayapp/icons/icon_calc.c
         displayapp/icons/icon_charging.c
-        displayapp/icons/icon_clock.c
-        displayapp/icons/icon_email.c
+        #displayapp/icons/icon_clock.c
+        #displayapp/icons/icon_email.c
         displayapp/icons/icon_firmware.c
-        displayapp/icons/icon_game.c
-        displayapp/icons/icon_heart_rate.c
-        displayapp/icons/icon_help.c
-        displayapp/icons/icon_info.c
-        displayapp/icons/icon_information.c
-        displayapp/icons/icon_iot.c
+        #displayapp/icons/icon_game.c
+        #displayapp/icons/icon_heart_rate.c
+        #displayapp/icons/icon_help.c
+        #displayapp/icons/icon_info.c
+        #displayapp/icons/icon_information.c
+        #displayapp/icons/icon_iot.c
         displayapp/icons/icon_low_battery.c
-        displayapp/icons/icon_map.c
+        #displayapp/icons/icon_map.c
         displayapp/icons/icon_phone.c
-        displayapp/icons/icon_qr_code.c
+        #displayapp/icons/icon_qr_code.c
         displayapp/icons/icon_raining.c
         displayapp/icons/icon_running.c
-        displayapp/icons/icon_settings.c
-        displayapp/icons/icon_music.c
-        displayapp/icons/icon_error.c
-        displayapp/icons/icon_folder.c
-        displayapp/icons/icon_two.c
-        displayapp/icons/icon_paddle.c
+        #displayapp/icons/icon_settings.c
+        #displayapp/icons/icon_music.c
+        #displayapp/icons/icon_error.c
+        #displayapp/icons/icon_folder.c
+        #displayapp/icons/icon_two.c
+        #displayapp/icons/icon_paddle.c
 
         #Notification Icons 
         displayapp/icons/not_email.c
@@ -513,8 +511,6 @@ set(INCLUDE_FILES
         logging/NrfLogger.h
 
         drivers/TwiMaster.h
-        #drivers/HRS3300.h
-        drivers/BMA421.h
         drivers/St7789.h        
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h

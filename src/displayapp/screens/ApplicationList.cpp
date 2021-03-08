@@ -69,8 +69,8 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
           { 
             {&icon_running,     "Steps",      Apps::Steps},                       
             {&icon_running,     "--",         Apps::None},
-            {&icon_raining,     "Weather",    Apps::Clock},
             {&icon_running,     "--",         Apps::None},
+            {&icon_raining,     "Weather",    Apps::Weather},
           }
 
   };

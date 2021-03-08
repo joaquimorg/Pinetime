@@ -1,9 +1,8 @@
 #pragma once
-
-#include <lvgl/src/lv_core/lv_obj.h>
 #include <chrono>
 #include <cstdint>
 #include <memory>
+#include <lvgl/lvgl.h>
 #include "Screen.h"
 #include "ScreenList.h"
 #include "components/datetime/DateTimeController.h"
@@ -12,14 +11,13 @@
 #include "components/ble/NotificationManager.h"
 
 namespace Pinetime {
-  namespace Drivers {
-    class BMA421;
-  }
+
   namespace Controllers {
     class Settings;
     class Battery;
     class Ble;
     class NotificationManager;
+    class Accelerometer;
   }
   namespace Applications {
     namespace Screens {
@@ -32,7 +30,7 @@ namespace Pinetime {
                   Controllers::Ble& bleController,
                   Controllers::NotificationManager& notificatioManager,
                   Controllers::Settings &settingsController,
-                  Drivers::BMA421& stepCounter);
+                  Controllers::Accelerometer& accelerometer);
           
           ~WatchFaceDigital() override;
 
@@ -92,7 +90,7 @@ namespace Pinetime {
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
           Controllers::Settings& settingsController;
-          Pinetime::Drivers::BMA421& stepCounter;
+          Controllers::Accelerometer& accelerometer;
       };
     }
   }

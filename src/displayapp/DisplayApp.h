@@ -10,6 +10,7 @@
 #include "components/brightness/BrightnessController.h"
 #include "components/firmwarevalidator/FirmwareValidator.h"
 #include "components/settings/Settings.h"
+#include "components/accelerometer/Accelerometer.h"
 #include "screens/Screen.h"
 namespace Pinetime {
 
@@ -17,7 +18,6 @@ namespace Pinetime {
     class St7789;
     class Cst816S;
     class WatchdogView;
-    class BMA421;
   }
   
   namespace Controllers {
@@ -46,7 +46,7 @@ namespace Pinetime {
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
-                   Drivers::BMA421 &stepCounter,
+                   Controllers::Accelerometer& accelerometer,
                    System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager &notificationManager,
                    Pinetime::Controllers::CallNotificationManager &callNotificationManager);
@@ -71,7 +71,7 @@ namespace Pinetime {
         Pinetime::Controllers::DateTime& dateTimeController;
         Pinetime::Drivers::WatchdogView& watchdog;
         Pinetime::Controllers::Settings& settingsController;
-        Pinetime::Drivers::BMA421& stepCounter;
+        Controllers::Accelerometer& accelerometer;
         Pinetime::System::SystemTask& systemTask;
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Controllers::CallNotificationManager& callNotificationManager;

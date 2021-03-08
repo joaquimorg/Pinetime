@@ -37,7 +37,7 @@ This project is released under the GNU General Public License version 3 or, at y
 ![Pinetime](images/img_lite_2.jpg "Pinetime")
 ![Pinetime](images/img_lite_3.jpg "Pinetime")
 
-[![PineTime Lite 0.1.0](https://res.cloudinary.com/marcomontalbano/image/upload/v1614559623/video_to_markdown/images/youtube--OtLSH4jalE4-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://youtu.be/OtLSH4jalE4 "PineTime Lite 0.1.0")
+[![PineTime Lite 0.1.0](https://res.cloudinary.com/marcomontalbano/image/upload/v1615222388/video_to_markdown/images/youtube--vJQQdbcaj8U-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=vJQQdbcaj8U "PineTime Lite 0.1.0")
 
 ## Screen Mockups
 

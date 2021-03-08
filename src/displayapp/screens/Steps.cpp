@@ -1,7 +1,6 @@
 #include "Steps.h"
 #include <lvgl/lvgl.h>
 #include "../DisplayApp.h"
-#include "drivers/BMA421.h"
 #include "board_config.h"
 #include <libraries/gpiote/app_gpiote.h>
 
@@ -11,13 +10,13 @@ using namespace Pinetime::Applications::Screens;
 
 Steps::Steps(
     Pinetime::Applications::DisplayApp *app, 
-    Pinetime::Drivers::BMA421& stepCounter,
+    Pinetime::Controllers::Accelerometer& accelerometer,
     Controllers::Settings &settingsController) 
       : Screen(app), 
-      stepCounter{stepCounter},
+      accelerometer{accelerometer},
       settingsController{settingsController} {
 
-  stepCounter.Update();
+  accelerometer.Update();
 
   stepsArc = lv_arc_create(lv_scr_act(), NULL);
 
@@ -37,13 +36,14 @@ Steps::Steps(
   lSteps = lv_label_create(lv_scr_act(), NULL);
   lv_obj_set_style_local_text_color(lSteps, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x0000FF));
   lv_obj_set_style_local_text_font(lSteps, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);   
-  lv_label_set_text_fmt(lSteps,"%li", stepCounter.GetSteps()); 
+  lv_label_set_text_fmt(lSteps,"%li", accelerometer.GetSteps()); 
   lv_obj_align(lSteps, steps_icon, LV_ALIGN_OUT_BOTTOM_MID, 0, 20);
 
-  lv_arc_set_value(stepsArc, int16_t(500 * stepCounter.GetSteps() / settingsController.GetStepsGoal()));
+  lv_arc_set_value(stepsArc, int16_t(500 * accelerometer.GetSteps() / settingsController.GetStepsGoal()));
 
   lv_obj_t * lstepsL = lv_label_create(lv_scr_act(), NULL);  
-  lv_label_set_text_fmt(lstepsL,"Steps\n/ %i", settingsController.GetStepsGoal()); 
+  lv_label_set_text_fmt(lstepsL,"Steps\n%i", settingsController.GetStepsGoal()); 
+  lv_label_set_align(lstepsL, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(lstepsL, lSteps, LV_ALIGN_OUT_BOTTOM_MID, 0, 10);
 
   lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
@@ -60,11 +60,11 @@ Steps::~Steps() {
 
 bool Steps::Refresh() {
   
-  stepCounter.Update();
+  accelerometer.Update();
 
-  lv_label_set_text_fmt(lSteps,"%li", stepCounter.GetSteps()); 
+  lv_label_set_text_fmt(lSteps,"%li", accelerometer.GetSteps()); 
 
-  stepCount = stepCounter.GetSteps();
+  stepCount = accelerometer.GetSteps();
   if(stepCount.IsUpdated()) {        
     lv_arc_set_value(stepsArc, int16_t(500 * stepCount.Get() / settingsController.GetStepsGoal()));
   }  

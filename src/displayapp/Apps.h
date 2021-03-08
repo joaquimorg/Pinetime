@@ -19,6 +19,7 @@ namespace Pinetime
       LowBatt,
       QuickSettings,
       FlashLight,
+      Weather,
 
       Settings,
       SettingDisplay,

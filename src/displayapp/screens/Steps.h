@@ -4,16 +4,12 @@
 #include "Screen.h"
 #include <lvgl/src/lv_core/lv_style.h>
 #include <lvgl/src/lv_core/lv_obj.h>
-#include "drivers/BMA421.h"
 
 namespace Pinetime {
 
-  namespace Drivers {
-    class BMA421;
-  }
-
   namespace Controllers {
     class Settings;
+    class Accelerometer;
   }
 
   namespace Applications {
@@ -21,7 +17,7 @@ namespace Pinetime {
 
       class Steps : public Screen {
         public:
-          Steps(DisplayApp* app, Pinetime::Drivers::BMA421& stepCounter, Controllers::Settings &settingsController);
+          Steps(DisplayApp* app, Pinetime::Controllers::Accelerometer& accelerometer, Controllers::Settings &settingsController);
           ~Steps() override;
 
           bool Refresh() override;
@@ -29,7 +25,7 @@ namespace Pinetime {
 
         private:          
 
-          Pinetime::Drivers::BMA421& stepCounter;
+          Pinetime::Controllers::Accelerometer& accelerometer;
           Controllers::Settings& settingsController;
 
           DirtyValue<uint32_t> stepCount  {0};

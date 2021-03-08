@@ -33,7 +33,7 @@ void HardwareTimerCallback(TimerHandle_t xTimer) {
 
 SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        Drivers::SpiNorFlash& spiNorFlash,
-                       Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel, Drivers::BMA421& stepCounter,
+                       Drivers::TwiMaster& twiMaster, Drivers::Cst816S &touchPanel, Controllers::Accelerometer& accelerometer,
                        Components::LittleVgl &lvgl,
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
                        Controllers::DateTime &dateTimeController,
@@ -44,7 +44,7 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        spiNorFlash{spiNorFlash},
                        twiMaster{twiMaster}, 
                        touchPanel{touchPanel}, 
-                       stepCounter{stepCounter},
+                       accelerometer{accelerometer},
                        lvgl{lvgl}, 
                        batteryController{batteryController},
                        bleController{bleController}, 
@@ -102,13 +102,10 @@ void SystemTask::Work() {
 
   settingsController.Init();
 
-  //stepCounter.Init();
-  
-  batteryController.Init();
-  settingsController.Init();  
+  accelerometer.Init();
 
   displayApp.reset(new Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController,
-                                                          dateTimeController, watchdogView, settingsController, stepCounter, *this, notificationManager, callNotificationManager));
+                                                          dateTimeController, watchdogView, settingsController, accelerometer, *this, notificationManager, callNotificationManager));
   displayApp->Start();
 
   //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
@@ -183,14 +180,14 @@ void SystemTask::Work() {
         case Messages::WakeUp:
           spi.Wakeup();
           twiMaster.Wakeup();
-          //stepCounter.Wakeup();
+          //accelerometer.Wakeup();
 
           nimbleController.StartAdvertising();
           
           spiNorFlash.Wakeup();
           touchPanel.Wakeup();
           lcd.Wakeup();
-          //stepCounter.Update();
+          //accelerometer.Update();
 
           isSleeping = false;
           isWakingUp = false;
@@ -251,7 +248,7 @@ void SystemTask::Work() {
           break;
         case Messages::OnStepEvent:
           vrMotor.Vibrate(25);
-          stepCounter.Update();
+          accelerometer.Update();
           break;
         case Messages::OnDisplayTaskSleeping:
           if(BootloaderVersion::IsValid()) {
@@ -262,8 +259,7 @@ void SystemTask::Work() {
           lcd.Sleep();
           #ifndef P8CLONE
           touchPanel.Sleep();
-          #endif
-          //stepCounter.Sleep();
+          //accelerometer.Sleep();
           //spi.Sleep();
           //twiMaster.Sleep();
           isSleeping = true;
@@ -324,7 +320,7 @@ void SystemTask::OnTouchEvent() {
 }
 
 void SystemTask::OnStepEvent() {
-  stepCounter.Update();
+  accelerometer.Update();
   if(isGoingToSleep) return ;
   //NRF_LOG_INFO("[systemtask] Step event");
   if(!isSleeping) {    
@@ -392,8 +388,9 @@ void SystemTask::HardwareStatus() {
 
   // verify the day to reset de counter
   // ToDo
-  stepCounter.Update();  
+  accelerometer.Update();  
   
+  settingsController.SetHistorySteps( accelerometer, dateTimeController );
   
   // Update Battery status
   batteryController.Update();

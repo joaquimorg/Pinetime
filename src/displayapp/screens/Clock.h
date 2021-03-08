@@ -9,14 +9,13 @@
 #include "components/datetime/DateTimeController.h"
 
 namespace Pinetime {
-  namespace Drivers {
-    class BMA421;
-  }
+
   namespace Controllers {
     class Settings;
     class Battery;
     class Ble;
     class NotificationManager;
+    class Accelerometer;
   }
 
   namespace Applications {
@@ -29,7 +28,7 @@ namespace Pinetime {
                   Controllers::Ble& bleController,
                   Controllers::NotificationManager& notificatioManager,
                   Controllers::Settings &settingsController,
-                  Drivers::BMA421& stepCounter);
+                  Controllers::Accelerometer& accelerometer);
           ~Clock() override;
 
           bool Refresh() override;
@@ -43,7 +42,7 @@ namespace Pinetime {
           Controllers::Ble& bleController;
           Controllers::NotificationManager& notificatioManager;
           Controllers::Settings& settingsController;
-          Drivers::BMA421& stepCounter;
+          Controllers::Accelerometer& accelerometer;
 
           ScreenList<4> screens;
           std::unique_ptr<Screen> WatchFaceDigitalScreen();
