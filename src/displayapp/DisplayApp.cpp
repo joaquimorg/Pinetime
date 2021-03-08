@@ -187,7 +187,16 @@ void DisplayApp::Refresh() {
       case Messages::ButtonPushed:
         if( currentApp == Apps::Clock ) {
           //systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
-          LoadApp( Apps::Launcher, DisplayApp::FullRefreshDirections::Up );
+          
+          settingsController.SetClockFace(settingsController.GetClockFace() + 1);
+          if ( settingsController.GetClockFace() > 3 ) {
+            settingsController.SetClockFace(0);
+            showapp++;
+            if ( showapp > 17 ) showapp = 1;
+            LoadApp( (Apps)showapp, DisplayApp::FullRefreshDirections::Up );
+          } else {
+            LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Up );
+          }
         } else {
           if ( !currentScreen->OnButtonPushed() ) {
             LoadApp( returnToApp, returnDirection );

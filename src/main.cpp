@@ -103,11 +103,11 @@ void ble_manager_set_ble_disconnection_callback(void (*disconnection)());
 std::unique_ptr<Pinetime::System::SystemTask> systemTask;
 
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
-  /*if(pin == TP_IRQ) {
-    //systemTask->OnTouchEvent();
-    systemTask->OnButtonPushed();
+  if(pin == TP_IRQ) {
+    systemTask->OnTouchEvent();
+    //systemTask->OnButtonPushed();
     return ;
-  }*/
+  }
 
   /*if(pin == BMA421_IRQ) {
     systemTask->OnStepEvent();

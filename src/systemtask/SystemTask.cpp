@@ -114,7 +114,6 @@ void SystemTask::Work() {
   //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
   nrfx_gpiote_in_config_t pinConfig;
 
-  #ifndef P8CLONE
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
   nrf_gpio_cfg_output(KEY_ENABLE);
@@ -128,7 +127,7 @@ void SystemTask::Work() {
 
   nrfx_gpiote_in_init(KEY_ACTION, &pinConfig, nrfx_gpiote_evt_handler);
   //
-  #endif
+  
   // Touch IRQ
   nrf_gpio_cfg_sense_input(TP_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
 
@@ -376,7 +375,8 @@ void SystemTask::OnIdle() {
   PushMessage(Messages::GoToSleep);
   #else
   xTimerReset(idleTimer, 0);
-  displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+  //displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
+  displayApp->PushMessage(Applications::DisplayApp::Messages::ButtonPushed);
   
   #endif
 }
@@ -384,6 +384,7 @@ void SystemTask::OnIdle() {
 void SystemTask::ReloadIdleTimer() const {
   if(isSleeping || isGoingToSleep) return;
   xTimerReset(idleTimer, 0);
+  displayApp->PushMessage(Applications::DisplayApp::Messages::ButtonPushed);
 }
 
 

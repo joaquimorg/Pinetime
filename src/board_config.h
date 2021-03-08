@@ -40,8 +40,8 @@
 #   define BMA421_TWI_ADDR 0x18
 #   define BMA421_IRQ 17
 
-#   define KEY_ACTION 25
-#   define KEY_ENABLE 25
+#   define KEY_ACTION 6
+#   define KEY_ENABLE 5
 
 #   define PWR_CTRL 25             // 3V3 POWER CONTROL
 #   define CHARGE_BASE_IRQ 3      // POWER PRESENCE INDICATION

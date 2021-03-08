@@ -107,7 +107,7 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
     }
     avg_sample /= i; // average all the samples out
 
-    voltage = (avg_sample * 2.0f) / (1024 / 3.0f);
+    voltage = (avg_sample * 2.04f) / (1024 / 3.0f);
    
     voltage = roundf(voltage * 100) / 100;
 

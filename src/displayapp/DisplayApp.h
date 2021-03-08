@@ -106,6 +106,8 @@ namespace Pinetime {
         TouchEvents OnTouchEvent();    
 
         void returnApp(Apps app, DisplayApp::FullRefreshDirections direction);
+
+        uint8_t showapp = 1;
                 
     };
   }
