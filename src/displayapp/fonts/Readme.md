@@ -27,3 +27,8 @@ static constex char* newSymbol = "\xEF\x86\x85";
 0x20-0x7f,0x2020
 ãÃâÂçÇôÔõÕéèÉÈíìÍÌúùÙÚáÁàÀ
 
+
+
+emoji :
+
+0x1F600-0x1F64F

@@ -379,13 +379,19 @@ void SystemTask::HardwareStatus() {
   // Update Battery status
   batteryController.Update();
 
-  // verify batt status to alert if is to low
-  if ( batteryController.PercentRemaining() >= 0 && batteryController.PercentRemaining() < 15 && !batteryController.IsCharging() ) {
-    if(isGoingToSleep) return ;
-    if(isSleeping && !isWakingUp) {
-      WakeUp();
-      vrMotor.Vibrate(35);
-      displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
+  if(isGoingToSleep) return ;
+  if(isSleeping && !isWakingUp) {
+    // verify batt status to alert if is to low
+    if ( batteryController.PercentRemaining() >= 0 && batteryController.PercentRemaining() < 15 && !batteryController.IsCharging() ) {
+        WakeUp();
+        vrMotor.Vibrate(35);
+        displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
+    }
+
+    // verify if batt is charged
+    if ( batteryController.PercentRemaining() == 100 && batteryController.IsCharging() ) {
+        WakeUp();
+        displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
     }
   }
 

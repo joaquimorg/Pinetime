@@ -93,7 +93,7 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
   int avg_sample = 0;
   int i;
 
-  const float battery_max = 4.05; //maximum voltage of battery
+  const float battery_max = 4.15; //maximum voltage of battery
   const float battery_min = 3.00;  //minimum voltage of battery before shutdown
 
   if (p_event->type == NRFX_SAADC_EVT_DONE) {
