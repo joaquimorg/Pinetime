@@ -371,10 +371,9 @@ void SystemTask::ReloadIdleTimer() const {
 
 void SystemTask::HardwareStatus() {
 
-  // verify the day to reset de counter
-  // ToDo
+    
   accelerometer.Update();  
-  
+  // verify the day to reset de counter
   settingsController.SetHistorySteps( accelerometer, dateTimeController );
   
   // Update Battery status

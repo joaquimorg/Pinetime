@@ -51,6 +51,7 @@ This project is released under the GNU General Public License version 3 or, at y
 ![Pinetime](images/screens/pinetime_3955.jpg "Pinetime")
 ![Pinetime](images/screens/pinetime_4004.jpg "Pinetime")
 ![Pinetime](images/screens/pinetime_2745.jpg "Pinetime")
+![Pinetime](images/screens/pinetime_2549.jpg "Pinetime")
 ![Pinetime](images/screens/pinetime_4019.jpg "Pinetime")
 ![Pinetime](images/screens/pinetime_4028.jpg "Pinetime")
 ![Pinetime](images/screens/pinetime_4044.jpg "Pinetime")
