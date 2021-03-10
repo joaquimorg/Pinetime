@@ -31,7 +31,7 @@ The available features are :
 - Firmware update from android app
 
 ## Companion app (development is in progress):
- - [Gadgetbridge](https://codeberg.org/joaquimorg/Gadgetbridge) (on Android)
+ - [Gadgetbridge](https://codeberg.org/joaquimorg/GadgetbridgePinetimeLite) (on Android)
 
 ## Licenses
 This project is released under the GNU General Public License version 3 or, at your option, any later version.
