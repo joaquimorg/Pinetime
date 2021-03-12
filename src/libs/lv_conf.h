@@ -205,7 +205,7 @@ e.g. "stm32f769xx.h" or "stm32f429xx.h" */
 
 /* 1: Enable file system (might be required for images */
 // TODO: Enable FS
-#define LV_USE_FILESYSTEM       0
+#define LV_USE_FILESYSTEM       1
 #if LV_USE_FILESYSTEM
 /*Declare the type of the user data of file system drivers (can be e.g. `void *`, `int`, `struct`)*/
 typedef void * lv_fs_drv_user_data_t;

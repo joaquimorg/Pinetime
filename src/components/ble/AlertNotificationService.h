@@ -11,6 +11,12 @@
 //00020001-78fc-48fe-8e23-433b3a1942d0
 #define NOTIFICATION_EVENT_SERVICE_UUID_BASE {0xd0, 0x42, 0x19, 0x3a, 0x3b, 0x43, 0x23, 0x8e, 0xfe, 0x48, 0xfc, 0x78, 0x01, 0x00, 0x02, 0x00}
 
+//00020000-78fc-48fe-8e23-433b3a1942d0
+#define MSG_EVENT_SERVICE_UUID_BASE {0xd0, 0x42, 0x19, 0x3a, 0x3b, 0x43, 0x23, 0x8e, 0xfe, 0x48, 0xfc, 0x78, 0x00, 0x00, 0x02, 0x00}
+
+//00020002-78fc-48fe-8e23-433b3a1942d0
+#define MSG_EVENT_SERVICE_UUID_CHAR {0xd0, 0x42, 0x19, 0x3a, 0x3b, 0x43, 0x23, 0x8e, 0xfe, 0x48, 0xfc, 0x78, 0x02, 0x00, 0x02, 0x00}
+
 namespace Pinetime {
 
   namespace System {
@@ -67,24 +73,15 @@ namespace Pinetime {
         static const uint8_t NOTIFICATION_SKYPE       = 0x15;
 
 
-        static constexpr uint16_t ansId {0x1811};
-        static constexpr uint16_t ansCharId {0x2a46};
-        //static constexpr uint16_t ansEventCharId = {0x2a47};
-
-        static constexpr ble_uuid16_t ansUuid {
-                .u { .type = BLE_UUID_TYPE_16 },
-                .value = ansId
+        static constexpr ble_uuid128_t ansUuid {
+                .u { .type = BLE_UUID_TYPE_128 },
+                .value = MSG_EVENT_SERVICE_UUID_BASE
         };
 
-        static constexpr ble_uuid16_t ansCharUuid {
-                .u { .type = BLE_UUID_TYPE_16 },
-                .value = ansCharId
+        static constexpr ble_uuid128_t ansCharUuid {
+                .u { .type = BLE_UUID_TYPE_128 },
+                .value = MSG_EVENT_SERVICE_UUID_CHAR
         };
-
-        /*static constexpr ble_uuid16_t ansEventUuid {
-                .u { .type = BLE_UUID_TYPE_16 },
-                .value = ansEventCharId
-        };*/
 
         static constexpr ble_uuid128_t notificationEventUuid {
                 .u { .type = BLE_UUID_TYPE_128 },

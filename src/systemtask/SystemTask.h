@@ -18,6 +18,7 @@
 #include "components/ble/NotificationManager.h"
 #include "components/ble/CallNotificationManager.h"
 #include "components/accelerometer/Accelerometer.h"
+#include "components/fs/FS.h"
 
 #include "drivers/Watchdog.h"
 #include "drivers/Cst816s.h"
@@ -92,7 +93,7 @@ namespace Pinetime {
         Controllers::NotificationManager notificationManager;
         Controllers::CallNotificationManager callNotificationManager;
         Controllers::NimbleController nimbleController;
-
+        Pinetime::Controllers::FS fs;
         Pinetime::Controllers::Motor vrMotor;
 
         QueueHandle_t systemTasksMsgQueue;

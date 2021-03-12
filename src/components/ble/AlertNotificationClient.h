@@ -8,6 +8,10 @@
 #undef min
 #include "BleClient.h"
 
+
+//00020000-78fc-48fe-8e23-433b3a1942d0
+#define MSG_EVENT_SERVICE_UUID_BASE {0xd0, 0x42, 0x19, 0x3a, 0x3b, 0x43, 0x23, 0x8e, 0xfe, 0x48, 0xfc, 0x78, 0x00, 0x00, 0x02, 0x00}
+
 namespace Pinetime {
 
   namespace System {
@@ -33,17 +37,18 @@ namespace Pinetime {
         void Discover(uint16_t connectionHandle, std::function<void(uint16_t)> lambda) override;
 
       private:
-        static constexpr uint16_t ansServiceId{0x1811};
+  
         static constexpr uint16_t supportedNewAlertCategoryId = 0x2a47;
         static constexpr uint16_t supportedUnreadAlertCategoryId = 0x2a48;
         static constexpr uint16_t newAlertId = 0x2a46;
         static constexpr uint16_t unreadAlertStatusId = 0x2a45;
         static constexpr uint16_t controlPointId = 0x2a44;
 
-        static constexpr ble_uuid16_t ansServiceUuid{
-                .u {.type = BLE_UUID_TYPE_16},
-                .value = ansServiceId
+        static constexpr ble_uuid128_t ansServiceUuid {
+                .u { .type = BLE_UUID_TYPE_128 },
+                .value = MSG_EVENT_SERVICE_UUID_BASE
         };
+
         static constexpr ble_uuid16_t supportedNewAlertCategoryUuid{
                 .u {.type = BLE_UUID_TYPE_16},
                 .value = supportedNewAlertCategoryId

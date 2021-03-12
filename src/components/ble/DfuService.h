@@ -76,10 +76,10 @@ namespace Pinetime {
         DfuImage dfuImage;
         NotificationManager notificationManager;
 
-        static constexpr uint16_t dfuServiceId{0x1530};
+        /*static constexpr uint16_t dfuServiceId{0x1530};
         static constexpr uint16_t packetCharacteristicId{0x1532};
         static constexpr uint16_t controlPointCharacteristicId{0x1531};
-        static constexpr uint16_t revisionCharacteristicId{0x1534};
+        static constexpr uint16_t revisionCharacteristicId{0x1534};*/
 
         uint16_t revision{0x0008};
 

@@ -4,7 +4,7 @@
 #include "systemtask/SystemTask.h"
 
 using namespace Pinetime::Controllers;
-constexpr ble_uuid16_t AlertNotificationClient::ansServiceUuid;
+constexpr ble_uuid128_t AlertNotificationClient::ansServiceUuid;
 constexpr ble_uuid16_t AlertNotificationClient::supportedNewAlertCategoryUuid;
 constexpr ble_uuid16_t AlertNotificationClient::supportedUnreadAlertCategoryUuid;
 constexpr ble_uuid16_t AlertNotificationClient::newAlertUuid;

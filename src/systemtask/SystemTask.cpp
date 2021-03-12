@@ -54,7 +54,8 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        watchdog{}, 
                        watchdogView{watchdog},
 
-                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash),
+                       fs( spiNorFlash ),
+                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash, fs),
                        vrMotor( settingsController ) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
 }
@@ -85,6 +86,8 @@ void SystemTask::Work() {
   spi.Init();
   spiNorFlash.Init();
   spiNorFlash.Wakeup();
+
+  fs.LVGLFileSystemInit();
 
   nimbleController.Init();
   nimbleController.StartAdvertising();
@@ -292,11 +295,9 @@ void SystemTask::OnButtonPushed() {
     PushMessage(Messages::OnButtonEvent);
     displayApp->PushMessage(Applications::DisplayApp::Messages::ButtonPushed);
   }
-  else {
-    if(!isWakingUp) {
-      //NRF_LOG_INFO("[systemtask] Button pushed, waking up");
-      WakeUp();
-    }
+  else if(!isWakingUp) {
+    //NRF_LOG_INFO("[systemtask] Button pushed, waking up");
+    WakeUp();
   }
 }
 
@@ -311,6 +312,8 @@ void SystemTask::OnTouchEvent() {
   if(!isSleeping) {
     PushMessage(Messages::OnTouchEvent);
     displayApp->PushMessage(Applications::DisplayApp::Messages::TouchEvent);
+  } else if(!isWakingUp) {
+    WakeUp();
   }
 }
 
