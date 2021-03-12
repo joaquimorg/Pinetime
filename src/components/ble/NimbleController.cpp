@@ -17,6 +17,13 @@
 
 using namespace Pinetime::Controllers;
 
+namespace {
+  int GAPEventCallback(struct ble_gap_event *event, void *arg) {
+    auto nimbleController = static_cast<NimbleController*>(arg);
+    return nimbleController->OnGAPEvent(event);
+  }
+}
+
 NimbleController::NimbleController(
         Pinetime::System::SystemTask& systemTask,
         Pinetime::Controllers::Ble& bleController,
@@ -24,7 +31,8 @@ NimbleController::NimbleController(
         Pinetime::Controllers::NotificationManager& notificationManager,
         Pinetime::Controllers::CallNotificationManager& callNotificationManager,
         Controllers::Battery& batteryController,
-        Pinetime::Drivers::SpiNorFlash& spiNorFlash) :
+        Pinetime::Drivers::SpiNorFlash& spiNorFlash,
+        Pinetime::Controllers::FS& fs) :
 
         systemTask{systemTask},
         bleController{bleController},
@@ -32,20 +40,17 @@ NimbleController::NimbleController(
         notificationManager{notificationManager},
         callNotificationManager{callNotificationManager},
         spiNorFlash{spiNorFlash},
+        fs{fs},
+        ftpService{systemTask, bleController, fs},
         dfuService{systemTask, bleController, spiNorFlash},
         currentTimeClient{dateTimeController},
-        anService{systemTask, notificationManager, callNotificationManager},
+        alertNotificationService{systemTask, notificationManager, callNotificationManager},
         alertNotificationClient{systemTask, notificationManager},
         currentTimeService{dateTimeController},
-        musicService{systemTask},
+        //musicService{systemTask},
         batteryInformationService{batteryController},
         immediateAlertService{systemTask, notificationManager},
         serviceDiscovery({&currentTimeClient, &alertNotificationClient}) {
-}
-
-int GAPEventCallback(struct ble_gap_event *event, void *arg) {
-  auto nimbleController = static_cast<NimbleController*>(arg);
-  return nimbleController->OnGAPEvent(event);
 }
 
 void NimbleController::Init() {
@@ -55,33 +60,42 @@ void NimbleController::Init() {
   ble_svc_gatt_init();
 
   deviceInformationService.Init();
+
   currentTimeClient.Init();
   currentTimeService.Init();
-  musicService.Init();
-  anService.Init();
+  
+  //musicService.Init();
+  
+  alertNotificationService.Init();
+  
   dfuService.Init();
+  
   batteryInformationService.Init();
-  immediateAlertService.Init();
-  int res;
-  res = ble_hs_util_ensure_addr(0);
-  ASSERT(res == 0);
-  res = ble_hs_id_infer_auto(0, &addrType);
-  ASSERT(res == 0);
-  res = ble_svc_gap_device_name_set(deviceName);
-  ASSERT(res == 0);
+  
+  //immediateAlertService.Init();
+
+  ftpService.Init();
+  
+  //int res;
+  ble_hs_util_ensure_addr(0);
+  //ASSERT(res == 0);
+  ble_hs_id_infer_auto(0, &addrType);
+  //ASSERT(res == 0);
+  ble_svc_gap_device_name_set(deviceName);
+  //ASSERT(res == 0);
   Pinetime::Controllers::Ble::BleAddress address;
-  res = ble_hs_id_copy_addr(addrType, address.data(), nullptr);
-  ASSERT(res == 0);
+  ble_hs_id_copy_addr(addrType, address.data(), nullptr);
+  //ASSERT(res == 0);
   bleController.AddressType((addrType == 0) ? Ble::AddressTypes::Public : Ble::AddressTypes::Random);
   bleController.Address(std::move(address));
 
-  res = ble_gatts_start();
-  ASSERT(res == 0);
+  ble_gatts_start();
+  //ASSERT(res == 0);
 }
 
 void NimbleController::StartAdvertising() {
   if(bleController.IsConnected() || ble_gap_conn_active() || ble_gap_adv_active()) return;
-
+  
   ble_svc_gap_device_name_set(deviceName);
 
   /* set adv parameters */
@@ -103,8 +117,8 @@ void NimbleController::StartAdvertising() {
   fields.flags = BLE_HS_ADV_F_DISC_GEN |
                  BLE_HS_ADV_F_BREDR_UNSUP;
 //  fields.uuids128 = BLE_UUID128(BLE_UUID128_DECLARE(
-//          0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
-//          0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff));
+//         0x00, 0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77,
+//         0x88, 0x99, 0xaa, 0xbb, 0xcc, 0xdd, 0xee, 0xff));
   fields.uuids128 = &dfuServiceUuid;
   fields.num_uuids128 = 1;
   fields.uuids128_is_complete = 1;
@@ -145,8 +159,8 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
 
       if (event->connect.status != 0) {
         /* Connection failed; resume advertising. */
-        StartAdvertising();
         bleController.Disconnect();
+        StartAdvertising();
       } else {
         bleController.Connect();
         systemTask.PushMessage(Pinetime::System::SystemTask::Messages::BleConnected);

@@ -392,6 +392,7 @@ list(APPEND SOURCE_FILES
         components/brightness/BrightnessController.cpp
         components/firmwarevalidator/FirmwareValidator.cpp
         components/accelerometer/Accelerometer.cpp
+        components/fs/FS.cpp
 
         components/ble/BleController.cpp
         components/ble/NotificationManager.cpp
@@ -406,7 +407,8 @@ list(APPEND SOURCE_FILES
         components/ble/MusicService.cpp
         components/ble/BatteryInformationService.cpp
         components/ble/ImmediateAlertService.cpp
-        components/ble/ServiceDiscovery.cpp        
+        components/ble/ServiceDiscovery.cpp     
+        components/ble/FtpService.cpp   
         
         FreeRTOS/port.c
         FreeRTOS/port_cmsis_systick.c

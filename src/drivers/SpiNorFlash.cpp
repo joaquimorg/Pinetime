@@ -76,7 +76,7 @@ void SpiNorFlash::Read(uint32_t address, uint8_t *buffer, size_t size) {
   cmd[0] = static_cast<uint8_t>(Commands::Read);
   cmd[1] = (uint8_t)(address >> 16U);
   cmd[2] = (uint8_t)(address >> 8U);
-  cmd[3] = (uint8_t)address;
+  cmd[3] = (uint8_t)(address);
 
   spi.Read(reinterpret_cast<uint8_t *>(&cmd), cmdSize, buffer, size);
 }

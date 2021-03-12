@@ -1,0 +1,8 @@
+{
+    "version" : 1.0,
+    "files" : [
+        {"name" : "BG_CLOCK01", "size":115110},
+        {"name" : "BG_CLOCK02", "size":115110}
+    ]
+
+}

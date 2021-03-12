@@ -4,7 +4,7 @@
 #include "Symbols.h"
 #include "NotificationIcon.h"
 
-LV_IMG_DECLARE(bg_clock);
+//LV_IMG_DECLARE(bg_clock);
 
 using namespace Pinetime::Applications::Screens;
 
@@ -41,10 +41,23 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   sHour = 99;
   sMinute = 99;
   sSecond = 99;
-  
+  //lv_img_set_src(bg_clock_img, &bg_clock);
+
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, &bg_clock);
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
+  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+
+  bg_clock_img = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
+  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 0);
+
+  bg_clock_img = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
+  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
+
+  bg_clock_img = lv_img_create(lv_scr_act(), NULL);
+  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
+  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
@@ -106,11 +119,11 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
 
   UpdateClock();
 
-  /*backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text_static(backgroundLabel, "");*/
+  lv_label_set_text_static(backgroundLabel, "");
 
 }
 

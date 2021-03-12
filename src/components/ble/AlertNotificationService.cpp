@@ -8,9 +8,8 @@
 
 using namespace Pinetime::Controllers;
 
-constexpr ble_uuid16_t AlertNotificationService::ansUuid;
-constexpr ble_uuid16_t AlertNotificationService::ansCharUuid;
-//constexpr ble_uuid16_t AlertNotificationService::ansEventUuid;
+constexpr ble_uuid128_t AlertNotificationService::ansUuid;
+constexpr ble_uuid128_t AlertNotificationService::ansCharUuid;
 constexpr ble_uuid128_t AlertNotificationService::notificationEventUuid;
 
 
@@ -39,13 +38,6 @@ AlertNotificationService::AlertNotificationService (
                     .arg = this,
                     .flags = BLE_GATT_CHR_F_WRITE
             },
-            /*{
-                    .uuid = (ble_uuid_t *) &ansEventUuid,
-                    .access_cb = AlertNotificationCallback,
-                    .arg = this,
-                    .flags = BLE_GATT_CHR_F_NOTIFY,
-                    .val_handle = &eventHandle
-            },*/
             {
                     .uuid = (ble_uuid_t *) &notificationEventUuid,
                     .access_cb = AlertNotificationCallback,

@@ -10,7 +10,8 @@
             "compilerPath": "/usr/bin/arm-none-eabi-g++",
             "cStandard": "c11",
             "cppStandard": "c++14",
-            "intelliSenseMode": "gcc-arm"
+            "intelliSenseMode": "gcc-arm",
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
         }
     ],
     "version": 4

@@ -11,20 +11,22 @@ constexpr ble_uuid128_t DfuService::controlPointCharacteristicUuid;
 constexpr ble_uuid128_t DfuService::revisionCharacteristicUuid;
 constexpr ble_uuid128_t DfuService::packetCharacteristicUuid;
 
-int DfuServiceCallback(uint16_t conn_handle, uint16_t attr_handle,
-                       struct ble_gatt_access_ctxt *ctxt, void *arg) {
-  auto dfuService = static_cast<DfuService *>(arg);
-  return dfuService->OnServiceData(conn_handle, attr_handle, ctxt);
-}
+namespace {
+  int DfuServiceCallback(uint16_t conn_handle, uint16_t attr_handle,
+                        struct ble_gatt_access_ctxt *ctxt, void *arg) {
+    auto dfuService = static_cast<DfuService *>(arg);
+    return dfuService->OnServiceData(conn_handle, attr_handle, ctxt);
+  }
 
-void NotificationTimerCallback(TimerHandle_t xTimer) {
-  auto notificationManager = static_cast<DfuService::NotificationManager *>(pvTimerGetTimerID(xTimer));
-  notificationManager->OnNotificationTimer();
-}
+  void NotificationTimerCallback(TimerHandle_t xTimer) {
+    auto notificationManager = static_cast<DfuService::NotificationManager *>(pvTimerGetTimerID(xTimer));
+    notificationManager->OnNotificationTimer();
+  }
 
-void TimeoutTimerCallback(TimerHandle_t xTimer) {
-  auto dfuService = static_cast<DfuService *>(pvTimerGetTimerID(xTimer));
-  dfuService->OnTimeout();
+  void TimeoutTimerCallback(TimerHandle_t xTimer) {
+    auto dfuService = static_cast<DfuService *>(pvTimerGetTimerID(xTimer));
+    dfuService->OnTimeout();
+  }
 }
 
 DfuService::DfuService(Pinetime::System::SystemTask &systemTask, Pinetime::Controllers::Ble &bleController,
