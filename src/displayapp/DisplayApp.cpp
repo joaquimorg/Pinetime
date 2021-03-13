@@ -27,6 +27,7 @@
 #include "displayapp/screens/SettingTimeFormat.h"
 #include "displayapp/screens/SettingWatchFace.h"
 #include "displayapp/screens/SettingSteps.h"
+#include "displayapp/screens/SettingWakeUp.h"
 
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
@@ -169,6 +170,11 @@ void DisplayApp::Refresh() {
             case TouchEvents::SwipeRight:
               if(currentApp == Apps::Clock) {
                 LoadApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::None );
+              }
+              break;
+            case TouchEvents::DoubleTap:
+              if(currentApp == Apps::Clock) {
+                systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
               }
               break;
             default:
@@ -357,12 +363,17 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
 
+      case Apps::SettingWakeUp: 
+        currentScreen.reset(new Screens::SettingWakeUp(this, settingsController));
+        returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
       case Apps::SettingSteps: 
         currentScreen.reset(new Screens::SettingSteps(this, settingsController));
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
       case Apps::About: 
-        currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, accelerometer)); 
+        currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, accelerometer, settingsController)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
       case Apps::FirmwareUpdate:

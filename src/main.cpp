@@ -52,9 +52,6 @@ Pinetime::Logging::NrfLogger logger;
 Pinetime::Logging::DummyLogger logger;
 #endif
 
-
-Pinetime::Controllers::Settings settingsController;
-
 Pinetime::Drivers::SpiMaster spi{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, {
         Pinetime::Drivers::SpiMaster::BitOrder::Msb_Lsb,
         Pinetime::Drivers::SpiMaster::Modes::Mode3,
@@ -70,6 +67,8 @@ Pinetime::Drivers::St7789 lcd {lcdSpi, LCD_DC};
 
 Pinetime::Drivers::Spi flashSpi {spi, FLASH_CSN};
 Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
+
+Pinetime::Controllers::Settings settingsController {spiNorFlash};
 
 // The TWI device should work @ up to 400Khz but there is a HW bug which prevent it from
 // respecting correct timings. According to erratas heet, this magic value makes it run

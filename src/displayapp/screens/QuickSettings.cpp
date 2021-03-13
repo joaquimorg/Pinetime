@@ -127,7 +127,7 @@ QuickSettings::QuickSettings(
 QuickSettings::~QuickSettings() {
   lv_task_del(taskUpdate);
   lv_obj_clean(lv_scr_act());
-  
+  settingsController.SaveSettings();
 }
 
 void QuickSettings::UpdateScreen() {

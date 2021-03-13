@@ -20,6 +20,7 @@ WatchFaceCustom::WatchFaceCustom(Pinetime::Applications::DisplayApp *app,
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
   settingsController.SetClockFace(3);
+  settingsController.SaveSettings();
 
   uint8_t day = dateTimeController.Day();
 

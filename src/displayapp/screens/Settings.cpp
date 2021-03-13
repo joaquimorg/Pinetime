@@ -63,10 +63,10 @@ std::unique_ptr<Screen> Settings::CreateScreen2() {
 
   std::array<Screens::List::Applications, 4> applications {
           {                        
+            {Symbols::clock,            "Wake Up",   Apps::SettingWakeUp},
             {Symbols::batteryUnknown,   "Battery",   Apps::Charging},
             {Symbols::firmware,         "Firmware",  Apps::FirmwareValidation},
             {Symbols::about,            "About",     Apps::About},
-            {Symbols::none,             "None",      Apps::None},
           }
 
   };

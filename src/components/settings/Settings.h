@@ -3,6 +3,8 @@
 #include <cstdint>
 #include "components/datetime/DateTimeController.h"
 #include "components/accelerometer/Accelerometer.h"
+#include "drivers/SpiNorFlash.h"
+#include "drivers/Cst816s.h"
 
 namespace Pinetime {
   namespace Controllers {
@@ -19,10 +21,18 @@ namespace Pinetime {
         enum class ClockType {H24, H12};
         enum class Vibration {ON, OFF};
 
+        Settings( Pinetime::Drivers::SpiNorFlash &spiNorFlash );
+
         void Init();
 
-        void SetClockFace( uint8_t face ) { clockFace = face; };
-        uint8_t GetClockFace() const { return clockFace; };
+        void SaveSettings();
+
+        void SetClockFace( uint8_t face ) {
+          if ( face != settings.clockFace ) settingsChanged = true;
+          settings.clockFace = face; 
+        };
+
+        uint8_t GetClockFace() const { return settings.clockFace; };
 
         void SetAppMenu( uint8_t menu ) { appMenu = menu; };
         uint8_t GetAppMenu() const { return appMenu; };
@@ -30,33 +40,83 @@ namespace Pinetime {
         void SetSettingsMenu( uint8_t menu ) { settingsMenu = menu; };
         uint8_t GetSettingsMenu() const { return settingsMenu; };
 
-        void SetClockType( ClockType clocktype ) { clockType = clocktype; };
-        ClockType GetClockType() const { return clockType; };
+        void SetClockType( ClockType clocktype ) { 
+          if ( clocktype != settings.clockType ) settingsChanged = true;
+          settings.clockType = clocktype; 
+        };
 
-        void SetStepsGoal( uint32_t goal ) { stepsGoal = goal; };
-        uint32_t GetStepsGoal() const { return stepsGoal; };
+        ClockType GetClockType() const { return settings.clockType; };
 
-        void SetVibrationStatus( Vibration status ) { vibrationStatus = status; };
-        Vibration GetVibrationStatus() const { return vibrationStatus; };
+        void SetStepsGoal( uint32_t goal ) { 
+          if ( goal != settings.stepsGoal ) settingsChanged = true;
+          settings.stepsGoal = goal; 
+        };
 
-        void SetScreenTimeOut( uint32_t timeout ) { screenTimeOut = timeout; };
-        uint32_t GetScreenTimeOut() const { return screenTimeOut; };
+        uint32_t GetStepsGoal() const { return settings.stepsGoal; };
+
+        void SetVibrationStatus( Vibration status ) { 
+          if ( status != settings.vibrationStatus ) settingsChanged = true;
+          settings.vibrationStatus = status; 
+        };
+
+        Vibration GetVibrationStatus() const { return settings.vibrationStatus; };
+
+        void SetScreenTimeOut( uint32_t timeout ) { 
+          if ( timeout != settings.screenTimeOut ) settingsChanged = true;
+          settings.screenTimeOut = timeout; 
+        };
+
+        uint32_t GetScreenTimeOut() const { return settings.screenTimeOut; };
 
         void SetHistorySteps( Accelerometer steps, DateTime date );
 
+        Pinetime::Drivers::Cst816S::Gestures getWakeUpTap() const { return settings.wakeUpTap; };
+
+        void setWakeUpTap( Pinetime::Drivers::Cst816S::Gestures wakeUp ) { 
+          if ( wakeUp != settings.wakeUpTap ) settingsChanged = true;
+          settings.wakeUpTap = wakeUp; 
+        };
+
+        uint8_t getSettingsBlock() const { return settingsFlashBlock; };
       private:
-        ClockType clockType = ClockType::H24;
-        Vibration vibrationStatus = Vibration::ON;
 
-        uint8_t clockFace = 0;
-        uint8_t appMenu = 0;
-        uint8_t settingsMenu = 0;
+        Pinetime::Drivers::SpiNorFlash& spiNorFlash;
 
-        uint32_t stepsGoal = 0;
-        uint32_t screenTimeOut = 15000;
+        struct SettingsData {
+
+          ClockType clockType = ClockType::H24;
+          Vibration vibrationStatus = Vibration::ON;
+
+          uint8_t clockFace = 0;
+
+          uint32_t stepsGoal = 1000;
+          uint32_t screenTimeOut = 15000;
+
+          Pinetime::Drivers::Cst816S::Gestures wakeUpTap = Pinetime::Drivers::Cst816S::Gestures::None;
+
+        };
 
         history_step_struct stepHistory[8];
         uint8_t stepHistoryPos = 0;
+
+        uint8_t appMenu = 0;
+        uint8_t settingsMenu = 0;
+
+        SettingsData settings;
+
+        // There are 10 blocks of reserved flash to save settings
+        // to minimize wear, the recording is done in a rotating way by the 10 blocks
+        uint8_t settingsFlashBlock = 99; // default to indicate it needs to find the active block
+
+        bool settingsChanged = false;
+
+        bool FindHeader();
+        void ReadSettingsData();
+        void EraseBlock();
+        void SetHeader( bool state );
+        void SaveSettingsData();
+        void LoadSettingsFromFlash();
+        void SaveSettingsToFlash();
 
     };
   }

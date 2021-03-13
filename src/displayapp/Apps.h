@@ -26,6 +26,7 @@ namespace Pinetime
       SettingTimeFormat,
       SettingWatchFace,
       SettingSteps,
+      SettingWakeUp,
     };
   }
 } // namespace Pinetime
