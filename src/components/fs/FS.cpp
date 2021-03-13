@@ -10,11 +10,42 @@ const uint8_t rawData[1] = {
     0x00
 };
 
+/* 
+ * External Flash MAP (4 MBytes)
+ * 
+ * 0x000000 +---------------------------------------+
+ *          |  Bootloader Assets                    |
+ *          |  256 KBytes                           |
+ *          |                                       |
+ * 0x040000 +---------------------------------------+
+ *          |  OTA                                  |
+ *          |  464 KBytes                           |
+ *          |                                       |
+ *          |                                       |
+ *          |                                       |
+ * 0x0B4000 +---------------------------------------+
+ *          |  File System FAT                      |
+ *          |  4 KBytes                             |
+ * 0x0B5000 +---------------------------------------+
+ *          |  File System FILES                    |
+ *          |  3.328 MBytes                         |
+ *          |                                       |
+ *          |                                       |
+ *          |                                       |
+ *          |                                       |
+ * 0x3F6000 +---------------------------------------+
+ *          |  System Settings                      |
+ *          |  40 KBytes                            |
+ * 0x400000 +---------------------------------------+
+ */
 
-#define FS_FAT 0x040000
-#define FS_ENDFAT 0x041000
-//#define FS_FAT 0x000000
-#define FS_FILES 0x042000
+#define FS_FAT      0x0B4000 // File System FAT
+#define FS_ENDFAT   0x0B5000
+
+#define FS_FILES    0x0B6000 // File System FILES
+#define FS_ENDFILES 0x3F6000 // File System END
+// File system size = 0x340000 - 3 407 872 Bytes - 3.328 MBytes
+// the last 40 Kbytes is reserved for System Settings
 
 FS::FS(Pinetime::Drivers::SpiNorFlash &spiNorFlash) : spiNorFlash{spiNorFlash} {}
 

@@ -22,6 +22,8 @@ WatchFaceDigital::WatchFaceDigital(Pinetime::Applications::DisplayApp *app,
                   accelerometer{accelerometer}
 {
   settingsController.SetClockFace(0);
+  settingsController.SaveSettings();
+  
   uint16_t year = dateTimeController.Year();
   uint8_t day = dateTimeController.Day();
 

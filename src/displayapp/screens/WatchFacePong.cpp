@@ -36,6 +36,7 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
                                            settingsController{settingsController} {
   
   settingsController.SetClockFace(3);
+  settingsController.SaveSettings();
 
   srand(dateTimeController.Seconds());
 

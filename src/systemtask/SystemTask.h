@@ -92,8 +92,8 @@ namespace Pinetime {
         Pinetime::Drivers::WatchdogView watchdogView;
         Controllers::NotificationManager notificationManager;
         Controllers::CallNotificationManager callNotificationManager;
-        Controllers::NimbleController nimbleController;
         Pinetime::Controllers::FS fs;
+        Controllers::NimbleController nimbleController;
         Pinetime::Controllers::Motor vrMotor;
 
         QueueHandle_t systemTasksMsgQueue;

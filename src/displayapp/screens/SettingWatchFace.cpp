@@ -83,6 +83,7 @@ SettingWatchFace::SettingWatchFace(
 
 SettingWatchFace::~SettingWatchFace() {
   lv_obj_clean(lv_scr_act());
+  settingsController.SaveSettings();
 }
 
 bool SettingWatchFace::Refresh() {

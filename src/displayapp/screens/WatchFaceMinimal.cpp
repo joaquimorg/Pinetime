@@ -23,6 +23,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
                                            settingsController{settingsController} {
                                              
   settingsController.SetClockFace(2);
+  settingsController.SaveSettings();
 
   uint8_t day = dateTimeController.Day();
 

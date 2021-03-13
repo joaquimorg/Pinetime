@@ -38,12 +38,11 @@ namespace Pinetime {
         void Sleep();
         void Wakeup();
       private:
-        //static constexpr uint8_t pinIrq = 28;
-        //static constexpr uint8_t pinReset = 10;
+
         static constexpr uint8_t lastTouchId = 0x0f;
         static constexpr uint8_t touchPointNumIndex = 2;
-        static constexpr uint8_t touchMiscIndex = 8;
-        static constexpr uint8_t touchXYIndex = 7;
+        //static constexpr uint8_t touchMiscIndex = 8;
+        //static constexpr uint8_t touchXYIndex = 7;
         static constexpr uint8_t touchEventIndex = 3;
         static constexpr uint8_t touchXHighIndex = 3;
         static constexpr uint8_t touchXLowIndex = 4;
@@ -53,7 +52,7 @@ namespace Pinetime {
         static constexpr uint8_t touchStep = 6;
         static constexpr uint8_t gestureIndex = 1;
 
-        uint8_t touchData[63];
+        uint8_t touchData[10];
         TwiMaster& twiMaster;
         uint8_t twiAddress;
     };

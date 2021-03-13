@@ -18,11 +18,13 @@ About::About(Pinetime::Applications::DisplayApp *app,
                        Pinetime::Controllers::BrightnessController& brightnessController,
                        Pinetime::Controllers::Ble& bleController,
                        Pinetime::Drivers::WatchdogView& watchdog,
-                       Pinetime::Controllers::Accelerometer& accelerometer) :
+                       Pinetime::Controllers::Accelerometer& accelerometer,
+                       Pinetime::Controllers::Settings& settingsController) :
         Screen(app),
         dateTimeController{dateTimeController}, batteryController{batteryController},
         brightnessController{brightnessController}, bleController{bleController}, watchdog{watchdog},
         accelerometer{accelerometer},
+        settingsController{settingsController},
         screens{app, 
           0,
           {
@@ -118,11 +120,14 @@ std::unique_ptr<Screen> About::CreateScreen2() {
               "#444444 Uptime#\t%02lud %02lu:%02lu:%02lu\n"
               "#444444 Battery#\t%d%% / %.2f v\n"
               "#444444 Backlight#\t%s\n"
-              "#444444 Last reset#\t%s\n",
+              "#444444 Last reset#\t%s\n"
+              "#444444 Settings block#\t%i\n",
           dateTimeController.Day(), static_cast<uint8_t>(dateTimeController.Month()), dateTimeController.Year(),
           dateTimeController.Hours(), dateTimeController.Minutes(), dateTimeController.Seconds(),
           uptimeDays, uptimeHours, uptimeMinutes, uptimeSeconds,
-          batteryPercent, batteryVoltage, brightnessController.ToString(), watchdog.ResetReasonToString(watchdog.ResetReason()));
+          batteryPercent, batteryVoltage, brightnessController.ToString(), watchdog.ResetReasonToString(watchdog.ResetReason()),
+          settingsController.getSettingsBlock()
+          );
   return std::unique_ptr<Screen>(new Screens::Label(1, 4, app, label));
 }
 

@@ -82,6 +82,7 @@ SettingDisplay::SettingDisplay(
 
 SettingDisplay::~SettingDisplay() {
   lv_obj_clean(lv_scr_act());
+  settingsController.SaveSettings();
 }
 
 bool SettingDisplay::Refresh() {

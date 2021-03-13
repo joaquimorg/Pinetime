@@ -184,7 +184,9 @@ void SystemTask::Work() {
           nimbleController.StartAdvertising();
           
           spiNorFlash.Wakeup();
-          touchPanel.Wakeup();
+          if ( settingsController.getWakeUpTap() != Pinetime::Drivers::Cst816S::Gestures::DoubleTap ) {
+            touchPanel.Wakeup();
+          }
           lcd.Wakeup();
           //accelerometer.Update();
 
@@ -256,9 +258,11 @@ void SystemTask::Work() {
             spiNorFlash.Sleep();
           }
           lcd.Sleep();
-          touchPanel.Sleep();
+          if ( settingsController.getWakeUpTap() != Pinetime::Drivers::Cst816S::Gestures::DoubleTap ) {
+            touchPanel.Sleep();
+          }
           //accelerometer.Sleep();
-          //spi.Sleep();
+          spi.Sleep();
           //twiMaster.Sleep();
           isSleeping = true;
           isGoingToSleep = false;
@@ -313,7 +317,11 @@ void SystemTask::OnTouchEvent() {
     PushMessage(Messages::OnTouchEvent);
     displayApp->PushMessage(Applications::DisplayApp::Messages::TouchEvent);
   } else if(!isWakingUp) {
-    WakeUp();
+    if ( settingsController.getWakeUpTap() == Pinetime::Drivers::Cst816S::Gestures::None ) return;
+    auto info = touchPanel.GetTouchInfo();
+    if( info.isTouch && info.gesture == settingsController.getWakeUpTap() ) {
+      WakeUp();
+    }
   }
 }
 

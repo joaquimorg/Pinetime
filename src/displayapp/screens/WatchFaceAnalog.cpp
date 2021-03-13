@@ -35,6 +35,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
   settingsController.SetClockFace(1);
+  settingsController.SaveSettings();
   
   uint8_t day = dateTimeController.Day();
 

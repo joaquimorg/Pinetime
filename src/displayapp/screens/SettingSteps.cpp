@@ -72,6 +72,7 @@ SettingSteps::SettingSteps(
 
 SettingSteps::~SettingSteps() {
   lv_obj_clean(lv_scr_act());
+  settingsController.SaveSettings();
 }
 
 bool SettingSteps::Refresh() {
