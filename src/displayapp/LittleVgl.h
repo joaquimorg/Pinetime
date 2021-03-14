@@ -52,6 +52,7 @@ namespace Pinetime {
         uint16_t tap_x = 0;
         uint16_t tap_y = 0;
         bool tapped = false;
+        bool isBusy = false;
     };
   }
 }

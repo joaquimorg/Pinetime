@@ -68,83 +68,6 @@ void LittleVgl::SetFullRefresh(FullRefreshDirections direction) {
 
 void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
 
-  uint16_t y1, y2, width, height = 0;
-  
-  ulTaskNotifyTake(pdTRUE, 500);
-  // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
-  // which cannot be set/clear during a transfert.
-
-
-  if( (scrollDirection == LittleVgl::FullRefreshDirections::Down) && (area->y2 == visibleNbLines - 1)) {
-    writeOffset = ((writeOffset + totalNbLines) - visibleNbLines) % totalNbLines;
-  } else if( (scrollDirection == FullRefreshDirections::Up) && (area->y1 == 0) ) {
-    writeOffset = (writeOffset + visibleNbLines) % totalNbLines;
-  }
-
-  y1 = (area->y1 + writeOffset) % totalNbLines;
-  y2 = (area->y2 + writeOffset) % totalNbLines;
-
-  width = (area->x2 - area->x1) + 1;
-  height = (y2 - y1) + 1;
-
-  if(scrollDirection == LittleVgl::FullRefreshDirections::Down) {
-
-    if(area->y2 < visibleNbLines - 1) {
-      uint16_t toScroll = 0;
-        if(area->y1 == 0) {
-        toScroll = height * 2;
-        scrollDirection = FullRefreshDirections::None;
-        lv_disp_set_direction(lv_disp_get_default(), 0);
-      } else {
-        toScroll = height;
-      }
-
-      if(scrollOffset >= toScroll)
-        scrollOffset -= toScroll;
-      else {
-        toScroll -= scrollOffset;
-        scrollOffset = (totalNbLines) - toScroll;
-      }
-
-      lcd.VerticalScrollStartAddress(scrollOffset);
-    }
-
-  } else if(scrollDirection == FullRefreshDirections::Up) {
-
-    if(area->y1 > 0) {
-      if(area->y2 == visibleNbLines - 1) {
-        scrollOffset += (height * 2);
-        scrollDirection = FullRefreshDirections::None;
-        lv_disp_set_direction(lv_disp_get_default(), 0);
-      } else {
-        scrollOffset += height;
-      }
-      scrollOffset = scrollOffset % totalNbLines;
-      lcd.VerticalScrollStartAddress(scrollOffset);
-    }
-  }
-
-  if (y2 < y1) {
-    height = (totalNbLines - 1) - y1;
-    lcd.BeginDrawBuffer(area->x1, y1, width, height);
-    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
-    /*ulTaskNotifyTake(pdTRUE, 320);
-    height = y2;
-    lcd.BeginDrawBuffer(area->x1, 0, width, height);
-    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);    */
-  } else {
-    lcd.BeginDrawBuffer(area->x1, y1, width, height);
-    lcd.NextDrawBuffer(reinterpret_cast<const uint8_t *>(color_p), width * height * 2);
-  }
-  
-  // IMPORTANT!!!
-  // Inform the graphics library that you are ready with the flushing
-  lv_disp_flush_ready(&disp_drv);
-}
-
-
-/*
-void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
   ulTaskNotifyTake(pdTRUE, 500);
   // Notification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
   // which cannot be set/clear during a transfer.
@@ -239,11 +162,10 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
     }
   }
 
-  // IMPORTANT!!!
-  // Inform the graphics library that you are ready with the flushing
+  /* IMPORTANT!!!
+   * Inform the graphics library that you are ready with the flushing*/
   lv_disp_flush_ready(&disp_drv);
 }
-*/
 
 void LittleVgl::SetNewTapEvent(uint16_t x, uint16_t y) {
   tap_x = x;
@@ -261,27 +183,7 @@ bool LittleVgl::GetTouchPadInfo(lv_indev_data_t *ptr) {
     ptr->state = LV_INDEV_STATE_REL;
   }
   return false;
-  /*
-  auto info = touchPanel.GetTouchInfo();
-
-  if((previousClick.x != info.x || previousClick.y != info.y) &&
-          (info.gesture == Drivers::Cst816S::Gestures::SingleTap)) {
-    // TODO For an unknown reason, the first touch is taken twice into account.
-    // 'firstTouch' is a quite'n'dirty workaound until I find a better solution
-    if(firstTouch) ptr->state = LV_INDEV_STATE_REL;
-    else ptr->state = LV_INDEV_STATE_PR;
-    firstTouch = false;
-    previousClick.x = info.x;
-    previousClick.y = info.y;
-  }
-  else {
-    ptr->state = LV_INDEV_STATE_REL;
-  }
-
-  ptr->point.x = info.x;
-  ptr->point.y = info.y;
-  return false;
-   */
+  
 }
 
 void LittleVgl::InitTheme() {

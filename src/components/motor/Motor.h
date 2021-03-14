@@ -21,6 +21,7 @@ namespace Pinetime {
         Controllers::Settings& settingsController;
 
         TimerHandle_t vrTimer;
+        bool isActive = false;
 
     };
   }
