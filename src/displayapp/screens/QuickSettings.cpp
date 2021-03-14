@@ -157,6 +157,7 @@ void QuickSettings::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
     
     brightness.Step();
     lv_label_set_text_static(btn1_lvl, brightness.GetIcon());
+    settingsController.SetBrightness( brightness.Level() );
 
   } else if(object == btn3 && event == LV_EVENT_VALUE_CHANGED) {
     

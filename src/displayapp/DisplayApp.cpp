@@ -83,6 +83,7 @@ void DisplayApp::Process(void *instance) {
 
 void DisplayApp::InitHw() {
   brightnessController.Init();
+  brightnessController.Set(settingsController.GetBrightness());
 }
 
 void DisplayApp::Refresh() {
