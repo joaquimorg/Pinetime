@@ -3,6 +3,7 @@
 #include <cstdint>
 #include "components/datetime/DateTimeController.h"
 #include "components/accelerometer/Accelerometer.h"
+#include "components/brightness/BrightnessController.h"
 #include "drivers/SpiNorFlash.h"
 #include "drivers/Cst816s.h"
 
@@ -77,6 +78,13 @@ namespace Pinetime {
           settings.wakeUpTap = wakeUp; 
         };
 
+        void SetBrightness( Controllers::BrightnessController::Levels level ) { 
+          if ( level != settings.brightLevel ) settingsChanged = true;
+          settings.brightLevel = level; 
+        };
+
+        Controllers::BrightnessController::Levels GetBrightness() const { return settings.brightLevel; };
+
         uint8_t getSettingsBlock() const { return settingsFlashBlock; };
       private:
 
@@ -93,6 +101,8 @@ namespace Pinetime {
           uint32_t screenTimeOut = 15000;
 
           Pinetime::Drivers::Cst816S::Gestures wakeUpTap = Pinetime::Drivers::Cst816S::Gestures::None;
+
+          Controllers::BrightnessController::Levels brightLevel = Controllers::BrightnessController::Levels::Medium;
 
         };
 

@@ -241,16 +241,17 @@ void nimble_port_ll_task_func(void *args) {
 }
 
 int main(void) {
-  logger.Init();
+  NRF_WDT->RR[0] = WDT_RR_RR_Reload;
+  //logger.Init();
 
   nrf_drv_clock_init();
+  nimble_port_init();
 
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
   systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
                                                     dateTimeController, settingsController));
   systemTask->Start();
-  nimble_port_init();
 
   vTaskStartScheduler();
 

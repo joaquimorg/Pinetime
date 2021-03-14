@@ -6,7 +6,7 @@ using namespace Pinetime::Controllers;
 
 #define SETTINGS_BASE_ADDR  0x3F6000 // Flash Settings Location
 
-#define SETTINGS_VERSION  0x0001 // Flash Settings Version
+#define SETTINGS_VERSION  0x0102 // Flash Settings Version
 struct SettingsHeader {
     uint8_t isActive; // 0xF1 = Block is active, 0xF0 = Block is inactive
     uint16_t version; // Current version, to verify if the saved data is for the current Version

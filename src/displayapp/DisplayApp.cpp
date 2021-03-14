@@ -83,6 +83,7 @@ void DisplayApp::Process(void *instance) {
 
 void DisplayApp::InitHw() {
   brightnessController.Init();
+  brightnessController.Set(settingsController.GetBrightness());
 }
 
 void DisplayApp::Refresh() {
@@ -321,8 +322,8 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         currentScreen.reset(new Screens::Notifications(this, notificationManager));
         returnApp(Apps::Clock, FullRefreshDirections::Up);
         break;
-      case Apps::IncomingCall: 
-        currentScreen.reset(new Screens::IncomingCall(this, callNotificationManager, systemTask.nimble().alertService())); 
+      case Apps::IncomingCall:
+        currentScreen.reset(new Screens::IncomingCall(this, callNotificationManager, systemTask.nimble().alertService()));
         returnApp(Apps::Clock, FullRefreshDirections::Down);
         break;
       case Apps::Steps: 
