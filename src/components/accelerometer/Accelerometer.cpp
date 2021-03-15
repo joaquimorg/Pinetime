@@ -77,20 +77,20 @@ void Accelerometer::Init() {
 
     /* Sets the electrical behaviour of interrupt
     */
-    pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
+    /*pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
     pinConfig.lvl = BMA4_ACTIVE_LOW;
     pinConfig.od = BMA4_OPEN_DRAIN;
     pinConfig.output_en = BMA4_OUTPUT_ENABLE;
     pinConfig.input_en = BMA4_INPUT_DISABLE;
-    bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);    
+    bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);    */
 
     /* Set the interrupt mode in the sensor.
     */
-    bma4_set_interrupt_mode(BMA4_LATCH_MODE, &bma);
+    //bma4_set_interrupt_mode(BMA4_LATCH_MODE, &bma);
 
     /* Interrupt Mapping
      */    
-    bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
+    //bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT, BMA4_ENABLE, &bma);
     
 
     /* Enable step counter */

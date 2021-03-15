@@ -28,7 +28,7 @@ LittleVgl::LittleVgl(Pinetime::Drivers::St7789& lcd, Pinetime::Drivers::Cst816S&
 }
 
 void LittleVgl::InitDisplay() {
-  lv_disp_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * 5);   /*Initialize the display buffer*/
+  lv_disp_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * 4);   /*Initialize the display buffer*/
   lv_disp_drv_init(&disp_drv);                    /*Basic initialization*/
 
   /*Set up the functions to access to your display*/
@@ -70,7 +70,7 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
 
   uint16_t y1, y2, width, height = 0;
   
-  ulTaskNotifyTake(pdTRUE, 320);
+  ulTaskNotifyTake(pdTRUE, 600);
   // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
   // which cannot be set/clear during a transfert.
 
