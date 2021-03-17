@@ -199,6 +199,10 @@ void DisplayApp::Refresh() {
         LoadApp( Apps::FirmwareUpdate, DisplayApp::FullRefreshDirections::Down );
       break;
 
+      case Messages::ResourceUpdateStart:
+        LoadApp( Apps::ResourceUpdate, DisplayApp::FullRefreshDirections::Down );
+      break;
+
       case Messages::StepEvent:
       break;
       
@@ -307,7 +311,9 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
   
   SetFullRefresh( direction );
 
-  returnApp(currentApp, currentDirection);
+  if ( currentApp != app ) {
+    returnApp(currentApp, currentDirection);
+  }
 
   switch(app) {
       case Apps::None:
@@ -377,13 +383,19 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, accelerometer, settingsController)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
+      // -----------------------------------------------------------------------------------------------------------------------------------------
+
       case Apps::FirmwareUpdate:
-        currentScreen.reset(new Screens::FirmwareUpdate(this, bleController));
+        currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
         //returnApp(currentApp, currentDirection);
         break;
       case Apps::FirmwareValidation: 
         currentScreen.reset(new Screens::FirmwareValidation(this, validator)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::ResourceUpdate:
+        currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------

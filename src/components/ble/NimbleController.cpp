@@ -41,7 +41,7 @@ NimbleController::NimbleController(
         callNotificationManager{callNotificationManager},
         spiNorFlash{spiNorFlash},
         fs{fs},
-        ftpService{systemTask, bleController, fs},
+        fileService{systemTask, bleController, fs},
         dfuService{systemTask, bleController, spiNorFlash},
         currentTimeClient{dateTimeController},
         alertNotificationService{systemTask, notificationManager, callNotificationManager},
@@ -74,7 +74,7 @@ void NimbleController::Init() {
   
   //immediateAlertService.Init();
 
-  ftpService.Init();
+  fileService.Init();
   
   //int res;
   ble_hs_util_ensure_addr(0);
@@ -190,14 +190,20 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
       NRF_LOG_INFO("encryption change event; status=%d ", event->enc_change.status);
       return 0;
     case BLE_GAP_EVENT_SUBSCRIBE:
-      NRF_LOG_INFO("subscribe event; conn_handle=%d attr_handle=%d "
+      /*NRF_LOG_INFO("subscribe event; conn_handle=%d attr_handle=%d "
                         "reason=%d prevn=%d curn=%d previ=%d curi=???\n",
                   event->subscribe.conn_handle,
                   event->subscribe.attr_handle,
                   event->subscribe.reason,
                   event->subscribe.prev_notify,
                   event->subscribe.cur_notify,
-                  event->subscribe.prev_indicate);
+                  event->subscribe.prev_indicate);*/
+
+
+      if ( event->subscribe.attr_handle == batteryInformationService.getBatteryLevelHandle() ) {
+        batteryInformationService.Notification( event->subscribe.cur_notify );
+      }
+
       return 0;
     case BLE_GAP_EVENT_MTU:
       NRF_LOG_INFO("mtu update event; conn_handle=%d cid=%d mtu=%d\n",

@@ -210,6 +210,7 @@ int DfuService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
         bleController.FirmwareUpdateTotalBytes(0xffffffffu);
         bleController.FirmwareUpdateCurrentBytes(0);
+        bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::FW);
         systemTask.PushMessage(Pinetime::System::SystemTask::Messages::BleFirmwareUpdateStarted);
         return 0;
       } else {

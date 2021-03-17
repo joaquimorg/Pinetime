@@ -2,6 +2,7 @@
 
 #include "Screen.h"
 #include <lvgl/src/lv_core/lv_obj.h>
+#include "systemtask/SystemTask.h"
 
 namespace Pinetime {
   namespace Controllers {
@@ -12,7 +13,7 @@ namespace Pinetime {
 
       class FirmwareUpdate : public Screen{
         public:
-          FirmwareUpdate(DisplayApp* app, Pinetime::Controllers::Ble& bleController);
+          FirmwareUpdate(DisplayApp* app, Pinetime::Controllers::Ble& bleController, System::SystemTask& systemTask);
           ~FirmwareUpdate() override;
 
           bool Refresh() override;
@@ -21,6 +22,8 @@ namespace Pinetime {
         private:
           enum class States { Idle, Running, Validated, Error };
           Pinetime::Controllers::Ble& bleController;
+          Pinetime::System::SystemTask& systemTask;
+          
           lv_obj_t* bar1;
           lv_obj_t* percentLabel;
           lv_obj_t* titleLabel;

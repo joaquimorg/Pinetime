@@ -78,6 +78,14 @@ SettingDisplay::SettingDisplay(
     lv_checkbox_set_checked(cbTimeOut[3], true);
   }
 
+  cbTimeOut[4] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbTimeOut[4], "\t5 minutes");
+  cbTimeOut[4]->user_data = this;
+  lv_obj_set_event_cb(cbTimeOut[4], event_handler);
+  if (settingsController.GetScreenTimeOut() == 300000 ) {
+    lv_checkbox_set_checked(cbTimeOut[4], true);
+  }
+
 }
 
 SettingDisplay::~SettingDisplay() {
@@ -92,7 +100,7 @@ bool SettingDisplay::Refresh() {
 
 void SettingDisplay::UpdateSelected(lv_obj_t *object, lv_event_t event) {
   if(event == LV_EVENT_VALUE_CHANGED) {
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
       if ( object == cbTimeOut[i] ) {
         lv_checkbox_set_checked(cbTimeOut[i], true);
         
@@ -100,6 +108,7 @@ void SettingDisplay::UpdateSelected(lv_obj_t *object, lv_event_t event) {
         if ( i == 1 ) { settingsController.SetScreenTimeOut(15000); };
         if ( i == 2 ) { settingsController.SetScreenTimeOut(20000); };
         if ( i == 3 ) { settingsController.SetScreenTimeOut(30000); };
+        if ( i == 4 ) { settingsController.SetScreenTimeOut(300000); };
         
         app->PushMessage(Applications::DisplayApp::Messages::UpdateTimeOut);
 

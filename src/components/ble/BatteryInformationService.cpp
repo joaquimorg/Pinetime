@@ -48,6 +48,7 @@ void BatteryInformationService::Init() {
 
   res = ble_gatts_add_svcs(serviceDefinition);
   ASSERT(res == 0);
+
 }
 
 int BatteryInformationService::OnBatteryServiceRequested(uint16_t connectionHandle, uint16_t attributeHandle,
@@ -59,4 +60,21 @@ int BatteryInformationService::OnBatteryServiceRequested(uint16_t connectionHand
     return (res == 0) ? 0 : BLE_ATT_ERR_INSUFFICIENT_RES;
   }
   return 0;
+}
+
+
+void BatteryInformationService::BatteryUpdate( uint16_t connectionHandle ) {
+  struct os_mbuf *om;
+  static uint8_t batteryValue = batteryController.PercentRemaining();
+  om = ble_hs_mbuf_from_flat(&batteryValue, 1);
+  if (om) {
+      ble_gattc_notify_custom(connectionHandle, batteryLevelHandle, om);
+  }
+}
+
+
+void BatteryInformationService::Notification( uint8_t notify ) {
+  struct os_mbuf *om;
+  static uint8_t batteryValue = batteryController.PercentRemaining();
+  om = ble_hs_mbuf_from_flat(&batteryValue, 1);
 }

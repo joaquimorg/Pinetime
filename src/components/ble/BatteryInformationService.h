@@ -20,6 +20,10 @@ namespace Pinetime {
         int
         OnBatteryServiceRequested(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context);
 
+        uint16_t getBatteryLevelHandle() const { return batteryLevelHandle; };
+
+        void Notification( uint8_t notify );
+
       private:
         Controllers::Battery& batteryController;
         static constexpr uint16_t batteryInformationServiceId {0x180F};
@@ -39,6 +43,8 @@ namespace Pinetime {
         struct ble_gatt_svc_def serviceDefinition[2];
 
         uint16_t batteryLevelHandle;
+
+        void BatteryUpdate( uint16_t connectionHandle );
 
     };
   }

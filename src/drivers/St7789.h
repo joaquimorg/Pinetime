@@ -27,6 +27,8 @@ namespace Pinetime {
         void BeginDrawBuffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
         void NextDrawBuffer(const uint8_t* data, size_t size);
 
+        void DrawBuffer(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2, const uint8_t *data);
+
         void DisplayOn();
         void DisplayOff();
 
@@ -56,6 +58,7 @@ namespace Pinetime {
         static constexpr uint16_t Width = 240;
         static constexpr uint16_t Height = 320;
         void RowAddressSet();
+        bool isLocked = false;
     };
   }
 }

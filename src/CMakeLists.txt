@@ -408,7 +408,7 @@ list(APPEND SOURCE_FILES
         components/ble/BatteryInformationService.cpp
         components/ble/ImmediateAlertService.cpp
         components/ble/ServiceDiscovery.cpp
-        components/ble/FtpService.cpp
+        components/ble/FileService.cpp
         
         FreeRTOS/port.c
         FreeRTOS/port_cmsis_systick.c

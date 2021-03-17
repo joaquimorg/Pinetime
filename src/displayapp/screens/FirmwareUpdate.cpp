@@ -4,15 +4,16 @@
 #include "../DisplayApp.h"
 
 using namespace Pinetime::Applications::Screens;
-//extern lv_font_t jetbrains_mono_extrabold_compressed;
-//extern lv_font_t jetbrains_mono_bold_20;
 
-
-FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime::Controllers::Ble& bleController) :
-      Screen(app), bleController{bleController} {
+FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime::Controllers::Ble& bleController, System::SystemTask &systemTask) :
+      Screen(app), bleController{bleController}, systemTask{systemTask} {
 
   titleLabel = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text_static(titleLabel, "Firmware update");
+  if ( bleController.FWType() == Pinetime::Controllers::Ble::FirmwareType::FW ) {
+    lv_label_set_text_static(titleLabel, "Firmware update");
+  } else {
+    lv_label_set_text_static(titleLabel, "Resource update");
+  }
   lv_obj_set_auto_realign(titleLabel, true);
   lv_obj_align(titleLabel, nullptr, LV_ALIGN_IN_TOP_MID, 0, 50);
 
@@ -28,10 +29,17 @@ FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime
   lv_label_set_text_static(percentLabel, "");
   lv_obj_set_auto_realign(percentLabel, true);
   lv_obj_align(percentLabel, bar1, LV_ALIGN_OUT_TOP_MID, 0, 70);
+
+  lv_obj_t * backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
+  lv_obj_set_size(backgroundLabel, 240, 240);
+  lv_obj_set_pos(backgroundLabel, 0, 0);
+  lv_label_set_text_static(backgroundLabel, "");
 }
 
 FirmwareUpdate::~FirmwareUpdate() {
   lv_obj_clean(lv_scr_act());
+  systemTask.PushMessage(Pinetime::System::SystemTask::Messages::EnableSleeping);
 }
 
 bool FirmwareUpdate::Refresh() {
@@ -70,11 +78,13 @@ bool FirmwareUpdate::DisplayProgression() const {
 
 void FirmwareUpdate::UpdateValidated() {
   lv_label_set_recolor(percentLabel, true);
-  lv_label_set_text_static(percentLabel, "#00ff00 Image Ok!#");
+  lv_label_set_text_static(percentLabel, "#00ff00 Download Ok!#");
+  vTaskDelay(500);
 }
 
 void FirmwareUpdate::UpdateError() {
   lv_label_set_recolor(percentLabel, true);
-  lv_label_set_text_static(percentLabel, "#ff0000 Error!#");
+  lv_label_set_text_static(percentLabel, "#ff0000 Download Error!#");
   lv_obj_set_style_local_bg_color(bar1, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
+  vTaskDelay(500);
 }

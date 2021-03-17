@@ -12,6 +12,7 @@ namespace Pinetime
       About,
       FirmwareUpdate,
       FirmwareValidation,
+      ResourceUpdate,
       Notifications,
       IncomingCall,
       Steps,
