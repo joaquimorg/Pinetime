@@ -387,6 +387,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
 
       case Apps::FirmwareUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
+        returnApp(Apps::Clock, FullRefreshDirections::None);
         //returnApp(currentApp, currentDirection);
         break;
       case Apps::FirmwareValidation: 
@@ -396,6 +397,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
 
       case Apps::ResourceUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
+        returnApp(Apps::Clock, FullRefreshDirections::None);
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -403,6 +405,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::Charging:
         currentScreen.reset(new Screens::Charging(this, batteryController));
         //returnApp(currentApp, currentDirection);
+        returnApp(Apps::Clock, FullRefreshDirections::None);
         break;
       case Apps::LowBatt:
         currentScreen.reset(new Screens::LowBatt(this, batteryController));

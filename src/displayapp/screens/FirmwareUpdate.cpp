@@ -70,7 +70,7 @@ bool FirmwareUpdate::DisplayProgression() const {
   float total = bleController.FirmwareUpdateTotalBytes() / 1024.0f;
   uint16_t pc = (current / total) * 100.0f;
 
-  lv_label_set_text_fmt(percentLabel, "%d %%\n%.0f\n%.0f", pc, current, total);
+  lv_label_set_text_fmt(percentLabel, "%d %% - %.0f Kb - %.0f Kb", pc, current, total);
 
   lv_bar_set_value(bar1, pc, LV_ANIM_OFF);
   return running;

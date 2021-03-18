@@ -74,7 +74,7 @@ void BatteryInformationService::BatteryUpdate( uint16_t connectionHandle ) {
 
 
 void BatteryInformationService::Notification( uint8_t notify ) {
-  struct os_mbuf *om;
+  //struct os_mbuf *om;
   static uint8_t batteryValue = batteryController.PercentRemaining();
-  om = ble_hs_mbuf_from_flat(&batteryValue, 1);
+  ble_hs_mbuf_from_flat(&batteryValue, 1);
 }

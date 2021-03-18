@@ -226,14 +226,11 @@ void St7789::VerticalScrollDefinition(uint16_t topFixedLines, uint16_t scrollLin
 }
 
 void St7789::VerticalScrollStartAddress(uint16_t line) {
-  //if ( isLocked ) return ;
-  isLocked = true;
   verticalScrollingStartAddress = line;
   //assert(line < 320);
   WriteCommand(ST7789_VSCSAD);
   WriteData(line >> 8u);
   WriteData(line & 0x00ffu);
-  isLocked = false;
 }
 
 
@@ -266,19 +263,17 @@ void St7789::DrawPixel(uint16_t x, uint16_t y, uint32_t color) {
 
 void St7789::BeginDrawBuffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
 
-  SetAddrWindow(0+x, ST7789_ROW_OFFSET+y, x+width-1, y+height-1);
+  SetAddrWindow(x, y, x + width - 1, y + height - 1);
   nrf_gpio_pin_set(pinDataCommand);
 }
 
 
-void St7789::DrawBuffer(uint16_t x1, uint16_t x2, uint16_t y1, uint16_t y2, const uint8_t *data) {
-  if ( isLocked ) return ;
-  isLocked = true;
-  size_t num_pix = (x2 - x1 + 1) * (y2 - y1 + 1);
-  SetAddrWindow( x1, y1, x2, y2);  
+void St7789::DrawBuffer(uint16_t x, uint16_t y, uint16_t width, uint16_t height, const uint8_t *data, size_t size) {
+  
+  SetAddrWindow(x, y, x + width - 1, y + height - 1);
   nrf_gpio_pin_set(pinDataCommand);
-  WriteSpi(data, num_pix * 2);
-  isLocked = false;
+  WriteSpi(data, size);
+
 }
 
 void St7789::NextDrawBuffer(const uint8_t *data, size_t size) {
