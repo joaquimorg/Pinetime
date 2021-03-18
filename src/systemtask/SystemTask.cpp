@@ -240,6 +240,19 @@ void SystemTask::Work() {
           if(bleController.State() == Controllers::Ble::FirmwareUpdateStates::Validated)
             NVIC_SystemReset();
           break;
+        
+        case Messages::OnResourceUpdateStart:
+          doNotGoToSleep = true;
+          if(isSleeping && !isWakingUp) WakeUp();
+          displayApp->PushMessage(Applications::DisplayApp::Messages::ResourceUpdateStart);
+          break;
+
+        case Messages::OnResourceUpdateEnd:
+          doNotGoToSleep = false;
+          xTimerStart(idleTimer, 0);
+
+          break;
+
         case Messages::OnTouchEvent:
           ReloadIdleTimer();
           break;

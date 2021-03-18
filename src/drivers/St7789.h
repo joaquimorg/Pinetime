@@ -35,7 +35,7 @@ namespace Pinetime {
       private:
         Spi& spi;
         uint8_t pinDataCommand;
-        uint8_t verticalScrollingStartAddress = 0;
+        uint16_t verticalScrollingStartAddress = 0;
 
         void HardwareReset();
         void SoftwareReset();

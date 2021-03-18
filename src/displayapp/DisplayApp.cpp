@@ -21,6 +21,7 @@
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/Weather.h"
+#include "displayapp/screens/ResourceUpdate.h"
 
 #include "displayapp/screens/Settings.h"
 #include "displayapp/screens/SettingDisplay.h"
@@ -204,6 +205,10 @@ void DisplayApp::Refresh() {
       
       case Messages::UpdateBleConnection:
       break;
+
+      case Messages::ResourceUpdateStart:
+        LoadApp( Apps::ResourceUpdate, DisplayApp::FullRefreshDirections::Down );
+      break;
       
       case Messages::UpdateBatteryLevel:
         batteryController.Update();
@@ -344,6 +349,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------
+      
       case Apps::Settings: 
         currentScreen.reset(new Screens::Settings(this, batteryController, dateTimeController, settingsController));
         returnApp(Apps::QuickSettings, FullRefreshDirections::Down);
@@ -377,6 +383,9 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         currentScreen.reset(new Screens::About(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, accelerometer, settingsController)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
         break;
+      
+      // -----------------------------------------------------------------------------------------------------------------------------------------
+
       case Apps::FirmwareUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController));
         //returnApp(currentApp, currentDirection);
@@ -384,6 +393,10 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::FirmwareValidation: 
         currentScreen.reset(new Screens::FirmwareValidation(this, validator)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down);
+        break;
+
+      case Apps::ResourceUpdate:
+        currentScreen.reset(new Screens::ResourceUpdate(this)); 
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------

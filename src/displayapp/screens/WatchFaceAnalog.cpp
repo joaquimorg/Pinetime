@@ -45,20 +45,9 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   //lv_img_set_src(bg_clock_img, &bg_clock);
 
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
+  lv_img_set_src(bg_clock_img, "F:/bg_clock_01.bin");
+  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
 
-  bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_TOP_RIGHT, 0, 0);
-
-  bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 0, 0);
-
-  bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(bg_clock_img, "F:/demo1.bin");
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, 0, 0);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);

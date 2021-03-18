@@ -300,11 +300,11 @@ static void basic_init(void)
     lv_style_set_outline_opa(&styles->btn, LV_STATE_FOCUSED, LV_OPA_50);
     lv_style_set_outline_color(&styles->btn, LV_STATE_DEFAULT, theme.color_primary);
     lv_style_set_outline_color(&styles->btn, LV_STATE_EDITED, theme.color_secondary);
-    lv_style_set_transition_time(&styles->btn, LV_STATE_DEFAULT, TRANSITION_TIME);
-    lv_style_set_transition_prop_4(&styles->btn, LV_STATE_DEFAULT, LV_STYLE_BORDER_OPA);
-    lv_style_set_transition_prop_5(&styles->btn, LV_STATE_DEFAULT, LV_STYLE_BG_COLOR);
-    lv_style_set_transition_prop_6(&styles->btn, LV_STATE_DEFAULT, LV_STYLE_OUTLINE_OPA);
-    lv_style_set_transition_delay(&styles->btn, LV_STATE_DEFAULT, TRANSITION_TIME);
+    lv_style_set_transition_time(&styles->btn, LV_STATE_DEFAULT, 0);
+    //lv_style_set_transition_prop_4(&styles->btn, LV_STATE_DEFAULT, LV_STYLE_BORDER_OPA);
+    //lv_style_set_transition_prop_5(&styles->btn, LV_STATE_DEFAULT, LV_STYLE_BG_COLOR);
+    //lv_style_set_transition_prop_6(&styles->btn, LV_STATE_DEFAULT, LV_STYLE_OUTLINE_OPA);
+    lv_style_set_transition_delay(&styles->btn, LV_STATE_DEFAULT, 0);
     lv_style_set_transition_delay(&styles->btn, LV_STATE_PRESSED, 0);
 
     lv_style_reset(&styles->pad_inner);

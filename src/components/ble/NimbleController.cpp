@@ -41,7 +41,7 @@ NimbleController::NimbleController(
         callNotificationManager{callNotificationManager},
         spiNorFlash{spiNorFlash},
         fs{fs},
-        ftpService{systemTask, bleController, fs},
+        fileService{systemTask, bleController, fs},
         dfuService{systemTask, bleController, spiNorFlash},
         currentTimeClient{dateTimeController},
         alertNotificationService{systemTask, notificationManager, callNotificationManager},
@@ -74,7 +74,7 @@ void NimbleController::Init() {
   
   //immediateAlertService.Init();
 
-  ftpService.Init();
+  fileService.Init();
   
   //int res;
   ble_hs_util_ensure_addr(0);

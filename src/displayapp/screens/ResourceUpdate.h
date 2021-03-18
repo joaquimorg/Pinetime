@@ -9,16 +9,16 @@ namespace Pinetime {
   namespace Applications {
     namespace Screens {
 
-      class ScreensTemplate : public Screen{
+      class ResourceUpdate : public Screen{
         public:
-          ScreensTemplate(DisplayApp* app, const char* name);
-          ~ScreensTemplate() override;
+          ResourceUpdate(DisplayApp* app);
+          ~ResourceUpdate() override;
 
           bool Refresh() override;
          
         private:          
 
-          lv_obj_t* llabel;
+          
 
       };
     }

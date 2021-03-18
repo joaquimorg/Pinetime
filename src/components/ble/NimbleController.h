@@ -14,7 +14,7 @@
 #include "CurrentTimeService.h"
 #include "DeviceInformationService.h"
 #include "DfuService.h"
-#include "FtpService.h"
+#include "FileService.h"
 #include "ImmediateAlertService.h"
 #include "MusicService.h"
 #include "ServiceDiscovery.h"
@@ -73,7 +73,7 @@ namespace Pinetime {
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
         Pinetime::Controllers::FS& fs;
 
-        FtpService ftpService;
+        FileService fileService;
         Pinetime::Controllers::DfuService dfuService;
 
         DeviceInformationService deviceInformationService;
