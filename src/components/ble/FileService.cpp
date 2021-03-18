@@ -66,7 +66,6 @@ void FileService::Init() {
   res = ble_gatts_add_svcs(mServiceDefinitions);
   ASSERT(res == 0);
 
-  bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::RES);
 }
 
 int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context) {
@@ -89,19 +88,22 @@ int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHand
           // Validation of size and erase flash
           // ...
 
-          fileSize = context->om->om_data[1] + (context->om->om_data[2] << 8) + (context->om->om_data[3] << 16);
+          fileSize = context->om->om_data[1] + (context->om->om_data[2] << 8) + (context->om->om_data[3] << 16) + (context->om->om_data[4] << 24);
+          bytesReceived = 0;
 
           if (fileSize == 0) {
             data[0] = 0x00;
           } else {
           
             data[0] = 0x01;
+            bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::RES);
             bleController.StartFirmwareUpdate();
             bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
             bleController.FirmwareUpdateTotalBytes(fileSize);
             bleController.FirmwareUpdateCurrentBytes(0);
             // Send task to open app
             mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateStart);
+            xTimerStart(timeoutTimer, 0);
           }
 
           // Notify to send Firmware !          
@@ -144,7 +146,26 @@ int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHand
         case Opcodes::COMMAND_FIRMWARE_UPDATE_SYNC: {
           
           if(bleController.IsFirmwareUpdating()) {
-            xTimerStart(timeoutTimer, 0);
+            //xTimerStart(timeoutTimer, 0);
+            xTimerReset(timeoutTimer, 0);
+          }
+
+          return 0;
+        }
+
+        case Opcodes::COMMAND_FIRMWARE_END_DATA: {
+
+          if ( bytesReceived == fileSize ) {
+            // Notify end
+            uint8_t data[2];
+            data[0] = 0x01;
+            data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_START_DATA;
+            auto *om = ble_hs_mbuf_from_flat(&data, sizeof(data));
+            ble_gattc_notify_custom(connectionHandle, eventHandle, om);
+
+            bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Validated);
+            xTimerStop(timeoutTimer, 0);
+
           }
 
           return 0;

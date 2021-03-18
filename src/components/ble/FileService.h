@@ -65,6 +65,7 @@ namespace Pinetime {
             COMMAND_FIRMWARE_INIT         = 0x01,
             COMMAND_FIRMWARE_START_DATA   = 0x03,
             COMMAND_FIRMWARE_CHECKSUM     = 0x04,
+            COMMAND_FIRMWARE_END_DATA     = 0x06,
         };
 
         uint16_t eventHandle;

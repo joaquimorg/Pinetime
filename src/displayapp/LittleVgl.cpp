@@ -71,7 +71,7 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
   // NOtification is still needed (even if there is a mutex on SPI) because of the DataCommand pin
   // which cannot be set/clear during a transfert.
 
-  uint16_t height = (area->y2 - area->y1) + 1;
+  /*uint16_t height = (area->y2 - area->y1) + 1;
     
   if(scrollDirection == LittleVgl::FullRefreshDirections::Down and (area->y2 < visibleNbLines - 1)) {
     uint16_t toScroll = 0;
@@ -118,8 +118,9 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
   
   if (y2_shift > y1_shift) {    
     lcd.DrawBuffer(area->x1, area->x2, y1_shift, y2_shift, reinterpret_cast<const uint8_t *>(color_p));
-  }
+  }*/
   
+  lcd.DrawBuffer(area->x1, area->x2, area->y1, area->y2, reinterpret_cast<const uint8_t *>(color_p));
   // IMPORTANT!!!
   // Inform the graphics library that you are ready with the flushing
   lv_disp_flush_ready(&disp_drv);
