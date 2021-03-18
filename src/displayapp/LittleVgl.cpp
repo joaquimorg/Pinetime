@@ -130,11 +130,11 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
       ulTaskNotifyTake(pdTRUE, 320);
     }
     
-    uint16_t pix_offset = width * height;
+    uint16_t pixOffset = width * height;
 
-    height = y2;
+    height = y2 + 1;
 
-    lcd.DrawBuffer(area->x1, 0, width, height, reinterpret_cast<const uint8_t *>(color_p + pix_offset), width * height * 2);
+    lcd.DrawBuffer(area->x1, 0, width, height, reinterpret_cast<const uint8_t *>(color_p + pixOffset), width * height * 2);
 
   } else {
     
