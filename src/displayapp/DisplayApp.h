@@ -39,7 +39,7 @@ namespace Pinetime {
         enum class Messages : uint8_t {GoToSleep, GoToRunning, UpdateBleConnection, UpdateBatteryLevel, TouchEvent, StepEvent, ButtonPushed,
             NewNotification, NewCall, BleFirmwareUpdateStarted, ChargingEvent, LowBattEvent, UpdateTimeOut, ResourceUpdateStart };
 
-        enum class FullRefreshDirections { None, Up, Down };
+        enum class FullRefreshDirections { None, Up, Down, Left, Right };
         enum class TouchModes { Gestures, Polling };
 
         DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &touchPanel,
@@ -95,6 +95,8 @@ namespace Pinetime {
 
         Apps returnToApp = Apps::None;
         FullRefreshDirections returnDirection = FullRefreshDirections::None;
+
+        TouchEvents returnTouchEvent = TouchEvents::None;
         
         TouchModes touchMode = TouchModes::Gestures;
 
@@ -105,7 +107,7 @@ namespace Pinetime {
         void IdleState();
         TouchEvents OnTouchEvent();    
 
-        void returnApp(Apps app, DisplayApp::FullRefreshDirections direction);
+        void returnApp(Apps app, DisplayApp::FullRefreshDirections direction, TouchEvents touchEvent);
                 
     };
   }

@@ -16,6 +16,7 @@ tools
 *.hex
 *.bin
 !bootloader/bootloader-5.0.4.bin
+!bootloader/bootloader.bin
 *.map
 *.out
 pinetime*.cbp

@@ -182,8 +182,8 @@ bool QuickSettings::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   switch (event) {
     case Pinetime::Applications::TouchEvents::SwipeLeft:
       running = false;
-      app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::None);
-      return true;
+      //app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::None);
+      return false;
 
     default:
       return true;

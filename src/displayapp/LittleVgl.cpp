@@ -60,8 +60,13 @@ void LittleVgl::InitTouchpad() {
 void LittleVgl::SetFullRefresh(FullRefreshDirections direction) {
   if(scrollDirection == FullRefreshDirections::None) {
     scrollDirection = direction;
-    if (scrollDirection == FullRefreshDirections::Down)
+    if (scrollDirection == FullRefreshDirections::Down) {
       lv_disp_set_direction(lv_disp_get_default(), 1);
+    } else if (scrollDirection == FullRefreshDirections::Right) {
+      lv_disp_set_direction(lv_disp_get_default(), 3);
+    } else if (scrollDirection == FullRefreshDirections::Left) {
+      lv_disp_set_direction(lv_disp_get_default(), 2);
+    }
   }
 }
 
@@ -119,6 +124,16 @@ void LittleVgl::FlushDisplay(const lv_area_t *area, lv_color_t *color_p) {
       }
       scrollOffset = scrollOffset % totalNbLines;
       lcd.VerticalScrollStartAddress(scrollOffset);
+    }
+  } else if(scrollDirection == FullRefreshDirections::Left) {
+    if(area->x2 == visibleNbLines - 1) {
+      scrollDirection = FullRefreshDirections::None;
+      lv_disp_set_direction(lv_disp_get_default(), 0);
+    }
+  } else if(scrollDirection == FullRefreshDirections::Right) {
+    if(area->x1 == 0) {
+      scrollDirection = FullRefreshDirections::None;
+      lv_disp_set_direction(lv_disp_get_default(), 0);
     }
   }
 

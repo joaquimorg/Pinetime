@@ -8,7 +8,7 @@ export PROJECT_VERSION="@PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT
 
 mkdir -p "$OUTPUT_DIR"
 
-cp "$SOURCES_DIR"/bootloader/pinetime-bootloader-rc4.bin $OUTPUT_DIR/bootloader.bin
+cp "$SOURCES_DIR"/bootloader/bootloader.bin $OUTPUT_DIR/bootloader.bin
 
 "$TOOLS_DIR"/mcuboot/scripts/imgtool.py create --version 1.0.0 \
     --align 4 --header-size 32 --slot-size 475136 --pad-header \

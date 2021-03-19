@@ -136,7 +136,6 @@ void Tile::UpdateScreen() {
 }
 
 bool Tile::Refresh() {
-
   return running;
 }
 
