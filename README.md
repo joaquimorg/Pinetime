@@ -38,29 +38,36 @@ This project is released under the GNU General Public License version 3 or, at y
 
 ## Screenshots
 
-![Pinetime](images/screens/pinetime_3828.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3847.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3857.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3818.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3905.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3915.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3922.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3930.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3939.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3947.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3955.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_4004.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_2745.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_2549.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_4019.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_4028.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_4044.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_4106.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_4113.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_5417.jpg "Pinetime")
-![Pinetime](images/screens/pinetime_3122.jpg "Pinetime")
+![Pinetime](images/pinetimelite_screens.jpg "Pinetime")
+
+<img src="images/screens/pinetime_3828.jpg" height="300" />
+
+<img src="images/screens/pinetime_3828.jpg" height="300" />
+<img src="images/screens/pinetime_3847.jpg" height="300" />
+<img src="images/screens/pinetime_3857.jpg" height="300" />
+<img src="images/screens/pinetime_3818.jpg" height="300" />
+<img src="images/screens/pinetime_3905.jpg" height="300" />
+<img src="images/screens/pinetime_3915.jpg" height="300" />
+<img src="images/screens/pinetime_3922.jpg" height="300" />
+<img src="images/screens/pinetime_3930.jpg" height="300" />
+<img src="images/screens/pinetime_3939.jpg" height="300" />
+<img src="images/screens/pinetime_3955.jpg" height="300" />
+<img src="images/screens/pinetime_4004.jpg" height="300" />
+<img src="images/screens/pinetime_2745.jpg" height="300" />
+<img src="images/screens/pinetime_2549.jpg" height="300" />
+<img src="images/screens/pinetime_4019.jpg" height="300" />
+<img src="images/screens/pinetime_4028.jpg" height="300" />
+<img src="images/screens/pinetime_4044.jpg" height="300" />
+<img src="images/screens/pinetime_4106.jpg" height="300" />
+<img src="images/screens/pinetime_4113.jpg" height="300" />
+<img src="images/screens/pinetime_5417.jpg" height="300" />
+<img src="images/screens/pinetime_3122.jpg" height="300" />
+
+---
 
 [![PineTime Lite 0.1.0](https://res.cloudinary.com/marcomontalbano/image/upload/v1615222388/video_to_markdown/images/youtube--vJQQdbcaj8U-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=vJQQdbcaj8U "PineTime Lite 0.1.0")
+
+---
 
 ## Screen Mockups
 
