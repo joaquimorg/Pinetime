@@ -40,15 +40,13 @@ This project is released under the GNU General Public License version 3 or, at y
 
 ![Pinetime](images/pinetimelite_screens.jpg "Pinetime")
 
-<img src="images/screens/pinetime_3828.jpg" height="300" />
-
-<img src="images/screens/pinetime_3828.jpg" height="300" /><img src="images/screens/pinetime_3847.jpg" height="300" /><img src="images/screens/pinetime_3857.jpg" height="300" />
-<img src="images/screens/pinetime_3818.jpg" height="300" /><img src="images/screens/pinetime_3905.jpg" height="300" /><img src="images/screens/pinetime_3915.jpg" height="300" />
-<img src="images/screens/pinetime_3922.jpg" height="300" /><img src="images/screens/pinetime_3930.jpg" height="300" /><img src="images/screens/pinetime_3939.jpg" height="300" />
-<img src="images/screens/pinetime_3955.jpg" height="300" /><img src="images/screens/pinetime_4004.jpg" height="300" /><img src="images/screens/pinetime_2745.jpg" height="300" />
-<img src="images/screens/pinetime_2549.jpg" height="300" /><img src="images/screens/pinetime_4019.jpg" height="300" /><img src="images/screens/pinetime_4028.jpg" height="300" />
-<img src="images/screens/pinetime_4044.jpg" height="300" /><img src="images/screens/pinetime_4106.jpg" height="300" /><img src="images/screens/pinetime_4113.jpg" height="300" />
-<img src="images/screens/pinetime_5417.jpg" height="300" /><img src="images/screens/pinetime_3122.jpg" height="300" />
+<img src="images/screens/pinetime_3828.jpg" height="300" /><img src="images/screens/pinetime_3828.jpg" height="300" /><img src="images/screens/pinetime_3847.jpg" height="300" />
+<img src="images/screens/pinetime_3857.jpg" height="300" /><img src="images/screens/pinetime_3818.jpg" height="300" /><img src="images/screens/pinetime_3905.jpg" height="300" />
+<img src="images/screens/pinetime_3915.jpg" height="300" /><img src="images/screens/pinetime_3922.jpg" height="300" /><img src="images/screens/pinetime_3930.jpg" height="300" />
+<img src="images/screens/pinetime_3939.jpg" height="300" /><img src="images/screens/pinetime_3955.jpg" height="300" /><img src="images/screens/pinetime_4004.jpg" height="300" />
+<img src="images/screens/pinetime_2745.jpg" height="300" /><img src="images/screens/pinetime_2549.jpg" height="300" /><img src="images/screens/pinetime_4019.jpg" height="300" />
+<img src="images/screens/pinetime_4028.jpg" height="300" /><img src="images/screens/pinetime_4044.jpg" height="300" /><img src="images/screens/pinetime_4106.jpg" height="300" />
+<img src="images/screens/pinetime_4113.jpg" height="300" /><img src="images/screens/pinetime_5417.jpg" height="300" /><img src="images/screens/pinetime_3122.jpg" height="300" />
 
 ---
 
