@@ -161,7 +161,7 @@ void DisplayApp::Refresh() {
                 LoadApp( Apps::Notifications, DisplayApp::FullRefreshDirections::Down );
                 break;
               case TouchEvents::SwipeRight:
-                  LoadApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::Right );
+                  LoadApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::RightAnim );
                 break;
               case TouchEvents::DoubleTap:
                   systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
@@ -342,7 +342,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         break;
       case Apps::QuickSettings: 
         currentScreen.reset(new Screens::QuickSettings(this, batteryController, dateTimeController, brightnessController, settingsController)); 
-        returnApp(Apps::Clock, FullRefreshDirections::Left, TouchEvents::SwipeLeft);
+        returnApp(Apps::Clock, FullRefreshDirections::LeftAnim, TouchEvents::SwipeLeft);
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -429,6 +429,12 @@ void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {
       break;
     case DisplayApp::FullRefreshDirections::Right:
       lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::Right);
+      break;
+    case DisplayApp::FullRefreshDirections::LeftAnim:
+      lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::LeftAnim);
+      break;
+    case DisplayApp::FullRefreshDirections::RightAnim:
+      lvgl.SetFullRefresh(Components::LittleVgl::FullRefreshDirections::RightAnim);
       break;
     default: break;
   }
