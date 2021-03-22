@@ -8,7 +8,7 @@ def concatFiles():
     #bytearray(4096 * 2)
     path = "./resfiles"
     files = os.listdir(path)
-    with open("pinetile-lite.res", "wb") as fo:
+    with open("pinetime-lite_0.2.0.res", "wb") as fo:
         # Write Header, file file identifiction 
         # 0x00 - File Identifiaction (0xAA)
         # 0x01 - File Type (RES-P-LITE)
