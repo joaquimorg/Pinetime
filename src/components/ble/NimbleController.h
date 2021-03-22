@@ -42,7 +42,7 @@ namespace Pinetime {
                 DateTime& dateTimeController, 
                 Pinetime::Controllers::NotificationManager& notificationManager,
                 Pinetime::Controllers::CallNotificationManager &callNotificationManager,
-                Controllers::Battery& batteryController, Pinetime::Drivers::SpiNorFlash& spiNorFlash, Pinetime::Controllers::FS& fs);
+                Controllers::Battery& batteryController, Pinetime::Drivers::SpiNorFlash& spiNorFlash);
         void Init();
         void StartAdvertising();
         int OnGAPEvent(ble_gap_event *event);
@@ -71,7 +71,6 @@ namespace Pinetime {
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Controllers::CallNotificationManager& callNotificationManager;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
-        Pinetime::Controllers::FS& fs;
 
         FileService fileService;
         Pinetime::Controllers::DfuService dfuService;

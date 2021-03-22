@@ -79,6 +79,14 @@ SettingWatchFace::SettingWatchFace(
     lv_checkbox_set_checked(cbTimeOut[3], true);
   }
 
+  cbTimeOut[4] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbTimeOut[4], "\tCustom");
+  cbTimeOut[4]->user_data = this;
+  lv_obj_set_event_cb(cbTimeOut[4], event_handler);
+  if (settingsController.GetClockFace() >= 4 ) {
+    lv_checkbox_set_checked(cbTimeOut[4], true);
+  }
+
 }
 
 SettingWatchFace::~SettingWatchFace() {
@@ -93,7 +101,7 @@ bool SettingWatchFace::Refresh() {
 
 void SettingWatchFace::UpdateSelected(lv_obj_t *object, lv_event_t event) {
   if(event == LV_EVENT_VALUE_CHANGED) {
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 5; i++) {
       if ( object == cbTimeOut[i] ) {
         lv_checkbox_set_checked(cbTimeOut[i], true);
         

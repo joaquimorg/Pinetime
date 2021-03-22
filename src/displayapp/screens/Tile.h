@@ -16,7 +16,7 @@ namespace Pinetime {
       class Tile : public Screen {
         public:
           struct Applications {
-            const void * icon;
+            const char* icon;
             const char* name;
             Pinetime::Applications::Apps application;
           };

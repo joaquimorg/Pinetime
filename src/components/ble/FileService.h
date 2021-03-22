@@ -18,23 +18,52 @@
 
 namespace Pinetime {
   namespace System {
-    class SystemTask;    
+    class SystemTask;
   }
+  
+  namespace Drivers {
+    class SpiNorFlash;
+  }
+
   namespace Controllers {
     class Ble;
-    class FS;
-
 
     class FileService {
       public:
         FileService(Pinetime::System::SystemTask &systemTask,
                    Pinetime::Controllers::Ble &bleController,
-                   Pinetime::Controllers::FS &fs);
+                   Pinetime::Drivers::SpiNorFlash &spiNorFlash);
         
         void Init();
 
         int OnServiceData(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context);
         void OnTimeout();
+
+
+        class SpiFlash {
+          public:
+            SpiFlash(Pinetime::Drivers::SpiNorFlash& spiNorFlash) : spiNorFlash{spiNorFlash} {}
+            void Init(size_t chunkSize, size_t totalSize);
+            void Erase();
+            void Append(uint8_t* data, size_t size);
+            uint16_t CalculateCrc();
+            bool IsComplete();
+
+          private:
+            Pinetime::Drivers::SpiNorFlash& spiNorFlash;
+            static constexpr size_t bufferSize = 200;
+            bool ready = false;
+            size_t chunkSize = 0;
+            size_t totalSize = 0;
+            static constexpr size_t writeOffset = 0x0B4000;
+            static constexpr size_t maxSize = 0x3F6000 - writeOffset;
+            size_t bufferWriteIndex = 0;
+            size_t totalWriteIndex = 0;
+            uint8_t tempBuffer[bufferSize];
+            
+            uint16_t ComputeCrc(uint8_t const *p_data, uint32_t size, uint16_t const *p_crc);
+
+        };
 
       private:
         static constexpr ble_uuid128_t serviceUuid{
@@ -47,14 +76,15 @@ namespace Pinetime {
                 .value = FILE_SERVICE_UUID_CHAR_CONTROL
         };
 
-        static constexpr ble_uuid128_t fileCharacteristicUuid{
+        static constexpr ble_uuid128_t fileDataCharacteristicUuid{
                 .u {.type = BLE_UUID_TYPE_128},
                 .value = FILE_SERVICE_UUID_CHAR
         };
 
         Pinetime::System::SystemTask &mSystemTask;
         Pinetime::Controllers::Ble &bleController;
-        Pinetime::Controllers::FS &fs;
+
+        SpiFlash spiFlash;
 
         const struct ble_gatt_chr_def mCharacteristicDefinitions[3];    ///< number of characteristics (plus one null)
         const struct ble_gatt_svc_def mServiceDefinitions[2];           ///< number of services (plus one null)
@@ -66,17 +96,27 @@ namespace Pinetime {
             COMMAND_FIRMWARE_START_DATA   = 0x03,
             COMMAND_FIRMWARE_CHECKSUM     = 0x04,
             COMMAND_FIRMWARE_END_DATA     = 0x06,
+            COMMAND_FIRMWARE_OK           = 0x07,
+            COMMAND_FIRMWARE_ERROR        = 0x08,
         };
 
-        uint16_t eventHandle;
+        enum class States : uint8_t {
+            Idle, Init, Start, Data, Validate, Validated
+        };
+        States state = States::Idle;
 
         uint32_t fileSize = 0;
         uint32_t bytesReceived = 0;
         TimerHandle_t timeoutTimer;
 
-        void closeActive();
-        int handleWrite(ble_gatt_access_ctxt*);
-        int handleRead(ble_gatt_access_ctxt*);
+        uint16_t fileControlCharacteristicHandle;
+        uint16_t fileDataCharacteristicHandle;
+
+        int ControlPointHandler(uint16_t connectionHandle, os_mbuf *om);
+        int WritePacketHandler(uint16_t connectionHandle, os_mbuf *om);
+        void Reset();
+
+        void NotificationSend(uint16_t connection, uint16_t charactHandle, const uint8_t *data, const size_t s);
 
   
     };

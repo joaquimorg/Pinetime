@@ -52,7 +52,7 @@ Pinetime::Logging::NrfLogger logger;
 Pinetime::Logging::DummyLogger logger;
 #endif
 
-Pinetime::Drivers::SpiMaster spi{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, {
+Pinetime::Drivers::SpiMaster spi0{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, {
         Pinetime::Drivers::SpiMaster::BitOrder::Msb_Lsb,
         Pinetime::Drivers::SpiMaster::Modes::Mode3,
         Pinetime::Drivers::SpiMaster::Frequencies::Freq8Mhz,
@@ -62,10 +62,10 @@ Pinetime::Drivers::SpiMaster spi{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, 
   }
 };
 
-Pinetime::Drivers::Spi lcdSpi {spi, LCD_CSN};
+Pinetime::Drivers::Spi lcdSpi {spi0, LCD_CSN};
 Pinetime::Drivers::St7789 lcd {lcdSpi, LCD_DC};
 
-Pinetime::Drivers::Spi flashSpi {spi, FLASH_CSN};
+Pinetime::Drivers::Spi flashSpi {spi0, FLASH_CSN};
 Pinetime::Drivers::SpiNorFlash spiNorFlash {flashSpi};
 
 Pinetime::Controllers::Settings settingsController {spiNorFlash};
@@ -132,18 +132,19 @@ void DebounceTimerCallback(TimerHandle_t xTimer) {
 void SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler(void) {
   if(((NRF_SPIM0->INTENSET & (1<<6)) != 0) && NRF_SPIM0->EVENTS_END == 1) {
     NRF_SPIM0->EVENTS_END = 0;
-    spi.OnEndEvent();
+    spi0.OnEndEvent();
   }
 
   if(((NRF_SPIM0->INTENSET & (1<<19)) != 0) && NRF_SPIM0->EVENTS_STARTED == 1) {
     NRF_SPIM0->EVENTS_STARTED = 0;
-    spi.OnStartedEvent();
+    spi0.OnStartedEvent();
   }
 
   if(((NRF_SPIM0->INTENSET & (1<<1)) != 0) && NRF_SPIM0->EVENTS_STOPPED == 1) {
     NRF_SPIM0->EVENTS_STOPPED = 0;
   }
 }
+
 
 static void (*radio_isr_addr)(void) ;
 static void (*rng_isr_addr)(void) ;
@@ -241,16 +242,16 @@ void nimble_port_ll_task_func(void *args) {
 }
 
 int main(void) {
-  NRF_WDT->RR[0] = WDT_RR_RR_Reload;
+  //NRF_WDT->RR[0] = WDT_RR_RR_Reload;
   //logger.Init();
 
   nrf_drv_clock_init();
-  nimble_port_init();
-
+  
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
+  systemTask.reset(new Pinetime::System::SystemTask(spi0, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
                                                     dateTimeController, settingsController));
+  nimble_port_init();
   systemTask->Start();  
 
   vTaskStartScheduler();

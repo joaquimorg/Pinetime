@@ -18,6 +18,7 @@ namespace Pinetime {
     class St7789;
     class Cst816S;
     class WatchdogView;
+    class SpiNorFlash;
   }
   
   namespace Controllers {
@@ -44,6 +45,7 @@ namespace Pinetime {
 
         DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &touchPanel,
                    Controllers::Battery &batteryController, Controllers::Ble &bleController,
+                   Pinetime::Drivers::SpiNorFlash& spiNorFlash,
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
                    Controllers::Accelerometer& accelerometer,
@@ -68,6 +70,7 @@ namespace Pinetime {
         Pinetime::Drivers::Cst816S& touchPanel;
         Pinetime::Controllers::Battery &batteryController;
         Pinetime::Controllers::Ble &bleController;
+        Pinetime::Drivers::SpiNorFlash& spiNorFlash;
         Pinetime::Controllers::DateTime& dateTimeController;
         Pinetime::Drivers::WatchdogView& watchdog;
         Pinetime::Controllers::Settings& settingsController;

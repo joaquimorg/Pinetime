@@ -4,7 +4,7 @@
 #include "board_config.h"
 #include <libraries/gpiote/app_gpiote.h>
 
-LV_IMG_DECLARE(icon_running);
+//LV_IMG_DECLARE(icon_running);
 
 using namespace Pinetime::Applications::Screens;
 
@@ -30,7 +30,7 @@ Steps::Steps(
   lv_obj_align(stepsArc, NULL, LV_ALIGN_CENTER, 0, 0);
 
   lv_obj_t * steps_icon = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(steps_icon, &icon_running);  
+  lv_img_set_src(steps_icon, "F:/ico_running.bin");
   lv_obj_align(steps_icon, NULL, LV_ALIGN_CENTER, 0, -25);
 
   lSteps = lv_label_create(lv_scr_act(), NULL);

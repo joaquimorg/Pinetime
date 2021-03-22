@@ -66,11 +66,12 @@ bool FirmwareUpdate::Refresh() {
 }
 
 bool FirmwareUpdate::DisplayProgression() const {
-  float current = bleController.FirmwareUpdateCurrentBytes() / 1024.0f;
-  float total = bleController.FirmwareUpdateTotalBytes() / 1024.0f;
+  float current = bleController.FirmwareUpdateCurrentBytes();// / 1024.0f;
+  float total = bleController.FirmwareUpdateTotalBytes();// / 1024.0f;
   uint16_t pc = (current / total) * 100.0f;
 
-  lv_label_set_text_fmt(percentLabel, "%d %% - %.0f Kb - %.0f Kb", pc, current, total);
+  lv_label_set_text_fmt(percentLabel, "%d %%\n%.0f b - %.0f b", pc, current, total);
+  lv_label_set_align( percentLabel, LV_LABEL_ALIGN_CENTER );
 
   lv_bar_set_value(bar1, pc, LV_ANIM_OFF);
   return running;
@@ -79,12 +80,19 @@ bool FirmwareUpdate::DisplayProgression() const {
 void FirmwareUpdate::UpdateValidated() {
   lv_label_set_recolor(percentLabel, true);
   lv_label_set_text_static(percentLabel, "#00ff00 Download Ok!#");
+  lv_label_set_align( percentLabel, LV_LABEL_ALIGN_CENTER );
+
   vTaskDelay(500);
 }
 
 void FirmwareUpdate::UpdateError() {
+  float current = bleController.FirmwareUpdateCurrentBytes();// / 1024.0f;
+  float total = bleController.FirmwareUpdateTotalBytes();// / 1024.0f;
   lv_label_set_recolor(percentLabel, true);
-  lv_label_set_text_static(percentLabel, "#ff0000 Download Error!#");
+  lv_label_set_text_fmt(percentLabel, "#ff0000 Download Error!#\n%.0f b - %.0f b", current, total);
+  //lv_label_set_text_static(percentLabel, "#ff0000 Download Error!#");
+  lv_label_set_align( percentLabel, LV_LABEL_ALIGN_CENTER );
+
   lv_obj_set_style_local_bg_color(bar1, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
   vTaskDelay(500);
 }

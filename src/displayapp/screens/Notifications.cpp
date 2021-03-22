@@ -3,6 +3,7 @@
 
 using namespace Pinetime::Applications::Screens;
 
+/*
 LV_IMG_DECLARE(not_email);
 LV_IMG_DECLARE(not_instantmessage);
 LV_IMG_DECLARE(not_missedcall);
@@ -11,7 +12,7 @@ LV_IMG_DECLARE(not_sms);
 LV_IMG_DECLARE(not_unknown);
 
 LV_IMG_DECLARE(icon_phone);
-
+*/
 
 Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::NotificationManager &notificationManager) :
         Screen(app), notificationManager{notificationManager} {
@@ -33,7 +34,7 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
     //currentItem.reset(new NotificationItem("Notification", NULL, 0, notificationManager.NbNotifications(), Modes::Preview));
 
     lv_obj_t * not_img = lv_img_create(lv_scr_act(), NULL);
-    lv_img_set_src(not_img, &icon_phone);
+    lv_img_set_src(not_img, "F:/not_unknown.bin");
     lv_obj_align(not_img, NULL, LV_ALIGN_CENTER, 0, -70);
 
     lv_obj_t* label = lv_label_create(lv_scr_act(), nullptr);   
@@ -64,14 +65,14 @@ char const *Notifications::CategoriesString[] = {
         "Instant Message"
 };
 
-void const *Notifications::CategoriesIcon[] = {
-        &not_unknown,
-        &not_email,
-        &not_missedcall,
-        &not_missedcall,
-        &not_sms,        
-        &not_schedule,
-        &not_instantmessage
+char const *Notifications::CategoriesIcon[] = {
+        "F:/not_unknown.bin",
+        "F:/not_email.bin",
+        "F:/not_missedcall.bin",
+        "F:/not_missedcall.bin",
+        "F:/not_unknown.bin",
+        "F:/not_schedule.bin",
+        "F:/not_unknown.bin"
 };
 
 lv_color_t const Notifications::CategoriesColor[] = {

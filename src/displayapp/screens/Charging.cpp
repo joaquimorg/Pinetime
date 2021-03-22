@@ -5,7 +5,7 @@
 
 using namespace Pinetime::Applications::Screens;
 
-LV_IMG_DECLARE(icon_charging);
+//LV_IMG_DECLARE(icon_charging);
 
 static void lv_update_task(struct _lv_task_t *task) {  
   auto user_data = static_cast<Charging *>(task->user_data);
@@ -30,7 +30,7 @@ Charging::Charging(
   batteryVoltage = batteryController.Voltage();
 
   lv_obj_t * charging_ico = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(charging_ico, &icon_charging);  
+  lv_img_set_src(charging_ico, "F:/icon_charging.bin");
   lv_obj_align(charging_ico, NULL, LV_ALIGN_CENTER, -35, -55);
 
   charging_bar = lv_bar_create(lv_scr_act(), NULL);

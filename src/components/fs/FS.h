@@ -21,11 +21,11 @@ namespace Pinetime {
 
             void FileDemo();
 
-            void FileOpen(uint8_t *fileName);
+            void FileOpen(uint8_t *fileName, void* file_p);
             void FileClose();
             void FileRead(uint8_t *buff, uint32_t size);
             void FileSeek(uint32_t pos);
-            uint32_t FileTell();
+            //uint32_t FileTell();
 
             bool FileIsReady() const { return fileReady; };
         private:

@@ -5,7 +5,7 @@
 
 using namespace Pinetime::Applications::Screens;
 
-LV_IMG_DECLARE(icon_low_battery);
+//LV_IMG_DECLARE(icon_low_battery);
 
 static void lv_update_task(struct _lv_task_t *task) {  
   auto user_data = static_cast<LowBatt *>(task->user_data);
@@ -24,7 +24,7 @@ LowBatt::LowBatt(
   batteryVoltage = batteryController.Voltage();
 
   lv_obj_t * low_battery_ico = lv_img_create(lv_scr_act(), NULL);
-  lv_img_set_src(low_battery_ico, &icon_low_battery);  
+  lv_img_set_src(low_battery_ico, "F:/icon_low_battery.bin");  
   lv_obj_align(low_battery_ico, NULL, LV_ALIGN_CENTER, 0, -65);
 
   lv_obj_t * status = lv_label_create(lv_scr_act(), NULL);  

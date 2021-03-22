@@ -81,6 +81,18 @@ void SpiNorFlash::Read(uint32_t address, uint8_t *buffer, size_t size) {
   spi.Read(reinterpret_cast<uint8_t *>(&cmd), cmdSize, buffer, size);
 }
 
+void SpiNorFlash::ReadFast(uint32_t address, uint8_t *buffer, size_t size) {
+  static constexpr uint8_t cmdSize = 5;
+  uint8_t cmd[cmdSize] = {};//{ static_cast<uint8_t>(Commands::Read), (uint8_t)(address >> 16U), (uint8_t)(address >> 8U), (uint8_t)address };
+  cmd[0] = static_cast<uint8_t>(Commands::FastRead);
+  cmd[1] = (uint8_t)(address >> 16U);
+  cmd[2] = (uint8_t)(address >> 8U);
+  cmd[3] = (uint8_t)address;
+  cmd[4] = 0x00;
+
+  spi.Read(reinterpret_cast<uint8_t *>(&cmd), cmdSize, buffer, size);
+}
+
 void SpiNorFlash::WriteEnable() {
   auto cmd = static_cast<uint8_t>(Commands::WriteEnable);
   spi.Read(&cmd, sizeof(cmd), nullptr, 0);

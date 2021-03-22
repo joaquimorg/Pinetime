@@ -37,7 +37,9 @@ Clock::Clock(DisplayApp* app,
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFacePongScreen(); },
-                //[this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen(); }
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen1(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen2(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen3(); },
           },
           Screens::ScreenListModes::LongPress          
         } {
@@ -76,6 +78,14 @@ std::unique_ptr<Screen> Clock::WatchFacePongScreen() {
   return std::unique_ptr<Screen>(new Screens::WatchFacePong(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
 }
 
-std::unique_ptr<Screen> Clock::WatchFaceCustomScreen() {  
-  return std::unique_ptr<Screen>(new Screens::WatchFaceCustom(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
+std::unique_ptr<Screen> Clock::WatchFaceCustomScreen1() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceCustom(0, app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceCustomScreen2() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceCustom(1, app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceCustomScreen3() {  
+  return std::unique_ptr<Screen>(new Screens::WatchFaceCustom(2, app, dateTimeController, batteryController, bleController, notificatioManager, settingsController));
 }

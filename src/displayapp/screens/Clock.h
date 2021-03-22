@@ -44,12 +44,14 @@ namespace Pinetime {
           Controllers::Settings& settingsController;
           Controllers::Accelerometer& accelerometer;
 
-          ScreenList<4> screens;
+          ScreenList<7> screens;
           std::unique_ptr<Screen> WatchFaceDigitalScreen();
           std::unique_ptr<Screen> WatchFaceAnalogScreen();
           std::unique_ptr<Screen> WatchFaceMinimalScreen();
           std::unique_ptr<Screen> WatchFacePongScreen();
-          std::unique_ptr<Screen> WatchFaceCustomScreen();
+          std::unique_ptr<Screen> WatchFaceCustomScreen1();
+          std::unique_ptr<Screen> WatchFaceCustomScreen2();
+          std::unique_ptr<Screen> WatchFaceCustomScreen3();
 
 
       };

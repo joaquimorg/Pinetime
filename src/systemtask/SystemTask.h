@@ -48,7 +48,7 @@ namespace Pinetime {
 
         SystemTask( Pinetime::Drivers::SpiMaster &spi, 
                     Pinetime::Drivers::St7789 &lcd,
-                    Pinetime::Drivers::SpiNorFlash& spiNorFlash,                   
+                    Pinetime::Drivers::SpiNorFlash& spiNorFlash,
                     Pinetime::Drivers::TwiMaster& twiMaster, 
                     Pinetime::Drivers::Cst816S &touchPanel, 
                     Controllers::Accelerometer &accelerometer,

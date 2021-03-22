@@ -454,10 +454,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WatchFaceMinimal.cpp
         displayapp/screens/WatchFaceCustom.cpp
         displayapp/screens/WatchFacePong.cpp
-        displayapp/icons/bg_clock.c
-
-        #displayapp/icons/background_16_1.c
-        #displayapp/icons/background_16_2.c
 
         #Fonts
         displayapp/fonts/lv_font_roboto_20.c
@@ -465,41 +461,7 @@ list(APPEND SOURCE_FILES
         displayapp/fonts/lv_font_sys_48.c
         displayapp/fonts/clock_font/lv_font_clock_90.c
         displayapp/fonts/clock_font/lv_font_clock_76.c
-        displayapp/fonts/clock_font/lv_font_clock_42.c 
-
-        #App Icons 
-        #displayapp/icons/icon_brightness.c
-        #displayapp/icons/icon_calc.c
-        displayapp/icons/icon_charging.c
-        #displayapp/icons/icon_clock.c
-        #displayapp/icons/icon_email.c
-        displayapp/icons/icon_firmware.c
-        #displayapp/icons/icon_game.c
-        #displayapp/icons/icon_heart_rate.c
-        #displayapp/icons/icon_help.c
-        #displayapp/icons/icon_info.c
-        #displayapp/icons/icon_information.c
-        #displayapp/icons/icon_iot.c
-        displayapp/icons/icon_low_battery.c
-        #displayapp/icons/icon_map.c
-        displayapp/icons/icon_phone.c
-        #displayapp/icons/icon_qr_code.c
-        displayapp/icons/icon_raining.c
-        displayapp/icons/icon_running.c
-        #displayapp/icons/icon_settings.c
-        #displayapp/icons/icon_music.c
-        #displayapp/icons/icon_error.c
-        #displayapp/icons/icon_folder.c
-        #displayapp/icons/icon_two.c
-        #displayapp/icons/icon_paddle.c
-
-        #Notification Icons 
-        displayapp/icons/not_email.c
-        displayapp/icons/not_instantmessage.c
-        displayapp/icons/not_missedcall.c
-        displayapp/icons/not_schedule.c
-        displayapp/icons/not_sms.c
-        displayapp/icons/not_unknown.c
+        displayapp/fonts/clock_font/lv_font_clock_42.c
 
         main.cpp
         

@@ -31,10 +31,6 @@ namespace Pinetime {
           }
 
           ~ScreenList() override {
-            current.reset(nullptr);
-            /*for(uint8_t i = 0; i < screens.size(); i++) {
-              screens[i]().reset(nullptr);
-            }*/
             lv_obj_clean(lv_scr_act());
           }
 
@@ -79,7 +75,7 @@ namespace Pinetime {
                 case TouchEvents::SwipeRight:
                   if (screenIndex > 0) {
                     current.reset(nullptr);
-                    app->SetFullRefresh(DisplayApp::FullRefreshDirections::None);
+                    app->SetFullRefresh(DisplayApp::FullRefreshDirections::RightAnim);
                     screenIndex--;
                     current = screens[screenIndex]();
                     return true;
@@ -90,7 +86,7 @@ namespace Pinetime {
                 case TouchEvents::SwipeLeft:
                   if (screenIndex < screens.size() - 1) {
                     current.reset(nullptr);
-                    app->SetFullRefresh(DisplayApp::FullRefreshDirections::None);
+                    app->SetFullRefresh(DisplayApp::FullRefreshDirections::LeftAnim);
                     screenIndex++;
                     current = screens[screenIndex]();                
                   }
@@ -105,7 +101,7 @@ namespace Pinetime {
                 screenIndex = 0;
               }              
               current.reset(nullptr);
-              app->SetFullRefresh(DisplayApp::FullRefreshDirections::None);
+              app->SetFullRefresh(DisplayApp::FullRefreshDirections::LeftAnim);
               current = screens[screenIndex]();
               return true;
             }

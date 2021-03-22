@@ -55,7 +55,7 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        watchdogView{watchdog},
 
                        fs( spiNorFlash ),
-                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash, fs),
+                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash),
                        vrMotor( settingsController ) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
 }
@@ -103,7 +103,7 @@ void SystemTask::Work() {
 
   accelerometer.Init();
 
-  displayApp.reset(new Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController,
+  displayApp.reset(new Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController, spiNorFlash, 
                                                           dateTimeController, watchdogView, settingsController, accelerometer, *this, notificationManager, callNotificationManager));
   displayApp->Start();
 
@@ -178,7 +178,7 @@ void SystemTask::Work() {
         break;
         case Messages::WakeUp:
           spi.Wakeup();
-          twiMaster.Wakeup();
+          //twiMaster.Wakeup();
           //accelerometer.Wakeup();
 
           nimbleController.StartAdvertising();

@@ -23,7 +23,7 @@ namespace Pinetime {
 
       class WatchFaceCustom : public Screen {
         public:
-          WatchFaceCustom(DisplayApp* app,
+          WatchFaceCustom(uint8_t imgnum, DisplayApp* app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
@@ -65,7 +65,6 @@ namespace Pinetime {
           lv_obj_t* label_time_sep;
           lv_obj_t* label_date;
           lv_obj_t* label_date_shadow;
-          lv_obj_t* backgroundLabel;
           lv_obj_t* notificationIcon;
 
           Controllers::DateTime& dateTimeController;

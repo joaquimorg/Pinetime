@@ -25,6 +25,7 @@ namespace Pinetime {
         bool WriteEnabled();
         uint8_t ReadConfigurationRegister();
         void Read(uint32_t address, uint8_t* buffer, size_t size);
+        void ReadFast(uint32_t address, uint8_t* buffer, size_t size);
         void Write(uint32_t address, const uint8_t *buffer, size_t size);
         void WriteEnable();
         void SectorErase(uint32_t sectorAddress);
@@ -43,6 +44,7 @@ namespace Pinetime {
         enum class Commands : uint8_t {
             PageProgram = 0x02,
             Read = 0x03,
+            FastRead = 0x0B,
             ReadStatusRegister = 0x05,
             WriteEnable = 0x06,
             ReadConfigurationRegister = 0x15,

@@ -38,6 +38,7 @@ using namespace Pinetime::Applications;
 
 DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Drivers::Cst816S &touchPanel,
                        Controllers::Battery &batteryController, Controllers::Ble &bleController,
+                       Drivers::SpiNorFlash& spiNorFlash,
                        Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                       
                        Controllers::Settings &settingsController,
                        Controllers::Accelerometer& accelerometer,
@@ -49,6 +50,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         touchPanel{touchPanel},
         batteryController{batteryController},
         bleController{bleController},
+        spiNorFlash{spiNorFlash},
         dateTimeController{dateTimeController},
         watchdog{watchdog},        
         settingsController{settingsController},
@@ -333,7 +335,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Weather: 
-        currentScreen.reset(new Screens::Weather(this));
+        currentScreen.reset(new Screens::Weather(this, spiNorFlash));
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::FlashLight: 
@@ -383,37 +385,40 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
 
       case Apps::FirmwareUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
-        returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        //returnApp(currentApp, currentDirection, TouchEvents::None);
+        //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::FirmwareValidation: 
         currentScreen.reset(new Screens::FirmwareValidation(this, validator)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        StartApp(Apps::Settings, FullRefreshDirections::Down);
+        //StartApp(Apps::Settings, FullRefreshDirections::Down);
         break;
 
       case Apps::ResourceUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
-        returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------
       
       case Apps::Charging:
         currentScreen.reset(new Screens::Charging(this, batteryController));
-        //returnApp(currentApp, currentDirection, TouchEvents::None);
-        returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::LowBatt:
         currentScreen.reset(new Screens::LowBatt(this, batteryController));
-        returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        //returnApp(currentApp, currentDirection, TouchEvents::None);
+        //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       
     }
     
-    currentApp = app;
-    currentDirection = direction;
+    if ( currentApp != app ) {
+      currentApp = app;
+      currentDirection = direction;
+    }
 }
 
 void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {

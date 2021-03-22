@@ -4,7 +4,8 @@ import os
 from struct import pack
 
 def concatFiles():
-    fat = bytearray(4096 * 2)
+    fat = bytearray(b'\xFF') * 8176
+    #bytearray(4096 * 2)
     path = "./resfiles"
     files = os.listdir(path)
     with open("pinetile-lite.res", "wb") as fo:
@@ -29,7 +30,7 @@ def concatFiles():
                 # end[1] = 0x00
                 fo.write(pack("32sIIB", infile.encode('UTF-8'), file_offset, fsize, 0x00))
                 file_offset = file_offset + fsize
-                file_fat_offset = file_fat_offset + 0x41
+                file_fat_offset = file_fat_offset + 0x2C
                 fo.seek(0, 2)                
                 with open(os.path.join(path, infile), "rb") as fin:
                     fo.write(fin.read())
