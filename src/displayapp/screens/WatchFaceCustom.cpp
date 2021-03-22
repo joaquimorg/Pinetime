@@ -57,14 +57,14 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   lv_obj_add_style(label_time, LV_LABEL_PART_MAIN, &hour_style);
   lv_label_set_text_fmt(label_time,  "%02i", hour);      
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -55, -50);
+  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -55, -60);
 
   // Minute
   label_time_min = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_add_style(label_time_min, LV_LABEL_PART_MAIN, &hour_style);
   lv_label_set_text_fmt(label_time_min,  "%02i", minute);
   //lv_label_set_align( label_time_min, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 55, -50);
+  lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 55, -60);
 
   // :  
   lv_style_init(&sep_style);
@@ -75,12 +75,12 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   lv_obj_add_style(label_time_sep, LV_LABEL_PART_MAIN, &sep_style);
   lv_label_set_text_static(label_time_sep,  ":");      
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, -50);
+  lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, -60);
   
   
   lv_style_init(&label_shadow_style);
   //lv_style_set_text_opa(&label_shadow_style, LV_STATE_DEFAULT, LV_OPA_50);
-  lv_style_set_text_color(&label_shadow_style, LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
+  lv_style_set_text_color(&label_shadow_style, LV_STATE_DEFAULT, lv_color_hex(0x444444));
 
   /*Create a label for the shadow first (it's in the background) */
   label_date_shadow = lv_label_create(lv_scr_act(), NULL);
@@ -155,12 +155,13 @@ bool WatchFaceCustom::Refresh() {
 
       if ( second % 2 == 0 ) {
         //sep_style.text.color = lv_color_hex(0xFFFFFF);
-        lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
+        //lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
+        lv_label_set_text_static(label_time_sep,  ":");
       } else {
         //sep_style.text.color = lv_color_hex(0x000000);
-        lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x000000));
+        //lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x000000));
+        lv_label_set_text_static(label_time_sep,  " ");
       }
-      lv_label_set_text_static(label_time_sep,  ":");   
     }
   
     if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
