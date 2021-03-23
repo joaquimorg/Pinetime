@@ -51,6 +51,8 @@ namespace Pinetime {
         void WriteData(uint8_t data);
         void ColumnAddressSet();
 
+        void WriteCommandData(uint8_t command, const uint8_t *params, uint16_t len);
+
         static constexpr uint16_t Width = 240;
         static constexpr uint16_t Height = 320;
         void RowAddressSet();
