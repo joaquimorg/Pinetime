@@ -1,12 +1,9 @@
-#include <libs/lvgl/lvgl.h>
 #include "WatchFaceCustom.h"
 #include "BatteryIcon.h"
 #include "BleIcon.h"
 #include "Symbols.h"
 #include "NotificationIcon.h"
-
-  
-//LV_IMG_DECLARE(bg_img_1);
+#include "resources_config.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -22,6 +19,8 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   settingsController.SetClockFace(4 + imgnum);
   settingsController.SaveSettings();
 
+  clock_76 = lv_font_load(FNT_CLOCK_76);
+
   uint8_t day = dateTimeController.Day();
 
   uint8_t hour = dateTimeController.Hours();
@@ -35,11 +34,11 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
   
   if ( imgnum == 0 ) {
-    lv_img_set_src(bg_clock_img, "F:/bg_clock_02.bin");
+    lv_img_set_src(bg_clock_img, WF_BACKGROUND_C1);
   } else if ( imgnum == 1 ) {
-    lv_img_set_src(bg_clock_img, "F:/bg_clock_03.bin");
+    lv_img_set_src(bg_clock_img, WF_BACKGROUND_C2);
   } else {
-    lv_img_set_src(bg_clock_img, "F:/bg_clock_04.bin");
+    lv_img_set_src(bg_clock_img, WF_BACKGROUND_C3);
   }
 
   lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
@@ -50,7 +49,7 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
 
   // Hour  
   lv_style_init(&hour_style);
-  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, clock_76);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time = lv_label_create(lv_scr_act(), NULL);
@@ -67,12 +66,8 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 55, -60);
 
   // :  
-  lv_style_init(&sep_style);
-  lv_style_set_text_font(&sep_style, LV_STATE_DEFAULT, &lv_font_clock_76);
-  lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-
   label_time_sep = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_add_style(label_time_sep, LV_LABEL_PART_MAIN, &sep_style);
+  lv_obj_add_style(label_time_sep, LV_LABEL_PART_MAIN, &hour_style);
   lv_label_set_text_static(label_time_sep,  ":");      
   //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, -60);
@@ -109,10 +104,11 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
 
 WatchFaceCustom::~WatchFaceCustom() {
 
-  lv_style_reset(&sep_style);
   lv_style_reset(&hour_style);
   lv_style_reset(&label_shadow_style);
   lv_style_reset(&dateyear_style);
+
+  lv_font_free(clock_76);
   
   lv_obj_clean(lv_scr_act());
 }
@@ -154,12 +150,8 @@ bool WatchFaceCustom::Refresh() {
       sSecond = second;
 
       if ( second % 2 == 0 ) {
-        //sep_style.text.color = lv_color_hex(0xFFFFFF);
-        //lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
         lv_label_set_text_static(label_time_sep,  ":");
       } else {
-        //sep_style.text.color = lv_color_hex(0x000000);
-        //lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x000000));
         lv_label_set_text_static(label_time_sep,  " ");
       }
     }

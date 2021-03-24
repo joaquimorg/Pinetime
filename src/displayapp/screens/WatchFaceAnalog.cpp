@@ -2,6 +2,7 @@
 #include "BatteryIcon.h"
 #include "BleIcon.h"
 #include "Symbols.h"
+#include "resources_config.h"
 #include "NotificationIcon.h"
 
 //LV_IMG_DECLARE(bg_clock);
@@ -45,7 +46,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
   //lv_img_set_src(bg_clock_img, &bg_clock);
-  lv_img_set_src(bg_clock_img, "F:/bg_clock_01.bin");
+  lv_img_set_src(bg_clock_img, WF_BACKGROUND_ANALOG);
   
   lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
 

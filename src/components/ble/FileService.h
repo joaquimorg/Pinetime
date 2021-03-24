@@ -62,6 +62,9 @@ namespace Pinetime {
             uint8_t tempBuffer[bufferSize];
             
             uint16_t ComputeCrc(uint8_t const *p_data, uint32_t size, uint16_t const *p_crc);
+            
+            // Don't write to flash... simulate mode for testing...
+            bool demoMode = false;
 
         };
 
@@ -98,6 +101,7 @@ namespace Pinetime {
             COMMAND_FIRMWARE_END_DATA     = 0x06,
             COMMAND_FIRMWARE_OK           = 0x07,
             COMMAND_FIRMWARE_ERROR        = 0x08,
+            COMMAND_FIRMWARE_CHECKSUM_ERR = 0x09,
         };
 
         enum class States : uint8_t {

@@ -162,7 +162,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
       uint16_t crc = om->om_data[1] + (om->om_data[2] << 8);
 
       // verify Checksum
-      //if(spiFlash.CalculateCrc() == crc){
+      if(spiFlash.CalculateCrc() == crc){
       
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Validated);
         bleController.StopFirmwareUpdate();
@@ -176,17 +176,19 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
 
         mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateEnd);
 
-        state = States::Validated;
-      /*} else {
+        xTimerStop(timeoutTimer, 0);
+
+        state = States::Idle;
+      } else {
         // Notify result of checksum
         uint8_t data[2];
         data[0] = 0x01;
-        data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_ERROR;
+        data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_CHECKSUM_ERR;
 
         NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Error);
         
-      }*/
+      }
 
       return 0;
     }
@@ -202,7 +204,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         return 0;
       }
 
-      if ( bytesReceived == fileSize and spiFlash.IsComplete()) {
+      if ( spiFlash.IsComplete() ) {
         // Notify end
         uint8_t data[2];
         data[0] = 0x01;
@@ -213,6 +215,14 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Validated);
         xTimerStop(timeoutTimer, 0);
         state = States::Validate;
+      } else {
+        // Notify result size error
+        uint8_t data[2];
+        data[0] = 0x01;
+        data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_ERROR;
+
+        NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+        bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Error);
       }
 
       return 0;
@@ -274,6 +284,7 @@ void FileService::SpiFlash::Init(size_t chunkSize, size_t totalSize) {
 }
 
 void FileService::SpiFlash::Append(uint8_t *data, size_t size) {
+
   if(!ready) return;
   ASSERT(size <= 20);
 
@@ -281,18 +292,23 @@ void FileService::SpiFlash::Append(uint8_t *data, size_t size) {
   bufferWriteIndex += size;
 
   if(bufferWriteIndex == bufferSize) {
-    spiNorFlash.Write(writeOffset + totalWriteIndex, tempBuffer, bufferWriteIndex);
+    if ( !demoMode ) {
+      spiNorFlash.Write(writeOffset + totalWriteIndex, tempBuffer, bufferWriteIndex);
+    }
     totalWriteIndex += bufferWriteIndex;
     bufferWriteIndex = 0;
   }
 
   if(bufferWriteIndex > 0 && totalWriteIndex + bufferWriteIndex == totalSize) {
-    spiNorFlash.Write(writeOffset + totalWriteIndex, tempBuffer, bufferWriteIndex);
+    if ( !demoMode ) {
+      spiNorFlash.Write(writeOffset + totalWriteIndex, tempBuffer, bufferWriteIndex);
+    }
     totalWriteIndex += bufferWriteIndex;
   }
 }
 
 void FileService::SpiFlash::Erase() {
+  if ( demoMode ) return;
   for (size_t erased = 0; erased < totalSize; erased += 0x1000) {
     spiNorFlash.SectorErase(writeOffset + erased);
   }

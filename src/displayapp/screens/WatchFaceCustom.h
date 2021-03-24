@@ -55,7 +55,7 @@ namespace Pinetime {
           DirtyValue<uint8_t> heartbeat  {0};
           DirtyValue<bool> notificationState {false};
           
-          lv_style_t sep_style;
+          lv_font_t* clock_76;
           lv_style_t hour_style;
           lv_style_t label_shadow_style;
           lv_style_t dateyear_style;

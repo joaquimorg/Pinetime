@@ -48,11 +48,11 @@ using namespace Pinetime::Controllers;
 
 FS::FS(Pinetime::Drivers::SpiNorFlash &spiNorFlash) : spiNorFlash{spiNorFlash} {}
 
-void FS::FileDemo() {
-    
-}
+void FS::FileOpen(void* file_p, uint8_t *fileName) {
 
-void FS::FileOpen(uint8_t *fileName, void* file_p) {
+    file_s currFile;
+
+    file_t* file = static_cast<file_t *>(file_p);
 
     uint8_t buffer[44];
 
@@ -64,63 +64,62 @@ void FS::FileOpen(uint8_t *fileName, void* file_p) {
             // file found, is the file I need ?
             if ((strcasecmp((char*)fileName, (char*)currFile.name)) == 0) {
                 // yes
-                readAddrOffset = 0;
-                fileReady = true;
-                //file_p = &currFile;
+                file->readAddrOffset = 0x00;
+                file->isOpen = true;
+                file->offset = currFile.offset;
+
                 return;
             }
         } else {
             // no more files in FAT
-            fileReady = false;
+            file->isOpen = false;
             return;
         }
     }
-    fileReady = false;
+    file->isOpen = false;
     return;
 }
 
 
-void FS::FileClose() {
+void FS::FileClose(void* file_p) {
+    file_t* file = static_cast<file_t *>(file_p);
 
-    fileReady = false;
-    readAddrOffset = 0x00;
-
+    file->readAddrOffset = 0x00;
+    file->isOpen = false;
 }
 
 
-void FS::FileRead(uint8_t *buff, uint32_t size) {
+void FS::FileRead(void* file_p, uint8_t *buff, uint32_t size) {
+    file_t* file = static_cast<file_t *>(file_p);
 
     // Fix for erro reading more than 240 bytes from flash ....
     //
     if ( size > 240 ) {
         uint32_t half = size / 2;
-        spiNorFlash.Read( FS_FILES + currFile.offset + readAddrOffset, (uint8_t *)buff, half );
-        spiNorFlash.Read( FS_FILES + currFile.offset + readAddrOffset + half, (uint8_t *)buff + half, half );
+        spiNorFlash.Read( FS_FILES + file->offset + file->readAddrOffset, (uint8_t *)buff, half );
+        spiNorFlash.Read( FS_FILES + file->offset + file->readAddrOffset + half, (uint8_t *)buff + half, half );
     }else {
-        spiNorFlash.Read( FS_FILES + currFile.offset + readAddrOffset, (uint8_t *)buff, size );
+        spiNorFlash.Read( FS_FILES + file->offset + file->readAddrOffset, (uint8_t *)buff, size );
     }
   
+    file->readAddrOffset += size;
 }
 
-void FS::FileSeek(uint32_t pos) {
+void FS::FileSeek(void* file_p, uint32_t pos) {
+
+    file_t* file = static_cast<file_t *>(file_p);
   
-    readAddrOffset = pos;
+    file->readAddrOffset = pos;
   
 }
-
-/*
-uint32_t FS::FileTell() {    
-
-    return readAddrOffset;
-  
-}
-*/
 
 lv_fs_res_t FSOpen(lv_fs_drv_t* drv, void* file_p, const char* path, lv_fs_mode_t mode) {
+    
+    file_t* file = static_cast<file_t *>(file_p);
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileOpen((uint8_t *)path, file_p);
+    filesys->FileOpen(file_p, (uint8_t *)path);
 
-    if (filesys->FileIsReady()) {
+    if (file->isOpen) {
         return LV_FS_RES_OK;
     } else {
         return LV_FS_RES_FS_ERR;
@@ -129,43 +128,35 @@ lv_fs_res_t FSOpen(lv_fs_drv_t* drv, void* file_p, const char* path, lv_fs_mode_
 
 lv_fs_res_t FSClose(lv_fs_drv_t* drv, void* file_p) {
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileClose();
+    filesys->FileClose( file_p );
 
     return LV_FS_RES_OK;
 }
 
 lv_fs_res_t FSRead(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t btr, uint32_t* br) {
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileRead((uint8_t *)buf, btr);
+    filesys->FileRead(file_p, (uint8_t *)buf, btr);
     *br = btr;
     return LV_FS_RES_OK;
 }
 
 lv_fs_res_t FSSeek(lv_fs_drv_t* drv, void* file_p, uint32_t pos) {
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileSeek(pos);
+    filesys->FileSeek(file_p, pos);
     return LV_FS_RES_OK;
 }
 
-/*
-lv_fs_res_t FSTell(struct _lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p) {
-    FS* filesys = static_cast<FS *>(drv->user_data);
-    *pos_p = filesys->FileTell();
-    return LV_FS_RES_OK;
-}
-*/
 
 void FS::LVGLFileSystemInit() {
     lv_fs_drv_t fs_drv;
     lv_fs_drv_init(&fs_drv);
 
-    //fs_drv.file_size = sizeof(file_t);
+    fs_drv.file_size = sizeof(file_t);
     fs_drv.letter = 'F';
     fs_drv.open_cb = FSOpen;
     fs_drv.close_cb = FSClose;
     fs_drv.read_cb = FSRead;
     fs_drv.seek_cb = FSSeek;
-    //fs_drv.tell_cb = FSTell;
 
     fs_drv.user_data = this; 
 

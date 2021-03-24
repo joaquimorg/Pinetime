@@ -5,6 +5,7 @@
 #include "BleIcon.h"
 #include "Symbols.h"
 #include "NotificationIcon.h"
+#include "resources_config.h"
 
 #define BALLSIZE 4
 #define PLAYERSIZE 10
@@ -40,6 +41,8 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   srand(dateTimeController.Seconds());
 
+  clock_76 = lv_font_load(FNT_CLOCK_76);
+
   // Set the background
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x001020));
 
@@ -58,13 +61,13 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   time_h = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_set_style_local_text_font(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_obj_set_style_local_text_font(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, clock_76);
   lv_label_set_text_fmt(time_h, "%02i", dateTimeController.Hours());
   lv_obj_align(time_h, NULL, LV_ALIGN_IN_TOP_MID, -50, 10);
 
   time_m = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_set_style_local_text_font(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
+  lv_obj_set_style_local_text_font(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, clock_76);
   lv_label_set_text_fmt(time_m, "%02i", dateTimeController.Minutes());
   lv_obj_align(time_m, NULL, LV_ALIGN_IN_TOP_MID, 50, 10);
 
@@ -128,6 +131,7 @@ WatchFacePong::~WatchFacePong() {
  
   lv_task_del(taskPlay);
   lv_task_del(taskUpdate);
+  lv_font_free(clock_76);
   lv_obj_clean(lv_scr_act());
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 }

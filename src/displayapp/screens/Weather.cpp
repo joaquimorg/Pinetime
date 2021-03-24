@@ -14,7 +14,7 @@ Weather::Weather(
 
   llabel = lv_label_create(lv_scr_act(), NULL);
   lv_label_set_recolor(llabel, true);
-  lv_label_set_text_fmt(llabel,     "#0000FF Screen# for Weather\n%d", CalculateCrc()); 
+  lv_label_set_text_fmt(llabel, "#0000FF Screen# for Weather\n%x", CalculateCrc()); 
   lv_label_set_align(llabel, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(llabel, NULL, LV_ALIGN_CENTER, 0, 0);
 
@@ -28,7 +28,7 @@ uint16_t Weather::CalculateCrc() {
   size_t currentOffset = 0;
   uint16_t crc = 0;
 
-  size_t totalSize = 0x36CD;
+  size_t totalSize = 524685;
   static constexpr size_t writeOffset = 0x0B4000;
 
   bool first = true;
@@ -53,7 +53,7 @@ uint16_t Weather::ComputeCrc(uint8_t const *p_data, uint32_t size, uint16_t cons
 
   for (uint32_t i = 0; i < size; i++) {
     crc = (crc >> 8) | (crc << 8);
-    crc ^= (uint8_t)p_data[i];
+    crc ^= p_data[i];
     crc ^= ((uint8_t) crc) >> 4;
     crc ^= crc << 12;
     crc ^= (crc & 0xFF) << 5;

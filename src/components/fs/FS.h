@@ -9,6 +9,12 @@ typedef struct {
     uint32_t offset;
     uint32_t size;
     uint8_t end;
+} file_s;
+
+typedef struct {
+    uint32_t readAddrOffset = 0x00;
+    uint32_t offset = 0x00;
+    bool isOpen = false;
 } file_t;
 
 namespace Pinetime {
@@ -19,21 +25,13 @@ namespace Pinetime {
 
             void LVGLFileSystemInit();
 
-            void FileDemo();
+            void FileOpen(void* file_p, uint8_t *fileName);
+            void FileClose(void* file_p);
+            void FileRead(void* file_p, uint8_t *buff, uint32_t size);
+            void FileSeek(void* file_p, uint32_t pos);
 
-            void FileOpen(uint8_t *fileName, void* file_p);
-            void FileClose();
-            void FileRead(uint8_t *buff, uint32_t size);
-            void FileSeek(uint32_t pos);
-            //uint32_t FileTell();
-
-            bool FileIsReady() const { return fileReady; };
         private:
             Pinetime::Drivers::SpiNorFlash& spiNorFlash;
-
-            uint32_t readAddrOffset = 0;
-            bool fileReady = false;
-            file_t currFile;
 
     };
   }

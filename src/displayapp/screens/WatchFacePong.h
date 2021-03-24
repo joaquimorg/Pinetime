@@ -50,6 +50,7 @@ namespace Pinetime {
           lv_obj_t* time_m;
           lv_obj_t* label_date;
           lv_obj_t* batteryIcon;
+          lv_font_t* clock_76;
 
           lv_obj_t* ball;
           lv_obj_t* ball_s;

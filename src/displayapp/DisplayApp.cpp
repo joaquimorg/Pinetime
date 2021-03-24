@@ -313,11 +313,11 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
   */
 
   switch(app) {
-      case Apps::None:
       case Apps::Launcher: 
         currentScreen.reset(new Screens::ApplicationList(this, dateTimeController, settingsController, batteryController)); 
         returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
+      case Apps::None:
       case Apps::Clock: 
         currentScreen.reset(new Screens::Clock(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, accelerometer)); 
         break;
@@ -385,19 +385,18 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
 
       case Apps::FirmwareUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
-        //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        //returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::FirmwareValidation: 
         currentScreen.reset(new Screens::FirmwareValidation(this, validator)); 
         returnApp(Apps::Settings, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        //StartApp(Apps::Settings, FullRefreshDirections::Down);
         break;
 
       case Apps::ResourceUpdate:
         currentScreen.reset(new Screens::FirmwareUpdate(this, bleController, systemTask));
-        //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        //returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
 
       // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -405,7 +404,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
       case Apps::Charging:
         currentScreen.reset(new Screens::Charging(this, batteryController));
         //returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        returnApp(currentApp == app or currentApp == Apps::LowBatt ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::LowBatt:
         currentScreen.reset(new Screens::LowBatt(this, batteryController));
@@ -414,11 +413,9 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         break;
       
     }
-    
-    if ( currentApp != app ) {
-      currentApp = app;
-      currentDirection = direction;
-    }
+        
+    currentApp = app;
+    currentDirection = direction;
 }
 
 void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {
