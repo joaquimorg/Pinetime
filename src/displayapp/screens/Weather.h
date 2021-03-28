@@ -26,9 +26,6 @@ namespace Pinetime {
           
           lv_obj_t* llabel;
 
-          uint16_t CalculateCrc();
-          uint16_t ComputeCrc(uint8_t const *p_data, uint32_t size, uint16_t const *p_crc);
-
       };
     }
   }

@@ -33,6 +33,7 @@ namespace Pinetime {
           ~WatchFaceCustom() override;
 
           bool Refresh() override;
+          void UpdateScreen();
 
         private:
 
@@ -57,15 +58,15 @@ namespace Pinetime {
           
           lv_font_t* clock_76;
           lv_style_t hour_style;
-          lv_style_t label_shadow_style;
-          lv_style_t dateyear_style;
 
           lv_obj_t* label_time;
+          lv_obj_t* label_time_am_pm;
           lv_obj_t* label_time_min;
           lv_obj_t* label_time_sep;
           lv_obj_t* label_date;
-          lv_obj_t* label_date_shadow;
           lv_obj_t* notificationIcon;
+
+          lv_task_t* taskUpdate;
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;

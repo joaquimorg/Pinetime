@@ -122,123 +122,123 @@ extern "C" {
   void vApplicationIdleHook(void) {
     lv_tick_inc(1);
   }
-}
+//}
 
-void DebounceTimerCallback(TimerHandle_t xTimer) {
-  xTimerStop(xTimer, 0);
-  systemTask->OnButtonPushed();
-}
-
-void SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler(void) {
-  if(((NRF_SPIM0->INTENSET & (1<<6)) != 0) && NRF_SPIM0->EVENTS_END == 1) {
-    NRF_SPIM0->EVENTS_END = 0;
-    spi0.OnEndEvent();
+  void DebounceTimerCallback(TimerHandle_t xTimer) {
+    xTimerStop(xTimer, 0);
+    systemTask->OnButtonPushed();
   }
 
-  if(((NRF_SPIM0->INTENSET & (1<<19)) != 0) && NRF_SPIM0->EVENTS_STARTED == 1) {
-    NRF_SPIM0->EVENTS_STARTED = 0;
-    spi0.OnStartedEvent();
+  void SPIM0_SPIS0_TWIM0_TWIS0_SPI0_TWI0_IRQHandler(void) {
+    if(((NRF_SPIM0->INTENSET & (1<<6)) != 0) && NRF_SPIM0->EVENTS_END == 1) {
+      NRF_SPIM0->EVENTS_END = 0;
+      spi0.OnEndEvent();
+    }
+
+    if(((NRF_SPIM0->INTENSET & (1<<19)) != 0) && NRF_SPIM0->EVENTS_STARTED == 1) {
+      NRF_SPIM0->EVENTS_STARTED = 0;
+      spi0.OnStartedEvent();
+    }
+
+    if(((NRF_SPIM0->INTENSET & (1<<1)) != 0) && NRF_SPIM0->EVENTS_STOPPED == 1) {
+      NRF_SPIM0->EVENTS_STOPPED = 0;
+    }
   }
 
-  if(((NRF_SPIM0->INTENSET & (1<<1)) != 0) && NRF_SPIM0->EVENTS_STOPPED == 1) {
-    NRF_SPIM0->EVENTS_STOPPED = 0;
-  }
-}
 
-
-static void (*radio_isr_addr)(void) ;
-static void (*rng_isr_addr)(void) ;
-static void (*rtc0_isr_addr)(void) ;
+  static void (*radio_isr_addr)(void) ;
+  static void (*rng_isr_addr)(void) ;
+  static void (*rtc0_isr_addr)(void) ;
 
 
 /* Some interrupt handlers required for NimBLE radio driver */
-extern "C" {
-void RADIO_IRQHandler(void) {
-  ((void (*)(void)) radio_isr_addr)();
-}
-
-void RNG_IRQHandler(void) {
-  ((void (*)(void)) rng_isr_addr)();
-}
-
-void RTC0_IRQHandler(void) {
-  ((void (*)(void)) rtc0_isr_addr)();
-}
-
-void WDT_IRQHandler(void) {
-  nrf_wdt_event_clear(NRF_WDT_EVENT_TIMEOUT);
-}
-
-void npl_freertos_hw_set_isr(int irqn, void (*addr)(void)) {
-  switch (irqn) {
-    case RADIO_IRQn:
-      radio_isr_addr = addr;
-      break;
-    case RNG_IRQn:
-      rng_isr_addr = addr;
-      break;
-    case RTC0_IRQn:
-      rtc0_isr_addr = addr;
-      break;
+//extern "C" {
+  void RADIO_IRQHandler(void) {
+    ((void (*)(void)) radio_isr_addr)();
   }
-}
 
-uint32_t
-npl_freertos_hw_enter_critical(void) {
-  uint32_t ctx = __get_PRIMASK();
-  __disable_irq();
-  return (ctx & 0x01);
-}
-
-void npl_freertos_hw_exit_critical(uint32_t ctx) {
-  if (!ctx) {
-    __enable_irq();
+  void RNG_IRQHandler(void) {
+    ((void (*)(void)) rng_isr_addr)();
   }
-}
 
-
-static struct ble_npl_eventq g_eventq_dflt;
-
-struct ble_npl_eventq *
-nimble_port_get_dflt_eventq(void) {
-  return &g_eventq_dflt;
-}
-
-void nimble_port_run(void) {
-  struct ble_npl_event *ev;
-
-  while (1) {
-    ev = ble_npl_eventq_get(&g_eventq_dflt, BLE_NPL_TIME_FOREVER);
-    ble_npl_event_run(ev);
+  void RTC0_IRQHandler(void) {
+    ((void (*)(void)) rtc0_isr_addr)();
   }
-}
 
-void BleHost(void *) {
-  nimble_port_run();
-}
+  void WDT_IRQHandler(void) {
+    nrf_wdt_event_clear(NRF_WDT_EVENT_TIMEOUT);
+  }
 
-void nimble_port_init(void) {
-  void os_msys_init(void);
-  void ble_store_ram_init(void);
-  ble_npl_eventq_init(&g_eventq_dflt);
-  os_msys_init();
-  ble_hs_init();
-  ble_store_ram_init();
+  void npl_freertos_hw_set_isr(int irqn, void (*addr)(void)) {
+    switch (irqn) {
+      case RADIO_IRQn:
+        radio_isr_addr = addr;
+        break;
+      case RNG_IRQn:
+        rng_isr_addr = addr;
+        break;
+      case RTC0_IRQn:
+        rtc0_isr_addr = addr;
+        break;
+    }
+  }
 
-  int res;
-  res = hal_timer_init(5, NULL);
-  ASSERT(res == 0);
-  res = os_cputime_init(32768);
-  ASSERT(res == 0);
-  ble_ll_init();
-  ble_hci_ram_init();
-  nimble_port_freertos_init(BleHost);
-}
+  uint32_t
+  npl_freertos_hw_enter_critical(void) {
+    uint32_t ctx = __get_PRIMASK();
+    __disable_irq();
+    return (ctx & 0x01);
+  }
 
-void nimble_port_ll_task_func(void *args) {
-  extern void ble_ll_task(void *);
-  ble_ll_task(args);
-}
+  void npl_freertos_hw_exit_critical(uint32_t ctx) {
+    if (!ctx) {
+      __enable_irq();
+    }
+  }
+
+
+  static struct ble_npl_eventq g_eventq_dflt;
+
+  struct ble_npl_eventq *
+  nimble_port_get_dflt_eventq(void) {
+    return &g_eventq_dflt;
+  }
+
+  void nimble_port_run(void) {
+    struct ble_npl_event *ev;
+
+    while (1) {
+      ev = ble_npl_eventq_get(&g_eventq_dflt, BLE_NPL_TIME_FOREVER);
+      ble_npl_event_run(ev);
+    }
+  }
+
+  void BleHost(void *) {
+    nimble_port_run();
+  }
+
+  void nimble_port_init(void) {
+    void os_msys_init(void);
+    void ble_store_ram_init(void);
+    ble_npl_eventq_init(&g_eventq_dflt);
+    os_msys_init();
+    ble_hs_init();
+    ble_store_ram_init();
+
+    int res;
+    res = hal_timer_init(5, NULL);
+    ASSERT(res == 0);
+    res = os_cputime_init(32768);
+    ASSERT(res == 0);
+    ble_ll_init();
+    ble_hci_ram_init();
+    nimble_port_freertos_init(BleHost);
+  }
+
+  void nimble_port_ll_task_func(void *args) {
+    extern void ble_ll_task(void *);
+    ble_ll_task(args);
+  }
 }
 
 int main(void) {
@@ -250,9 +250,9 @@ int main(void) {
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
   systemTask.reset(new Pinetime::System::SystemTask(spi0, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
-                                                    dateTimeController, settingsController));
-  nimble_port_init();
+                                                    dateTimeController, settingsController));  
   systemTask->Start();  
+  nimble_port_init();
 
   vTaskStartScheduler();
 

@@ -546,6 +546,7 @@ include_directories(
         ../
         FreeRTOS
         libs
+        libs/lvgl
         libs/date/includes
         libs/mynewt-nimble/porting/npl/freertos/include
         libs/mynewt-nimble/nimble/include

@@ -64,6 +64,39 @@ void DateTime::UpdateTime(uint32_t systickCounter) {
   second = time.seconds().count();
 }
 
+uint8_t DateTime::Hours12() {
+  uint8_t hour12 = hour;
+
+  if (hour == 0 && hour != 12) {
+    hour12 = 12;
+  } else if (hour == 12 && hour != 0) {
+    hour12 = 12;
+  } else if (hour < 12 && hour != 0) {
+    hour12 = hour;
+  } else if (hour > 12 && hour != 0) {
+    hour12 = hour - 12;
+  }
+
+  return hour12;
+}
+
+const char *DateTime::HourAMPM( bool nl ) {
+  if (hour == 0 && hour != 12) {
+    if ( nl ) return "a\nm";
+    else return "AM";
+  } else if (hour == 12 && hour != 0) {
+    if ( nl ) return "p\nm";
+    else return "PM";
+  } else if (hour < 12 && hour != 0) {
+    if ( nl ) return "a\nm";
+    else return "AM";
+  } else if (hour > 12 && hour != 0) {
+    if ( nl ) return "p\nm";
+    else return "PM";
+  }
+  if ( nl ) return "-\n-";
+  else return "--";  
+}
 
 const char *DateTime::MonthShortToString() {
   return DateTime::MonthsString[(uint8_t)month];

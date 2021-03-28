@@ -50,6 +50,7 @@ namespace Pinetime {
           uint8_t currentDay = 0;
 
           lv_obj_t* label_time;
+          lv_obj_t* label_time_am_pm;
           lv_obj_t* label_time_min;
           lv_obj_t* seconds;
           lv_obj_t* label_date;

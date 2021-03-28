@@ -35,6 +35,7 @@ namespace Pinetime {
           ~WatchFaceDigital() override;
 
           bool Refresh() override;
+          void UpdateScreen();
 
         private:
           uint8_t sHour, sMinute, sSecond;
@@ -43,13 +44,6 @@ namespace Pinetime {
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
           Pinetime::Controllers::DateTime::Days currentDayOfWeek = Pinetime::Controllers::DateTime::Days::Unknown;
           uint8_t currentDay = 0;
-
-          DirtyValue<float> batteryPercentRemaining  {0};
-          DirtyValue<bool> bleState {false};
-          DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
-          DirtyValue<uint32_t> stepCount  {0};
-          //DirtyValue<uint8_t> heartbeat  {0};
-          DirtyValue<bool> notificationState {false};
 
           lv_style_t stepc_style;
 
@@ -67,6 +61,7 @@ namespace Pinetime {
           lv_style_t date_style;
           
           lv_obj_t* label_time;
+          lv_obj_t* label_time_am_pm;
           lv_obj_t* label_time_sec;
           lv_obj_t* label_date;
           lv_obj_t* label_date_month;
@@ -83,6 +78,8 @@ namespace Pinetime {
           lv_obj_t* notificationIcon;
           lv_obj_t* seconds_body;
 
+          lv_task_t* taskUpdate;
+          
           lv_point_t seconds_point[2];
 
           Controllers::DateTime& dateTimeController;

@@ -7,6 +7,11 @@
 
 using namespace Pinetime::Applications::Screens;
 
+static void lv_update_task(struct _lv_task_t *task) {  
+  auto user_data = static_cast<WatchFaceCustom *>(task->user_data);
+  user_data->UpdateScreen();
+}
+
 WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
@@ -21,15 +26,9 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
 
   clock_76 = lv_font_load(FNT_CLOCK_76);
 
-  uint8_t day = dateTimeController.Day();
-
-  uint8_t hour = dateTimeController.Hours();
-  uint8_t minute = dateTimeController.Minutes();
-  uint8_t second = dateTimeController.Seconds();
-
-  sHour = hour;
-  sMinute = minute;
-  sSecond = second;
+  sHour = 99;
+  sMinute = 99;
+  sSecond = 99;
 
   lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
   
@@ -54,45 +53,25 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
 
   label_time = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_time, LV_LABEL_PART_MAIN, &hour_style);
-  lv_label_set_text_fmt(label_time,  "%02i", hour);      
-  //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -55, -60);
+
+  if ( settingsController.GetClockType() == Controllers::Settings::ClockType::H12 ) {
+    label_time_am_pm = lv_label_create(lv_scr_act(), NULL);
+    lv_label_set_align( label_time_am_pm, LV_LABEL_ALIGN_CENTER );
+  }
 
   // Minute
   label_time_min = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_add_style(label_time_min, LV_LABEL_PART_MAIN, &hour_style);
-  lv_label_set_text_fmt(label_time_min,  "%02i", minute);
-  //lv_label_set_align( label_time_min, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 55, -60);
-
+  
   // :  
   label_time_sep = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_time_sep, LV_LABEL_PART_MAIN, &hour_style);
-  lv_label_set_text_static(label_time_sep,  ":");      
-  //lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, -60);
   
-  
-  lv_style_init(&label_shadow_style);
-  //lv_style_set_text_opa(&label_shadow_style, LV_STATE_DEFAULT, LV_OPA_50);
-  lv_style_set_text_color(&label_shadow_style, LV_STATE_DEFAULT, lv_color_hex(0x444444));
 
-  /*Create a label for the shadow first (it's in the background) */
-  label_date_shadow = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_add_style(label_date_shadow, LV_LABEL_PART_MAIN, &label_shadow_style);
-
-  // Date  
-  lv_style_init(&dateyear_style);
   label_date = lv_label_create(lv_scr_act(), nullptr);
-  lv_style_set_text_color(&dateyear_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_add_style(label_date, LV_LABEL_PART_MAIN, &dateyear_style);
-  lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToStringLow(), day, dateTimeController.MonthToStringLow());
-  lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_CENTER, 0, 100);
-
-  lv_label_set_text(label_date_shadow, lv_label_get_text(label_date));
-  lv_label_set_align( label_date_shadow, LV_LABEL_ALIGN_CENTER );
-  lv_obj_align(label_date_shadow, label_date, LV_ALIGN_IN_TOP_LEFT, 1, 1);
+  lv_obj_set_style_local_text_color(label_date, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
+  lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 4, -4);
 
   lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -100,73 +79,91 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text(backgroundLabel, "");
 
+  UpdateScreen();
+  taskUpdate = lv_task_create(lv_update_task, 10000, LV_TASK_PRIO_MID, this);
+
 }
 
 WatchFaceCustom::~WatchFaceCustom() {
-
+  
+  lv_task_del(taskUpdate);
+  lv_obj_clean(lv_scr_act());
   lv_style_reset(&hour_style);
-  lv_style_reset(&label_shadow_style);
-  lv_style_reset(&dateyear_style);
-
   lv_font_free(clock_76);
   
-  lv_obj_clean(lv_scr_act());
 }
 
 
-bool WatchFaceCustom::Refresh() {
+void WatchFaceCustom::UpdateScreen() {
 
-  notificationState = notificatioManager.AreNewNotificationsAvailable();
+  if(notificatioManager.AreNewNotificationsAvailable())
+    lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
+  else
+    lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
 
-  if(notificationState.IsUpdated()) {
-    if(notificationState.Get() == true)
-      lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
-    else
-      lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
+
+  auto month = dateTimeController.Month();
+  uint8_t day = dateTimeController.Day();
+  auto dayOfWeek = dateTimeController.DayOfWeek();
+  uint8_t hour;
+  if ( settingsController.GetClockType() == Controllers::Settings::ClockType::H24 ) {
+    hour = dateTimeController.Hours();
+  } else {
+    hour = dateTimeController.Hours12();
   }
+  uint8_t minute = dateTimeController.Minutes();
+  uint8_t second = dateTimeController.Seconds();
 
-  currentDateTime = dateTimeController.CurrentDateTime();
+  if(sHour != hour || sMinute != minute) {
+    sHour = hour;
+    sMinute = minute;
+    
+    lv_label_set_text_fmt(label_time_min,  "%02i", sMinute);
+    lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 55, -60);
 
-  if(currentDateTime.IsUpdated()) {
-
-    auto month = dateTimeController.Month();
-    uint8_t day = dateTimeController.Day();
-    auto dayOfWeek = dateTimeController.DayOfWeek();
-
-    uint8_t hour = dateTimeController.Hours();
-    uint8_t minute = dateTimeController.Minutes();
-    uint8_t second = dateTimeController.Seconds();
-
-    if(sHour != hour || sMinute != minute) {
-      sHour = hour;
-      sMinute = minute;
-      lv_label_set_text_fmt(label_time,  "%02i", sHour);
-      lv_label_set_text_fmt(label_time_min,  "%02i", sMinute);
-
-    }
-
-    if(sSecond != second) {
-      
-      sSecond = second;
-
-      if ( second % 2 == 0 ) {
-        lv_label_set_text_static(label_time_sep,  ":");
+    if ( settingsController.GetClockType() == Controllers::Settings::ClockType::H12 ) {
+      lv_label_set_text_fmt(label_time, "%2i", hour);
+      if ( hour > 9 ) {
+        lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -50, -60);
       } else {
-        lv_label_set_text_static(label_time_sep,  " ");
+        lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -35, -60);
       }
+      lv_label_set_text(label_time_am_pm, dateTimeController.HourAMPM(true));
+      lv_obj_align(label_time_am_pm, label_time, LV_ALIGN_OUT_LEFT_MID, 0, 0);
+      lv_label_set_align( label_time_am_pm, LV_LABEL_ALIGN_CENTER );
+    } else {
+      lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -55, -60);
+      lv_label_set_text_fmt(label_time, "%02i", hour);
     }
-  
-    if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 
-      lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToStringLow(), day, dateTimeController.MonthToStringLow());
-      lv_label_set_text(label_date_shadow, lv_label_get_text(label_date));
-      lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
-      lv_label_set_align( label_date_shadow, LV_LABEL_ALIGN_CENTER );
-      currentMonth = month;
-      currentDayOfWeek = dayOfWeek;
-      currentDay = day;
+  }
+
+  if(sSecond != second) {
+    
+    sSecond = second;
+
+    if ( second % 2 == 0 ) {
+      lv_label_set_text_static(label_time_sep,  ":");
+    } else {
+      lv_label_set_text_static(label_time_sep,  " ");
     }
   }
 
+  if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
+
+    if ( settingsController.GetClockType() == Controllers::Settings::ClockType::H12 ) {
+      lv_label_set_text_fmt(label_date, "%s, %s %02i", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.MonthToStringLow(), dateTimeController.Day());
+    } else {
+      lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
+    }
+
+    currentMonth = month;
+    currentDayOfWeek = dayOfWeek;
+    currentDay = day;
+  }
+  
+}
+
+bool WatchFaceCustom::Refresh() {
   return true;
 }

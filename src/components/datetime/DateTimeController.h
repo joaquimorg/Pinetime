@@ -17,6 +17,8 @@ namespace Pinetime {
         uint8_t Day() const { return day; }
         Days DayOfWeek() const { return dayOfWeek; }
         uint8_t Hours() const { return hour; }
+        uint8_t Hours12();
+        const char *HourAMPM( bool nl );
         uint8_t Minutes() const { return minute; }
         uint8_t Seconds() const { return second; }
 

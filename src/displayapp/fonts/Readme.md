@@ -70,11 +70,11 @@ lv_font_conv --font OpenSans-Regular.ttf --symbols ãÃâÂçÇôÔõÕéèÉÈ�
 #### This fonts are in external Flash
 
 ```
-lv_font_conv --font 071MKSDBoldB.TTF --symbols %-/0123456789: --size 42 --format bin --bpp 2 --no-compress -o lv_font_clock_42.bin
+lv_font_conv --font 071MKSDBoldB.TTF --symbols %-/0123456789: -r 0x20 --size 42 --format bin --bpp 2 --no-compress -o lv_font_clock_42.bin
 ```
 ```
-lv_font_conv --font 071MKSDBoldB.TTF --symbols %-/0123456789: --size 76 --format bin --bpp 2 --no-compress -o lv_font_clock_76.bin
+lv_font_conv --font 071MKSDBoldB.TTF --symbols %-/0123456789: -r 0x20 --size 76 --format bin --bpp 2 --no-compress -o lv_font_clock_76.bin
 ```
 ```
-lv_font_conv --font 071MKSDBoldB.TTF --symbols %-/0123456789: --size 90 --format bin --bpp 2 --no-compress -o lv_font_clock_90.bin
+lv_font_conv --font 071MKSDBoldB.TTF --symbols %-/0123456789: -r 0x20 --size 90 --format bin --bpp 2 --no-compress -o lv_font_clock_90.bin
 ```

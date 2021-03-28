@@ -15,15 +15,18 @@ using namespace Pinetime::Applications::Screens;
 #define PI 3.14159265358979323846
 
 // ##
-static int16_t coordinate_x_relocate(int16_t x)
-{
+static int16_t coordinate_x_relocate(int16_t x) {
     return ((x) + LV_HOR_RES / 2);
 }
 
 // ##
-static int16_t coordinate_y_relocate(int16_t y)
-{
+static int16_t coordinate_y_relocate(int16_t y) {
     return (((y) - LV_HOR_RES / 2) < 0) ? (0 - ((y) - LV_HOR_RES / 2)) : ((y) - LV_HOR_RES / 2);
+}
+
+static void lv_update_task(struct _lv_task_t *task) {  
+  auto user_data = static_cast<WatchFaceAnalog *>(task->user_data);
+  user_data->UpdateScreen();
 }
 
 WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
@@ -52,7 +55,7 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
-  lv_label_set_text(batteryIcon, Symbols::batteryHalf);
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
   lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -8, -4);
 
 
@@ -116,6 +119,8 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
+  taskUpdate = lv_task_create(lv_update_task, 10000, LV_TASK_PRIO_MID, this);
+
 }
 
 WatchFaceAnalog::~WatchFaceAnalog() {
@@ -125,7 +130,9 @@ WatchFaceAnalog::~WatchFaceAnalog() {
   lv_style_reset(&minute_line_style);
   lv_style_reset(&minute_line_style_trace);
   lv_style_reset(&second_line_style);
-          
+  
+  lv_task_del(taskUpdate);
+
   lv_obj_clean(lv_scr_act());
 }
 
@@ -178,8 +185,9 @@ void WatchFaceAnalog::UpdateClock() {
   }
 }
 
+void WatchFaceAnalog::UpdateScreen() {
 
-bool WatchFaceAnalog::Refresh() {
+  UpdateClock();
 
   batteryPercentRemaining = batteryController.PercentRemaining();
   if (batteryPercentRemaining.IsUpdated()) {
@@ -204,8 +212,6 @@ bool WatchFaceAnalog::Refresh() {
     month = dateTimeController.Month();
     day = dateTimeController.Day();
     dayOfWeek = dateTimeController.DayOfWeek();
-
-    UpdateClock();
   
     if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
 
@@ -216,6 +222,9 @@ bool WatchFaceAnalog::Refresh() {
       currentDay = day;
     }
   }
+}
+
+bool WatchFaceAnalog::Refresh() {
 
   return true;
 }

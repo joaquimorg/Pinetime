@@ -41,8 +41,6 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   srand(dateTimeController.Seconds());
 
-  clock_76 = lv_font_load(FNT_CLOCK_76);
-
   // Set the background
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x001020));
 
@@ -61,20 +59,14 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   time_h = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_set_style_local_text_font(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, clock_76);
-  lv_label_set_text_fmt(time_h, "%02i", dateTimeController.Hours());
-  lv_obj_align(time_h, NULL, LV_ALIGN_IN_TOP_MID, -50, 10);
+  lv_obj_set_style_local_text_font(time_h, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
 
   time_m = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_obj_set_style_local_text_font(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, clock_76);
-  lv_label_set_text_fmt(time_m, "%02i", dateTimeController.Minutes());
-  lv_obj_align(time_m, NULL, LV_ALIGN_IN_TOP_MID, 50, 10);
+  lv_obj_set_style_local_text_font(time_m, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
 
   label_date = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(label_date, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-  lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
-  //lv_label_set_align( label_date, LV_LABEL_ALIGN_LEFT );
   lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_IN_BOTTOM_LEFT, 4, -4);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
@@ -115,11 +107,13 @@ WatchFacePong::WatchFacePong(Pinetime::Applications::DisplayApp *app,
 
   draw_ball();
 
-  /*lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
-  lv_label_set_text(backgroundLabel, "");*/
+  lv_label_set_text(backgroundLabel, "");
+
+  UpdateScreen();
 
   taskUpdate = lv_task_create(lv_update_task, 50000, LV_TASK_PRIO_LOW, this);
 
@@ -131,7 +125,6 @@ WatchFacePong::~WatchFacePong() {
  
   lv_task_del(taskPlay);
   lv_task_del(taskUpdate);
-  lv_font_free(clock_76);
   lv_obj_clean(lv_scr_act());
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 }
@@ -266,71 +259,19 @@ void WatchFacePong::pong_play() {
 void WatchFacePong::UpdateScreen() {
 
   lv_label_set_text_fmt(time_h, "%02i", dateTimeController.Hours());
+  lv_obj_align(time_h, NULL, LV_ALIGN_IN_TOP_MID, -50, 10);
   lv_label_set_text_fmt(time_m, "%02i", dateTimeController.Minutes());
-  lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
+  lv_obj_align(time_m, NULL, LV_ALIGN_IN_TOP_MID, 50, 10);
+
+  if ( settingsController.GetClockType() == Controllers::Settings::ClockType::H12 ) {
+    lv_label_set_text_fmt(label_date, "%s, %s %02i", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.MonthToStringLow(), dateTimeController.Day());
+  } else {
+    lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
+  }  
   lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
 }
 
 bool WatchFacePong::Refresh() {
-
-  /*notificationState = notificatioManager.AreNewNotificationsAvailable();
-
-  if(notificationState.IsUpdated()) {
-    if(notificationState.Get() == true)
-      lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
-    else
-      lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
-  }*/
-
-  //pong_play();
-
-  /*
-  currentDateTime = dateTimeController.CurrentDateTime();
-
-  if(currentDateTime.IsUpdated()) {
-
-    auto month = dateTimeController.Month();
-    uint8_t day = dateTimeController.Day();
-    auto dayOfWeek = dateTimeController.DayOfWeek();
-
-    uint8_t hour = dateTimeController.Hours();
-    uint8_t minute = dateTimeController.Minutes();
-    uint8_t second = dateTimeController.Seconds();
-
-    if(sHour != hour || sMinute != minute) {
-      sHour = hour;
-      sMinute = minute;
-      lv_label_set_text_fmt(label_time,  "%02i", sHour);
-      lv_label_set_text_fmt(label_time_min,  "%02i", sMinute);
-
-    }
-
-    if(sSecond != second) {
-      
-      sSecond = second;
-
-      if ( second % 2 == 0 ) {
-        //sep_style.text.color = lv_color_hex(0xFFFFFF);
-        lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
-      } else {
-        //sep_style.text.color = lv_color_hex(0x000000);
-        lv_style_set_text_color(&sep_style, LV_STATE_DEFAULT, lv_color_hex(0x000000));
-      }
-      lv_label_set_text_static(label_time_sep,  ":");   
-    }
-  
-    if ((month != currentMonth) || (dayOfWeek != currentDayOfWeek) || (day != currentDay)) {
-
-      lv_label_set_text_fmt(label_date, "%s %02i %s", dateTimeController.DayOfWeekShortToString(), day, dateTimeController.MonthToString());
-      lv_label_set_text(label_date_shadow, lv_label_get_text(label_date));
-      lv_label_set_align( label_date, LV_LABEL_ALIGN_CENTER );
-      lv_label_set_align( label_date_shadow, LV_LABEL_ALIGN_CENTER );
-      currentMonth = month;
-      currentDayOfWeek = dayOfWeek;
-      currentDay = day;
-    }
-  }
-  */
 
   return true;
 }

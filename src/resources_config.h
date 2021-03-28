@@ -1,6 +1,5 @@
 #pragma once
 
-
 // Resource version
 #define RESOURCE_VERION 1.0.1
 
