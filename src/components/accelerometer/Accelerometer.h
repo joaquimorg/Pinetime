@@ -34,21 +34,26 @@ namespace Pinetime {
             float GetTemp() const { return tempC; };
             accl_data_struct GetAccel() const { return accelData; };
 
+            void ReadIRQStatus();
+            bool isStepIRQ();
+
+            bool isReady() const { return deviceReady; };
+
         private:
 
             Pinetime::Drivers::TwiMaster& twiMaster;
             uint8_t twiAddress;
 
-            uint8_t deviceReady = 0;
+            bool deviceReady = false;
 
             struct bma4_dev bma;
             struct bma4_accel_config accel_conf;
-
             struct accl_data_struct accelData;
             uint32_t step_count = 0;
             uint8_t activity = 0;
             uint8_t tapStatus = 0;
-            float tempC = 0;            
+            float tempC = 0;
+            uint16_t irqStatus;
 
             void bma4_error_codes_print_result(const char api_name[], uint16_t rslt);
             

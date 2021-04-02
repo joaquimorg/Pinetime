@@ -1,7 +1,6 @@
 {
     "cmake.configureOnOpen": false,
     "files.associations": {
-        "*.sql": "oracle",
         "memory": "cpp",
         "random": "cpp",
         "optional": "cpp",

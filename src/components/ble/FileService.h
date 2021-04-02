@@ -42,8 +42,12 @@ namespace Pinetime {
 
         class SpiFlash {
           public:
+            enum class FlashType : uint8_t {
+                RES, FW, BOT
+            };
+            
             SpiFlash(Pinetime::Drivers::SpiNorFlash& spiNorFlash) : spiNorFlash{spiNorFlash} {}
-            void Init(size_t chunkSize, size_t totalSize);
+            void Init(size_t chunkSize, size_t totalSize, FlashType flashType);
             void Erase();
             void Append(uint8_t* data, size_t size);
             uint16_t CalculateCrc();
@@ -55,13 +59,19 @@ namespace Pinetime {
             bool ready = false;
             size_t chunkSize = 0;
             size_t totalSize = 0;
-            static constexpr size_t writeOffset = 0x0B4000;
-            static constexpr size_t maxSize = 0x3F6000 - writeOffset;
+            
+            FlashType flashType;
+            size_t writeOffset = 0;
+            
+            // Firmware
+            size_t maxSize = 475136;
+
             size_t bufferWriteIndex = 0;
             size_t totalWriteIndex = 0;
             uint8_t tempBuffer[bufferSize];
             
             uint16_t ComputeCrc(uint8_t const *p_data, uint32_t size, uint16_t const *p_crc);
+            void WriteMagicNumber();
             
             // Don't write to flash... simulate mode for testing...
             bool demoMode = false;

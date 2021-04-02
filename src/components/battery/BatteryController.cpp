@@ -22,11 +22,11 @@ void Battery::Init() {
   //nrfx_gpiote_in_config_t pinConfig;
 
   // POWER PRESENCE INDICATION IRQ
-  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
 
   static nrfx_gpiote_in_config_t const pinConfig = {
       .sense = NRF_GPIOTE_POLARITY_TOGGLE,
-      .pull = NRF_GPIO_PIN_NOPULL,
+      .pull = NRF_GPIO_PIN_PULLUP,
       .is_watcher = false,
       .hi_accuracy = false,
       .skip_gpio_setup = true,
@@ -83,18 +83,17 @@ void Battery::Update() {
   // Non blocking read
   SaadcInit();
   
-  APP_ERROR_CHECK(nrfx_saadc_sample());
+  nrfx_saadc_sample();
   
 }
 
 void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
 
-  
   int avg_sample = 0;
   int i;
 
-  const float battery_max = 4.15; //maximum voltage of battery
-  const float battery_min = 3.00;  //minimum voltage of battery before shutdown
+  const float battery_max = 4.20; //maximum voltage of battery
+  const float battery_min = 3.10;  //minimum voltage of battery before shutdown
 
   if (p_event->type == NRFX_SAADC_EVT_DONE) {
     
@@ -105,11 +104,10 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
     }
     avg_sample /= i; // average all the samples out
 
-    voltage = (avg_sample * 2.04f) / (1024 / 3.0f);
-   
+    voltage = (static_cast<float>(avg_sample) * 2.04f) / (1024 / 3.0f);
     voltage = roundf(voltage * 100) / 100;
 
-    percentRemaining = ((voltage - battery_min) / (battery_max - battery_min)) * 100;
+    percentRemaining = static_cast<int>(((voltage - battery_min) / (battery_max - battery_min)) * 100);
 
     if (percentRemaining > 100) {
         percentRemaining = 100;    
@@ -120,8 +118,6 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
 
     nrfx_saadc_uninit();
 
-  } else {
-    percentRemaining = -1;
   }
 }
 

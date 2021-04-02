@@ -78,5 +78,6 @@ void FirmwareValidation::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
     running  = false;
   } else if(object == buttonReset && event == LV_EVENT_PRESSED) {
     validator.Reset();
+    running  = false;
   }
 }

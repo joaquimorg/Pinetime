@@ -890,7 +890,7 @@ int8_t bma4_write_config_file(struct bma4_dev *dev)
     /* Wait for sensor time synchronization. Refer the data-sheet for
      * more information
      */
-    dev->delay_us(450, dev->intf_ptr);
+    dev->delay_us(500, dev->intf_ptr);
     if (rslt == BMA4_OK)
     {
         /* Disable config loading*/

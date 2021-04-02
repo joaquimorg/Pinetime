@@ -6,23 +6,17 @@
 
 namespace Pinetime {
 
-  namespace Drivers {
-    class SpiNorFlash;
-  }
-
   namespace Applications {
     namespace Screens {
 
       class Weather : public Screen{
         public:
-          Weather(DisplayApp* app, Pinetime::Drivers::SpiNorFlash& spiNorFlash);
+          Weather(DisplayApp* app);
           ~Weather() override;
 
           bool Refresh() override;
          
-        private:          
-
-          Pinetime::Drivers::SpiNorFlash& spiNorFlash;
+        private:
           
           lv_obj_t* llabel;
 

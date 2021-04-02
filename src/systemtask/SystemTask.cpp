@@ -11,10 +11,13 @@
 #include <hal/nrf_rtc.h>
 #include <libraries/gpiote/app_gpiote.h>
 #include <libraries/log/nrf_log.h>
-
+#include <hal/nrf_gpio.h>
 #include "main.h"
 #include "board_config.h"
 #include "BootloaderVersion.h"
+#include "Version.h"
+
+#include <memory>
 
 using namespace Pinetime::System;
 
@@ -72,42 +75,46 @@ void SystemTask::Process(void *instance) {
 }
 
 void SystemTask::Work() {
-  //ret_code_t errCode;
 
   watchdog.Setup(7);
   watchdog.Start();
+  
   APP_GPIOTE_INIT(6);
 
-  /*if(!nrf_drv_gpiote_is_init()) {
-    errCode = nrf_drv_gpiote_init();                                       
-    APP_ERROR_CHECK(errCode);
-  }*/
-
+  twiMaster.Init();
   spi.Init();
+  lcd.Init();
+  
+  brightnessController.Init();
+  brightnessController.Set(Controllers::BrightnessController::Levels::Low);
+  
+  /* Init Message */
+  lv_obj_t * initMessage = lv_label_create(lv_scr_act(), nullptr);
+  lv_label_set_text_fmt(initMessage, "PineTime Lite OS\n%ld.%ld.%ld", Version::Major(), Version::Minor(), Version::Patch());
+  lv_obj_align(initMessage, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_label_set_align(initMessage, LV_LABEL_ALIGN_CENTER);
+  lv_task_handler();
+  
+  watchdog.Kick();
   spiNorFlash.Init();
   spiNorFlash.Wakeup();
+  watchdog.Kick();
+  
+  fs.VerifyResource();
 
   fs.LVGLFileSystemInit();
-
-  nimbleController.Init();
-  nimbleController.StartAdvertising();
-  lcd.Init();
-
-  twiMaster.Init();
-  touchPanel.Init();
   
+  touchPanel.Init();  
+  watchdog.Kick();
+  settingsController.Init();  
+  
+  watchdog.Kick();
   batteryController.Init();
   batteryController.Update();
-
-  settingsController.Init();
-
-  accelerometer.Init();
-
-  displayApp.reset(new Applications::DisplayApp(lcd, lvgl, touchPanel, batteryController, bleController, spiNorFlash, 
-                                                          dateTimeController, watchdogView, settingsController, accelerometer, *this, notificationManager, callNotificationManager));
-  displayApp->Start();
-
-  //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
+  watchdog.Kick();
+  nimbleController.Init();
+  nimbleController.StartAdvertising();  
+  watchdog.Kick();
 
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
@@ -146,6 +153,18 @@ void SystemTask::Work() {
   pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
 
   nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
+
+  nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
+
+  static nrfx_gpiote_in_config_t const pinConfigBMA = {
+      .sense = NRF_GPIOTE_POLARITY_TOGGLE,
+      .pull = NRF_GPIO_PIN_PULLUP,
+      .is_watcher = false,
+      .hi_accuracy = false,
+      .skip_gpio_setup = true,
+    };
+  
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);
   //
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), pdFALSE, this, IdleTimerCallback);
@@ -153,10 +172,19 @@ void SystemTask::Work() {
 
   // Hardware status timer
   hardwareTimer = xTimerCreate ("hardwareTimer", pdMS_TO_TICKS(hardwareTime), pdTRUE, this, HardwareTimerCallback);
-  xTimerStart(hardwareTimer, 0);
+  xTimerStart(hardwareTimer, 0);  
+
+  displayApp =  std::make_unique<Pinetime::Applications::DisplayApp>(
+      lcd, lvgl, touchPanel, batteryController, bleController, spiNorFlash, 
+      dateTimeController, watchdogView, settingsController, accelerometer, brightnessController,
+      *this, notificationManager, callNotificationManager);
+      
+  displayApp->Start();
+  
+  accelerometer.Init();
 
   vrMotor.Init();
-
+  
   // Suppress endless loop diagnostic
   #pragma clang diagnostic push
   #pragma ide diagnostic ignored "EndlessLoop"
@@ -278,6 +306,28 @@ void SystemTask::Work() {
           isSleeping = true;
           isGoingToSleep = false;
           break;
+        case Messages::PowerOFF:
+          brightnessController.Set(Controllers::BrightnessController::Levels::Off);
+          //xTimerStop(idleTimer, 0);
+          //xTimerStop(hardwareTimer, 0);
+          spiNorFlash.Sleep();
+          lcd.Sleep();
+          spi.Sleep();
+          twiMaster.Sleep();
+          accelerometer.Sleep();
+          //isSleeping = true;
+          nrf_gpio_cfg_default(TP_IRQ);
+          nrf_gpio_cfg_default(BMA421_IRQ);
+          nrf_gpio_cfg_default(KEY_ACTION);
+          nrf_gpio_cfg_default(CHARGE_BASE_IRQ);
+          nrf_gpio_cfg_default(CHARGE_IRQ);
+
+          // Button
+          nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
+          nrf_gpio_cfg_output(KEY_ENABLE);
+          nrf_gpio_pin_set(KEY_ENABLE);
+          NRF_POWER->SYSTEMOFF = 1;
+          break;
         default: break;
       }
     }
@@ -337,13 +387,16 @@ void SystemTask::OnTouchEvent() {
 }
 
 void SystemTask::OnStepEvent() {
-  accelerometer.Update();
   if(isGoingToSleep) return ;
+
+  //vrMotor.Vibrate(10);
+  
+  /*
   //NRF_LOG_INFO("[systemtask] Step event");
   if(!isSleeping) {    
     //PushMessage(Messages::OnStepEvent);
     displayApp->PushMessage(Applications::DisplayApp::Messages::StepEvent);    
-  }
+  }*/
 }
 
 void SystemTask::OnChargingEvent() {
@@ -393,10 +446,12 @@ void SystemTask::ReloadIdleTimer() const {
 
 void SystemTask::HardwareStatus() {
 
-    
-  accelerometer.Update();  
-  // verify the day to reset de counter
-  settingsController.SetHistorySteps( accelerometer, dateTimeController );
+  //accelerometer.ReadIRQStatus();
+  //if ( accelerometer.isStepIRQ() ) {
+    accelerometer.Update();  
+    // verify the day to reset de counter
+    settingsController.SetHistorySteps( accelerometer, dateTimeController );
+  //}
   
   // Update Battery status
   batteryController.Update();
@@ -407,7 +462,11 @@ void SystemTask::HardwareStatus() {
     if ( batteryController.PercentRemaining() >= 0 && batteryController.PercentRemaining() < 15 && !batteryController.IsCharging() ) {
         WakeUp();
         vrMotor.Vibrate(35);
-        displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
+        if ( batteryController.PercentRemaining() < 5 ) {
+          PushMessage(Messages::PowerOFF);
+        } else {
+          displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
+        }
     }
 
     // verify if batt is charged

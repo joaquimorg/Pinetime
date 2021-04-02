@@ -15,7 +15,7 @@
 # under the License.
 #
 
-TINYCRYPT_CFLAGS := -std=c99
+TINYCRYPT_CFLAGS := 
 
 TINYCRYPT_INCLUDE := \
 	$(NIMBLE_ROOT)/ext/tinycrypt/include \

@@ -120,15 +120,39 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
 
       if (fileSize > 0) {
         data[0] = 0x01;
-        bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::RES);
+        
+        if ( om->om_data[5] == 0x01 ) {
+          bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::RES);
+          spiFlash.Init(20, fileSize, SpiFlash::FlashType::RES);
+        } else if ( om->om_data[5] == 0x02 ) {
+          if ( fileSize > 475136 ) {
+            // Notify Error !
+            data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_ERROR;
+            NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+            Reset();
+            return 0;
+          }
+          bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::FW);
+          spiFlash.Init(20, fileSize, SpiFlash::FlashType::FW);
+        } else if ( om->om_data[5] == 0x03 ) {
+          if ( fileSize > 32800 ) {
+            // Notify Error !
+            data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_ERROR;
+            NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+            Reset();
+            return 0;
+          }
+          bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::BOT);
+          spiFlash.Init(20, fileSize, SpiFlash::FlashType::BOT);
+        }
+
         bleController.StartFirmwareUpdate();
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
         bleController.FirmwareUpdateTotalBytes(fileSize);
         bleController.FirmwareUpdateCurrentBytes(0);
         // Send task to open app
         mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateStart);
-
-        spiFlash.Init(20, fileSize);
+        
         spiFlash.Erase();
 
         // Notify to send Firmware !          
@@ -274,13 +298,20 @@ void FileService::OnTimeout() {
   Reset();
 }
 
-
-
-void FileService::SpiFlash::Init(size_t chunkSize, size_t totalSize) {
+void FileService::SpiFlash::Init(size_t chunkSize, size_t totalSize, FlashType flashType) {
   if(chunkSize != 20) return;
   this->chunkSize = chunkSize;
   this->totalSize = totalSize;
   this->ready = true;
+  this->flashType = flashType;
+  if ( this->flashType == FlashType::RES ) {
+    writeOffset = 0x0B4000;
+  } else if ( this->flashType == FlashType::FW ) {
+    writeOffset = 0x040000;
+  } else if ( this->flashType == FlashType::BOT ) {
+    writeOffset = 0x000000;
+  }
+  
 }
 
 void FileService::SpiFlash::Append(uint8_t *data, size_t size) {
@@ -304,7 +335,22 @@ void FileService::SpiFlash::Append(uint8_t *data, size_t size) {
       spiNorFlash.Write(writeOffset + totalWriteIndex, tempBuffer, bufferWriteIndex);
     }
     totalWriteIndex += bufferWriteIndex;
+    if ( this->flashType == FlashType::FW ) {
+      if (totalSize < maxSize)
+        WriteMagicNumber();
+    }
   }
+}
+
+void FileService::SpiFlash::WriteMagicNumber() {
+  uint32_t magic[4] = { // TODO When this variable is a static constexpr, the values written to the memory are not correct. Why?
+          0xf395c277,
+          0x7fefd260,
+          0x0f505235,
+          0x8079b62c,
+  };  
+  uint32_t offset = writeOffset + (maxSize - (4 * sizeof(uint32_t)));
+  spiNorFlash.Write(offset, reinterpret_cast<const uint8_t *>(magic), 4 * sizeof(uint32_t));
 }
 
 void FileService::SpiFlash::Erase() {

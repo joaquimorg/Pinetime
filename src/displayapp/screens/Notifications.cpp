@@ -28,10 +28,10 @@ Notifications::Notifications(DisplayApp *app, Pinetime::Controllers::Notificatio
 
   if(notification.valid) {
     currentId = notification.id;
-    currentItem.reset(new NotificationItem(CategoryToString(notification.category), notification, notification.index, notificationManager.NbNotifications()));
+    currentItem = std::make_unique<NotificationItem>(CategoryToString(notification.category), notification, notification.index, notificationManager.NbNotifications());
     validDisplay = true;
   } else {
-    //currentItem.reset(new NotificationItem("Notification", NULL, 0, notificationManager.NbNotifications(), Modes::Preview));
+    //currentItem = std::make_unique<NotificationItem>("Notification", NULL, 0, notificationManager.NbNotifications(), Modes::Preview);
 
     lv_obj_t * not_img = lv_img_create(lv_scr_act(), NULL);
     lv_img_set_src(not_img, "F:/not_unknown.bin");
@@ -112,7 +112,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
         currentId = previousNotification.id;
         currentItem.reset(nullptr);
         app->SetFullRefresh(DisplayApp::FullRefreshDirections::Down);
-        currentItem.reset(new NotificationItem(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications()));
+        currentItem = std::make_unique<NotificationItem>(CategoryToString(previousNotification.category), previousNotification,  previousNotification.index, notificationManager.NbNotifications());
       }
       return true;
     case Pinetime::Applications::TouchEvents::SwipeUp: {
@@ -131,7 +131,7 @@ bool Notifications::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
         currentId = nextNotification.id;
         currentItem.reset(nullptr);
         app->SetFullRefresh(DisplayApp::FullRefreshDirections::Up);
-        currentItem.reset(new NotificationItem(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications()));
+        currentItem = std::make_unique<NotificationItem>(CategoryToString(nextNotification.category), nextNotification,  nextNotification.index, notificationManager.NbNotifications());
       }
       return true;
       

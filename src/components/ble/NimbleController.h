@@ -13,7 +13,7 @@
 #include "CurrentTimeClient.h"
 #include "CurrentTimeService.h"
 #include "DeviceInformationService.h"
-#include "DfuService.h"
+//#include "DfuService.h"
 #include "FileService.h"
 #include "ImmediateAlertService.h"
 #include "MusicService.h"
@@ -73,7 +73,7 @@ namespace Pinetime {
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
 
         FileService fileService;
-        Pinetime::Controllers::DfuService dfuService;
+        //Pinetime::Controllers::DfuService dfuService;
 
         DeviceInformationService deviceInformationService;
         CurrentTimeClient currentTimeClient;
@@ -88,10 +88,10 @@ namespace Pinetime {
         uint8_t addrType; // 1 = Random, 0 = PUBLIC
         uint16_t connectionHandle = 0;
 
-        ble_uuid128_t dfuServiceUuid {
+        /*ble_uuid128_t dfuServiceUuid {
                 .u { .type = BLE_UUID_TYPE_128},
                 .value = {0x23, 0xD1, 0xBC, 0xEA, 0x5F, 0x78, 0x23, 0x15, 0xDE, 0xEF, 0x12, 0x12, 0x30, 0x15, 0x00, 0xFF}
-        };
+        };*/
 
         ServiceDiscovery serviceDiscovery;
     };

@@ -11,7 +11,7 @@ namespace Pinetime {
         using BleAddress = std::array<uint8_t, 6>;
         enum class FirmwareUpdateStates {Idle, Running, Validated, Error};
         enum class AddressTypes { Public, Random };
-        enum class FirmwareType { FW, RES };
+        enum class FirmwareType { FW, RES, BOT };
 
         Ble() = default;
         bool IsConnected() const {return isConnected;}

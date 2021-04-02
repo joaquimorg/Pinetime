@@ -52,6 +52,8 @@ Pinetime::Logging::NrfLogger logger;
 Pinetime::Logging::DummyLogger logger;
 #endif
 
+#include <memory>
+
 Pinetime::Drivers::SpiMaster spi0{Pinetime::Drivers::SpiMaster::SpiModule::SPI0, {
         Pinetime::Drivers::SpiMaster::BitOrder::Msb_Lsb,
         Pinetime::Drivers::SpiMaster::Modes::Mode3,
@@ -92,26 +94,27 @@ void ble_manager_set_ble_disconnection_callback(void (*disconnection)());
 
 std::unique_ptr<Pinetime::System::SystemTask> systemTask;
 
+
 void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action) {
   if(pin == TP_IRQ) {
     systemTask->OnTouchEvent();
     return ;
   }
 
-  /*if(pin == BMA421_IRQ) {
+  if(pin == BMA421_IRQ) {
     systemTask->OnStepEvent();
     return ;
-  }*/
+  }
 
   if(pin == CHARGE_BASE_IRQ) {
     systemTask->OnPowerPresentEvent();
     return ;
   }
 
-  /*if(pin == CHARGE_IRQ) {
+  if(pin == CHARGE_IRQ) {
     systemTask->OnChargingEvent();
     return ;
-  }*/
+  }
 
   BaseType_t xHigherPriorityTaskWoken = pdFALSE;
   xTimerStartFromISR(debounceTimer, &xHigherPriorityTaskWoken);
@@ -119,10 +122,10 @@ void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action
 }
 
 extern "C" {
+
   void vApplicationIdleHook(void) {
     lv_tick_inc(1);
   }
-//}
 
   void DebounceTimerCallback(TimerHandle_t xTimer) {
     xTimerStop(xTimer, 0);
@@ -145,14 +148,13 @@ extern "C" {
     }
   }
 
-
   static void (*radio_isr_addr)(void) ;
   static void (*rng_isr_addr)(void) ;
   static void (*rtc0_isr_addr)(void) ;
 
 
 /* Some interrupt handlers required for NimBLE radio driver */
-//extern "C" {
+
   void RADIO_IRQHandler(void) {
     ((void (*)(void)) radio_isr_addr)();
   }
@@ -241,16 +243,44 @@ extern "C" {
   }
 }
 
+#define NRF52_ONRAM1_OFFRAM1  	POWER_RAM_POWER_S0POWER_On      << POWER_RAM_POWER_S0POWER_Pos      \
+												      | POWER_RAM_POWER_S1POWER_On      << POWER_RAM_POWER_S1POWER_Pos      \
+												      | POWER_RAM_POWER_S0RETENTION_On  << POWER_RAM_POWER_S0RETENTION_Pos  \
+	                            | POWER_RAM_POWER_S1RETENTION_On  << POWER_RAM_POWER_S1RETENTION_Pos; 
+												
+#define NRF52_ONRAM1_OFFRAM0    POWER_RAM_POWER_S0POWER_On      << POWER_RAM_POWER_S0POWER_Pos      \
+												      | POWER_RAM_POWER_S1POWER_On      << POWER_RAM_POWER_S1POWER_Pos      \
+												      | POWER_RAM_POWER_S0RETENTION_Off << POWER_RAM_POWER_S0RETENTION_Pos  \
+	                            | POWER_RAM_POWER_S1RETENTION_Off << POWER_RAM_POWER_S1RETENTION_Pos;														
+												
+#define NRF52_ONRAM0_OFFRAM0    POWER_RAM_POWER_S0POWER_Off     << POWER_RAM_POWER_S0POWER_Pos      \
+												      | POWER_RAM_POWER_S1POWER_Off     << POWER_RAM_POWER_S1POWER_Pos;
+															
+void configure_ram_retention(void) {
+			NRF_POWER->RAM[0].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[1].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[2].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[3].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[4].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[5].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[6].POWER = NRF52_ONRAM1_OFFRAM0;
+			NRF_POWER->RAM[7].POWER = NRF52_ONRAM1_OFFRAM0;
+}
+
 int main(void) {
   //NRF_WDT->RR[0] = WDT_RR_RR_Reload;
   //logger.Init();
+  configure_ram_retention();
+  //Before you enter SYSTEM OFF you need to disable the sense mechanism for the pins that are not going to wake up the chip 
+  //and enable it on the one that are going to wake up the chip.
+  //NRF_POWER->SYSTEMOFF = 1;
 
   nrf_drv_clock_init();
   
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
-  systemTask.reset(new Pinetime::System::SystemTask(spi0, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
-                                                    dateTimeController, settingsController));  
+  systemTask = std::make_unique<Pinetime::System::SystemTask>(spi0, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,
+                                                    dateTimeController, settingsController);  
   systemTask->Start();  
   nimble_port_init();
 

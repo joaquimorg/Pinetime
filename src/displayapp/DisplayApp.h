@@ -49,6 +49,7 @@ namespace Pinetime {
                    Controllers::DateTime &dateTimeController, Drivers::WatchdogView &watchdog,                   
                    Controllers::Settings &settingsController,
                    Controllers::Accelerometer& accelerometer,
+                   Controllers::BrightnessController& brightnessController,
                    System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager &notificationManager,
                    Pinetime::Controllers::CallNotificationManager &callNotificationManager);
@@ -75,14 +76,13 @@ namespace Pinetime {
         Pinetime::Drivers::WatchdogView& watchdog;
         Pinetime::Controllers::Settings& settingsController;
         Controllers::Accelerometer& accelerometer;
+        Controllers::BrightnessController& brightnessController;
         Pinetime::System::SystemTask& systemTask;
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Controllers::CallNotificationManager& callNotificationManager;
         std::unique_ptr<Screens::Screen> currentScreen;
 
         Pinetime::Controllers::FirmwareValidator validator;
-        Controllers::BrightnessController brightnessController;
-
 
         TaskHandle_t taskHandle;
         States state = States::Running;

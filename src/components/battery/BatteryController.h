@@ -23,9 +23,6 @@ namespace Pinetime {
         bool isCharging = false;
         //bool isPowerPresent = false;
 
-        //float voltage = 0.0f;
-        //int8_t percentRemaining = -1;
-
         
     };
   }

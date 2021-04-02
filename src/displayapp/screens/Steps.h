@@ -32,6 +32,7 @@ namespace Pinetime {
 
           lv_obj_t * lSteps;
           lv_obj_t * stepsArc;
+          lv_obj_t * steps_icon;
 
 
       };

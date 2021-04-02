@@ -20,18 +20,29 @@ This project is a fork of [Infinitime](https://github.com/JF002/InfiniTime)
 
 The purpose of **PinetimeLite** is to build firmware for Pinetime that is lightweight and maximizes battery life.
 The available features are :
-- Step counter
-- Quick settings to change the backlight, notification vibration and flash light
-- Charging notification
-- Low battery alert
-- Notifications, with app identification
-- Incoming call notification, you can cancel the call or silence
-- Backlight timeout select
-- Multi watch faces ( 4 )
-- Firmware update from android app
+ - Step counter is working
+ - Quick settings to change the backlight, notification vibration and flash light
+ - Charging notification
+ - Low battery alert
+ - Notifications, with app identification
+ - Incoming call notification
+ - Backlight timeout config
+ - Screen wake up on double tap or single tap
+ - Screen sleep on double tap
+ - Multi watch faces ( 6 )
+ - Firmware update
+ - Settings saved to external flash
+ - External resources, images and icons, are now in the external flash
+ - Web app for update Resources and Firmware
+
+### <span style="color:red">The 0.3.0 version removes the compatibility with Nordic DFU to update the firmware.</span>
 
 ## Companion app (development is in progress):
  - [Gadgetbridge](https://codeberg.org/joaquimorg/GadgetbridgePinetimeLite) (on Android)
+ <i>Do not use to update firmware or resources in version 0.3.0</i>
+ - [PinetimeLiteApp](https://home.joaquim.org/pinetime/) (on web browser)
+ Compatible with version 0.3.0, it is possible with this application to set the clock, update resources and firmware.
+
 
 ## Licenses
 This project is released under the GNU General Public License version 3 or, at your option, any later version.

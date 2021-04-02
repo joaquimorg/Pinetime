@@ -12,6 +12,7 @@
 
 #include "components/settings/Settings.h"
 #include "components/battery/BatteryController.h"
+#include "components/brightness/BrightnessController.h"
 #include "components/motor/Motor.h"
 #include "components/ble/BleController.h"
 #include "components/ble/NimbleController.h"
@@ -41,7 +42,7 @@ namespace Pinetime {
   namespace System {
     class SystemTask {
       public:
-        enum class Messages {WakeUp, GoToSleep, OnNewNotification, OnNewCall, BleConnected,
+        enum class Messages {PowerOFF, WakeUp, GoToSleep, OnNewNotification, OnNewCall, BleConnected,
             BleFirmwareUpdateStarted, BleFirmwareUpdateFinished, OnTouchEvent, OnStepEvent, OnButtonEvent, OnDisplayTaskSleeping,
             ReloadIdleTimer, EnableSleeping, DisableSleeping, UpdateTimeOut, OnResourceUpdateStart, OnResourceUpdateEnd
         };
@@ -95,6 +96,7 @@ namespace Pinetime {
         Pinetime::Controllers::FS fs;
         Controllers::NimbleController nimbleController;
         Pinetime::Controllers::Motor vrMotor;
+        Controllers::BrightnessController brightnessController;
 
         QueueHandle_t systemTasksMsgQueue;
 

@@ -48,7 +48,22 @@ using namespace Pinetime::Controllers;
 
 FS::FS(Pinetime::Drivers::SpiNorFlash &spiNorFlash) : spiNorFlash{spiNorFlash} {}
 
+void FS::VerifyResource() {
+    uint8_t buffer[16];
+    spiNorFlash.Read( FS_HEADER, buffer, 16 );
+
+    if ( (buffer[0] == 0xAA and buffer[1] == 0x52) and 
+        // File version
+        (buffer[11] == 0x00 and buffer[12] == 0x01) ) {        
+        fsValid = true;
+    } else {
+        fsValid = false;
+    }
+}
+
 void FS::FileOpen(void* file_p, uint8_t *fileName) {
+
+    if ( !fsValid ) return;
 
     file_s currFile;
 
@@ -90,6 +105,7 @@ void FS::FileClose(void* file_p) {
 
 
 void FS::FileRead(void* file_p, uint8_t *buff, uint32_t size) {
+    if ( !fsValid ) return;
     file_t* file = static_cast<file_t *>(file_p);
 
     // Fix for erro reading more than 240 bytes from flash ....
@@ -106,6 +122,7 @@ void FS::FileRead(void* file_p, uint8_t *buff, uint32_t size) {
 }
 
 void FS::FileSeek(void* file_p, uint32_t pos) {
+    if ( !fsValid ) return;
 
     file_t* file = static_cast<file_t *>(file_p);
   
@@ -148,6 +165,8 @@ lv_fs_res_t FSSeek(lv_fs_drv_t* drv, void* file_p, uint32_t pos) {
 
 
 void FS::LVGLFileSystemInit() {
+    
+    if ( !fsValid ) return;
     lv_fs_drv_t fs_drv;
     lv_fs_drv_init(&fs_drv);
 

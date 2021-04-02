@@ -1,7 +1,7 @@
 #pragma once
 
 // Resource version
-#define RESOURCE_VERION 1.0.1
+#define RESOURCE_VERION 1.0.2
 
 #define FNT_CLOCK_42            "F:/lv_font_clock_42.bin"
 #define FNT_CLOCK_76            "F:/lv_font_clock_76.bin"

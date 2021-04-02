@@ -24,8 +24,6 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   settingsController.SetClockFace(4 + imgnum);
   settingsController.SaveSettings();
 
-  clock_76 = lv_font_load(FNT_CLOCK_76);
-
   sHour = 99;
   sMinute = 99;
   sSecond = 99;
@@ -48,7 +46,7 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
 
   // Hour  
   lv_style_init(&hour_style);
-  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, clock_76);
+  lv_style_set_text_font(&hour_style, LV_STATE_DEFAULT, &lv_font_clock_76);
   lv_style_set_text_color(&hour_style, LV_STATE_DEFAULT, lv_color_hex(0xFFFFFF));
 
   label_time = lv_label_create(lv_scr_act(), NULL);
@@ -66,7 +64,7 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
   // :  
   label_time_sep = lv_label_create(lv_scr_act(), NULL);
   lv_obj_add_style(label_time_sep, LV_LABEL_PART_MAIN, &hour_style);
-  lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, 0, -60);
+  lv_obj_align(label_time_sep, lv_scr_act(), LV_ALIGN_CENTER, -6, -60);
   
 
   label_date = lv_label_create(lv_scr_act(), nullptr);
@@ -89,7 +87,6 @@ WatchFaceCustom::~WatchFaceCustom() {
   lv_task_del(taskUpdate);
   lv_obj_clean(lv_scr_act());
   lv_style_reset(&hour_style);
-  lv_font_free(clock_76);
   
 }
 
@@ -132,8 +129,8 @@ void WatchFaceCustom::UpdateScreen() {
       lv_obj_align(label_time_am_pm, label_time, LV_ALIGN_OUT_LEFT_MID, 0, 0);
       lv_label_set_align( label_time_am_pm, LV_LABEL_ALIGN_CENTER );
     } else {
-      lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -55, -60);
       lv_label_set_text_fmt(label_time, "%02i", hour);
+      lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, -50, -60);
     }
 
   }

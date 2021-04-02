@@ -11,8 +11,12 @@ FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime
   titleLabel = lv_label_create(lv_scr_act(), nullptr);
   if ( bleController.FWType() == Pinetime::Controllers::Ble::FirmwareType::FW ) {
     lv_label_set_text_static(titleLabel, "Firmware update");
-  } else {
+  } else if ( bleController.FWType() == Pinetime::Controllers::Ble::FirmwareType::RES ) {
     lv_label_set_text_static(titleLabel, "Resource update");
+  } else if ( bleController.FWType() == Pinetime::Controllers::Ble::FirmwareType::BOT ) {
+    lv_label_set_text_static(titleLabel, "Bootloader update");
+  } else {
+    lv_label_set_text_static(titleLabel, "Update");
   }
   lv_obj_set_auto_realign(titleLabel, true);
   lv_obj_align(titleLabel, nullptr, LV_ALIGN_IN_TOP_MID, 0, 50);
