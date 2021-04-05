@@ -52,7 +52,6 @@ namespace Pinetime {
           uint8_t minutes;
           int8_t batteryPercent = -1;
           
-
           lv_obj_t * iconsApps[4];
           lv_obj_t * iconsAppsLabel[4];
 

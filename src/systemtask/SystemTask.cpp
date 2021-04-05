@@ -81,40 +81,28 @@ void SystemTask::Work() {
   
   APP_GPIOTE_INIT(6);
 
+  vrMotor.Init();
+  
   twiMaster.Init();
+  accelerometer.Init();
   spi.Init();
   lcd.Init();
   
   brightnessController.Init();
-  brightnessController.Set(Controllers::BrightnessController::Levels::Low);
-  
-  /* Init Message */
-  lv_obj_t * initMessage = lv_label_create(lv_scr_act(), nullptr);
-  lv_label_set_text_fmt(initMessage, "PineTime Lite OS\n%ld.%ld.%ld", Version::Major(), Version::Minor(), Version::Patch());
-  lv_obj_align(initMessage, NULL, LV_ALIGN_CENTER, 0, 0);
-  lv_label_set_align(initMessage, LV_LABEL_ALIGN_CENTER);
-  lv_task_handler();
-  
-  watchdog.Kick();
   spiNorFlash.Init();
-  spiNorFlash.Wakeup();
-  watchdog.Kick();
+  spiNorFlash.Wakeup();  
   
   fs.VerifyResource();
-
   fs.LVGLFileSystemInit();
   
-  touchPanel.Init();  
-  watchdog.Kick();
+  touchPanel.Init();
   settingsController.Init();  
   
-  watchdog.Kick();
   batteryController.Init();
   batteryController.Update();
-  watchdog.Kick();
+
   nimbleController.Init();
-  nimbleController.StartAdvertising();  
-  watchdog.Kick();
+  nimbleController.StartAdvertising();
 
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
@@ -179,11 +167,10 @@ void SystemTask::Work() {
       dateTimeController, watchdogView, settingsController, accelerometer, brightnessController,
       *this, notificationManager, callNotificationManager);
       
-  displayApp->Start();
-  
-  accelerometer.Init();
+  watchdog.Kick();
+  displayApp->Start();  
 
-  vrMotor.Init();
+  accelerometer.Config();  
   
   // Suppress endless loop diagnostic
   #pragma clang diagnostic push
@@ -212,7 +199,8 @@ void SystemTask::Work() {
           nimbleController.StartAdvertising();
           
           spiNorFlash.Wakeup();
-          if ( settingsController.getWakeUpTap() != Pinetime::Drivers::Cst816S::Gestures::DoubleTap ) {
+          // Double Tap needs the touch screen to be in normal mode
+          if ( settingsController.getWakeUpMode() != Pinetime::Controllers::Settings::WakeUpMode::DoubleTap ) {
             touchPanel.Wakeup();
           }
           lcd.Wakeup();
@@ -228,6 +216,21 @@ void SystemTask::Work() {
           xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareTime), 0);
 
         break;
+        case Messages::TouchWakeUp: {
+          auto touchInfo = touchPanel.GetTouchInfo();
+          if( touchInfo.isTouch and 
+              (
+                ( touchInfo.gesture == Pinetime::Drivers::Cst816S::Gestures::DoubleTap and 
+                  settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::DoubleTap 
+                ) or
+                ( touchInfo.gesture == Pinetime::Drivers::Cst816S::Gestures::SingleTap and 
+                  settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::SingleTap
+                )
+              )
+            ) {
+            WakeUp();
+          }
+        } break;
         case Messages::GoToSleep:
           isGoingToSleep = true;
           //NRF_LOG_INFO("[systemtask] Going to sleep");
@@ -297,7 +300,9 @@ void SystemTask::Work() {
             spiNorFlash.Sleep();
           }
           lcd.Sleep();
-          if ( settingsController.getWakeUpTap() != Pinetime::Drivers::Cst816S::Gestures::DoubleTap ) {
+
+          // Double Tap needs the touch screen to be in normal mode
+          if ( settingsController.getWakeUpMode() != Pinetime::Controllers::Settings::WakeUpMode::DoubleTap ) {
             touchPanel.Sleep();
           }
           //accelerometer.Sleep();
@@ -372,17 +377,14 @@ void SystemTask::WakeUp() {
 }
 
 void SystemTask::OnTouchEvent() {
-  if(isGoingToSleep) return ;
-  //NRF_LOG_INFO("[systemtask] Touch event");
+   if(isGoingToSleep) return ;
   if(!isSleeping) {
     PushMessage(Messages::OnTouchEvent);
-    displayApp->PushMessage(Applications::DisplayApp::Messages::TouchEvent);
+    displayApp->PushMessage(Pinetime::Applications::DisplayApp::Messages::TouchEvent);
   } else if(!isWakingUp) {
-    if ( settingsController.getWakeUpTap() == Pinetime::Drivers::Cst816S::Gestures::None ) return;
-    auto info = touchPanel.GetTouchInfo();
-    if( info.isTouch && info.gesture == settingsController.getWakeUpTap() ) {
-      WakeUp();
-    }
+    if( settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::None or 
+          settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::RaiseWrist ) return;
+    PushMessage(Messages::TouchWakeUp);
   }
 }
 

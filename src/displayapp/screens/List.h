@@ -5,7 +5,6 @@
 #include <memory>
 #include "Screen.h"
 #include "../Apps.h"
-#include "components/datetime/DateTimeController.h"
 #include "components/settings/Settings.h"
 
 #define MAXLISTITEMS 4
@@ -22,8 +21,7 @@ namespace Pinetime {
           };
 
           explicit List(uint8_t screenID, uint8_t numScreens,
-              DisplayApp* app, 
-              Controllers::DateTime& dateTimeController,
+              DisplayApp* app,
               Controllers::Settings& settingsController, 
               std::array<Applications, MAXLISTITEMS>& applications);
           ~List() override;
@@ -35,19 +33,8 @@ namespace Pinetime {
 
         private:
 
-          Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
           Pinetime::Applications::Apps apps[MAXLISTITEMS];
-
-          DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
-
-          lv_obj_t * label_time;
-          
-          uint8_t oldHours = 0;
-          uint8_t oldMinutes = 0;
-          uint8_t hours;
-          uint8_t minutes;
-
 
           lv_obj_t * itemApps[MAXLISTITEMS];
 

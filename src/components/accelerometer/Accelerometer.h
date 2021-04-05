@@ -21,6 +21,7 @@ namespace Pinetime {
             //char* status;
 
             void Init();
+            void Config();
             void Update();
 
             void Wakeup();

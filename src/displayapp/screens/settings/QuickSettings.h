@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <FreeRTOS.h>
 #include <timers.h>
-#include "Screen.h"
+#include "displayapp/screens/Screen.h"
 #include <lvgl/lvgl.h>
 #include "components/datetime/DateTimeController.h"
 #include "components/brightness/BrightnessController.h"
@@ -50,14 +50,6 @@ namespace Pinetime {
           lv_obj_t * btn3;
           lv_obj_t * btn3_lvl;
           lv_obj_t * btn4;
-          
-          uint8_t oldHours = 0;
-          uint8_t oldMinutes = 0;
-          uint8_t hours;
-          uint8_t minutes;
-          
-          int8_t batteryPercent = -1;
-
 
       };
     }

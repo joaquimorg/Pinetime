@@ -14,11 +14,11 @@ namespace {
 
   }
 
-}
+  static void lv_update_task(struct _lv_task_t *task) {  
+    auto user_data = static_cast<Tile *>(task->user_data);
+    user_data->UpdateScreen();
+  }
 
-static void lv_update_task(struct _lv_task_t *task) {  
-  auto user_data = static_cast<Tile *>(task->user_data);
-  user_data->UpdateScreen();
 }
 
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};

@@ -4,39 +4,27 @@
 
 using namespace Pinetime::Applications::Screens;
 
-//namespace {
+namespace {
   static void ButtonEventHandler(lv_obj_t * obj, lv_event_t event) {
     List* screen = static_cast<List *>(obj->user_data);
     screen->OnButtonEvent(obj, event);
   }
 
-//}
+}
 
 List::List(uint8_t screenID, uint8_t numScreens,
     DisplayApp* app, 
-    Controllers::DateTime& dateTimeController, 
     Controllers::Settings &settingsController, 
     std::array<Applications, MAXLISTITEMS>& applications) : 
     Screen(app),
-    dateTimeController{dateTimeController},
-    settingsController{settingsController},
-    currentDateTime{{}}  
+    settingsController{settingsController}
 {
 
   // Set the background to Black
   lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_make(0, 0, 0));
 
   settingsController.SetSettingsMenu(screenID);
-  /*uint8_t hours = dateTimeController.Hours();
-  uint8_t minutes = dateTimeController.Minutes();
-  oldHours = hours;
-  oldMinutes = minutes;*/
 
-  // Time
-  /*label_time = lv_label_create(lv_scr_act(), nullptr);  
-  lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
-  lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_MID, 0, 4);*/
 
   if ( numScreens > 1 ) {
     pageIndicatorBasePoints[0].x = 240 - 3;
@@ -131,7 +119,7 @@ void List::OnButtonEvent(lv_obj_t * object, lv_event_t event) {
   if ( event == LV_EVENT_RELEASED ) {
     for(int i = 0; i < MAXLISTITEMS; i++) {
       if ( apps[i] != Apps::None && object == itemApps[i] ) {
-        app->StartApp(apps[i], DisplayApp::FullRefreshDirections::None);
+        app->StartApp(apps[i], DisplayApp::FullRefreshDirections::Down);
         running = false;
         return;
       }

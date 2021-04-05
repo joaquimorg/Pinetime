@@ -80,7 +80,11 @@ set(SDK_SOURCE_FILES
         ${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf_format.c
 
         # TWI
+        ${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_twi.c
         ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi.c
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twim.c
+        ${NRF5_SDK_PATH}/components/libraries/queue/nrf_queue.c
+        ${NRF5_SDK_PATH}/components/libraries/twi_mngr/nrf_twi_mngr.c
 
         # GPIOTE
         ${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c
@@ -425,17 +429,17 @@ list(APPEND SOURCE_FILES
         displayapp/screens/FirmwareUpdate.cpp
         displayapp/screens/FirmwareValidation.cpp
         displayapp/screens/ApplicationList.cpp
-        displayapp/screens/Notifications.cpp     
-        displayapp/screens/QuickSettings.cpp   
+        displayapp/screens/Notifications.cpp
         displayapp/screens/FlashLight.cpp
         displayapp/screens/Weather.cpp
 
-        displayapp/screens/Settings.cpp
-        displayapp/screens/SettingDisplay.cpp
-        displayapp/screens/SettingTimeFormat.cpp
-        displayapp/screens/SettingWatchFace.cpp
-        displayapp/screens/SettingSteps.cpp
-        displayapp/screens/SettingWakeUp.cpp
+        displayapp/screens/settings/QuickSettings.cpp   
+        displayapp/screens/settings/Settings.cpp
+        displayapp/screens/settings/SettingDisplay.cpp
+        displayapp/screens/settings/SettingTimeFormat.cpp
+        displayapp/screens/settings/SettingWatchFace.cpp
+        displayapp/screens/settings/SettingSteps.cpp
+        displayapp/screens/settings/SettingWakeUp.cpp
 
         #Watch Faces
         displayapp/screens/WatchFaceDigital.cpp
@@ -604,6 +608,7 @@ include_directories(
         ${NRF5_SDK_PATH}/components/libraries/strerror
         ${NRF5_SDK_PATH}/components/libraries/svc
         ${NRF5_SDK_PATH}/components/libraries/timer
+        ${NRF5_SDK_PATH}/components/libraries/twi_mngr
         ${NRF5_SDK_PATH}/components/libraries/usbd
         ${NRF5_SDK_PATH}/components/libraries/usbd/class/audio
         ${NRF5_SDK_PATH}/components/libraries/usbd/class/cdc

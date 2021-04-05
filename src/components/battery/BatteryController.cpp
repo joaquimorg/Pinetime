@@ -1,60 +1,37 @@
-#include <math.h>
 #include "BatteryController.h"
 #include <hal/nrf_gpio.h>
-#include <libraries/gpiote/app_gpiote.h>
+#include <nrfx_saadc.h>
 #include <libraries/log/nrf_log.h>
 #include <algorithm>
-#include "board_config.h"
-#include "main.h"
+#include <math.h>
 
 using namespace Pinetime::Controllers;
 
-#define SAMPLES_IN_BUFFER 1
-static nrf_saadc_value_t m_buffer_pool[2][SAMPLES_IN_BUFFER];
+Battery *Battery::instance = nullptr;
 
-float voltage = 0.0f;
-int8_t percentRemaining = -1;
+Battery::Battery() {
+  instance = this;
+}
 
 void Battery::Init() {
+  nrf_gpio_cfg_input(chargingPin, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+  nrf_gpio_cfg_input(powerPresentPin, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+}
 
-  //nrf_gpio_cfg_input(CHARGE_BASE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
+void Battery::Update() {
 
-  //nrfx_gpiote_in_config_t pinConfig;
-
-  // POWER PRESENCE INDICATION IRQ
-  nrf_gpio_cfg_sense_input(CHARGE_BASE_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
-
-  static nrfx_gpiote_in_config_t const pinConfig = {
-      .sense = NRF_GPIOTE_POLARITY_TOGGLE,
-      .pull = NRF_GPIO_PIN_PULLUP,
-      .is_watcher = false,
-      .hi_accuracy = false,
-      .skip_gpio_setup = true,
-    };
+  isCharging = !nrf_gpio_pin_read(chargingPin);
+  isPowerPresent = !nrf_gpio_pin_read(powerPresentPin);
   
-  nrfx_gpiote_in_init(CHARGE_BASE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
-  //
-
-  // CHARGE INDICATION IRQ
-  // Need to find how to handle this
-  // TO DO
-  nrf_gpio_cfg_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup);
-  /*nrf_gpio_cfg_sense_input(CHARGE_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
-
-  pinConfig.skip_gpio_setup = true;
-  pinConfig.hi_accuracy = false;
-  pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
-
-  nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
-  //
-
+  // Non blocking read
+  SaadcInit();
+  nrfx_saadc_sample();
+  
 }
 
 void Battery::SaadcInit() {
   nrfx_saadc_config_t adcConfig = NRFX_SAADC_DEFAULT_CONFIG;
-  APP_ERROR_CHECK(nrfx_saadc_init(&adcConfig, SaadcEventHandler));
+  APP_ERROR_CHECK(nrfx_saadc_init(&adcConfig, adcCallbackStatic));
 
   nrf_saadc_channel_config_t adcChannelConfig = {
           .resistor_p = NRF_SAADC_RESISTOR_DISABLED,
@@ -64,65 +41,40 @@ void Battery::SaadcInit() {
           .acq_time   = NRF_SAADC_ACQTIME_3US,
           .mode       = NRF_SAADC_MODE_SINGLE_ENDED,
           .burst      = NRF_SAADC_BURST_ENABLED,
-          .pin_p      = BATTERY_VOL,
+          .pin_p      = batteryVoltageAdcInput,
           .pin_n      = NRF_SAADC_INPUT_DISABLED
   };
   APP_ERROR_CHECK(nrfx_saadc_channel_init(0, &adcChannelConfig));
+  APP_ERROR_CHECK(nrfx_saadc_buffer_convert(&saadc_value, 1));
 
-  APP_ERROR_CHECK(nrfx_saadc_buffer_convert(m_buffer_pool[0],SAMPLES_IN_BUFFER));
-
-  APP_ERROR_CHECK(nrfx_saadc_buffer_convert(m_buffer_pool[1],SAMPLES_IN_BUFFER));
-}
-
-void Battery::Update() {
-
-  isCharging = !nrf_gpio_pin_read(CHARGE_IRQ);
-  
-  //isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
-
-  // Non blocking read
-  SaadcInit();
-  
-  nrfx_saadc_sample();
-  
 }
 
 void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
 
-  int avg_sample = 0;
-  int i;
+    const float battery_max = 4.18; // maximum voltage of battery ( max charging voltage is 4.21 )
+    const float battery_min = 3.20; // minimum voltage of battery before shutdown ( depends on the battery )
 
-  const float battery_max = 4.20; //maximum voltage of battery
-  const float battery_min = 3.10;  //minimum voltage of battery before shutdown
+    if (p_event->type == NRFX_SAADC_EVT_DONE) {
+      
+      APP_ERROR_CHECK(nrfx_saadc_buffer_convert(&saadc_value, 1));
 
-  if (p_event->type == NRFX_SAADC_EVT_DONE) {
-    
-    APP_ERROR_CHECK(nrfx_saadc_buffer_convert(p_event->data.done.p_buffer, SAMPLES_IN_BUFFER));
+      voltage = (static_cast<float>(p_event->data.done.p_buffer[0]) * 2.04f) / (1024 / 3.0f);
+      voltage = roundf(voltage * 100) / 100;
 
-    for (i = 0; i < SAMPLES_IN_BUFFER; i++) {
-      avg_sample += p_event->data.done.p_buffer[i]; // take N samples in a row
+      percentRemaining = static_cast<int>(((voltage - battery_min) / (battery_max - battery_min)) * 100);
+
+      percentRemaining = std::max(percentRemaining, 0);
+      percentRemaining = std::min(percentRemaining, 100);
+
+      nrfx_saadc_uninit();
     }
-    avg_sample /= i; // average all the samples out
-
-    voltage = (static_cast<float>(avg_sample) * 2.04f) / (1024 / 3.0f);
-    voltage = roundf(voltage * 100) / 100;
-
-    percentRemaining = static_cast<int>(((voltage - battery_min) / (battery_max - battery_min)) * 100);
-
-    if (percentRemaining > 100) {
-        percentRemaining = 100;    
-    }
-    if (percentRemaining < 0) {
-        percentRemaining = 0;    
-    }
-
-    nrfx_saadc_uninit();
-
   }
+
+void Battery::adcCallbackStatic(nrfx_saadc_evt_t const *event) {
+    instance->SaadcEventHandler(event);
 }
 
-
-int8_t Battery::PercentRemaining() {
+int Battery::PercentRemaining() {
   return percentRemaining;
 }
 

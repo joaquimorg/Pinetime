@@ -14,9 +14,6 @@ struct SettingsHeader {
 
 #define HEADER_SIZE sizeof(SettingsHeader)
 
-// TODO (team): 
-// Read and write the settings to Flash
-//
 Settings::Settings( Pinetime::Drivers::SpiNorFlash &spiNorFlash ) : spiNorFlash{spiNorFlash} {}
 
 void Settings::Init() {

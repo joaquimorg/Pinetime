@@ -1,8 +1,7 @@
 #include "QuickSettings.h"
-#include "../DisplayApp.h"
-#include "board_config.h"
-#include "Symbols.h"
-#include "BatteryIcon.h"
+#include "displayapp/DisplayApp.h"
+#include "displayapp/screens/Symbols.h"
+#include "displayapp/screens/BatteryIcon.h"
 
 
 using namespace Pinetime::Applications::Screens;
@@ -35,21 +34,15 @@ QuickSettings::QuickSettings(
   settingsController{settingsController}
 {
 
-  batteryPercent = batteryController.PercentRemaining();
-  uint8_t hours = dateTimeController.Hours();
-  uint8_t minutes = dateTimeController.Minutes();
-  oldHours = hours;
-  oldMinutes = minutes;
-
   // Time
   label_time = lv_label_create(lv_scr_act(), NULL);  
-  lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
+  lv_label_set_text_fmt(label_time,  "%02i:%02i", dateTimeController.Hours(), dateTimeController.Minutes());      
   lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 15, 4);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
-  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
   lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_TOP_RIGHT, -15, 4);
   
 
@@ -131,20 +124,8 @@ QuickSettings::~QuickSettings() {
 }
 
 void QuickSettings::UpdateScreen() {
- 
-  batteryPercent = batteryController.PercentRemaining();
-
-  hours = dateTimeController.Hours();
-  minutes = dateTimeController.Minutes();
-    
-  if(oldHours != hours || oldMinutes != minutes) {
-    lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
-    oldHours = hours;
-    oldMinutes = minutes;
-  }
-
-  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));
- 
+  lv_label_set_text_fmt(label_time,  "%02i:%02i", dateTimeController.Hours(), dateTimeController.Minutes());
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
 }
 
 void QuickSettings::OnButtonEvent(lv_obj_t *object, lv_event_t event) {
@@ -182,7 +163,6 @@ bool QuickSettings::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
   switch (event) {
     case Pinetime::Applications::TouchEvents::SwipeLeft:
       running = false;
-      //app->StartApp(Apps::Clock, DisplayApp::FullRefreshDirections::None);
       return false;
 
     default:
@@ -191,6 +171,5 @@ bool QuickSettings::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
 }
 
 bool QuickSettings::Refresh() {
-  
   return running;
 }

@@ -17,17 +17,17 @@
 #include "displayapp/screens/IncomingCall.h"
 #include "displayapp/screens/About.h"
 #include "displayapp/screens/Tile.h"
-#include "displayapp/screens/QuickSettings.h"
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/Weather.h"
 
-#include "displayapp/screens/Settings.h"
-#include "displayapp/screens/SettingDisplay.h"
-#include "displayapp/screens/SettingTimeFormat.h"
-#include "displayapp/screens/SettingWatchFace.h"
-#include "displayapp/screens/SettingSteps.h"
-#include "displayapp/screens/SettingWakeUp.h"
+#include "displayapp/screens/settings/QuickSettings.h"
+#include "displayapp/screens/settings/Settings.h"
+#include "displayapp/screens/settings/SettingDisplay.h"
+#include "displayapp/screens/settings/SettingTimeFormat.h"
+#include "displayapp/screens/settings/SettingWatchFace.h"
+#include "displayapp/screens/settings/SettingSteps.h"
+#include "displayapp/screens/settings/SettingWakeUp.h"
 
 #include "drivers/Cst816s.h"
 #include "drivers/St7789.h"
@@ -238,56 +238,10 @@ void DisplayApp::Refresh() {
 void DisplayApp::RunningState() {
 
   if(!currentScreen->Refresh()) {
-
-    LoadApp( nextApp, nextDirection );
-    
-    nextApp = Apps::None;
-    nextDirection = DisplayApp::FullRefreshDirections::None;
+    LoadApp( returnToApp, returnDirection );
   }
 
   lv_task_handler();
-}
-
-void DisplayApp::IdleState() {
-
-}
-
-void DisplayApp::PushMessage(DisplayApp::Messages msg) {
-  BaseType_t xHigherPriorityTaskWoken;
-  xHigherPriorityTaskWoken = pdFALSE;
-  xQueueSendFromISR(msgQueue, &msg, &xHigherPriorityTaskWoken);
-  if (xHigherPriorityTaskWoken) {
-    /* Actual macro used here is port specific. */
-    // TODO : should I do something here?
-  }
-}
-
-TouchEvents DisplayApp::OnTouchEvent() {
-  auto info = touchPanel.GetTouchInfo();
-  if(info.isTouch) {
-    switch(info.gesture) {
-      case Pinetime::Drivers::Cst816S::Gestures::SingleTap:
-        if(touchMode == TouchModes::Gestures)
-          lvgl.SetNewTapEvent(info.x, info.y);
-        return TouchEvents::Tap;
-      case Pinetime::Drivers::Cst816S::Gestures::LongPress:
-        return TouchEvents::LongTap;
-      case Pinetime::Drivers::Cst816S::Gestures::DoubleTap:
-        return TouchEvents::DoubleTap;
-      case Pinetime::Drivers::Cst816S::Gestures::SlideRight:
-        return TouchEvents::SwipeRight;
-      case Pinetime::Drivers::Cst816S::Gestures::SlideLeft:
-        return TouchEvents::SwipeLeft;
-      case Pinetime::Drivers::Cst816S::Gestures::SlideDown:
-        return TouchEvents::SwipeDown;
-      case Pinetime::Drivers::Cst816S::Gestures::SlideUp:
-        return TouchEvents::SwipeUp;
-      case Pinetime::Drivers::Cst816S::Gestures::None:
-      default:
-        return TouchEvents::None;
-    }
-  }
-  return TouchEvents::None;
 }
 
 void DisplayApp::returnApp(Apps app, DisplayApp::FullRefreshDirections direction, TouchEvents touchEvent) {
@@ -297,8 +251,7 @@ void DisplayApp::returnApp(Apps app, DisplayApp::FullRefreshDirections direction
 }
 
 void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction) {
-  nextApp = app;
-  nextDirection = direction;
+  LoadApp( app, direction );
 }
 
 void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) {
@@ -306,12 +259,6 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
   currentScreen.reset(nullptr);
   
   SetFullRefresh( direction );
-
-  /*
-  if ( currentApp != app ) {
-    returnApp(currentApp, currentDirection, TouchEvents::None);
-  }
-  */
 
   switch(app) {
       case Apps::Launcher: 
@@ -350,7 +297,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
 
       // -----------------------------------------------------------------------------------------------------------------------------------------
       case Apps::Settings: 
-        currentScreen = std::make_unique<Screens::Settings>(this, batteryController, dateTimeController, settingsController);
+        currentScreen = std::make_unique<Screens::Settings>(this, settingsController);
         returnApp(Apps::QuickSettings, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
 
@@ -416,7 +363,48 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
     }
         
     currentApp = app;
-    currentDirection = direction;
+}
+
+void DisplayApp::IdleState() {
+
+}
+
+void DisplayApp::PushMessage(DisplayApp::Messages msg) {
+  BaseType_t xHigherPriorityTaskWoken;
+  xHigherPriorityTaskWoken = pdFALSE;
+  xQueueSendFromISR(msgQueue, &msg, &xHigherPriorityTaskWoken);
+  if (xHigherPriorityTaskWoken) {
+    /* Actual macro used here is port specific. */
+    // TODO : should I do something here?
+  }
+}
+
+TouchEvents DisplayApp::OnTouchEvent() {
+  auto info = touchPanel.GetTouchInfo();
+  if(info.isTouch) {
+    switch(info.gesture) {
+      case Pinetime::Drivers::Cst816S::Gestures::SingleTap:
+        if(touchMode == TouchModes::Gestures)
+          lvgl.SetNewTapEvent(info.x, info.y);
+        return TouchEvents::Tap;
+      case Pinetime::Drivers::Cst816S::Gestures::LongPress:
+        return TouchEvents::LongTap;
+      case Pinetime::Drivers::Cst816S::Gestures::DoubleTap:
+        return TouchEvents::DoubleTap;
+      case Pinetime::Drivers::Cst816S::Gestures::SlideRight:
+        return TouchEvents::SwipeRight;
+      case Pinetime::Drivers::Cst816S::Gestures::SlideLeft:
+        return TouchEvents::SwipeLeft;
+      case Pinetime::Drivers::Cst816S::Gestures::SlideDown:
+        return TouchEvents::SwipeDown;
+      case Pinetime::Drivers::Cst816S::Gestures::SlideUp:
+        return TouchEvents::SwipeUp;
+      case Pinetime::Drivers::Cst816S::Gestures::None:
+      default:
+        return TouchEvents::None;
+    }
+  }
+  return TouchEvents::None;
 }
 
 void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {

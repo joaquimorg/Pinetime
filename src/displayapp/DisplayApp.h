@@ -89,12 +89,8 @@ namespace Pinetime {
         QueueHandle_t msgQueue;
         static constexpr uint8_t queueSize = 10;
         static constexpr uint8_t itemSize = 1;
-        
-        Apps nextApp = Apps::None;
-        FullRefreshDirections nextDirection = FullRefreshDirections::None;
 
         Apps currentApp = Apps::None;
-        FullRefreshDirections currentDirection = FullRefreshDirections::None;
 
         Apps returnToApp = Apps::None;
         FullRefreshDirections returnDirection = FullRefreshDirections::None;

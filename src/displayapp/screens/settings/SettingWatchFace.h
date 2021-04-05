@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <lvgl/lvgl.h>
 #include "components/settings/Settings.h"
-#include "Screen.h"
+#include "displayapp/screens/Screen.h"
 
 namespace Pinetime {
 
@@ -21,8 +21,8 @@ namespace Pinetime {
         private:          
 
           Controllers::Settings& settingsController;
-
-          lv_obj_t * cbTimeOut[5];
+          uint8_t optionsTotal;
+          lv_obj_t * cbOption[5];
           
       };
     }

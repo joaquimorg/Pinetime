@@ -35,10 +35,6 @@ Accelerometer::Accelerometer(Pinetime::Drivers::TwiMaster &twiMaster) : twiMaste
 
 void Accelerometer::Init() {
 
-    struct bma4_int_pin_config pinConfig;
-
-    deviceReady = false;    
-
     bma.intf = BMA4_I2C_INTF;
     //dev_addr = BMA4_I2C_ADDR_PRIMARY;
     bma.bus_read = user_i2c_read;
@@ -49,7 +45,10 @@ void Accelerometer::Init() {
     bma.read_write_len = 8;
 
     /* Sensor initialization */
-    bma421_init(&bma);
+    int8_t rslt;
+
+    rslt = bma421_init(&bma);
+
     //nrf_delay_us(50);
     vTaskDelay(50);
 
@@ -59,11 +58,22 @@ void Accelerometer::Init() {
     vTaskDelay(50);
     //bma4_set_advance_power_save(BMA4_DISABLE, &bma);    
 
+    deviceReady = true;
     /* Upload the configuration file to enable the features of the sensor. */
-    bma421_write_config_file(&bma);
+    rslt = bma421_write_config_file(&bma);
+    if ( rslt != BMA4_OK ) {
+      nrf_delay_us(100);
+      deviceReady = false;
+    }
     //nrf_delay_us(100);
     vTaskDelay(50);
 
+    
+}
+
+void Accelerometer::Config() {
+    struct bma4_int_pin_config pinConfig;
+    if ( !deviceReady ) return;
     /* Enable the accelerometer */
     bma4_set_accel_enable(BMA4_ENABLE, &bma);
     vTaskDelay(50);
@@ -94,8 +104,7 @@ void Accelerometer::Init() {
 
     /* Interrupt Mapping */    
     bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT , BMA4_ENABLE, &bma);
-
-    deviceReady = true;
+   
 }
 
 void Accelerometer::Wakeup() {

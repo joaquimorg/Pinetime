@@ -3,17 +3,18 @@
 #include <cstdint>
 #include <lvgl/lvgl.h>
 #include "components/settings/Settings.h"
-#include "Screen.h"
+#include "displayapp/screens/Screen.h"
+
 
 namespace Pinetime {
 
   namespace Applications {
     namespace Screens {
 
-      class SettingSteps : public Screen{
+      class SettingDisplay : public Screen{
         public:
-          SettingSteps(DisplayApp* app, Pinetime::Controllers::Settings &settingsController);
-          ~SettingSteps() override;
+          SettingDisplay(DisplayApp* app, Pinetime::Controllers::Settings &settingsController);
+          ~SettingDisplay() override;
 
           bool Refresh() override;
           void UpdateSelected(lv_obj_t *object, lv_event_t event);
@@ -21,10 +22,8 @@ namespace Pinetime {
         private:          
 
           Controllers::Settings& settingsController;
-
-          lv_obj_t * stepValue;
-          lv_obj_t * btnPlus;
-          lv_obj_t * btnMinus;
+          uint8_t optionsTotal;
+          lv_obj_t * cbOption[5];
           
       };
     }

@@ -1,8 +1,8 @@
 #pragma once
 
 #include <cstdint>
-#include "Screen.h"
-#include "ScreenList.h"
+#include "displayapp/screens/Screen.h"
+#include "displayapp/screens/ScreenList.h"
 
 namespace Pinetime {
 
@@ -13,8 +13,6 @@ namespace Pinetime {
       class Settings : public Screen{
         public:
           Settings(DisplayApp* app, 
-          Controllers::Battery& batteryController,
-          Pinetime::Controllers::DateTime& dateTimeController,
           Pinetime::Controllers::Settings &settingsController);
           ~Settings() override;
 
@@ -24,9 +22,6 @@ namespace Pinetime {
           bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
 
         private:          
-
-          Controllers::Battery& batteryController;
-          Controllers::DateTime& dateTimeController;
           Controllers::Settings& settingsController;
           
           ScreenList<2> screens;

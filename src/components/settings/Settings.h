@@ -5,7 +5,6 @@
 #include "components/accelerometer/Accelerometer.h"
 #include "components/brightness/BrightnessController.h"
 #include "drivers/SpiNorFlash.h"
-#include "drivers/Cst816s.h"
 
 namespace Pinetime {
   namespace Controllers {
@@ -21,6 +20,7 @@ namespace Pinetime {
         
         enum class ClockType {H24, H12};
         enum class Vibration {ON, OFF};
+        enum class WakeUpMode {None, SingleTap, DoubleTap, RaiseWrist};
 
         Settings( Pinetime::Drivers::SpiNorFlash &spiNorFlash );
 
@@ -32,7 +32,6 @@ namespace Pinetime {
           if ( face != settings.clockFace ) settingsChanged = true;
           settings.clockFace = face; 
         };
-
         uint8_t GetClockFace() const { return settings.clockFace; };
 
         void SetAppMenu( uint8_t menu ) { appMenu = menu; };
@@ -45,44 +44,38 @@ namespace Pinetime {
           if ( clocktype != settings.clockType ) settingsChanged = true;
           settings.clockType = clocktype; 
         };
-
         ClockType GetClockType() const { return settings.clockType; };
 
         void SetStepsGoal( uint32_t goal ) { 
           if ( goal != settings.stepsGoal ) settingsChanged = true;
           settings.stepsGoal = goal; 
         };
-
         uint32_t GetStepsGoal() const { return settings.stepsGoal; };
 
         void SetVibrationStatus( Vibration status ) { 
           if ( status != settings.vibrationStatus ) settingsChanged = true;
           settings.vibrationStatus = status; 
         };
-
         Vibration GetVibrationStatus() const { return settings.vibrationStatus; };
 
         void SetScreenTimeOut( uint32_t timeout ) { 
           if ( timeout != settings.screenTimeOut ) settingsChanged = true;
           settings.screenTimeOut = timeout; 
         };
-
         uint32_t GetScreenTimeOut() const { return settings.screenTimeOut; };
 
         void SetHistorySteps( Accelerometer steps, DateTime date );
 
-        Pinetime::Drivers::Cst816S::Gestures getWakeUpTap() const { return settings.wakeUpTap; };
-
-        void setWakeUpTap( Pinetime::Drivers::Cst816S::Gestures wakeUp ) { 
-          if ( wakeUp != settings.wakeUpTap ) settingsChanged = true;
-          settings.wakeUpTap = wakeUp; 
+        void setWakeUpMode( WakeUpMode wakeUp ) { 
+          if ( wakeUp != settings.wakeUpMode ) settingsChanged = true;
+          settings.wakeUpMode = wakeUp; 
         };
+        WakeUpMode getWakeUpMode() const { return settings.wakeUpMode; };
 
         void SetBrightness( Controllers::BrightnessController::Levels level ) { 
           if ( level != settings.brightLevel ) settingsChanged = true;
           settings.brightLevel = level; 
         };
-
         Controllers::BrightnessController::Levels GetBrightness() const { return settings.brightLevel; };
 
         uint8_t getSettingsBlock() const { return settingsFlashBlock; };
@@ -100,7 +93,7 @@ namespace Pinetime {
           uint32_t stepsGoal = 1000;
           uint32_t screenTimeOut = 15000;
 
-          Pinetime::Drivers::Cst816S::Gestures wakeUpTap = Pinetime::Drivers::Cst816S::Gestures::None;
+          WakeUpMode wakeUpMode = WakeUpMode::None;
 
           Controllers::BrightnessController::Levels brightLevel = Controllers::BrightnessController::Levels::Medium;
 

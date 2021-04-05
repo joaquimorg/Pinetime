@@ -1,7 +1,8 @@
 #include "SettingWatchFace.h"
 #include <lvgl/lvgl.h>
-#include "../DisplayApp.h"
-#include "Symbols.h"
+#include "displayapp/DisplayApp.h"
+#include "displayapp/screens/Screen.h"
+#include "displayapp/screens/Symbols.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -46,47 +47,47 @@ SettingWatchFace::SettingWatchFace(
   lv_label_set_align(icon, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(icon, title, LV_ALIGN_OUT_LEFT_MID, -10, 0);
 
-  
-  cbTimeOut[0] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[0], "\tDigital face");
-  cbTimeOut[0]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[0], event_handler);  
+  optionsTotal = 0;
+  cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tDigital face");
+  cbOption[optionsTotal]->user_data = this;
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);  
   if (settingsController.GetClockFace() == 0 ) {
-    lv_checkbox_set_checked(cbTimeOut[0], true);
+    lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
-
-  cbTimeOut[1] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[1], "\tAnalog face");
-  cbTimeOut[1]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[1], event_handler);  
+  optionsTotal++;
+  cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tAnalog face");
+  cbOption[optionsTotal]->user_data = this;
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);  
   if (settingsController.GetClockFace() == 1 ) {
-    lv_checkbox_set_checked(cbTimeOut[1], true);
+    lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
-
-  cbTimeOut[2] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[2], "\tBig circle face");
-  cbTimeOut[2]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[2], event_handler);
+  optionsTotal++;
+  cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tBig circle face");
+  cbOption[optionsTotal]->user_data = this;
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
   if (settingsController.GetClockFace() == 2 ) {
-    lv_checkbox_set_checked(cbTimeOut[2], true);
+    lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
-
-  cbTimeOut[3] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[3], "\tPong game face");
-  cbTimeOut[3]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[3], event_handler);
+  optionsTotal++;
+  cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tPong game face");
+  cbOption[optionsTotal]->user_data = this;
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
   if (settingsController.GetClockFace() == 3 ) {
-    lv_checkbox_set_checked(cbTimeOut[3], true);
+    lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
-
-  cbTimeOut[4] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbTimeOut[4], "\tCustom");
-  cbTimeOut[4]->user_data = this;
-  lv_obj_set_event_cb(cbTimeOut[4], event_handler);
+  optionsTotal++;
+  cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tCustom");
+  cbOption[optionsTotal]->user_data = this;
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
   if (settingsController.GetClockFace() >= 4 ) {
-    lv_checkbox_set_checked(cbTimeOut[4], true);
+    lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
-
+  optionsTotal++;
 }
 
 SettingWatchFace::~SettingWatchFace() {
@@ -101,14 +102,14 @@ bool SettingWatchFace::Refresh() {
 
 void SettingWatchFace::UpdateSelected(lv_obj_t *object, lv_event_t event) {
   if(event == LV_EVENT_VALUE_CHANGED) {
-    for(int i = 0; i < 5; i++) {
-      if ( object == cbTimeOut[i] ) {
-        lv_checkbox_set_checked(cbTimeOut[i], true);
+    for(int i = 0; i < optionsTotal; i++) {
+      if ( object == cbOption[i] ) {
+        lv_checkbox_set_checked(cbOption[i], true);
         
         settingsController.SetClockFace(i);
 
       } else {
-        lv_checkbox_set_checked(cbTimeOut[i], false);
+        lv_checkbox_set_checked(cbOption[i], false);
       }
     }
   }

@@ -20,10 +20,15 @@ namespace Pinetime {
           bool Refresh() override;
           
           bool OnTouchEvent(Pinetime::Applications::TouchEvents event) override;
+          void OnClickEvent(lv_obj_t *obj, lv_event_t event);
 
         private:
           Pinetime::System::SystemTask& systemTask;
           Controllers::BrightnessController& brightness;
+
+          lv_obj_t* flashLight;
+          lv_obj_t* backgroundAction;
+          bool isOn = true;
 
       };
     }
