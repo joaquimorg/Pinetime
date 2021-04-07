@@ -4,24 +4,23 @@
 #include <libraries/delay/nrf_delay.h>
 #include <task.h>
 #include "board_config.h"
+#include "drivers/TwiMaster.h"
 
 using namespace Pinetime::Controllers;
 
 
-/* Earth's gravity in m/s^2 */
-#define GRAVITY_EARTH       (9.80665f)
-
-
 int8_t user_i2c_read(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr) {
     Pinetime::Drivers::TwiMaster *twiMaster = (Pinetime::Drivers::TwiMaster *)intf_ptr;
-    twiMaster->Read(BMA421_TWI_ADDR, reg_addr, reg_data, length);
+    Pinetime::Drivers::TwiMaster::ErrorCodes ret = twiMaster->Read(BMA421_TWI_ADDR, reg_addr, reg_data, length);
+    if (ret != Pinetime::Drivers::TwiMaster::ErrorCodes::NoError) return 1;
     return 0;
 }
 
 
 int8_t user_i2c_write(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length, void *intf_ptr) {
     Pinetime::Drivers::TwiMaster *twiMaster = (Pinetime::Drivers::TwiMaster *)intf_ptr;
-    twiMaster->Write(BMA421_TWI_ADDR, reg_addr, reg_data, length);
+    Pinetime::Drivers::TwiMaster::ErrorCodes ret = twiMaster->Write(BMA421_TWI_ADDR, reg_addr, reg_data, length);
+    if (ret != Pinetime::Drivers::TwiMaster::ErrorCodes::NoError) return 1;
     return 0;
 }
 
@@ -35,6 +34,8 @@ Accelerometer::Accelerometer(Pinetime::Drivers::TwiMaster &twiMaster) : twiMaste
 
 void Accelerometer::Init() {
 
+    struct bma4_int_pin_config pinConfig;
+
     bma.intf = BMA4_I2C_INTF;
     //dev_addr = BMA4_I2C_ADDR_PRIMARY;
     bma.bus_read = user_i2c_read;
@@ -42,41 +43,35 @@ void Accelerometer::Init() {
     bma.variant = BMA42X_VARIANT;
     bma.intf_ptr = &twiMaster;
     bma.delay_us = user_delay;
-    bma.read_write_len = 8;
+    bma.read_write_len = 64;
 
     /* Sensor initialization */
     int8_t rslt;
 
-    rslt = bma421_init(&bma);
-
-    //nrf_delay_us(50);
-    vTaskDelay(50);
-
     /* Soft reset */
     bma4_soft_reset(&bma);    
-    //nrf_delay_us(100);
-    vTaskDelay(50);
+    nrf_delay_us(50);
+
+    twiMaster.Disable();    
+    twiMaster.Init();    
+
+    rslt = bma421_init(&bma);
+    if ( rslt != BMA4_OK ) {
+        deviceReady = false;
+        return;
+    }
+
+    nrf_delay_us(50);
+
     //bma4_set_advance_power_save(BMA4_DISABLE, &bma);    
 
-    deviceReady = true;
     /* Upload the configuration file to enable the features of the sensor. */
-    rslt = bma421_write_config_file(&bma);
-    if ( rslt != BMA4_OK ) {
-      nrf_delay_us(100);
-      deviceReady = false;
-    }
-    //nrf_delay_us(100);
-    vTaskDelay(50);
+    bma421_write_config_file(&bma);
+    nrf_delay_us(50);    
 
-    
-}
-
-void Accelerometer::Config() {
-    struct bma4_int_pin_config pinConfig;
-    if ( !deviceReady ) return;
     /* Enable the accelerometer */
     bma4_set_accel_enable(BMA4_ENABLE, &bma);
-    vTaskDelay(50);
+    nrf_delay_us(50);
 
     /* Accelerometer Configuration Setting */
     accel_conf.odr = BMA4_OUTPUT_DATA_RATE_100HZ;
@@ -87,7 +82,7 @@ void Accelerometer::Config() {
     /* Set the accel configurations */    
     bma4_set_accel_config(&accel_conf, &bma);
 
-    bma421_step_detector_enable(BMA4_ENABLE, &bma);
+    //bma421_step_detector_enable(BMA4_ENABLE, &bma);
 
     /* Enable step counter */
     bma421_feature_enable(BMA421_STEP_CNTR , BMA4_ENABLE, &bma);    
@@ -104,7 +99,10 @@ void Accelerometer::Config() {
 
     /* Interrupt Mapping */    
     bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT , BMA4_ENABLE, &bma);
+
+    bma421_step_counter_set_watermark(1, &bma);
    
+    deviceReady = true;
 }
 
 void Accelerometer::Wakeup() {
@@ -141,9 +139,12 @@ void Accelerometer::UpdateAccel() {
     struct bma4_accel sens_data;
     
     bma4_read_accel_xyz(&sens_data, &bma);
-    accelData.x = (sens_data.x / 0x10);
+    /*accelData.x = (sens_data.x / 0x10);
     accelData.y = (sens_data.y / 0x10);
-    accelData.z = (sens_data.z / 0x10);
+    accelData.z = (sens_data.z / 0x10);*/
+    accelData.x = sens_data.x;
+    accelData.y = sens_data.y;
+    accelData.z = sens_data.z;
 }
 
 void Accelerometer::Update() {

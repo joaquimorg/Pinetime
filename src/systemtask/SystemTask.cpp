@@ -80,22 +80,18 @@ void SystemTask::Work() {
   watchdog.Start();
   
   APP_GPIOTE_INIT(6);
-
-  vrMotor.Init();
   
-  twiMaster.Init();
-  accelerometer.Init();
   spi.Init();
   lcd.Init();
-  
   brightnessController.Init();
+  brightnessController.Set(Controllers::BrightnessController::Levels::Low);
+
   spiNorFlash.Init();
-  spiNorFlash.Wakeup();  
+  spiNorFlash.Wakeup();
   
   fs.VerifyResource();
   fs.LVGLFileSystemInit();
   
-  touchPanel.Init();
   settingsController.Init();  
   
   batteryController.Init();
@@ -103,6 +99,10 @@ void SystemTask::Work() {
 
   nimbleController.Init();
   nimbleController.StartAdvertising();
+  
+  twiMaster.Init();
+  accelerometer.Init();
+  touchPanel.Init();
 
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
@@ -142,7 +142,7 @@ void SystemTask::Work() {
 
   nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
 
-  nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
+  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
 
   static nrfx_gpiote_in_config_t const pinConfigBMA = {
       .sense = NRF_GPIOTE_POLARITY_TOGGLE,
@@ -152,7 +152,7 @@ void SystemTask::Work() {
       .skip_gpio_setup = true,
     };
   
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);*/
   //
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), pdFALSE, this, IdleTimerCallback);
@@ -170,7 +170,7 @@ void SystemTask::Work() {
   watchdog.Kick();
   displayApp->Start();  
 
-  accelerometer.Config();  
+  vrMotor.Init();
   
   // Suppress endless loop diagnostic
   #pragma clang diagnostic push

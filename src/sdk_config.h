@@ -5109,7 +5109,7 @@
 // <e> NRFX_TWIS_ENABLED - nrfx_twis - TWIS peripheral driver
 //==========================================================
 #ifndef NRFX_TWIS_ENABLED
-#define NRFX_TWIS_ENABLED 0
+#define NRFX_TWIS_ENABLED 1
 #endif
 // <q> NRFX_TWIS0_ENABLED  - Enable TWIS0 instance
 
@@ -5536,7 +5536,7 @@
  
 
 #ifndef TWI1_USE_EASY_DMA
-#define TWI1_USE_EASY_DMA 1
+#define TWI1_USE_EASY_DMA 0
 
 #endif
 
@@ -6744,7 +6744,7 @@
 // <e> TWIS_ENABLED - nrf_drv_twis - TWIS peripheral driver - legacy layer
 //==========================================================
 #ifndef TWIS_ENABLED
-#define TWIS_ENABLED 0
+#define TWIS_ENABLED 1
 #endif
 // <q> TWIS0_ENABLED  - Enable TWIS0 instance
 

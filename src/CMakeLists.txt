@@ -83,8 +83,8 @@ set(SDK_SOURCE_FILES
         ${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_twi.c
         ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi.c
         ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twim.c
-        ${NRF5_SDK_PATH}/components/libraries/queue/nrf_queue.c
-        ${NRF5_SDK_PATH}/components/libraries/twi_mngr/nrf_twi_mngr.c
+        #${NRF5_SDK_PATH}/components/libraries/queue/nrf_queue.c
+        #${NRF5_SDK_PATH}/components/libraries/twi_mngr/nrf_twi_mngr.c
 
         # GPIOTE
         ${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c
@@ -344,13 +344,9 @@ set(LVGL_SRC
         libs/lvgl/src/lv_widgets/lv_win.c
         )
 
-set(BMA421_SRC        
-        libs/bma421/bma4_defs.h
+set(BMA421_SRC
         libs/bma421/bma4.c
-        libs/bma421/bma4.h        
-        libs/bma421/bma421_config.h
         libs/bma421/bma421.c
-        libs/bma421/bma421.h
         )
 
         
@@ -432,6 +428,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Notifications.cpp
         displayapp/screens/FlashLight.cpp
         displayapp/screens/Weather.cpp
+        displayapp/screens/Motion.cpp
 
         displayapp/screens/settings/QuickSettings.cpp   
         displayapp/screens/settings/Settings.cpp

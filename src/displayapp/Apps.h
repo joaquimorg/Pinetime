@@ -21,6 +21,7 @@ namespace Pinetime
       QuickSettings,
       FlashLight,
       Weather,
+      Motion,
 
       Settings,
       SettingDisplay,

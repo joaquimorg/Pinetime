@@ -2,7 +2,6 @@
 #include <lvgl/lvgl.h>
 #include "../DisplayApp.h"
 #include "board_config.h"
-#include <libraries/gpiote/app_gpiote.h>
 
 //LV_IMG_DECLARE(icon_running);
 

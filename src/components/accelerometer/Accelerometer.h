@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../drivers/TwiMaster.h"
+#include "drivers/TwiMaster.h"
 #include "bma421/bma4.h"
 #include "bma421/bma421.h"
 
@@ -21,7 +21,6 @@ namespace Pinetime {
             //char* status;
 
             void Init();
-            void Config();
             void Update();
 
             void Wakeup();

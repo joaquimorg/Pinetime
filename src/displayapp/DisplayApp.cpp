@@ -20,6 +20,7 @@
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/Weather.h"
+#include "displayapp/screens/Motion.h"
 
 #include "displayapp/screens/settings/QuickSettings.h"
 #include "displayapp/screens/settings/Settings.h"
@@ -278,14 +279,6 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         StartApp(Apps::Clock, FullRefreshDirections::Down);
         break;
-      case Apps::Steps: 
-        currentScreen = std::make_unique<Screens::Steps>(this, accelerometer, settingsController);
-        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        break;
-      case Apps::Weather: 
-        currentScreen = std::make_unique<Screens::Weather>(this);
-        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        break;
       case Apps::FlashLight: 
         currentScreen = std::make_unique<Screens::FlashLight>(this, systemTask, brightnessController);
         returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
@@ -325,6 +318,7 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         currentScreen = std::make_unique<Screens::SettingSteps>(this, settingsController);
         returnApp(Apps::Settings, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
+
       case Apps::About: 
         currentScreen = std::make_unique<Screens::About>(this, dateTimeController, batteryController, brightnessController, bleController, watchdog, accelerometer, settingsController); 
         returnApp(Apps::Settings, FullRefreshDirections::Down, TouchEvents::SwipeDown);
@@ -360,6 +354,20 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(currentApp == app ? Apps::Clock : currentApp, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       
+      // -----------------------------------------------------------------------------------------------------------------------------------------
+
+      case Apps::Steps: 
+        currentScreen = std::make_unique<Screens::Steps>(this, accelerometer, settingsController);
+        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        break;
+      case Apps::Weather: 
+        currentScreen = std::make_unique<Screens::Weather>(this);
+        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        break;
+      case Apps::Motion: 
+        currentScreen = std::make_unique<Screens::Motion>(this, accelerometer);
+        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        break;
     }
         
     currentApp = app;

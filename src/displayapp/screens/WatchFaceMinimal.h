@@ -52,10 +52,13 @@ namespace Pinetime {
           lv_obj_t* label_time;
           lv_obj_t* label_time_am_pm;
           lv_obj_t* label_time_min;
-          lv_obj_t* seconds;
           lv_obj_t* label_date;
           lv_obj_t* notificationIcon;
           lv_obj_t* batteryIcon;
+
+          lv_obj_t* seconds;
+          lv_obj_t* arcMinutes;
+          lv_obj_t* arcHours;
 
           lv_task_t* taskUpdate;
 

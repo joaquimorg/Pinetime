@@ -27,12 +27,9 @@ SettingTimeFormat::SettingTimeFormat(
   lv_obj_set_style_local_pad_inner(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 5);
   lv_obj_set_style_local_border_width(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 0);
 
-  lv_obj_set_pos(container1, 30, 60);
-  lv_obj_set_width(container1, LV_HOR_RES - 50);
-  lv_obj_set_height(container1, LV_VER_RES - 60);
-  //lv_obj_set_auto_realign(container1, true);                  
-  //lv_obj_align_origo(container1, NULL, LV_ALIGN_CENTER, 0, 0);
-  //lv_cont_set_fit(container1, LV_FIT_MAX);
+  lv_obj_set_pos(container1, 10, 60);
+  lv_obj_set_width(container1, LV_HOR_RES - 20);
+  lv_obj_set_height(container1, LV_VER_RES - 50);
   lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_LEFT);
 
   lv_obj_t * title = lv_label_create(lv_scr_act(), NULL);  

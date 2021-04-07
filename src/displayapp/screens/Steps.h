@@ -1,9 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <lvgl/lvgl.h>
 #include "Screen.h"
-#include <lvgl/src/lv_core/lv_style.h>
-#include <lvgl/src/lv_core/lv_obj.h>
 
 namespace Pinetime {
 

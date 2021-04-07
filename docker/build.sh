@@ -14,6 +14,7 @@ export OUTPUT_DIR="${OUTPUT_DIR:=$BUILD_DIR/output}"
 export BUILD_TYPE=${BUILD_TYPE:=Release}
 export GCC_ARM_VER=${GCC_ARM_VER:="gcc-arm-none-eabi-9-2020-q2-update"}
 export NRF_SDK_VER=${NRF_SDK_VER:="nRF5_SDK_15.3.0_59ac345"}
+#export NRF_SDK_VER=${NRF_SDK_VER:="nRF5_SDK_17.0.2_d674dde"}
 
 MACHINE="$(uname -m)"
 [[ "$MACHINE" == "arm64" ]] && MACHINE="aarch64"
@@ -49,6 +50,7 @@ GetMcuBoot() {
 
 GetNrfSdk() {
   wget -q "https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v15.x.x/$NRF_SDK_VER.zip" -O /tmp/$NRF_SDK_VER
+  #wget -q "https://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v17.x.x/$NRF_SDK_VER.zip" -O /tmp/$NRF_SDK_VER  
   unzip -q /tmp/$NRF_SDK_VER -d "$TOOLS_DIR/"
   rm /tmp/$NRF_SDK_VER
 }

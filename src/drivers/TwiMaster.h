@@ -1,8 +1,6 @@
 #pragma once
 #include <FreeRTOS.h>
 #include <semphr.h>
-#include "nrfx_twi.h"
-#include "nrf_twi_mngr.h"
 #include <cstdint>
 
 namespace Pinetime {
@@ -27,6 +25,7 @@ namespace Pinetime {
 
         void Sleep();
         void Wakeup();
+        void Disable();
 
 
       private:
@@ -34,7 +33,7 @@ namespace Pinetime {
         SemaphoreHandle_t mutex;
         const Modules module;
         const Parameters params;
-        static constexpr uint8_t maxDataSize{8};
+        static constexpr uint8_t maxDataSize{64};
         static constexpr uint8_t registerSize{1};
         uint8_t internalBuffer[maxDataSize + registerSize];
 
