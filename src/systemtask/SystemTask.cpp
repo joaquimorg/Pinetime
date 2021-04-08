@@ -312,7 +312,7 @@ void SystemTask::Work() {
           isGoingToSleep = false;
           break;
         case Messages::PowerOFF:
-          brightnessController.Set(Controllers::BrightnessController::Levels::Off);
+          /*brightnessController.Set(Controllers::BrightnessController::Levels::Off);
           //xTimerStop(idleTimer, 0);
           //xTimerStop(hardwareTimer, 0);
           spiNorFlash.Sleep();
@@ -331,7 +331,7 @@ void SystemTask::Work() {
           nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
           nrf_gpio_cfg_output(KEY_ENABLE);
           nrf_gpio_pin_set(KEY_ENABLE);
-          NRF_POWER->SYSTEMOFF = 1;
+          NRF_POWER->SYSTEMOFF = 1;*/
           break;
         default: break;
       }

@@ -109,7 +109,7 @@ namespace Pinetime {
         bool isBleDiscoveryTimerRunning = false;
         uint8_t bleDiscoveryTimer = 0;
 
-        static constexpr uint32_t hardwareTime = 15000;
+        static constexpr uint32_t hardwareTime = 50000;
         static constexpr uint32_t hardwareIdleTime = 120000;
 
         TaskHandle_t taskHandle;

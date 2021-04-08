@@ -52,7 +52,7 @@ namespace Pinetime {
         static constexpr uint8_t touchStep = 6;
         static constexpr uint8_t gestureIndex = 1;
 
-        uint8_t touchData[10];
+        uint8_t touchData[63];
         TwiMaster& twiMaster;
         uint8_t twiAddress;
     };

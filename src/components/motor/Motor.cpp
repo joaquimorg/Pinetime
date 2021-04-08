@@ -14,8 +14,8 @@ namespace {
 
 Motor::Motor( Controllers::Settings &settingsController ) :
     settingsController{settingsController} {
-        vrTimer = xTimerCreate("vrTimer", pdMS_TO_TICKS( 0 ), pdFALSE, this, vrTimerCallback);
-    }
+    vrTimer = xTimerCreate("vrTimer", pdMS_TO_TICKS( 0 ), pdFALSE, this, vrTimerCallback);
+}
 
 void Motor::Init() {
     nrf_gpio_cfg_output(VIBRATOR_CTRL);

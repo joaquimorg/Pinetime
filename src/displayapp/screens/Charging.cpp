@@ -71,7 +71,7 @@ Charging::Charging(
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
-  taskUpdate = lv_task_create(lv_update_task, 500000, LV_TASK_PRIO_LOW, this);
+  taskUpdate = lv_task_create(lv_update_task, 50000, LV_TASK_PRIO_LOW, this);
   taskAnim = lv_task_create(lv_anim_task, 1000, LV_TASK_PRIO_LOW, this);
   UpdateScreen();
 }
