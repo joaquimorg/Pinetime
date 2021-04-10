@@ -143,7 +143,7 @@ void Tile::OnObjectEvent(lv_obj_t *obj, lv_event_t event) {
   if ( event == LV_EVENT_PRESSED ) {
     for(int i = 0; i < 4; i++) {
       if ( apps[i] != Apps::None && obj == iconsApps[i] ) {
-        app->StartApp(apps[i], DisplayApp::FullRefreshDirections::Down);
+        app->StartApp(apps[i], DisplayApp::FullRefreshDirections::Up);
         running = false;
         return;
       }

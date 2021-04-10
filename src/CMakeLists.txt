@@ -80,11 +80,9 @@ set(SDK_SOURCE_FILES
         ${NRF5_SDK_PATH}/external/fprintf/nrf_fprintf_format.c
 
         # TWI
+        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twim.c
         ${NRF5_SDK_PATH}/integration/nrfx/legacy/nrf_drv_twi.c
         ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twi.c
-        ${NRF5_SDK_PATH}/modules/nrfx/drivers/src/nrfx_twim.c
-        #${NRF5_SDK_PATH}/components/libraries/queue/nrf_queue.c
-        #${NRF5_SDK_PATH}/components/libraries/twi_mngr/nrf_twi_mngr.c
 
         # GPIOTE
         ${NRF5_SDK_PATH}/components/libraries/gpiote/app_gpiote.c
@@ -429,6 +427,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/FlashLight.cpp
         displayapp/screens/Weather.cpp
         displayapp/screens/Motion.cpp
+        displayapp/screens/Tasks.cpp
+        displayapp/screens/InfiniPaint.cpp
 
         displayapp/screens/settings/QuickSettings.cpp   
         displayapp/screens/settings/Settings.cpp

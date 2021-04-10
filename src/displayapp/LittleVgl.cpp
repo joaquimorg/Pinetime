@@ -173,7 +173,23 @@ void LittleVgl::SetNewTapEvent(uint16_t x, uint16_t y) {
   tapped = true;
 }
 
+void LittleVgl::SetTouchPadEvent(Pinetime::Drivers::Cst816S::TouchInfos touchInfo) {
+  touch = touchInfo;
+}
+
 bool LittleVgl::GetTouchPadInfo(lv_indev_data_t *ptr) {
+  
+  /*touch = touchPanel.GetTouchInfo();
+
+  if(!touch.action) {
+    ptr->state = LV_INDEV_STATE_REL;
+  } else {
+    ptr->state = LV_INDEV_STATE_PR;
+    ptr->point.x = touch.x;
+    ptr->point.y = touch.y;
+    
+  }*/
+
   if(tapped) {
     ptr->point.x = tap_x;
     ptr->point.y = tap_y;
@@ -182,6 +198,7 @@ bool LittleVgl::GetTouchPadInfo(lv_indev_data_t *ptr) {
   } else {
     ptr->state = LV_INDEV_STATE_REL;
   }
+
   return false;
   
 }

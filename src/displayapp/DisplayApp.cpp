@@ -21,6 +21,8 @@
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/Weather.h"
 #include "displayapp/screens/Motion.h"
+#include "displayapp/screens/Tasks.h"
+#include "displayapp/screens/InfiniPaint.h"
 
 #include "displayapp/screens/settings/QuickSettings.h"
 #include "displayapp/screens/settings/Settings.h"
@@ -60,15 +62,14 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         brightnessController{brightnessController},
         systemTask{systemTask},
         notificationManager{notificationManager},
-        callNotificationManager{callNotificationManager}/*,
-        currentScreen{new Screens::Clock>(this, dateTimeController, batteryController, bleController, notificationManager, settingsController, accelerometer) }*/
+        callNotificationManager{callNotificationManager}
 {
   msgQueue = xQueueCreate(queueSize, itemSize);
-  LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
+  StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
 }
 
 void DisplayApp::Start() {
-  if (pdPASS != xTaskCreate(DisplayApp::Process, "displayapp", 512, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 800, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 
@@ -124,10 +125,10 @@ void DisplayApp::Refresh() {
       case Messages::GoToRunning:
         if (state == States::Running) break;
         if(!currentScreen) {
-          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
+          StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
         } else {
           if ( currentApp == Apps::Launcher || currentApp == Apps::QuickSettings || currentApp == Apps::Settings ) {
-            LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
+            StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
           }
         }
         
@@ -141,15 +142,13 @@ void DisplayApp::Refresh() {
       break;
 
       case Messages::NewCall:
-        if ( callNotificationManager.IsInCall() ) {
-          LoadApp( Apps::IncomingCall, DisplayApp::FullRefreshDirections::Down );
-        } else {
-          LoadApp( Apps::Clock, DisplayApp::FullRefreshDirections::Up );
+        if ( currentApp != Apps::IncomingCall ) {
+          StartApp( Apps::IncomingCall, DisplayApp::FullRefreshDirections::Down );
         }
       break;
 
       case Messages::NewNotification: 
-        LoadApp( Apps::Notifications, DisplayApp::FullRefreshDirections::Down );
+        StartApp( Apps::Notifications, DisplayApp::FullRefreshDirections::Down );
       break;
 
       case Messages::TouchEvent: {
@@ -159,23 +158,23 @@ void DisplayApp::Refresh() {
           if ( currentApp == Apps::Clock ) {
             switch (gesture) {
               case TouchEvents::SwipeUp:
-                LoadApp( Apps::Launcher, DisplayApp::FullRefreshDirections::Up );
+                StartApp( Apps::Launcher, DisplayApp::FullRefreshDirections::Up );
                 break;
               case TouchEvents::SwipeDown:
-                LoadApp( Apps::Notifications, DisplayApp::FullRefreshDirections::Down );
+                StartApp( Apps::Notifications, DisplayApp::FullRefreshDirections::Down );
                 break;
               case TouchEvents::SwipeRight:
-                  LoadApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::RightAnim );
+                StartApp( Apps::QuickSettings, DisplayApp::FullRefreshDirections::RightAnim );
                 break;
               case TouchEvents::DoubleTap:
-                  systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
+                systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
                 break;
               default:
                 break;
             }
           } else {
             if ( returnTouchEvent == gesture ) {
-              LoadApp( returnToApp, returnDirection );
+              StartApp( returnToApp, returnDirection );
             }
           }
         }
@@ -187,17 +186,17 @@ void DisplayApp::Refresh() {
           systemTask.PushMessage(System::SystemTask::Messages::GoToSleep);
         } else {
           if ( !currentScreen->OnButtonPushed() ) {
-            LoadApp( returnToApp, returnDirection );
+            StartApp( returnToApp, returnDirection );
           }
         }
       break;
 
       case Messages::BleFirmwareUpdateStarted:
-        LoadApp( Apps::FirmwareUpdate, DisplayApp::FullRefreshDirections::Down );
+        StartApp( Apps::FirmwareUpdate, DisplayApp::FullRefreshDirections::Down );
       break;
 
       case Messages::ResourceUpdateStart:
-        LoadApp( Apps::ResourceUpdate, DisplayApp::FullRefreshDirections::Down );
+        StartApp( Apps::ResourceUpdate, DisplayApp::FullRefreshDirections::Down );
       break;
 
       case Messages::StepEvent:
@@ -212,14 +211,14 @@ void DisplayApp::Refresh() {
 
       case Messages::ChargingEvent :
         if( currentApp != Apps::Charging ) {
-          LoadApp( Apps::Charging, DisplayApp::FullRefreshDirections::Down );
+          StartApp( Apps::Charging, DisplayApp::FullRefreshDirections::Down );
         }
       break;
 
       case Messages::LowBattEvent :        
         if( currentApp != Apps::LowBatt ) {
-          SetBrightness(Controllers::BrightnessController::Levels::Low);
-          LoadApp( Apps::LowBatt, DisplayApp::FullRefreshDirections::Down );
+          brightnessController.Set(Controllers::BrightnessController::Levels::Low);
+          StartApp( Apps::LowBatt, DisplayApp::FullRefreshDirections::Down );
         }
       break;
 
@@ -239,7 +238,7 @@ void DisplayApp::Refresh() {
 void DisplayApp::RunningState() {
 
   if(!currentScreen->Refresh()) {
-    LoadApp( returnToApp, returnDirection );
+    StartApp( returnToApp, returnDirection );
   }
 
   lv_task_handler();
@@ -252,10 +251,6 @@ void DisplayApp::returnApp(Apps app, DisplayApp::FullRefreshDirections direction
 }
 
 void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction) {
-  LoadApp( app, direction );
-}
-
-void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) {
     
   currentScreen.reset(nullptr);
   
@@ -275,9 +270,8 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Clock, FullRefreshDirections::Up, TouchEvents::SwipeUp);
         break;
       case Apps::IncomingCall: 
-        currentScreen = std::make_unique<Screens::IncomingCall>(this, callNotificationManager, systemTask.nimble().alertService()); 
+        currentScreen = std::make_unique<Screens::IncomingCall>(this, callNotificationManager, systemTask.nimble().alertService(), systemTask); 
         returnApp(Apps::Clock, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        StartApp(Apps::Clock, FullRefreshDirections::Down);
         break;
       case Apps::FlashLight: 
         currentScreen = std::make_unique<Screens::FlashLight>(this, systemTask, brightnessController);
@@ -361,7 +355,11 @@ void DisplayApp::LoadApp(Apps app, DisplayApp::FullRefreshDirections direction) 
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Weather: 
-        currentScreen = std::make_unique<Screens::Weather>(this);
+        currentScreen = std::make_unique<Screens::InfiniPaint>(this, lvgl);
+        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        break;
+      case Apps::Tasks: 
+        currentScreen = std::make_unique<Screens::Tasks>(this);
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Motion: 
@@ -391,7 +389,7 @@ TouchEvents DisplayApp::OnTouchEvent() {
   auto info = touchPanel.GetTouchInfo();
   if(info.isTouch) {
     switch(info.gesture) {
-      case Pinetime::Drivers::Cst816S::Gestures::SingleTap:
+      case Pinetime::Drivers::Cst816S::Gestures::SingleTap:        
         if(touchMode == TouchModes::Gestures)
           lvgl.SetNewTapEvent(info.x, info.y);
         return TouchEvents::Tap;
@@ -442,9 +440,5 @@ void DisplayApp::SetFullRefresh(DisplayApp::FullRefreshDirections direction) {
 
 void DisplayApp::SetTouchMode(DisplayApp::TouchModes mode) {
   touchMode = mode;
-}
-
-void DisplayApp::SetBrightness(Controllers::BrightnessController::Levels level) {
-  brightnessController.Set(level);
 }
 

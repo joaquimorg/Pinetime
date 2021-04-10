@@ -19,6 +19,10 @@ adafruit-nrfutil dfu genpkg --dev-type 0x0052 \
     --application "$OUTPUT_DIR/pinetime-lite-$PROJECT_VERSION.bin" \
     "$OUTPUT_DIR/dfu-lite-$PROJECT_VERSION.zip"
 
+cp "$OUTPUT_DIR/pinetime-lite-$PROJECT_VERSION.bin" "$OUTPUT_DIR/pinetime-lite-$PROJECT_VERSION.bin.fw"
+
+cp "$SOURCES_DIR"/bootloader/bootloader.bin $OUTPUT_DIR/bootloader.bin.bot
+
 mkdir -p "$OUTPUT_DIR/src"
 cd "$BUILD_DIR"
 cp src/*.bin "$OUTPUT_DIR/src"

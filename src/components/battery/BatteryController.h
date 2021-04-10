@@ -13,30 +13,30 @@ namespace Pinetime {
     */ 
     template <int N> 
     class CircBuffer {
-    public:
-      CircBuffer() : arr{}, sz{}, cap{N}, head{} {}
-      /**
-     insert member function overwrites the next data to the current 
-    HEAD and moves the HEAD to the newly inserted value.
-    */ 
-      void insert(const int num) {
-        head %= cap;
-        arr[head++] = num;
-        if (sz != cap) {
-          sz++;
+      public:
+        CircBuffer() : arr{}, sz{}, cap{N}, head{} {}
+        /**
+       insert member function overwrites the next data to the current 
+      HEAD and moves the HEAD to the newly inserted value.
+      */ 
+        void insert(const int num) {
+          head %= cap;
+          arr[head++] = num;
+          if (sz != cap) {
+            sz++;
+          }
         }
-      }
 
-      int GetAverage() const {
-        int sum = std::accumulate(arr.begin(), arr.end(), 0);
-        return (sum / sz);
-      }
+        int GetAverage() const {
+          int sum = std::accumulate(arr.begin(), arr.end(), 0);
+          return (sum / sz);
+        }
 
-    private:
-      std::array<int, N> arr; /**< internal array used to store the values*/
-      uint8_t sz; /**< The current size of the array.*/
-      uint8_t cap; /**< Total capacity of the CircBuffer.*/
-      uint8_t head; /**< The current head of the CircBuffer*/
+      private:
+        std::array<int, N> arr; /**< internal array used to store the values*/
+        uint8_t sz; /**< The current size of the array.*/
+        uint8_t cap; /**< Total capacity of the CircBuffer.*/
+        uint8_t head; /**< The current head of the CircBuffer*/
     };
 
     class Battery {
@@ -47,7 +47,7 @@ namespace Pinetime {
         void Init();
         void Update();
         
-        int PercentRemaining() const { return percentRemainingBuffer.GetAverage(); }
+        int PercentRemaining() const { return static_cast<int>(percentRemainingBuffer.GetAverage()); }
 
         float Voltage() const { return voltage; }
 
@@ -56,10 +56,10 @@ namespace Pinetime {
 
       private:
         static Battery *instance;
-        nrf_saadc_value_t  m_buffer_pool[2][5];
+        nrf_saadc_value_t  m_buffer_pool[2][1];
 
-        static constexpr uint8_t percentRemainingSamples = 10;
-        CircBuffer<percentRemainingSamples> percentRemainingBuffer {};
+        static constexpr uint8_t percentSamples = 5;
+        CircBuffer<percentSamples> percentRemainingBuffer {};
 
         float voltage = 0.0f;
         int percentRemaining = -1;

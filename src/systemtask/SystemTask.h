@@ -122,11 +122,11 @@ namespace Pinetime {
         void Work();
         void ReloadIdleTimer() const;
 
-#if configUSE_TRACE_FACILITY == 1
-        SystemMonitor<FreeRtosMonitor> monitor;
-#else
+//#if configUSE_TRACE_FACILITY == 1
+//        SystemMonitor<FreeRtosMonitor> monitor;
+//#else
         SystemMonitor<DummyMonitor> monitor;
-#endif
+//#endif
     };
   }
 }

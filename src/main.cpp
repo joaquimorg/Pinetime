@@ -76,8 +76,8 @@ Pinetime::Controllers::Settings settingsController {spiNorFlash};
 // respecting correct timings. According to erratas heet, this magic value makes it run
 // at ~390Khz with correct timings.
 static constexpr uint32_t MaxTwiFrequencyWithoutHardwareBug{0x06200000};
-Pinetime::Drivers::TwiMaster twiMaster{Pinetime::Drivers::TwiMaster::Modules::TWIM1,
-                                       Pinetime::Drivers::TwiMaster::Parameters {
+Pinetime::Drivers::TwiMaster twiMaster{ Pinetime::Drivers::TwiMaster::Modules::TWIM1,
+                                        Pinetime::Drivers::TwiMaster::Parameters {
                                                MaxTwiFrequencyWithoutHardwareBug, TWI_SDA, TWI_SCL}};
 Pinetime::Drivers::Cst816S touchPanel {twiMaster, TP_TWI_ADDR};
 Pinetime::Components::LittleVgl lvgl {lcd, touchPanel};
@@ -111,7 +111,7 @@ void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action
     return ;
   }
 
-  if(pin == CHARGE_IRQ) {
+  if(pin == CHARGE_IRQ and action == NRF_GPIOTE_POLARITY_TOGGLE) {
     systemTask->OnChargingEvent();
     return ;
   }

@@ -7,6 +7,7 @@
 #include "Apps.h"
 #include "LittleVgl.h"
 #include "TouchEvents.h"
+//#include "systemtask/SystemTask.h"
 #include "components/brightness/BrightnessController.h"
 #include "components/firmwarevalidator/FirmwareValidator.h"
 #include "components/settings/Settings.h"
@@ -32,7 +33,7 @@ namespace Pinetime {
 
   namespace System {
     class SystemTask;
-  };
+  }
   namespace Applications {
     class DisplayApp {
       public:
@@ -50,19 +51,16 @@ namespace Pinetime {
                    Controllers::Settings &settingsController,
                    Controllers::Accelerometer& accelerometer,
                    Controllers::BrightnessController& brightnessController,
-                   System::SystemTask &systemTask,
+                   Pinetime::System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager &notificationManager,
                    Pinetime::Controllers::CallNotificationManager &callNotificationManager);
         void Start();
         void PushMessage(Messages msg);
 
         void StartApp(Apps app, DisplayApp::FullRefreshDirections direction);
-        void LoadApp(Apps app, DisplayApp::FullRefreshDirections direction);
 
         void SetFullRefresh(FullRefreshDirections direction);
         void SetTouchMode(TouchModes mode);
-
-        void SetBrightness(Controllers::BrightnessController::Levels level);
 
       private:
 

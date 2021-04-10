@@ -2,6 +2,7 @@
 #include <lvgl/lvgl.h>
 #include "Symbols.h"
 #include "../DisplayApp.h"
+#include "systemtask/SystemTask.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -16,10 +17,12 @@ namespace {
 IncomingCall::IncomingCall(
   Pinetime::Applications::DisplayApp *app, 
   Pinetime::Controllers::CallNotificationManager& callNotificationManager,
-  Pinetime::Controllers::AlertNotificationService& alertNotificationService) : 
+  Pinetime::Controllers::AlertNotificationService& alertNotificationService,
+  System::SystemTask &systemTask) : 
   Screen(app),
   callNotificationManager{callNotificationManager},
-  alertNotificationService{alertNotificationService}
+  alertNotificationService{alertNotificationService},
+  systemTask{systemTask}
 {
 
   Controllers::CallNotificationManager::Notification notifCall = callNotificationManager.Get();
@@ -76,13 +79,18 @@ IncomingCall::IncomingCall(
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
+  systemTask.PushMessage(Pinetime::System::SystemTask::Messages::DisableSleeping);
 }
 
 IncomingCall::~IncomingCall() {
+  systemTask.PushMessage(Pinetime::System::SystemTask::Messages::EnableSleeping);
   lv_obj_clean(lv_scr_act());
 }
 
 bool IncomingCall::Refresh() {
+  if ( !callNotificationManager.IsInCall()) {
+    running = false;
+  }
   return running;
 }
 

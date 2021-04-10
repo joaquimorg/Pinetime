@@ -1,6 +1,7 @@
 #pragma once
 
 #include <lvgl/lvgl.h>
+#include "drivers/Cst816s.h"
 
 namespace Pinetime {
   namespace Drivers {
@@ -22,7 +23,10 @@ namespace Pinetime {
         void FlushDisplay(const lv_area_t * area, lv_color_t * color_p);
         bool GetTouchPadInfo(lv_indev_data_t *ptr);
         void SetFullRefresh(FullRefreshDirections direction);
+
         void SetNewTapEvent(uint16_t x, uint16_t y);
+        void SetTouchPadEvent(Pinetime::Drivers::Cst816S::TouchInfos touchInfo);
+        Pinetime::Drivers::Cst816S::TouchInfos GetTouchPadEvent() { return touch; };
 
       private:
         void InitDisplay();
@@ -52,6 +56,8 @@ namespace Pinetime {
         uint16_t tap_x = 0;
         uint16_t tap_y = 0;
         bool tapped = false;
+
+        Pinetime::Drivers::Cst816S::TouchInfos touch;
 
     };
   }

@@ -79,8 +79,11 @@ void SystemTask::Work() {
   watchdog.Setup(7);
   watchdog.Start();
   
-  APP_GPIOTE_INIT(6);
-  
+  APP_GPIOTE_INIT(2);  
+
+  twiMaster.Init();
+  accelerometer.Init();
+
   spi.Init();
   lcd.Init();
   brightnessController.Init();
@@ -93,56 +96,44 @@ void SystemTask::Work() {
   fs.LVGLFileSystemInit();
   
   settingsController.Init();  
-  
-  batteryController.Init();
-  batteryController.Update();
 
   nimbleController.Init();
   nimbleController.StartAdvertising();
-  
-  twiMaster.Init();
-  accelerometer.Init();
+
   touchPanel.Init();
 
   // Button
-  nrf_gpio_cfg_sense_input(KEY_ACTION, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_High);
+  nrf_gpio_cfg_sense_input(KEY_ACTION, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
   nrf_gpio_cfg_output(KEY_ENABLE);
   nrf_gpio_pin_set(KEY_ENABLE);
 
-  nrfx_gpiote_in_config_t pinConfig;
-  pinConfig.skip_gpio_setup = true;
-  pinConfig.hi_accuracy = false;
-  pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pulldown;
-
-  nrfx_gpiote_in_init(KEY_ACTION, &pinConfig, nrfx_gpiote_evt_handler);
+  static nrfx_gpiote_in_config_t const pinConfigKEY = {
+      .sense = NRF_GPIOTE_POLARITY_LOTOHI,
+      .pull = NRF_GPIO_PIN_PULLDOWN,
+      .is_watcher = false,
+      .hi_accuracy = false,
+      .skip_gpio_setup = true,
+    };
+  
+  nrfx_gpiote_in_init(KEY_ACTION, &pinConfigKEY, nrfx_gpiote_evt_handler);
   //
 
   // Touch IRQ
-  nrf_gpio_cfg_sense_input(TP_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
+  nrf_gpio_cfg_sense_input(TP_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
 
-  pinConfig.skip_gpio_setup = true;
-  pinConfig.hi_accuracy = false;
-  pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
-
-  nrfx_gpiote_in_init(TP_IRQ, &pinConfig, nrfx_gpiote_evt_handler);
+  static nrfx_gpiote_in_config_t const pinConfigTP = {
+      .sense = NRF_GPIOTE_POLARITY_HITOLO,
+      .pull = NRF_GPIO_PIN_PULLUP,
+      .is_watcher = false,
+      .hi_accuracy = false,
+      .skip_gpio_setup = true,
+    };
+  
+  nrfx_gpiote_in_init(TP_IRQ, &pinConfigTP, nrfx_gpiote_evt_handler);
   //
 
   // Step Counter IRQ
-  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup, (nrf_gpio_pin_sense_t)GPIO_PIN_CNF_SENSE_Low);
-
-  pinConfig.skip_gpio_setup = true;
-  pinConfig.hi_accuracy = false;
-  pinConfig.is_watcher = false;
-  pinConfig.sense = (nrf_gpiote_polarity_t)NRF_GPIOTE_POLARITY_HITOLO;
-  pinConfig.pull = (nrf_gpio_pin_pull_t)GPIO_PIN_CNF_PULL_Pullup;
-
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfig, nrfx_gpiote_evt_handler);*/
-
-  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
+  nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
 
   static nrfx_gpiote_in_config_t const pinConfigBMA = {
       .sense = NRF_GPIOTE_POLARITY_TOGGLE,
@@ -152,8 +143,10 @@ void SystemTask::Work() {
       .skip_gpio_setup = true,
     };
   
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);*/
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);
   //
+  batteryController.Init();
+  //batteryController.Update();
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
@@ -403,22 +396,22 @@ void SystemTask::OnStepEvent() {
 
 void SystemTask::OnChargingEvent() {
   if(isGoingToSleep) return ;
-  /*if(isSleeping && !isWakingUp) {
+  if(isSleeping && !isWakingUp) {
     WakeUp();
   }
   //vrMotor.Vibrate(35);
-  displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);*/
+  displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
 }
 
 void SystemTask::OnPowerPresentEvent() {  
   if(isGoingToSleep) return ;
-  if(isSleeping && !isWakingUp) {
+  /*if(isSleeping && !isWakingUp) {
     WakeUp();
   }
   if ( !batteryController.IsCharging() ) {
     //vrMotor.Vibrate(35);
     displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
-  }
+  }*/
 }
 
 void SystemTask::PushMessage(SystemTask::Messages msg) {

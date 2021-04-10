@@ -43,7 +43,7 @@ void Accelerometer::Init() {
     bma.variant = BMA42X_VARIANT;
     bma.intf_ptr = &twiMaster;
     bma.delay_us = user_delay;
-    bma.read_write_len = 64;
+    bma.read_write_len = 16;
 
     /* Sensor initialization */
     int8_t rslt;
@@ -52,7 +52,7 @@ void Accelerometer::Init() {
     bma4_soft_reset(&bma);    
     nrf_delay_us(50);
 
-    twiMaster.Disable();    
+    twiMaster.Sleep();    
     twiMaster.Init();    
 
     rslt = bma421_init(&bma);
@@ -88,6 +88,8 @@ void Accelerometer::Init() {
     bma421_feature_enable(BMA421_STEP_CNTR , BMA4_ENABLE, &bma);    
 
     bma421_reset_step_counter(&bma);
+
+    bma4_set_interrupt_mode(BMA4_LATCH_MODE, &bma);
 
     /* Sets the electrical behaviour of interrupt */
     pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
