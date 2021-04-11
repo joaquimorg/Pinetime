@@ -100,6 +100,8 @@ int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHand
 
 int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
   auto opcode = static_cast<Opcodes>(om->om_data[0]);
+
+  mtuSize = ble_att_mtu(connectionHandle);
   
   switch (opcode) {
     case Opcodes::COMMAND_SEND_FIRMWARE_INFO: {
@@ -123,7 +125,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         
         if ( om->om_data[5] == 0x01 ) {
           bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::RES);
-          spiFlash.Init(20, fileSize, SpiFlash::FlashType::RES);
+          spiFlash.Init(mtuSize, fileSize, SpiFlash::FlashType::RES);
         } else if ( om->om_data[5] == 0x02 ) {
           if ( fileSize > 475136 ) {
             // Notify Error !
@@ -133,7 +135,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
             return 0;
           }
           bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::FW);
-          spiFlash.Init(20, fileSize, SpiFlash::FlashType::FW);
+          spiFlash.Init(mtuSize, fileSize, SpiFlash::FlashType::FW);
         } else if ( om->om_data[5] == 0x03 ) {
           if ( fileSize > 32800 ) {
             // Notify Error !
@@ -143,7 +145,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
             return 0;
           }
           bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::BOT);
-          spiFlash.Init(20, fileSize, SpiFlash::FlashType::BOT);
+          spiFlash.Init(mtuSize, fileSize, SpiFlash::FlashType::BOT);
         }
 
         bleController.StartFirmwareUpdate();
@@ -299,7 +301,7 @@ void FileService::OnTimeout() {
 }
 
 void FileService::SpiFlash::Init(size_t chunkSize, size_t totalSize, FlashType flashType) {
-  if(chunkSize != 20) return;
+  //if(chunkSize != 20) return;
   this->chunkSize = chunkSize;
   this->totalSize = totalSize;
   this->ready = true;
@@ -317,7 +319,7 @@ void FileService::SpiFlash::Init(size_t chunkSize, size_t totalSize, FlashType f
 void FileService::SpiFlash::Append(uint8_t *data, size_t size) {
 
   if(!ready) return;
-  ASSERT(size <= 20);
+  ASSERT(size <= this->chunkSize);
 
   std::memcpy(tempBuffer + bufferWriteIndex, data, size);
   bufferWriteIndex += size;

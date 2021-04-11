@@ -39,7 +39,7 @@ The available features are :
 
 ## Companion app (development is in progress):
  - [Gadgetbridge](https://codeberg.org/joaquimorg/GadgetbridgePinetimeLite) (on Android)
- <i>Do not use to update firmware or resources in version 0.3.0</i>
+ <i>Do not use to update firmware or resources in version 0.4.0</i>
  - [PinetimeLiteApp](https://home.joaquim.org/pinetime/) (on web browser)
  Compatible with version 0.3.0, it is possible with this application to set the clock, update resources and firmware.
 

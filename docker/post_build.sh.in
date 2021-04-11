@@ -23,6 +23,11 @@ cp "$OUTPUT_DIR/pinetime-lite-$PROJECT_VERSION.bin" "$OUTPUT_DIR/pinetime-lite-$
 
 cp "$SOURCES_DIR"/bootloader/bootloader.bin $OUTPUT_DIR/bootloader.bin.bot
 
+cd "$SOURCES_DIR"/resources
+./res_build.py
+cp "$SOURCES_DIR"/resources/pinetime-lite.res $OUTPUT_DIR/pinetime-lite_$PROJECT_VERSION.res
+
+
 mkdir -p "$OUTPUT_DIR/src"
 cd "$BUILD_DIR"
 cp src/*.bin "$OUTPUT_DIR/src"

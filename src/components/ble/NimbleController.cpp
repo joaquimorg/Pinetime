@@ -208,6 +208,7 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
                   event->mtu.conn_handle,
                   event->mtu.channel_id,
                   event->mtu.value);
+       ble_att_set_preferred_mtu(event->mtu.value);
       return 0;
 
     case BLE_GAP_EVENT_REPEAT_PAIRING: {

@@ -55,7 +55,7 @@ namespace Pinetime {
 
           private:
             Pinetime::Drivers::SpiNorFlash& spiNorFlash;
-            static constexpr size_t bufferSize = 200;
+            static constexpr size_t bufferSize = 240;
             bool ready = false;
             size_t chunkSize = 0;
             size_t totalSize = 0;
@@ -119,6 +119,7 @@ namespace Pinetime {
         };
         States state = States::Idle;
 
+        uint16_t mtuSize = 240;
         uint32_t fileSize = 0;
         uint32_t bytesReceived = 0;
         TimerHandle_t timeoutTimer;
