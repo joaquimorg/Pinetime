@@ -31,7 +31,8 @@ About::About(Pinetime::Applications::DisplayApp *app,
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen3(); },
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen4(); }
+                //[this]() -> std::unique_ptr<Screen> { return CreateScreen4(); },
+                [this]() -> std::unique_ptr<Screen> { return CreateScreen5(); }
           },
           Screens::ScreenListModes::UpDown
         } {}
@@ -87,7 +88,7 @@ std::unique_ptr<Screen> About::CreateScreen1() {
           Version::Major(), Version::Minor(), Version::Patch(),
           __DATE__, __TIME__);
   lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
-  return std::unique_ptr<Screen>(new Screens::Label(0, 4, app, label));
+  return std::unique_ptr<Screen>(new Screens::Label(0, 5, app, label));
 }
 
 std::unique_ptr<Screen> About::CreateScreen2() {
@@ -128,7 +129,7 @@ std::unique_ptr<Screen> About::CreateScreen2() {
           batteryPercent, batteryVoltage, brightnessController.ToString(), watchdog.ResetReasonToString(watchdog.ResetReason()),
           settingsController.getSettingsBlock()
           );
-  return std::unique_ptr<Screen>(new Screens::Label(1, 4, app, label));
+  return std::unique_ptr<Screen>(new Screens::Label(1, 5, app, label));
 }
 
 std::unique_ptr<Screen> About::CreateScreen3() {
@@ -160,10 +161,47 @@ std::unique_ptr<Screen> About::CreateScreen3() {
           accelerometer.GetTemp()
           );
 
-  return std::unique_ptr<Screen>(new Screens::Label(2, 4, app, label));
+  return std::unique_ptr<Screen>(new Screens::Label(2, 5, app, label));
 }
 
+
+bool sortById(const TaskStatus_t &lhs, const TaskStatus_t &rhs) { return lhs.xTaskNumber < rhs.xTaskNumber; }
+
 std::unique_ptr<Screen> About::CreateScreen4() {
+  CreateContainer();
+  TaskStatus_t tasksStatus[6];
+  lv_obj_t * taskInfo = lv_table_create(container1, nullptr);
+  lv_table_set_col_cnt(taskInfo, 3);
+  lv_table_set_row_cnt(taskInfo, 7);
+  //lv_obj_set_pos(taskInfo, 10, 10);
+
+  lv_table_set_cell_value(taskInfo, 0, 0, "#");
+  lv_table_set_col_width(taskInfo, 0, 30);
+  lv_table_set_cell_value(taskInfo, 0, 1, "Task");
+  lv_table_set_col_width(taskInfo, 1, 80);
+  lv_table_set_cell_value(taskInfo, 0, 2, "Free");
+  lv_table_set_col_width(taskInfo, 2, 90);
+
+  auto nb = uxTaskGetSystemState(tasksStatus, 6, nullptr);
+  std::sort(tasksStatus, tasksStatus + nb, sortById);
+  for (uint8_t i = 0; i < nb; i++) {
+    
+    lv_table_set_cell_value(taskInfo, i + 1, 0, std::to_string(tasksStatus[i].xTaskNumber).c_str());
+    lv_table_set_cell_value(taskInfo, i + 1, 1, tasksStatus[i].pcTaskName);    
+    if (tasksStatus[i].usStackHighWaterMark < 20) {
+      std::string str1 = std::to_string(tasksStatus[i].usStackHighWaterMark) + " low";
+      lv_table_set_cell_value(taskInfo, i + 1, 2, str1.c_str());
+    } else {
+      lv_table_set_cell_value(taskInfo, i + 1, 2, std::to_string(tasksStatus[i].usStackHighWaterMark).c_str());
+    }
+
+  }
+  return std::unique_ptr<Screen>(new Screens::Label(3, 5, app, taskInfo));
+}
+
+
+
+std::unique_ptr<Screen> About::CreateScreen5() {
   CreateContainer();
   lv_obj_t * label = lv_label_create(container1, nullptr);
   lv_label_set_recolor(label, true);
@@ -176,5 +214,6 @@ std::unique_ptr<Screen> About::CreateScreen4() {
               "#FFFF00 https://github.com/#\n"
               "#FFFF00 joaquimorg/PinetimeLite#");
   lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
-  return std::unique_ptr<Screen>(new Screens::Label(3, 4, app, label));
+  return std::unique_ptr<Screen>(new Screens::Label(4, 5, app, label));
 }
+

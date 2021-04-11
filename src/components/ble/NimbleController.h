@@ -94,6 +94,7 @@ namespace Pinetime {
         };*/
 
         ServiceDiscovery serviceDiscovery;
+
     };
   }
 }

@@ -40,6 +40,7 @@ namespace Pinetime {
           std::unique_ptr<Screen> CreateScreen2();
           std::unique_ptr<Screen> CreateScreen3();
           std::unique_ptr<Screen> CreateScreen4();
+          std::unique_ptr<Screen> CreateScreen5();
 
           void CreateContainer();
       };

@@ -21,8 +21,6 @@
 #include "displayapp/screens/FlashLight.h"
 #include "displayapp/screens/Weather.h"
 #include "displayapp/screens/Motion.h"
-#include "displayapp/screens/Tasks.h"
-#include "displayapp/screens/InfiniPaint.h"
 
 #include "displayapp/screens/settings/QuickSettings.h"
 #include "displayapp/screens/settings/Settings.h"
@@ -69,7 +67,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
 }
 
 void DisplayApp::Start() {
-  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 800, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 1000, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 
@@ -355,11 +353,7 @@ void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction)
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Weather: 
-        currentScreen = std::make_unique<Screens::InfiniPaint>(this, lvgl);
-        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
-        break;
-      case Apps::Tasks: 
-        currentScreen = std::make_unique<Screens::Tasks>(this);
+        currentScreen = std::make_unique<Screens::Weather>(this);
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Motion: 

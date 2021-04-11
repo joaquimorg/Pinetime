@@ -38,7 +38,7 @@ namespace Pinetime {
 
         int OnServiceData(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context);
         void OnTimeout();
-
+        void Restart();
 
         class SpiFlash {
           public:

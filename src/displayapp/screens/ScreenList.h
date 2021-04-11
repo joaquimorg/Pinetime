@@ -39,11 +39,6 @@ namespace Pinetime {
             return running;
           }
 
-          /*bool OnButtonPushed() override {
-            running = false;
-            return true;
-          }*/
-
           bool OnTouchEvent(TouchEvents event) override {
 
             if ( mode == ScreenListModes::UpDown) {

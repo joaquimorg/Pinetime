@@ -163,6 +163,7 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
         bleController.Connect();
         systemTask.PushMessage(Pinetime::System::SystemTask::Messages::BleConnected);
         connectionHandle = event->connect.conn_handle;
+        fileService.Restart();
         // Service discovery is deffered via systemtask
       }
     }
@@ -174,6 +175,7 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
       /* Connection terminated; resume advertising. */
       currentTimeClient.Reset();
       alertNotificationClient.Reset();
+
       connectionHandle = BLE_HS_CONN_HANDLE_NONE;
       bleController.Disconnect();
       StartAdvertising();
@@ -186,7 +188,8 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
     case BLE_GAP_EVENT_ENC_CHANGE:
       /* Encryption has been enabled or disabled for this connection. */
       NRF_LOG_INFO("encryption change event; status=%d ", event->enc_change.status);
-      return 0;
+      //return 0;
+      break;
     case BLE_GAP_EVENT_SUBSCRIBE:
       /*NRF_LOG_INFO("subscribe event; conn_handle=%d attr_handle=%d "
                         "reason=%d prevn=%d curn=%d previ=%d curi=???\n",
@@ -202,15 +205,17 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
         batteryInformationService.Notification( event->subscribe.cur_notify );
       }
 
-      return 0;
+      //return 0;
+      break;
     case BLE_GAP_EVENT_MTU:
       NRF_LOG_INFO("mtu update event; conn_handle=%d cid=%d mtu=%d\n",
                   event->mtu.conn_handle,
                   event->mtu.channel_id,
                   event->mtu.value);
        ble_att_set_preferred_mtu(event->mtu.value);
-      return 0;
-
+       
+      //return 0;
+      break;
     case BLE_GAP_EVENT_REPEAT_PAIRING: {
       /* We already have a bond with the peer, but it is attempting to
        * establish a new secure link.  This app sacrifices security for
@@ -242,7 +247,8 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
                    notifSize);
 
       alertNotificationClient.OnNotification(event);
-      return 0;
+      //return 0;
+      break;
     }
       /* Attribute data is contained in event->notify_rx.attr_data. */
 
@@ -250,6 +256,8 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
 //      NRF_LOG_INFO("Advertising event : %d", event->type);
       break;
   }
+
+
   return 0;
 }
 

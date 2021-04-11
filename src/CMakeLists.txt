@@ -427,8 +427,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/FlashLight.cpp
         displayapp/screens/Weather.cpp
         displayapp/screens/Motion.cpp
-        displayapp/screens/Tasks.cpp
-        displayapp/screens/InfiniPaint.cpp
 
         displayapp/screens/settings/QuickSettings.cpp   
         displayapp/screens/settings/Settings.cpp

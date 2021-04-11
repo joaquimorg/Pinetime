@@ -70,6 +70,9 @@ void FileService::Init() {
 
 int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context) {
   
+  mtuSize = ble_att_preferred_mtu();
+  //mtuSize = ble_att_mtu(connectionHandle);
+
   if(bleController.IsFirmwareUpdating()){
     xTimerStart(timeoutTimer, 0);
   }
@@ -99,9 +102,7 @@ int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHand
 
 
 int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
-  auto opcode = static_cast<Opcodes>(om->om_data[0]);
-
-  mtuSize = ble_att_mtu(connectionHandle);
+  auto opcode = static_cast<Opcodes>(om->om_data[0]);  
   
   switch (opcode) {
     case Opcodes::COMMAND_SEND_FIRMWARE_INFO: {
@@ -288,11 +289,16 @@ void FileService::NotificationSend(uint16_t connection, uint16_t charactHandle, 
 
 
 void FileService::Reset() {
+  Restart();
+  mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateEnd);
+}
+
+
+void FileService::Restart() {
   state = States::Idle;
   bytesReceived = 0;
   bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Error);
-  bleController.StopFirmwareUpdate();
-  mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateEnd);
+  bleController.StopFirmwareUpdate();  
 }
 
 void FileService::OnTimeout() {
