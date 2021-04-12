@@ -23,7 +23,7 @@ namespace Pinetime {
 
       class WatchFaceAnalog : public Screen {
         public:
-          WatchFaceAnalog(DisplayApp* app,
+          WatchFaceAnalog(uint8_t imgnum, DisplayApp* app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
@@ -40,6 +40,8 @@ namespace Pinetime {
           uint8_t hour;
           uint8_t minute;
           uint8_t second;
+
+          uint8_t imgNum;
 
           Pinetime::Controllers::DateTime::Months month;
           uint8_t day;
@@ -77,6 +79,7 @@ namespace Pinetime {
           lv_obj_t* label_date_day;
           lv_obj_t* batteryIcon;
           lv_obj_t* notificationIcon;
+          lv_obj_t* stepValue;
 
           lv_task_t* taskUpdate;
          

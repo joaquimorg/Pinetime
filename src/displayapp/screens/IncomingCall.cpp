@@ -39,7 +39,7 @@ IncomingCall::IncomingCall(
   lv_obj_align(callName, NULL, LV_ALIGN_CENTER, 0, -40);
 
   lv_obj_t * callInfo = lv_label_create(lv_scr_act(), NULL);                     /*Enable re-coloring by commands in the text*/
-  lv_label_set_text_fmt(callInfo, "Incoming call"); 
+  lv_label_set_text(callInfo, "Incoming call"); 
   lv_obj_set_style_local_text_color(callInfo, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GREEN);
   lv_label_set_align(callInfo, LV_LABEL_ALIGN_CENTER);
   lv_obj_align(callInfo, NULL, LV_ALIGN_CENTER, 0, -10);

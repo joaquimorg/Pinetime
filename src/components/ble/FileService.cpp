@@ -150,13 +150,14 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         }
 
         bleController.StartFirmwareUpdate();
-        bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
+        bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::FormatFlash);
         bleController.FirmwareUpdateTotalBytes(fileSize);
         bleController.FirmwareUpdateCurrentBytes(0);
         // Send task to open app
         mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateStart);
         
         spiFlash.Erase();
+        bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
 
         // Notify to send Firmware !          
         data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_INIT;

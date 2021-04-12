@@ -65,6 +65,7 @@ namespace Pinetime {
         uint32_t GetScreenTimeOut() const { return settings.screenTimeOut; };
 
         void SetHistorySteps( Accelerometer steps, DateTime date );
+        uint32_t GetSteps() const { return stepHistory[stepHistoryPos].steps; };
 
         void setWakeUpMode( WakeUpMode wakeUp ) { 
           if ( wakeUp != settings.wakeUpMode ) settingsChanged = true;

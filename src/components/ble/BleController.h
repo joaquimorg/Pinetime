@@ -9,7 +9,7 @@ namespace Pinetime {
     class Ble {
       public:
         using BleAddress = std::array<uint8_t, 6>;
-        enum class FirmwareUpdateStates {Idle, Running, Validated, Error};
+        enum class FirmwareUpdateStates {Idle, Running, Validated, Error, FormatFlash};
         enum class AddressTypes { Public, Random };
         enum class FirmwareType { FW, RES, BOT };
 

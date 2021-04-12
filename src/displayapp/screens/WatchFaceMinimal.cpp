@@ -23,7 +23,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
                                              
-  settingsController.SetClockFace(2);
+  settingsController.SetClockFace(3);
   settingsController.SaveSettings();
 
   sHour = 99;

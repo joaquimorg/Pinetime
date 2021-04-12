@@ -141,12 +141,10 @@ void Accelerometer::UpdateAccel() {
     struct bma4_accel sens_data;
     
     bma4_read_accel_xyz(&sens_data, &bma);
-    /*accelData.x = (sens_data.x / 0x10);
+    accelData.x = (sens_data.x / 0x10);
     accelData.y = (sens_data.y / 0x10);
-    accelData.z = (sens_data.z / 0x10);*/
-    accelData.x = sens_data.x;
-    accelData.y = sens_data.y;
-    accelData.z = sens_data.z;
+    accelData.z = (sens_data.z / 0x10);
+        
 }
 
 void Accelerometer::Update() {

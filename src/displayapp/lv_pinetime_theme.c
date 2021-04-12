@@ -530,10 +530,10 @@ static void chart_init(void)
     lv_style_set_line_color(&styles->chart_series_bg, LV_STATE_DEFAULT, COLOR_BG_BORDER);
 
     lv_style_reset(&styles->chart_series);
-    lv_style_set_line_width(&styles->chart_series, LV_STATE_DEFAULT, LV_DPX(3));
-    lv_style_set_size(&styles->chart_series, LV_STATE_DEFAULT, LV_DPX(4));
-    lv_style_set_pad_inner(&styles->chart_series, LV_STATE_DEFAULT, LV_DPX(2));     /*Space between columns*/
-    lv_style_set_radius(&styles->chart_series, LV_STATE_DEFAULT, LV_DPX(1));
+    lv_style_set_line_width(&styles->chart_series, LV_STATE_DEFAULT, 1);
+    lv_style_set_size(&styles->chart_series, LV_STATE_DEFAULT, 4);
+    lv_style_set_pad_inner(&styles->chart_series, LV_STATE_DEFAULT, 3);     /*Space between columns*/
+    lv_style_set_radius(&styles->chart_series, LV_STATE_DEFAULT, 4);
 
 #endif
 }
@@ -1255,8 +1255,8 @@ static void theme_apply(lv_theme_t * th, lv_obj_t * obj, lv_theme_style_t name)
 #endif
 #if LV_USE_TABLE
         case LV_THEME_TABLE: {
-                list = lv_obj_get_style_list(obj, LV_TABLE_PART_BG);
-                _lv_style_list_add_style(list, &styles->bg);
+                //list = lv_obj_get_style_list(obj, LV_TABLE_PART_BG);
+                //_lv_style_list_add_style(list, &styles->bg);
 
                 int idx = 1; /* start value should be 1, not zero, since cell styles
                             start at 1 due to presence of LV_TABLE_PART_BG=0

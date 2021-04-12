@@ -34,7 +34,8 @@ Clock::Clock(DisplayApp* app,
           settingsController.GetClockFace(),
           {
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceDigitalScreen(); },
-                [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen1(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceAnalogScreen2(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceMinimalScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFacePongScreen(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen1(); },
@@ -66,8 +67,12 @@ std::unique_ptr<Screen> Clock::WatchFaceDigitalScreen() {
   return std::make_unique<Screens::WatchFaceDigital>(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController, accelerometer);
 }
 
-std::unique_ptr<Screen> Clock::WatchFaceAnalogScreen() {  
-  return std::make_unique<Screens::WatchFaceAnalog>(app, dateTimeController, batteryController, bleController, notificatioManager, settingsController);
+std::unique_ptr<Screen> Clock::WatchFaceAnalogScreen1() {  
+  return std::make_unique<Screens::WatchFaceAnalog>(0, app, dateTimeController, batteryController, bleController, notificatioManager, settingsController);
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceAnalogScreen2() {  
+  return std::make_unique<Screens::WatchFaceAnalog>(1, app, dateTimeController, batteryController, bleController, notificatioManager, settingsController);
 }
 
 std::unique_ptr<Screen> Clock::WatchFaceMinimalScreen() {  

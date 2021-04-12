@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(pinetimelite VERSION 0.4.1 LANGUAGES C CXX ASM)
+project(pinetimelite VERSION 0.4.5 LANGUAGES C CXX ASM)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_CXX_STANDARD 14)

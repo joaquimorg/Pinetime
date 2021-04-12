@@ -27,9 +27,9 @@ SettingWatchFace::SettingWatchFace(
   lv_obj_set_style_local_pad_inner(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 5);
   lv_obj_set_style_local_border_width(container1, LV_CONT_PART_MAIN, LV_STATE_DEFAULT, 0);
 
-  lv_obj_set_pos(container1, 10, 60);
-  lv_obj_set_width(container1, LV_HOR_RES - 20);
-  lv_obj_set_height(container1, LV_VER_RES - 50);
+  lv_obj_set_pos(container1, 10, 35);
+  lv_obj_set_width(container1, LV_HOR_RES - 5);
+  lv_obj_set_height(container1, LV_VER_RES - 5);
   lv_cont_set_layout(container1, LV_LAYOUT_COLUMN_LEFT);
 
   lv_obj_t * title = lv_label_create(lv_scr_act(), NULL);  
@@ -46,7 +46,7 @@ SettingWatchFace::SettingWatchFace(
 
   optionsTotal = 0;
   cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tDigital face");
+  lv_checkbox_set_text_static(cbOption[optionsTotal], " Digital");
   cbOption[optionsTotal]->user_data = this;
   lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);  
   if (settingsController.GetClockFace() == 0 ) {
@@ -54,23 +54,23 @@ SettingWatchFace::SettingWatchFace(
   }
   optionsTotal++;
   cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tAnalog face");
+  lv_checkbox_set_text_static(cbOption[optionsTotal], " Analog 1");
   cbOption[optionsTotal]->user_data = this;
   lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);  
-  if (settingsController.GetClockFace() == 1 ) {
+  if (settingsController.GetClockFace() == 1) {
     lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
   optionsTotal++;
   cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tBig circle face");
+  lv_checkbox_set_text_static(cbOption[optionsTotal], " Analog 2");
   cbOption[optionsTotal]->user_data = this;
-  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
-  if (settingsController.GetClockFace() == 2 ) {
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);  
+  if (settingsController.GetClockFace() == 2) {
     lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
   optionsTotal++;
   cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tPong game face");
+  lv_checkbox_set_text_static(cbOption[optionsTotal], " Big circle");
   cbOption[optionsTotal]->user_data = this;
   lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
   if (settingsController.GetClockFace() == 3 ) {
@@ -78,10 +78,18 @@ SettingWatchFace::SettingWatchFace(
   }
   optionsTotal++;
   cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
-  lv_checkbox_set_text_static(cbOption[optionsTotal], "\tCustom");
+  lv_checkbox_set_text_static(cbOption[optionsTotal], " Pong game");
   cbOption[optionsTotal]->user_data = this;
   lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
-  if (settingsController.GetClockFace() >= 4 ) {
+  if (settingsController.GetClockFace() == 4 ) {
+    lv_checkbox_set_checked(cbOption[optionsTotal], true);
+  }
+  optionsTotal++;
+  cbOption[optionsTotal] = lv_checkbox_create(container1, NULL);
+  lv_checkbox_set_text_static(cbOption[optionsTotal], " Images (1 2 3)");
+  cbOption[optionsTotal]->user_data = this;
+  lv_obj_set_event_cb(cbOption[optionsTotal], event_handler);
+  if (settingsController.GetClockFace() >= 5 ) {
     lv_checkbox_set_checked(cbOption[optionsTotal], true);
   }
   optionsTotal++;

@@ -24,6 +24,7 @@ namespace Pinetime {
           
           bool OnTouchEvent(TouchEvents event) override;
         private:
+          bool running = true;
           
           lv_obj_t* container1;
 
@@ -35,7 +36,7 @@ namespace Pinetime {
           Pinetime::Controllers::Accelerometer& accelerometer;
           Pinetime::Controllers::Settings& settingsController;
 
-          ScreenList<4> screens;
+          ScreenList<5> screens;
           std::unique_ptr<Screen> CreateScreen1();
           std::unique_ptr<Screen> CreateScreen2();
           std::unique_ptr<Screen> CreateScreen3();

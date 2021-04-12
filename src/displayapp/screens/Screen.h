@@ -49,7 +49,7 @@ namespace Pinetime {
           virtual bool Refresh() = 0;
       
           /** @return false if the button hasn't been handled by the app, true if it has been handled */
-          virtual bool OnButtonPushed() { running = false; return false; }
+          virtual bool OnButtonPushed() { return false; }
 
           /** @return false if the event hasn't been handled by the app, true if it has been handled */
           virtual bool OnTouchEvent(TouchEvents event) { return false; }

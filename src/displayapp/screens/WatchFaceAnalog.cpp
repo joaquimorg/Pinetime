@@ -29,7 +29,7 @@ static void lv_update_task(struct _lv_task_t *task) {
   user_data->UpdateScreen();
 }
 
-WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
+WatchFaceAnalog::WatchFaceAnalog(uint8_t imgnum, Pinetime::Applications::DisplayApp *app,
                   Controllers::DateTime& dateTimeController,
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
@@ -38,7 +38,8 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
-  settingsController.SetClockFace(1);
+  imgNum = imgnum;
+  settingsController.SetClockFace(1 + imgNum);
   settingsController.SaveSettings();
   
   uint8_t day = dateTimeController.Day();
@@ -47,37 +48,39 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   sMinute = 99;
   sSecond = 99;
   
-  lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), NULL);
-  //lv_img_set_src(bg_clock_img, &bg_clock);
-  lv_img_set_src(bg_clock_img, WF_BACKGROUND_ANALOG);
+  lv_obj_t * bg_clock_img = lv_img_create(lv_scr_act(), nullptr);
+
+  if ( imgNum == 0 ) {
+    lv_img_set_src(bg_clock_img, WF_BACKGROUND_ANALOG01);
+  } else if ( imgNum == 1 ) {
+    lv_img_set_src(bg_clock_img, WF_BACKGROUND_ANALOG02);
+  }  
   
-  lv_obj_align(bg_clock_img, NULL, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_align(bg_clock_img, nullptr, LV_ALIGN_CENTER, 0, 0);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
   lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
-  lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_BOTTOM_RIGHT, -8, -4);
+  lv_obj_align(batteryIcon, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, -8, -4);
 
 
-  notificationIcon = lv_label_create(lv_scr_act(), NULL);
+  notificationIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(notificationIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
   lv_obj_set_style_local_text_font(notificationIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
   lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
-  lv_obj_align(notificationIcon, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 8, -4);
+  lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_BOTTOM_LEFT, 8, -4);  
 
   // Date - Day / Week day
 
-  label_date_day = lv_label_create(lv_scr_act(), NULL);
-  lv_obj_set_style_local_text_color(label_date_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xf0a500));
+  label_date_day = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_text_fmt(label_date_day,  "%s\n%02i", dateTimeController.DayOfWeekShortToString(), day);
-  lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );    
-  lv_obj_align(label_date_day, NULL, LV_ALIGN_CENTER, 50, 0);  
+  lv_label_set_align( label_date_day, LV_LABEL_ALIGN_CENTER );
   
-  minute_body = lv_line_create(lv_scr_act(), NULL);
-  minute_body_trace = lv_line_create(lv_scr_act(), NULL);
-  hour_body   = lv_line_create(lv_scr_act(), NULL);
-  hour_body_trace   = lv_line_create(lv_scr_act(), NULL);
-  second_body = lv_line_create(lv_scr_act(), NULL);
+  minute_body = lv_line_create(lv_scr_act(), nullptr);
+  minute_body_trace = lv_line_create(lv_scr_act(), nullptr);
+  hour_body   = lv_line_create(lv_scr_act(), nullptr);
+  hour_body_trace   = lv_line_create(lv_scr_act(), nullptr);
+  second_body = lv_line_create(lv_scr_act(), nullptr);
 
 
   lv_style_init(&second_line_style);
@@ -87,29 +90,51 @@ WatchFaceAnalog::WatchFaceAnalog(Pinetime::Applications::DisplayApp *app,
   lv_obj_add_style(second_body, LV_LINE_PART_MAIN, &second_line_style);
 
   lv_style_init(&minute_line_style);
-  lv_style_set_line_width(&minute_line_style, LV_STATE_DEFAULT, 7);
-  lv_style_set_line_color(&minute_line_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+  lv_style_set_line_width(&minute_line_style, LV_STATE_DEFAULT, 7);  
   lv_style_set_line_rounded(&minute_line_style, LV_STATE_DEFAULT, true);
   lv_obj_add_style(minute_body, LV_LINE_PART_MAIN, &minute_line_style);
 
   lv_style_init(&minute_line_style_trace);
-  lv_style_set_line_width(&minute_line_style_trace, LV_STATE_DEFAULT, 3);
-  lv_style_set_line_color(&minute_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+  lv_style_set_line_width(&minute_line_style_trace, LV_STATE_DEFAULT, 3);  
   lv_style_set_line_rounded(&minute_line_style_trace, LV_STATE_DEFAULT, false);
   lv_obj_add_style(minute_body_trace, LV_LINE_PART_MAIN, &minute_line_style_trace);
 
 
   lv_style_init(&hour_line_style);
-  lv_style_set_line_width(&hour_line_style, LV_STATE_DEFAULT, 7);
-  lv_style_set_line_color(&hour_line_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+  lv_style_set_line_width(&hour_line_style, LV_STATE_DEFAULT, 7);  
   lv_style_set_line_rounded(&hour_line_style, LV_STATE_DEFAULT, true);
   lv_obj_add_style(hour_body, LV_LINE_PART_MAIN, &hour_line_style);
 
   lv_style_init(&hour_line_style_trace);
-  lv_style_set_line_width(&hour_line_style_trace, LV_STATE_DEFAULT, 3);
-  lv_style_set_line_color(&hour_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+  lv_style_set_line_width(&hour_line_style_trace, LV_STATE_DEFAULT, 3);  
   lv_style_set_line_rounded(&hour_line_style_trace, LV_STATE_DEFAULT, false);
   lv_obj_add_style(hour_body_trace, LV_LINE_PART_MAIN, &hour_line_style_trace);
+
+
+  if ( imgNum == 0 ) {
+    lv_obj_set_style_local_text_color(label_date_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0xf0a500));
+    lv_obj_align(label_date_day, nullptr, LV_ALIGN_CENTER, 50, 0);
+
+    lv_style_set_line_color(&minute_line_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_style_set_line_color(&minute_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_style_set_line_color(&hour_line_style, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+    lv_style_set_line_color(&hour_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_WHITE);
+
+  } else if ( imgNum == 1 ) {
+    lv_obj_set_style_local_text_color(label_date_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x2f2f2f));
+    lv_obj_align(label_date_day, nullptr, LV_ALIGN_CENTER, 90, 0);
+    lv_obj_set_style_local_text_color(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x2f2f2f));
+
+    lv_style_set_line_color(&minute_line_style, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
+    lv_style_set_line_color(&minute_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
+    lv_style_set_line_color(&hour_line_style, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
+    lv_style_set_line_color(&hour_line_style_trace, LV_STATE_DEFAULT, LV_COLOR_YELLOW);
+
+    stepValue = lv_label_create(lv_scr_act(), nullptr);  
+    lv_obj_set_style_local_text_color(stepValue, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x2f2f2f));
+    lv_label_set_text_fmt(stepValue, "%d", settingsController.GetSteps());
+    lv_obj_align(stepValue, nullptr, LV_ALIGN_IN_BOTTOM_MID, 0, -12);
+  }
 
   UpdateClock();
 
@@ -221,6 +246,11 @@ void WatchFaceAnalog::UpdateScreen() {
       currentDayOfWeek = dayOfWeek;
       currentDay = day;
     }
+  }
+
+  if ( imgNum == 1 ) {
+    lv_label_set_text_fmt(stepValue, "%d", settingsController.GetSteps());
+    lv_obj_align(stepValue, nullptr, LV_ALIGN_IN_BOTTOM_MID, 0, -12);
   }
 }
 

@@ -532,9 +532,8 @@ set(INCLUDE_FILES
 include_directories(
         .
         ../
-        FreeRTOS
-        libs
-        libs/lvgl
+        FreeRTOS/
+        libs/
         libs/date/includes
         libs/mynewt-nimble/porting/npl/freertos/include
         libs/mynewt-nimble/nimble/include

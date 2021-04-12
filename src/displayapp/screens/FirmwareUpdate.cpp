@@ -66,6 +66,10 @@ bool FirmwareUpdate::Refresh() {
         state = States::Error;
       }
       return running;
+    case Pinetime::Controllers::Ble::FirmwareUpdateStates::FormatFlash:
+      FlashFormat();
+      return running;
+
   }
 }
 
@@ -99,4 +103,11 @@ void FirmwareUpdate::UpdateError() {
 
   lv_obj_set_style_local_bg_color(bar1, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
   vTaskDelay(500);
+}
+
+
+void FirmwareUpdate::FlashFormat() {
+  lv_label_set_recolor(percentLabel, true);
+  lv_label_set_text_static(percentLabel, "#ffff00 Formating Flash...#");
+  lv_label_set_align( percentLabel, LV_LABEL_ALIGN_CENTER );
 }

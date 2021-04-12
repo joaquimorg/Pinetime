@@ -31,10 +31,9 @@ namespace Pinetime {
           States state;
 
           bool DisplayProgression() const;
-
           void UpdateValidated();
-
           void UpdateError();
+          void FlashFormat();
       };
     }
   }

@@ -31,7 +31,7 @@ About::About(Pinetime::Applications::DisplayApp *app,
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen3(); },
-                //[this]() -> std::unique_ptr<Screen> { return CreateScreen4(); },
+                [this]() -> std::unique_ptr<Screen> { return CreateScreen4(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen5(); }
           },
           Screens::ScreenListModes::UpDown
@@ -43,8 +43,6 @@ About::~About() {
 }
 
 bool About::Refresh() {
-  if(running)
-    running = screens.Refresh();
   return running;
 }
 
@@ -181,6 +179,12 @@ std::unique_ptr<Screen> About::CreateScreen4() {
   lv_table_set_col_width(taskInfo, 1, 80);
   lv_table_set_cell_value(taskInfo, 0, 2, "Free");
   lv_table_set_col_width(taskInfo, 2, 90);
+  lv_table_set_cell_type(taskInfo, 0, 0, 2);
+  lv_table_set_cell_type(taskInfo, 0, 1, 2);
+  lv_table_set_cell_type(taskInfo, 0, 2, 2);
+  lv_table_set_cell_type(taskInfo, 0, 3, 2);
+
+  lv_obj_set_style_local_text_color(taskInfo, LV_TABLE_PART_CELL2, LV_STATE_DEFAULT, lv_color_hex(0xFFFF00));
 
   auto nb = uxTaskGetSystemState(tasksStatus, 6, nullptr);
   std::sort(tasksStatus, tasksStatus + nb, sortById);
@@ -194,7 +198,6 @@ std::unique_ptr<Screen> About::CreateScreen4() {
     } else {
       lv_table_set_cell_value(taskInfo, i + 1, 2, std::to_string(tasksStatus[i].usStackHighWaterMark).c_str());
     }
-
   }
   return std::unique_ptr<Screen>(new Screens::Label(3, 5, app, taskInfo));
 }

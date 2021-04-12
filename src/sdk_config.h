@@ -4992,7 +4992,7 @@
 // <e> NRFX_TWIM_ENABLED - nrfx_twim - TWIM peripheral driver
 //==========================================================
 #ifndef NRFX_TWIM_ENABLED
-#define NRFX_TWIM_ENABLED 1
+#define NRFX_TWIM_ENABLED 0
 #endif
 // <q> NRFX_TWIM0_ENABLED  - Enable TWIM0 instance
 
@@ -5244,7 +5244,7 @@
 // <e> NRFX_TWI_ENABLED - nrfx_twi - TWI peripheral driver
 //==========================================================
 #ifndef NRFX_TWI_ENABLED
-#define NRFX_TWI_ENABLED 1
+#define NRFX_TWI_ENABLED 0
 #endif
 // <q> NRFX_TWI0_ENABLED  - Enable TWI0 instance
 
@@ -6669,7 +6669,7 @@
 // <e> TWIS_ENABLED - nrf_drv_twis - TWIS peripheral driver - legacy layer
 //==========================================================
 #ifndef TWIS_ENABLED
-#define TWIS_ENABLED 1
+#define TWIS_ENABLED 0
 #endif
 // <q> TWIS0_ENABLED  - Enable TWIS0 instance
 
@@ -8248,7 +8248,7 @@
 
 
 #ifndef NRF_TWI_MNGR_ENABLED
-#define NRF_TWI_MNGR_ENABLED 1
+#define NRF_TWI_MNGR_ENABLED 0
 #endif
 
 // <q> SLIP_ENABLED  - slip - SLIP encoding and decoding

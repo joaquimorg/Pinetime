@@ -24,6 +24,7 @@ namespace Pinetime {
                 Pinetime::Controllers::Accelerometer& accelerometer;
 
                 lv_obj_t * chart;
+                lv_obj_t * label;
                 lv_chart_series_t * ser1;
                 lv_chart_series_t * ser2;
                 lv_chart_series_t * ser3;
