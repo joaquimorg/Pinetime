@@ -48,15 +48,20 @@ void Battery::Init() {
 		.skip_gpio_setup = true,
 		};
 	
-	nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfigCharge, nrfx_gpiote_evt_handler);	
+	nrfx_gpiote_in_init(CHARGE_IRQ, &pinConfigCharge, nrfx_gpiote_evt_handler);
 		
 }
 
 void Battery::Update() {
 
   	isCharging = !nrf_gpio_pin_read(CHARGE_IRQ);
-  	isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);	
+  	isPowerPresent = !nrf_gpio_pin_read(CHARGE_BASE_IRQ);
+	
+	if ( isReading ) return;
+
 	SaadcInit();
+	samples = 0;
+	isReading = true;
 	nrfx_saadc_sample();
 }
 
@@ -67,47 +72,83 @@ void Battery::SaadcInit() {
   	nrf_saadc_channel_config_t adcChannelConfig = {
 		.resistor_p = NRF_SAADC_RESISTOR_DISABLED,
 		.resistor_n = NRF_SAADC_RESISTOR_DISABLED,
-		.gain       = NRF_SAADC_GAIN1_5,
+		.gain       = NRF_SAADC_GAIN1_6,
 		.reference  = NRF_SAADC_REFERENCE_INTERNAL,
-		.acq_time   = NRF_SAADC_ACQTIME_5US,
+		.acq_time   = NRF_SAADC_ACQTIME_20US,
 		.mode       = NRF_SAADC_MODE_SINGLE_ENDED,
 		.burst      = NRF_SAADC_BURST_ENABLED,
 		.pin_p      = BATTERY_VOL,
 		.pin_n      = NRF_SAADC_INPUT_DISABLED
   	};
   	APP_ERROR_CHECK(nrfx_saadc_channel_init(0, &adcChannelConfig));
-	APP_ERROR_CHECK(nrfx_saadc_buffer_convert(m_buffer_pool[0], 1));
-    APP_ERROR_CHECK(nrfx_saadc_buffer_convert(m_buffer_pool[1], 1));
+	APP_ERROR_CHECK(nrfx_saadc_buffer_convert(&adc_buf[0], 1));
+    APP_ERROR_CHECK(nrfx_saadc_buffer_convert(&adc_buf[1], 1));
 
+}
+
+/**
+ * Symmetric sigmoidal approximation
+ * https://www.desmos.com/calculator/7m9lu26vpy
+ *
+ * c - c / (1 + k*x/v)^3
+ */
+uint8_t Battery::sigmoidal(uint16_t voltage, uint16_t minVoltage, uint16_t maxVoltage) {
+	// slow
+	// uint8_t result = 110 - (110 / (1 + pow(1.468 * (voltage - minVoltage)/(maxVoltage - minVoltage), 6)));
+
+	// steep
+	// uint8_t result = 102 - (102 / (1 + pow(1.621 * (voltage - minVoltage)/(maxVoltage - minVoltage), 8.1)));
+
+	// normal
+	uint8_t result = 105 - (105 / (1 + pow(1.724 * (voltage - minVoltage)/(maxVoltage - minVoltage), 5.5)));
+	return result >= 100 ? 100 : result;
 }
 
 void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
 
-	const float battery_max = 4.18; // maximum voltage of battery ( max charging voltage is 4.21 )
-	const float battery_min = 3.20; // minimum voltage of battery before shutdown ( depends on the battery )
+	const uint16_t battery_max = 4150; // maximum voltage of battery ( max charging voltage is 4.21 )
+	const uint16_t battery_min = 3200; // minimum voltage of battery before shutdown ( depends on the battery )
+
+	const uint16_t VIN_MEAS_R26 = 1000 + 50; // 1000kOhm +- 5% + error correction
+	const uint16_t VIN_MEAS_R35 = 1000; // 1000kOhm +- 5%
 
 	if (p_event->type == NRFX_SAADC_EVT_DONE) {
-	
+
+		nrf_saadc_value_t adc_result;
+
+		adc_result = p_event->data.done.p_buffer[0];
+
 		APP_ERROR_CHECK(nrfx_saadc_buffer_convert(p_event->data.done.p_buffer, 1));
 
-		int i, batt_sum=0;
+		// Voltage divider ratio
+		//(R26 + R35) / R35
+		auto value = (VIN_MEAS_R26 + VIN_MEAS_R35) * adc_result / VIN_MEAS_R35;		
 
-		for (i = 0; i < 1; i++) {
-			batt_sum+=p_event->data.done.p_buffer[i];		
-		}
-		batt_sum /= 1;
+		sumValue = sumValue - readBuffer[readBufferIndex];	// Remove the oldest entry from the sum
+		readBuffer[readBufferIndex] = value;           		// Add the newest reading to the window
+		sumValue = sumValue + value;                 		// Add the newest reading to the sum
+		readBufferIndex = (readBufferIndex+1) % percentSamples;   // Increment the index, and wrap to 0 if it exceeds the window size
 
-      	voltage = (batt_sum * 2.04f) / (1024 / 3.0f);
-      	voltage = roundf(voltage * 100) / 100;		
-		
-      	percentRemaining = static_cast<int>(((voltage - battery_min) / (battery_max - battery_min)) * 100);
+		sumValueAvg = sumValue / percentSamples;
 
-      	percentRemaining = std::max(percentRemaining, 0);
-      	percentRemaining = std::min(percentRemaining, 100);
+		// ADC * 0.6V reference / 10-bit ADC * prescale (1/6)
+		auto miliVolts = ((sumValueAvg * 600) / 1024) * 6;
 
+		voltage = (float)miliVolts / 1000;
+
+		percentRemaining = sigmoidal(miliVolts, battery_min, battery_max);
+
+		percentRemaining = std::max(percentRemaining, 0);
+		percentRemaining = std::min(percentRemaining, 100);
 		percentRemainingBuffer.insert(percentRemaining);
 
-      	nrfx_saadc_uninit();
+		samples++;
+		if ( samples > percentSamples ) {
+      		nrfx_saadc_uninit();
+			isReading = false;
+		} else {
+			nrfx_saadc_sample();
+		}
     }
 }
 

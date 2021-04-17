@@ -21,18 +21,18 @@
 
 using namespace Pinetime::System;
 
-void IdleTimerCallback(TimerHandle_t xTimer) {
+namespace {
+  void IdleTimerCallback(TimerHandle_t xTimer) {
+    //NRF_LOG_INFO("IdleTimerCallback");
+    auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
+    sysTask->OnIdle();
+  }
 
-  //NRF_LOG_INFO("IdleTimerCallback");
-  auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
-  sysTask->OnIdle();
+  void HardwareTimerCallback(TimerHandle_t xTimer) {
+    auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
+    sysTask->HardwareStatus();
+  }
 }
-
-void HardwareTimerCallback(TimerHandle_t xTimer) {
-  auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
-  sysTask->HardwareStatus();
-}
-
 
 SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        Drivers::SpiNorFlash& spiNorFlash,
@@ -102,6 +102,9 @@ void SystemTask::Work() {
 
   touchPanel.Init();
 
+  batteryController.Init();
+  //batteryController.Update();
+
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
   nrf_gpio_cfg_output(KEY_ENABLE);
@@ -133,7 +136,7 @@ void SystemTask::Work() {
   //
 
   // Step Counter IRQ
-  nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
+  /*nrf_gpio_cfg_sense_input(BMA421_IRQ, NRF_GPIO_PIN_PULLUP, NRF_GPIO_PIN_SENSE_LOW);
 
   static nrfx_gpiote_in_config_t const pinConfigBMA = {
       .sense = NRF_GPIOTE_POLARITY_TOGGLE,
@@ -143,25 +146,22 @@ void SystemTask::Work() {
       .skip_gpio_setup = true,
     };
   
-  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);
+  nrfx_gpiote_in_init(BMA421_IRQ, &pinConfigBMA, nrfx_gpiote_evt_handler);*/
   //
-  batteryController.Init();
-  //batteryController.Update();
+
+  displayApp =  std::make_unique<Pinetime::Applications::DisplayApp>(
+    lcd, lvgl, touchPanel, batteryController, bleController, spiNorFlash, 
+    dateTimeController, watchdogView, settingsController, accelerometer, brightnessController,
+    *this, notificationManager, callNotificationManager);
+    
+  displayApp->Start(); 
 
   idleTimer = xTimerCreate ("idleTimer", pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), pdFALSE, this, IdleTimerCallback);
   xTimerStart(idleTimer, 0);
 
   // Hardware status timer
   hardwareTimer = xTimerCreate ("hardwareTimer", pdMS_TO_TICKS(hardwareTime), pdTRUE, this, HardwareTimerCallback);
-  xTimerStart(hardwareTimer, 0);  
-
-  displayApp =  std::make_unique<Pinetime::Applications::DisplayApp>(
-      lcd, lvgl, touchPanel, batteryController, bleController, spiNorFlash, 
-      dateTimeController, watchdogView, settingsController, accelerometer, brightnessController,
-      *this, notificationManager, callNotificationManager);
-      
-  watchdog.Kick();
-  displayApp->Start();  
+  xTimerStart(hardwareTimer, 0);   
 
   vrMotor.Init();
   
@@ -452,20 +452,19 @@ void SystemTask::HardwareStatus() {
   batteryController.Update();
 
   if(isGoingToSleep) return ;
-  if(isSleeping && !isWakingUp) {
+  if(isSleeping and !isWakingUp) {
     // verify batt status to alert if is to low
-    if ( batteryController.PercentRemaining() >= 0 && batteryController.PercentRemaining() < 15 && !batteryController.IsCharging() ) {
+    if ( batteryController.PercentRemaining() >= 0 and batteryController.PercentRemaining() < 15 and !batteryController.IsCharging() ) {
         WakeUp();
         vrMotor.Vibrate(35);
+        displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
         if ( batteryController.PercentRemaining() < 5 ) {
           PushMessage(Messages::PowerOFF);
-        } else {
-          displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
         }
     }
 
     // verify if batt is charged
-    if ( batteryController.PercentRemaining() == 100 && batteryController.IsCharging() ) {
+    if ( batteryController.PercentRemaining() == 100 and batteryController.IsCharging() ) {
         WakeUp();
         displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
     }

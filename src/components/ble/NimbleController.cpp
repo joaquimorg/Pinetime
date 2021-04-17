@@ -40,7 +40,7 @@ NimbleController::NimbleController(
         callNotificationManager{callNotificationManager},
         spiNorFlash{spiNorFlash},
         fileService{systemTask, bleController, spiNorFlash},
-        //dfuService{systemTask, bleController, spiNorFlash},
+        dfuService{systemTask, bleController, spiNorFlash},
         currentTimeClient{dateTimeController},
         alertNotificationService{systemTask, notificationManager, callNotificationManager},
         alertNotificationClient{systemTask, notificationManager},
@@ -66,7 +66,7 @@ void NimbleController::Init() {
   
   alertNotificationService.Init();
   
-  //dfuService.Init();
+  dfuService.Init();
   
   batteryInformationService.Init();
   

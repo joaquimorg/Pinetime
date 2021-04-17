@@ -36,7 +36,7 @@ namespace Pinetime {
           Pinetime::Controllers::Accelerometer& accelerometer;
           Pinetime::Controllers::Settings& settingsController;
 
-          ScreenList<5> screens;
+          ScreenList<4> screens;
           std::unique_ptr<Screen> CreateScreen1();
           std::unique_ptr<Screen> CreateScreen2();
           std::unique_ptr<Screen> CreateScreen3();

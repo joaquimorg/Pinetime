@@ -31,7 +31,7 @@ About::About(Pinetime::Applications::DisplayApp *app,
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen2(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen3(); },
-                [this]() -> std::unique_ptr<Screen> { return CreateScreen4(); },
+                //[this]() -> std::unique_ptr<Screen> { return CreateScreen4(); },
                 [this]() -> std::unique_ptr<Screen> { return CreateScreen5(); }
           },
           Screens::ScreenListModes::UpDown

@@ -52,7 +52,7 @@ Charging::Charging(
   percent = lv_label_create(lv_scr_act(), NULL);
   lv_obj_set_style_local_text_font(percent, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
   if ( batteryPercent >= 0) {
-    lv_label_set_text_fmt(percent,"%02i%%", batteryPercent);
+    lv_label_set_text_fmt(percent,"%i%%", batteryPercent);
   } else {
     lv_label_set_text(percent,"--%");
   }
@@ -71,7 +71,7 @@ Charging::Charging(
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
 
-  taskUpdate = lv_task_create(lv_update_task, 50000, LV_TASK_PRIO_LOW, this);
+  taskUpdate = lv_task_create(lv_update_task, 60000, LV_TASK_PRIO_LOW, this);
   taskAnim = lv_task_create(lv_anim_task, 1000, LV_TASK_PRIO_LOW, this);
   UpdateScreen();
 }
@@ -87,7 +87,7 @@ void Charging::UpdateAnim() {
   batteryPercent = batteryController.PercentRemaining();
 
   if ( batteryPercent >= 0 ) {
-    if ( batteryController.IsCharging() ) {
+    if ( batteryController.IsCharging() and batteryPercent < 100 ) {
       animation +=1;
       if (animation >= 100) {
         animation = 0;
@@ -114,20 +114,21 @@ void Charging::UpdateScreen() {
   batteryVoltage = batteryController.Voltage();
 
   if ( batteryPercent >= 0 ) {
-    if ( batteryController.IsCharging() ) {
-
-      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0xFF0000));
-
+    if ( batteryController.IsCharging() and batteryPercent < 100 ) {
+      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, LV_COLOR_RED);
       lv_label_set_text_static(status,"Battery charging");
-
+    } else if ( batteryPercent == 100 ) {
+      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, LV_COLOR_BLUE);
+      lv_label_set_text_static(status,"Battery is fully charged");
+    } else if ( batteryPercent < 10 ) {
+      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, LV_COLOR_YELLOW);
+      lv_label_set_text_static(status,"Battery is low");
     } else {
-      
-      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, lv_color_hex(0x00FF00));
-
+      lv_obj_set_style_local_bg_color(charging_bar, LV_BAR_PART_INDIC , LV_STATE_DEFAULT, LV_COLOR_GREEN);
       lv_label_set_text_static(status,"Battery discharging");
     }
     
-    lv_label_set_text_fmt(percent,"%02i%%", batteryPercent);
+    lv_label_set_text_fmt(percent,"%i%%", batteryPercent);
     
   } else {
     lv_label_set_text_static(status,"Reading Battery status");

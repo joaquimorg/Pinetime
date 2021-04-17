@@ -13,7 +13,7 @@
 #include "CurrentTimeClient.h"
 #include "CurrentTimeService.h"
 #include "DeviceInformationService.h"
-//#include "DfuService.h"
+#include "DfuService.h"
 #include "FileService.h"
 #include "ImmediateAlertService.h"
 #include "MusicService.h"
@@ -73,7 +73,7 @@ namespace Pinetime {
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
 
         FileService fileService;
-        //Pinetime::Controllers::DfuService dfuService;
+        Pinetime::Controllers::DfuService dfuService;
 
         DeviceInformationService deviceInformationService;
         CurrentTimeClient currentTimeClient;

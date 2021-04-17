@@ -3,7 +3,6 @@
 #include <drivers/include/nrfx_saadc.h>
 #include <array>
 #include <numeric>
-
 namespace Pinetime {
   namespace Controllers {
 
@@ -56,7 +55,13 @@ namespace Pinetime {
 
       private:
         static Battery *instance;
-        nrf_saadc_value_t  m_buffer_pool[2][1];
+        nrf_saadc_value_t adc_buf[2];
+
+        uint16_t readBuffer[5];
+        uint8_t readBufferIndex = 0;
+        uint16_t sumValue = 0;
+        uint16_t sumValueAvg = 0;
+
 
         static constexpr uint8_t percentSamples = 5;
         CircBuffer<percentSamples> percentRemainingBuffer {};
@@ -71,6 +76,10 @@ namespace Pinetime {
 
         void SaadcEventHandler(nrfx_saadc_evt_t const * p_event);
         static void adcCallbackStatic(nrfx_saadc_evt_t const *event);
+
+        bool isReading = false;
+        uint8_t samples = 0;
+        uint8_t sigmoidal(uint16_t voltage, uint16_t minVoltage, uint16_t maxVoltage);
     };
   }
 }
