@@ -126,12 +126,16 @@ jobs:
         run:  |
           cd build
           make pinetime-mcuboot-lite
+          echo ""
 
       - name: Create firmware image
         run:  |
-          # The generated firmware binary looks like "pinetime-mcuboot-lite-0.8.2.bin"
           ls -l build/src/pinetime-mcuboot-lite*.bin
-          ${{ runner.temp }}/mcuboot/scripts/imgtool.py create --align 4 --version 1.0.0 --header-size 32 --slot-size 475136 --pad-header build/src/pinetime-mcuboot-lite*.bin build/src/pinetime-mcuboot-app-img.bin
+          IMGTOOL_INPUT_ARGUMENT=$( ls build/src | grep "pinetime-mcuboot-lite-[0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\.bin" )
+          echo ""
+          echo -e "\u001b[32m ${IMGTOOL_INPUT_ARGUMENT} \u001b[0m"
+          echo ""
+          ${{ runner.temp }}/mcuboot/scripts/imgtool.py create --align 4 --version 1.0.0 --header-size 32 --slot-size 475136 --pad-header build/src/${IMGTOOL_INPUT_ARGUMENT} build/src/pinetime-mcuboot-lite-img.bin
           ${{ runner.temp }}/mcuboot/scripts/imgtool.py verify build/src/pinetime-mcuboot-lite-img.bin
 
       - name: Create DFU package
