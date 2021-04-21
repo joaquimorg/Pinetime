@@ -151,27 +151,38 @@ jobs:
           name: pinetime-mcuboot-lite-dfu
           path: build/src/pinetime-mcuboot-lite-dfu/*
 
-        #########################################################################################
-        # Make and Upload Standalone Firmware
-
-      - name: Make pinetime-lite
-        run:  |
-          cd build
-          make pinetime-lite
-
-      - name: Upload standalone firmware
+      - name: Upload FW
         uses: actions/upload-artifact@v2
         with:
-          name: pinetime-lite.out
-          path: build/src/pinetime-lite*.out
+          name: pinetime-mcuboot-lite-img.bin.fw
+          path: build/src/pinetime-mcuboot-lite-img.bin
+
+      - name: Upload RES
+        uses: actions/upload-artifact@v2
+        with:
+          name: pinetime-lite.res
+          path: resources/pinetime-lite.res
+
+      #########################################################################################
+      # Make and Upload Standalone Firmware
+
+      #- name: Make pinetime-lite
+      #  run:  |
+      #    cd build
+      #    make pinetime-lite
+
+      #- name: Upload standalone firmware
+      #  uses: actions/upload-artifact@v2
+      #  with:
+      #    name: pinetime-lite.out
+      #    path: build/src/pinetime-lite*.out
 
       #########################################################################################
       # Finish
 
-      - name: Find output
-        run:  |
-          find . -name "pinetime-lite.*" -ls
-          find . -name "pinetime-mcuboot-lite.*" -ls
+      #- name: Find output
+      #  run:  |
+      #    find . -name "pinetime-*.*" -ls
 
 # Embedded Arm Toolchain and nRF5 SDK will only be cached if the build succeeds.
 # So make sure that the first build always succeeds, e.g. comment out the "Make" step.
