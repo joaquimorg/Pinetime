@@ -1,8 +1,8 @@
 # PineTime
 
-- Master Build ![Build PineTime Firmware (Master)](https://github.com/joaquimorg/PinetimeLite/workflows/Build%20PineTime%20Firmware/badge.svg?branch=master)](https://joaquimorg/PinetimeLite/InfiniTime/actions)
+- Master Build ![Build PineTime Firmware (Master)(https://github.com/joaquimorg/PinetimeLite/workflows/Build%20PineTime%20Firmware/badge.svg?branch=master)](https://github.com/joaquimorg/PinetimeLite/actions/workflows/main.yml)
 
-- developLite Build ![Build PineTime Firmware (Master)](https://github.com/joaquimorg/PinetimeLite/workflows/Build%20PineTime%20Firmware/badge.svg?branch=master)](https://joaquimorg/PinetimeLite/InfiniTime/actions)
+- developLite Build ![Build PineTime Firmware (Master)(https://github.com/joaquimorg/PinetimeLite/workflows/Build%20PineTime%20Firmware/badge.svg?branch=developLite)](https://github.com/joaquimorg/PinetimeLite/actions/workflows/dev_build.yml)
 
 > The PineTime is a free and open source smartwatch capable of running custom-built open operating systems. Some of the notable features include a heart rate monitor, a week-long battery as well as a capacitive touch IPS display that is legible in direct sunlight. It is a fully community driven side-project, which means that it will ultimately be up to the developers and end-users to determine when they deem the PineTime ready to ship.
 
