@@ -124,22 +124,22 @@ void Battery::SaadcEventHandler(nrfx_saadc_evt_t const * p_event) {
 		//(R26 + R35) / R35
 		auto value = (VIN_MEAS_R26 + VIN_MEAS_R35) * adc_result / VIN_MEAS_R35;		
 
-		sumValue = sumValue - readBuffer[readBufferIndex];	// Remove the oldest entry from the sum
-		readBuffer[readBufferIndex] = value;           		// Add the newest reading to the window
-		sumValue = sumValue + value;                 		// Add the newest reading to the sum
-		readBufferIndex = (readBufferIndex+1) % percentSamples;   // Increment the index, and wrap to 0 if it exceeds the window size
-
-		sumValueAvg = sumValue / percentSamples;
+		voltageBuffer.insert(value);
 
 		// ADC * 0.6V reference / 10-bit ADC * prescale (1/6)
-		auto miliVolts = ((sumValueAvg * 600) / 1024) * 6;
+		auto miliVolts = ((voltageBuffer.GetAverage() * 600) / 1024) * 6;
 
 		voltage = (float)miliVolts / 1000;
 
-		percentRemaining = sigmoidal(miliVolts, battery_min, battery_max);
-
-		percentRemaining = std::max(percentRemaining, 0);
-		percentRemaining = std::min(percentRemaining, 100);
+		if (miliVolts <= battery_min) {
+			percentRemaining = 0;
+		} else if (miliVolts >= battery_max) {
+			percentRemaining = 100;
+		} else {
+			percentRemaining = sigmoidal(miliVolts, battery_min, battery_max);
+			percentRemaining = std::max(percentRemaining, 0);
+			percentRemaining = std::min(percentRemaining, 100);
+		}
 		percentRemainingBuffer.insert(percentRemaining);
 
 		samples++;

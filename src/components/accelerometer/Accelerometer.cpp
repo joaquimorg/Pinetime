@@ -34,7 +34,7 @@ Accelerometer::Accelerometer(Pinetime::Drivers::TwiMaster &twiMaster) : twiMaste
 
 void Accelerometer::Init() {
 
-    struct bma4_int_pin_config pinConfig;
+    //struct bma4_int_pin_config pinConfig;
 
     bma.intf = BMA4_I2C_INTF;
     //dev_addr = BMA4_I2C_ADDR_PRIMARY;
@@ -87,22 +87,24 @@ void Accelerometer::Init() {
     /* Enable step counter */
     bma421_feature_enable(BMA421_STEP_CNTR , BMA4_ENABLE, &bma);    
 
-    bma421_reset_step_counter(&bma);
+    //bma421_reset_step_counter(&bma);
 
-    bma4_set_interrupt_mode(BMA4_LATCH_MODE, &bma);
+    //bma4_set_interrupt_mode(BMA4_LATCH_MODE, &bma);
 
     /* Sets the electrical behaviour of interrupt */
-    pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
+    /*pinConfig.edge_ctrl = BMA4_LEVEL_TRIGGER;
     pinConfig.lvl = BMA4_ACTIVE_LOW;
     pinConfig.od = BMA4_PUSH_PULL;
     pinConfig.output_en = BMA4_OUTPUT_ENABLE;
     pinConfig.input_en = BMA4_INPUT_DISABLE;
-    bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);
+    bma4_set_int_pin_config(&pinConfig, BMA4_INTR1_MAP, &bma);*/
 
     /* Interrupt Mapping */    
-    bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT , BMA4_ENABLE, &bma);
+    //bma421_map_interrupt(BMA4_INTR1_MAP, BMA421_STEP_CNTR_INT , BMA4_ENABLE, &bma);
 
     bma421_step_counter_set_watermark(1, &bma);
+
+    bma4_set_advance_power_save(BMA4_ENABLE, &bma);
    
     deviceReady = true;
 }

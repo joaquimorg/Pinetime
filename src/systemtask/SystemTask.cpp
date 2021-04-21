@@ -185,7 +185,7 @@ void SystemTask::Work() {
           xTimerChangePeriod(idleTimer, pdMS_TO_TICKS(settingsController.GetScreenTimeOut()), 0);
         break;
         case Messages::WakeUp:
-          spi.Wakeup();
+          //spi.Wakeup();
           //twiMaster.Wakeup();
           //accelerometer.Wakeup();
 
@@ -194,7 +194,7 @@ void SystemTask::Work() {
           spiNorFlash.Wakeup();
           // Double Tap needs the touch screen to be in normal mode
           if ( settingsController.getWakeUpMode() != Pinetime::Controllers::Settings::WakeUpMode::DoubleTap ) {
-            touchPanel.Wakeup();
+            //touchPanel.Wakeup();
           }
           lcd.Wakeup();
           //accelerometer.Update();
@@ -228,7 +228,6 @@ void SystemTask::Work() {
           isGoingToSleep = true;
           //NRF_LOG_INFO("[systemtask] Going to sleep");
           xTimerStop(idleTimer, 0);
-          
           xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareIdleTime), 0);
 
           displayApp->PushMessage(Applications::DisplayApp::Messages::GoToSleep);
@@ -283,8 +282,8 @@ void SystemTask::Work() {
           ReloadIdleTimer();
           break;
         case Messages::OnStepEvent:
-          vrMotor.Vibrate(25);
-          accelerometer.Update();
+          //vrMotor.Vibrate(25);
+          //accelerometer.Update();
           break;
         case Messages::OnDisplayTaskSleeping:
           if(BootloaderVersion::IsValid()) {
@@ -296,10 +295,10 @@ void SystemTask::Work() {
 
           // Double Tap needs the touch screen to be in normal mode
           if ( settingsController.getWakeUpMode() != Pinetime::Controllers::Settings::WakeUpMode::DoubleTap ) {
-            touchPanel.Sleep();
+            //touchPanel.Sleep();
           }
           //accelerometer.Sleep();
-          spi.Sleep();
+          //spi.Sleep();
           //twiMaster.Sleep();
           isSleeping = true;
           isGoingToSleep = false;
@@ -341,9 +340,11 @@ void SystemTask::Work() {
       }
     }
 
-    monitor.Process();
-    uint32_t systick_counter = nrf_rtc_counter_get(portNRF_RTC_REG);
-    dateTimeController.UpdateTime(systick_counter);
+    //monitor.Process();
+    //uint32_t systick_counter = nrf_rtc_counter_get(portNRF_RTC_REG);
+    //dateTimeController.UpdateTime(systick_counter);
+
+    dateTimeController.UpdateTime(nrf_rtc_counter_get(portNRF_RTC_REG));
     if(!nrf_gpio_pin_read(KEY_ACTION))
       watchdog.Kick();
   }
@@ -441,21 +442,22 @@ void SystemTask::ReloadIdleTimer() const {
 
 void SystemTask::HardwareStatus() {
 
-  //accelerometer.ReadIRQStatus();
-  //if ( accelerometer.isStepIRQ() ) {
-    accelerometer.Update();  
-    // verify the day to reset de counter
-    settingsController.SetHistorySteps( accelerometer, dateTimeController );
-  //}
+  accelerometer.Update();  
+  // verify the day to reset de counter
+  settingsController.SetHistorySteps( accelerometer, dateTimeController );
   
   // Update Battery status
   batteryController.Update();
 
   if(isGoingToSleep) return ;
   if(isSleeping and !isWakingUp) {
+
+    nimbleController.StartAdvertising();
+
     // verify batt status to alert if is to low
     if ( batteryController.PercentRemaining() >= 0 and batteryController.PercentRemaining() < 15 and !batteryController.IsCharging() ) {
         WakeUp();
+        brightnessController.Set(Controllers::BrightnessController::Levels::Low);
         vrMotor.Vibrate(35);
         displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
         if ( batteryController.PercentRemaining() < 5 ) {
@@ -464,7 +466,7 @@ void SystemTask::HardwareStatus() {
     }
 
     // verify if batt is charged
-    if ( batteryController.PercentRemaining() == 100 and batteryController.IsCharging() ) {
+    if ( !batteryController.IsCharging() and batteryController.IsPowerPresent() ) {
         WakeUp();
         displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
     }

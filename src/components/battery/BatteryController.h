@@ -57,14 +57,9 @@ namespace Pinetime {
         static Battery *instance;
         nrf_saadc_value_t adc_buf[2];
 
-        uint16_t readBuffer[5];
-        uint8_t readBufferIndex = 0;
-        uint16_t sumValue = 0;
-        uint16_t sumValueAvg = 0;
-
-
         static constexpr uint8_t percentSamples = 5;
         CircBuffer<percentSamples> percentRemainingBuffer {};
+        CircBuffer<percentSamples> voltageBuffer {};
 
         float voltage = 0.0f;
         int percentRemaining = -1;
