@@ -5,6 +5,7 @@
 #include "NotificationManager.h"
 #include "CallNotificationManager.h"
 #include "systemtask/SystemTask.h"
+#include "components/settings/Settings.h"
 
 using namespace Pinetime::Controllers;
 
@@ -30,7 +31,8 @@ void AlertNotificationService::Init() {
 AlertNotificationService::AlertNotificationService ( 
     System::SystemTask& systemTask, 
     NotificationManager& notificationManager,
-    CallNotificationManager& callNotificationManager )
+    CallNotificationManager& callNotificationManager,
+    Controllers::Settings &settingsController )
   : characteristicDefinition{
             {
                     .uuid = (ble_uuid_t *) &ansCharUuid,
@@ -62,7 +64,8 @@ AlertNotificationService::AlertNotificationService (
     }, 
     systemTask{systemTask}, 
     notificationManager{notificationManager},
-    callNotificationManager{callNotificationManager} {
+    callNotificationManager{callNotificationManager},
+    settingsController{settingsController} {
 }
 
 int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle,
@@ -82,8 +85,6 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
     Pinetime::System::SystemTask::Messages event = Pinetime::System::SystemTask::Messages::OnNewNotification;
 
     if ( category == NOTIFICATION_INCOME_CALL || category == NOTIFICATION_CALL_OFF ) {
-      
-      //notifCall.category = Pinetime::Controllers::CallNotificationManager::Categories::Unknown;
 
       event = Pinetime::System::SystemTask::Messages::OnNewCall;
       
@@ -105,16 +106,37 @@ int AlertNotificationService::OnAlert(uint16_t conn_handle, uint16_t attr_handle
 
       } else if ( category == NOTIFICATION_CALL_OFF ) {
 
-        //notifCall.category = Pinetime::Controllers::CallNotificationManager::Categories::EndCall;
-
         callNotificationManager.TerminateCall();
 
       } 
 
-      
-      //notif.category = Pinetime::Controllers::NotificationManager::Categories::IncomingCall;
-      //notificationManager.Push(std::move(notif));
+    } else if ( category == NOTIFICATION_WEATHER ) {
 
+      Settings::Weather weather;
+      uint8_t* weatherData = new uint8_t[22];
+    
+      os_mbuf_copydata(ctxt->om, headerSize, 22, weatherData);
+
+      weather.day = weatherData[1];
+      weather.month = static_cast<DateTime::Months>(weatherData[0]);
+
+      weather.current.temp = weatherData[3];
+      weather.current.minTemp = weatherData[4];
+      weather.current.maxTemp = weatherData[5];
+      weather.current.conditionCode = weatherData[6];
+
+      for (int forecast = 0; forecast < 3; forecast++) {
+        weather.forecast[forecast].temp = 0;
+        weather.forecast[forecast].minTemp = weatherData[9 + (forecast * 5)];
+        weather.forecast[forecast].maxTemp = weatherData[10 + (forecast * 5)];
+        weather.forecast[forecast].conditionCode = weatherData[11 + (forecast * 5)];
+      }
+      os_mbuf_copydata(ctxt->om, 31, subject_length + 1, weather.location.data());
+      weather.hasData = true;
+
+      settingsController.SetWeather(weather);
+
+      return 0;
     } else {
 
       NotificationManager::Notification notif;

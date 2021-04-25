@@ -407,6 +407,7 @@ list(APPEND SOURCE_FILES
         displayapp/lv_pinetime_theme.c
 
         displayapp/DisplayApp.cpp
+        displayapp/screens/ShowMessage.cpp
         displayapp/screens/Screen.cpp
         displayapp/screens/Charging.cpp
         displayapp/screens/LowBatt.cpp
@@ -426,6 +427,8 @@ list(APPEND SOURCE_FILES
         displayapp/screens/Notifications.cpp
         displayapp/screens/FlashLight.cpp
         displayapp/screens/Weather.cpp
+        displayapp/screens/WeatherToday.cpp
+        displayapp/screens/WeatherForecast.cpp
         displayapp/screens/Motion.cpp
 
         displayapp/screens/settings/QuickSettings.cpp   

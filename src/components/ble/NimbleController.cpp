@@ -31,7 +31,8 @@ NimbleController::NimbleController(
         Pinetime::Controllers::NotificationManager& notificationManager,
         Pinetime::Controllers::CallNotificationManager& callNotificationManager,
         Controllers::Battery& batteryController,
-        Pinetime::Drivers::SpiNorFlash& spiNorFlash) :
+        Pinetime::Drivers::SpiNorFlash& spiNorFlash,
+        Controllers::Settings &settingsController) :
 
         systemTask{systemTask},
         bleController{bleController},
@@ -39,10 +40,11 @@ NimbleController::NimbleController(
         notificationManager{notificationManager},
         callNotificationManager{callNotificationManager},
         spiNorFlash{spiNorFlash},
+        settingsController{settingsController},
         fileService{systemTask, bleController, spiNorFlash},
         dfuService{systemTask, bleController, spiNorFlash},
         currentTimeClient{dateTimeController},
-        alertNotificationService{systemTask, notificationManager, callNotificationManager},
+        alertNotificationService{systemTask, notificationManager, callNotificationManager, settingsController},
         alertNotificationClient{systemTask, notificationManager},
         currentTimeService{dateTimeController},
         //musicService{systemTask},

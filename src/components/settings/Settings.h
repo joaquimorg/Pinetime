@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <array>
 #include "components/datetime/DateTimeController.h"
 #include "components/accelerometer/Accelerometer.h"
 #include "components/brightness/BrightnessController.h"
@@ -80,6 +81,27 @@ namespace Pinetime {
         Controllers::BrightnessController::Levels GetBrightness() const { return settings.brightLevel; };
 
         uint8_t getSettingsBlock() const { return settingsFlashBlock; };
+
+        struct WeatherData {
+          bool isCelsius = true;
+          uint8_t temp = 0;
+          uint8_t minTemp = 0;
+          uint8_t maxTemp = 0;
+          uint8_t conditionCode = 5;
+        };
+        
+        struct Weather {
+          WeatherData current;
+          WeatherData forecast[3];
+          std::array<char, 50> location;
+          uint8_t day;
+          DateTime::Months month;
+          bool hasData = false;
+        };
+        
+        void SetWeather(Weather weatherData) { weather = weatherData; };
+        Weather GetWeather() { return weather; };
+
       private:
 
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
@@ -99,6 +121,8 @@ namespace Pinetime {
           Controllers::BrightnessController::Levels brightLevel = Controllers::BrightnessController::Levels::Medium;
 
         };
+
+        Weather weather;
 
         history_step_struct stepHistory[8];
         uint8_t stepHistoryPos = 0;

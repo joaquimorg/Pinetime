@@ -29,7 +29,7 @@ Motion::Motion(Pinetime::Applications::DisplayApp *app, Pinetime::Controllers::A
     lv_chart_refresh(chart); /*Required after direct set*/
 
     label = lv_label_create(lv_scr_act(), NULL);
-    lv_label_set_text_fmt(label, "X #FF0000 %d# Y #008000 %d# Z #FFFF00 %d#", 0, 0, 0);
+    lv_label_set_text_fmt(label, "X #FF0000 %d# Y #008000 %d# Z #FFFF00 %d#\n%d", 0, 0, 0, 0);
     lv_label_set_align(label, LV_LABEL_ALIGN_CENTER);
     lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
     lv_label_set_recolor(label, true);
@@ -42,12 +42,16 @@ Motion::~Motion() {
 
 bool Motion::Refresh() {
     accelerometer.UpdateAccel();
-    accl_data_struct accl = accelerometer.GetAccel();
-    lv_chart_set_next(chart, ser1, accl.x);
-    lv_chart_set_next(chart, ser2, accl.y);
-    lv_chart_set_next(chart, ser3, accl.z);
+    lv_chart_set_next(chart, ser1, accelerometer.GetAccelX());
+    lv_chart_set_next(chart, ser2, accelerometer.GetAccelY());
+    lv_chart_set_next(chart, ser3, accelerometer.GetAccelZ());
 
-    lv_label_set_text_fmt(label, "X #FF0000 %d# Y #008000 %d# Z #FFFF00 %d#", accl.x, accl.y, accl.z);
+    lv_label_set_text_fmt(label, "X #FF0000 %d# Y #008000 %d# Z #FFFF00 %d#\n%d", 
+        accelerometer.GetAccelX(), 
+        accelerometer.GetAccelY(), 
+        accelerometer.GetAccelZ(), 
+        accelerometer.GetDirection()
+    );
     lv_obj_align(label, NULL, LV_ALIGN_IN_TOP_MID, 0, 10);
 
   return running;

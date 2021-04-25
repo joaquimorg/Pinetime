@@ -25,12 +25,14 @@ namespace Pinetime {
   namespace Controllers {
     class NotificationManager;
     class CallNotificationManager;
+    class Settings;
 
     class AlertNotificationService {
       public:
         AlertNotificationService(Pinetime::System::SystemTask &systemTask,
                                  Pinetime::Controllers::NotificationManager &notificationManager,
-                                 Pinetime::Controllers::CallNotificationManager &callNotificationManager);
+                                 Pinetime::Controllers::CallNotificationManager &callNotificationManager,
+                                 Controllers::Settings &settingsController);
         void Init();
 
         int OnAlert(uint16_t conn_handle, uint16_t attr_handle,
@@ -72,6 +74,8 @@ namespace Pinetime {
         static const uint8_t NOTIFICATION_LINE        = 0x14;
         static const uint8_t NOTIFICATION_SKYPE       = 0x15;
 
+        static const uint8_t NOTIFICATION_WEATHER     = 0x20;
+
 
         static constexpr ble_uuid128_t ansUuid {
                 .u { .type = BLE_UUID_TYPE_128 },
@@ -94,6 +98,7 @@ namespace Pinetime {
         Pinetime::System::SystemTask &systemTask;
         NotificationManager &notificationManager;
         CallNotificationManager &callNotificationManager;
+        Controllers::Settings &settingsController;
 
         uint16_t eventHandle;
     };

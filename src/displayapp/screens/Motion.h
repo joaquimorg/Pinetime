@@ -19,7 +19,7 @@ namespace Pinetime {
                 ~Motion() override;
 
                 bool Refresh() override;
-
+                
             private:
                 Pinetime::Controllers::Accelerometer& accelerometer;
 
@@ -28,7 +28,7 @@ namespace Pinetime {
                 lv_chart_series_t * ser1;
                 lv_chart_series_t * ser2;
                 lv_chart_series_t * ser3;
- 
+                
             };
         }
     }

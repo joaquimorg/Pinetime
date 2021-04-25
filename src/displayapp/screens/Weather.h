@@ -1,8 +1,9 @@
 #pragma once
 
 #include <cstdint>
-#include <lvgl/lvgl.h>
+#include <memory>
 #include "Screen.h"
+#include "ScreenList.h"
 
 namespace Pinetime {
 
@@ -11,14 +12,19 @@ namespace Pinetime {
 
       class Weather : public Screen{
         public:
-          Weather(DisplayApp* app);
+          Weather(DisplayApp* app, Controllers::Settings &settingsController);
           ~Weather() override;
 
           bool Refresh() override;
+          bool OnTouchEvent(TouchEvents event) override;
          
-        private:
-          
-          lv_obj_t* llabel;
+        private:          
+          Controllers::Settings &settingsController;
+
+          bool running = true;
+          ScreenList<2> screens;
+          std::unique_ptr<Screen> CreateScreen1();
+          std::unique_ptr<Screen> CreateScreen2();
 
       };
     }

@@ -66,6 +66,13 @@ lv_font_conv --font icons_sys_48.ttf -r 0xe908 -r 0xe901 -r 0xe900 -r 0xe903 -r 
 ```
 lv_font_conv --font OpenSans-Regular.ttf --symbols ãÃâÂçÇôÔõÕéèÉÈíìÍÌúùÙÚáÁàÀ -r '0x20-0x7f,0x2020' --font NotoEmoji-Regular.ttf -r '0x1F600-0x1F64F' --size 20 --format bin --bpp 2 --no-compress -o lv_font_roboto_20.bin
 ```
+---
+
+lv_font_conv --font icons_sys_20.ttf -r 0xe920 -r 0xe924 -r 0xe921 -r 0xe922 -r 0xe923 -r 0xe906 -r 0xe907 -r 0xe901 -r 0xe903 -r 0xe905 -r 0xe904 -r 0xe902 -r 0xe900 -r 0xe908 -r 0xe909 -r 0xe90a -r 0xe90b -r 0xe90c --size 20 --format lvgl --bpp 2 --no-compress -o lv_font_sys_20.c
+
+```
+lv_font_conv --font OpenSans-Regular.ttf --symbols ãÃâÂçÇôÔõÕéèÉÈíìÍÌúùÙÚáÁàÀ° -r '0x20-0x7f,0x2020,0xB0' --font NotoEmoji-Regular.ttf -r '0x1F600-0x1F64F' --size 20 --format lvgl --bpp 2 --no-compress -o lv_font_roboto_20.c
+```
 
 #### This fonts are in external Flash
 

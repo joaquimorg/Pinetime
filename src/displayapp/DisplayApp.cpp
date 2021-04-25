@@ -7,6 +7,7 @@
 #include "components/ble/NotificationManager.h"
 #include "components/ble/CallNotificationManager.h"
 
+#include "displayapp/screens/ShowMessage.h"
 #include "displayapp/screens/ApplicationList.h"
 #include "displayapp/screens/Clock.h"
 #include "displayapp/screens/Charging.h"
@@ -352,8 +353,12 @@ void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction)
         currentScreen = std::make_unique<Screens::Steps>(this, accelerometer, settingsController);
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
-      case Apps::Weather: 
-        currentScreen = std::make_unique<Screens::Weather>(this);
+      case Apps::Weather:
+        if (settingsController.GetWeather().hasData) {
+          currentScreen = std::make_unique<Screens::Weather>(this, settingsController);
+        } else {
+          currentScreen = std::make_unique<Screens::ShowMessage>(this, "Wait for\nweather information.", "F:/meteo_sun.bin");
+        }
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Motion: 

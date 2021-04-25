@@ -32,6 +32,9 @@ namespace Pinetime {
         static constexpr const char* about                = "\xEE\xA4\x8C"; //e90c
         static constexpr const char* wface                = "\xEE\xA4\x8F"; //e90f
 
+        static constexpr const char* expandLess           = "\xEE\xA4\x90"; //e910
+        static constexpr const char* expandMore           = "\xEE\xA4\x91"; //e911
+
         // font sys 48
         // lv_font_sys_48.c
         // 

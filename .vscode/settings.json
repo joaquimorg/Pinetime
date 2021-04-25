@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.sql": "oracle",
         "optional": "cpp",
         "istream": "cpp",
         "ostream": "cpp",
@@ -9,6 +10,10 @@
         "functional": "cpp",
         "tuple": "cpp",
         "type_traits": "cpp",
-        "utility": "cpp"
+        "utility": "cpp",
+        "chrono": "cpp",
+        "cstdint": "cpp",
+        "algorithm": "cpp",
+        "typeinfo": "cpp"
     }
 }

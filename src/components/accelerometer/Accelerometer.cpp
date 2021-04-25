@@ -6,6 +6,8 @@
 #include "board_config.h"
 #include "drivers/TwiMaster.h"
 
+#define M_PI	3.14159265358979323846
+
 using namespace Pinetime::Controllers;
 
 
@@ -143,10 +145,60 @@ void Accelerometer::UpdateAccel() {
     struct bma4_accel sens_data;
     
     bma4_read_accel_xyz(&sens_data, &bma);
-    accelData.x = (sens_data.x / 0x10);
-    accelData.y = (sens_data.y / 0x10);
-    accelData.z = (sens_data.z / 0x10);
-        
+    // Remap X and Y
+    accelData.x = sens_data.y / 0x10;
+    accelData.y = -sens_data.x / 0x10;
+    accelData.z = sens_data.z / 0x10;
+}
+
+Accelerometer::Direction Accelerometer::GetDirection() {
+    struct bma4_accel acc;
+    if (bma4_read_accel_xyz(&acc, &bma) != BMA4_OK) {
+        return Direction::ERROR;
+    }
+
+    // Remap X and Y
+    int16_t x = acc.y;
+    int16_t y = -acc.x;
+    int16_t z = acc.z;
+    
+    uint16_t absX = abs(x);
+    uint16_t absY = abs(y);
+    uint16_t absZ = abs(z);
+
+    if ((absZ > absX) && (absZ > absY)) {
+        if (z > 0) {
+            return  Direction::DISP_DOWN;
+        } else {
+            return Direction::DISP_UP;
+        }
+    } else if ((absY > absX) && (absY > absZ)) {
+        if (y > 0) {
+            return Direction::BOTTOM_EDGE;
+        } else {
+            return  Direction::TOP_EDGE;
+        }
+    } else {
+        if (x < 0) {
+            return Direction::RIGHT_EDGE;
+        } else {
+            return Direction::LEFT_EDGE;
+        }
+    }
+}
+
+bool Accelerometer::WristRotate() {
+    Accelerometer::Direction direction = GetDirection();
+    bool wristRotate = false;
+    if ( direction != previousDirection ) {
+        if ( previousDirection == Accelerometer::Direction::TOP_EDGE and 
+            direction == Accelerometer::Direction::DISP_UP ) {
+            wristRotate = true;
+        }
+
+        previousDirection = direction;
+    }
+    return wristRotate;
 }
 
 void Accelerometer::Update() {

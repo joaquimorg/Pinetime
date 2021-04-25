@@ -20,7 +20,7 @@ namespace Pinetime {
           ~Steps() override;
 
           bool Refresh() override;
-          
+          void UpdateScreen();
 
         private:          
 
@@ -33,6 +33,8 @@ namespace Pinetime {
           lv_obj_t * stepsArc;
           lv_obj_t * steps_icon;
 
+          lv_task_t* taskUpdate;
+          uint8_t currentImage = 1;
 
       };
     }
