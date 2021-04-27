@@ -7,11 +7,8 @@ using namespace Pinetime::Applications::Screens;
 
 namespace {
   static void event_handler(lv_obj_t * obj, lv_event_t event) {
-    
     Tile* screen = static_cast<Tile *>(obj->user_data);
-
     screen->OnObjectEvent(obj, event);
-
   }
 
   static void lv_update_task(struct _lv_task_t *task) {  

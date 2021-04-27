@@ -68,7 +68,7 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
   std::array<Screens::Tile::Applications, 4> applications {
           { 
             {"F:/ico_running.bin",    "Steps",    Apps::Steps},
-            {"F:/ico_raining.bin",    "Weather",  Apps::Weather},
+            {"F:/ico_raining.bin",    "Weather",  Apps::WeatherToday},
             {"",     "",    Apps::None},
             {"F:/ico_chart.bin",      "Motion",   Apps::Motion},
           }

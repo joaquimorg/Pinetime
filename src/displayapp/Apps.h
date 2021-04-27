@@ -20,7 +20,8 @@ namespace Pinetime
       LowBatt,
       QuickSettings,
       FlashLight,
-      Weather,
+      WeatherToday,
+      WeatherForecast,
       Motion,
 
       Settings,

@@ -32,6 +32,11 @@ namespace {
     auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
     sysTask->HardwareStatus();
   }
+
+  void WakeUpTimerCallback(TimerHandle_t xTimer) {
+    auto sysTask = static_cast<SystemTask *>(pvTimerGetTimerID(xTimer));
+    sysTask->WakeUpCheck();
+  }
 }
 
 SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
@@ -163,6 +168,10 @@ void SystemTask::Work() {
   hardwareTimer = xTimerCreate ("hardwareTimer", pdMS_TO_TICKS(hardwareTime), pdTRUE, this, HardwareTimerCallback);
   xTimerStart(hardwareTimer, 0);   
 
+  // WakeUp timer
+  wakeUpTimer = xTimerCreate ("wakeUpTimer", pdMS_TO_TICKS(500), pdTRUE, this, WakeUpTimerCallback);
+  //xTimerStart(wakeUpTimer, 0);
+
   vrMotor.Init();
   
   // Suppress endless loop diagnostic
@@ -192,6 +201,7 @@ void SystemTask::Work() {
           nimbleController.StartAdvertising();
           
           spiNorFlash.Wakeup();
+
           // Double Tap needs the touch screen to be in normal mode
           if ( settingsController.getWakeUpMode() != Pinetime::Controllers::Settings::WakeUpMode::DoubleTap ) {
             //touchPanel.Wakeup();
@@ -206,7 +216,11 @@ void SystemTask::Work() {
           //displayApp->PushMessage(Applications::DisplayApp::Messages::UpdateBatteryLevel);
 
           xTimerStart(idleTimer, 0);
-          //xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareTime), 0);
+          xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareTime), 0);
+
+          if ( settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::RaiseWrist ) {
+            xTimerStop(wakeUpTimer, 0);
+          }
 
         break;
         case Messages::TouchWakeUp: {
@@ -228,7 +242,7 @@ void SystemTask::Work() {
           isGoingToSleep = true;
           //NRF_LOG_INFO("[systemtask] Going to sleep");
           xTimerStop(idleTimer, 0);
-          //xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareIdleTime), 0);
+          xTimerChangePeriod(hardwareTimer, pdMS_TO_TICKS(hardwareIdleTime), 0);
 
           displayApp->PushMessage(Applications::DisplayApp::Messages::GoToSleep);
           break;
@@ -300,6 +314,11 @@ void SystemTask::Work() {
           //accelerometer.Sleep();
           //spi.Sleep();
           //twiMaster.Sleep();
+
+          if ( settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::RaiseWrist ) {
+            xTimerStart(wakeUpTimer, 0);
+          }
+
           isSleeping = true;
           isGoingToSleep = false;
           break;
@@ -440,9 +459,18 @@ void SystemTask::ReloadIdleTimer() const {
 }
 
 
-void SystemTask::HardwareStatus() {
+void SystemTask::WakeUpCheck() {
+  if(isGoingToSleep) return ;
+  if(isSleeping and !isWakingUp) {
+    if( settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::RaiseWrist ) {
+      if ( accelerometer.WristRotate() ) {
+        WakeUp();
+      }
+    }
+  }
+}
 
-  uint32_t systickCounter = nrf_rtc_counter_get(portNRF_RTC_REG);
+void SystemTask::HardwareStatus() {
 
   accelerometer.Update();  
   // verify the day to reset de counter
@@ -451,42 +479,31 @@ void SystemTask::HardwareStatus() {
   batteryController.Update();
 
   if(isGoingToSleep) return ;
-  if(isSleeping and !isWakingUp) {
-
-    if( settingsController.getWakeUpMode() == Pinetime::Controllers::Settings::WakeUpMode::RaiseWrist ) {
-      if ( accelerometer.WristRotate() ) {
-        WakeUp();
-      }
-    }
+  if(isSleeping and !isWakingUp) {    
 
     if ( !bleController.IsConnected() ) {
       nimbleController.StartAdvertising();
     }
     
-    if ( (systickCounter - lastSystickCounter) > 500000 ) {
-      lastSystickCounter = systickCounter;
-      // verify batt status to alert if is to low
-      if ( batteryController.PercentRemaining() >= 0 and batteryController.PercentRemaining() < 10 and !batteryController.IsCharging() ) {          
-          WakeUp();
-          brightnessController.Set(Controllers::BrightnessController::Levels::Low);
-          vrMotor.Vibrate(35);
-          displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
-          if ( batteryController.PercentRemaining() < 5 ) {
-            PushMessage(Messages::PowerOFF);
-          }
-      }
+    // verify batt status to alert if is to low
+    if ( batteryController.PercentRemaining() >= 0 and batteryController.PercentRemaining() < 10 and !batteryController.IsCharging() ) {          
+        WakeUp();
+        brightnessController.Set(Controllers::BrightnessController::Levels::Low);
+        vrMotor.Vibrate(35);
+        displayApp->PushMessage(Applications::DisplayApp::Messages::LowBattEvent);
 
-      // verify if batt is charged
-      if ( !batteryController.IsCharging() and batteryController.IsPowerPresent() ) {
-          WakeUp();
-          displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
-      }
+        // if to low switch off
+        if ( batteryController.PercentRemaining() < 5 ) {
+          PushMessage(Messages::PowerOFF);
+        }
     }
-  }
 
-  if (!isSleeping) {
-    if ( lastSystickCounter == 0 ) lastSystickCounter = systickCounter;
-    lastSystickCounter = systickCounter;
+    // verify if batt is charged
+    if ( !batteryController.IsCharging() and batteryController.IsPowerPresent() ) {
+        WakeUp();
+        displayApp->PushMessage(Applications::DisplayApp::Messages::ChargingEvent);
+    }
+    
   }
 
 }

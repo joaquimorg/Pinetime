@@ -20,7 +20,8 @@
 #include "displayapp/screens/Tile.h"
 #include "displayapp/screens/Steps.h"
 #include "displayapp/screens/FlashLight.h"
-#include "displayapp/screens/Weather.h"
+#include "displayapp/screens/WeatherToday.h"
+#include "displayapp/screens/WeatherForecast.h"
 #include "displayapp/screens/Motion.h"
 
 #include "displayapp/screens/settings/QuickSettings.h"
@@ -353,13 +354,17 @@ void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction)
         currentScreen = std::make_unique<Screens::Steps>(this, accelerometer, settingsController);
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
-      case Apps::Weather:
+      case Apps::WeatherToday:
         if (settingsController.GetWeather().hasData) {
-          currentScreen = std::make_unique<Screens::Weather>(this, settingsController);
+          currentScreen = std::make_unique<Screens::WeatherToday>(this, settingsController);
         } else {
           currentScreen = std::make_unique<Screens::ShowMessage>(this, "Wait for\nweather information.", "F:/meteo_sun.bin");
         }
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        break;
+      case Apps::WeatherForecast:
+        currentScreen = std::make_unique<Screens::WeatherForecast>(this, settingsController);
+        returnApp(Apps::WeatherToday, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
       case Apps::Motion: 
         currentScreen = std::make_unique<Screens::Motion>(this, accelerometer);

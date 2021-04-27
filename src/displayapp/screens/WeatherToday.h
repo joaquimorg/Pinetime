@@ -19,6 +19,7 @@ namespace Pinetime {
           WeatherToday(DisplayApp* app, Controllers::Settings &settingsController);
           ~WeatherToday() override;
 
+          bool OnTouchEvent(TouchEvents event) override;
           bool Refresh() override;
           void UpdateScreen();
          

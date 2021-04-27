@@ -72,6 +72,7 @@ namespace Pinetime {
 
         void OnIdle();
         void HardwareStatus();
+        void WakeUpCheck();
 
         Controllers::NimbleController& nimble() {return nimbleController;};
 
@@ -109,13 +110,13 @@ namespace Pinetime {
         bool isBleDiscoveryTimerRunning = false;
         uint8_t bleDiscoveryTimer = 0;
 
-        static constexpr uint32_t hardwareTime = 5000;
-        static constexpr uint32_t hardwareIdleTime = 60000;
+        static constexpr uint32_t hardwareTime = 10000;
+        static constexpr uint32_t hardwareIdleTime = 120000;
 
         TaskHandle_t taskHandle;
         TimerHandle_t idleTimer;
         TimerHandle_t hardwareTimer;
-        uint32_t lastSystickCounter = 0;
+        TimerHandle_t wakeUpTimer;
         bool doNotGoToSleep = false;
 
         void WakeUp();

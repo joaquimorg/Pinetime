@@ -122,6 +122,18 @@ WeatherToday::~WeatherToday() {
   lv_obj_clean(lv_scr_act());
 }
 
+bool WeatherToday::OnTouchEvent(Pinetime::Applications::TouchEvents event) {
+  switch (event) {
+    case Pinetime::Applications::TouchEvents::SwipeUp: 
+      running = false;
+      app->StartApp(Apps::WeatherForecast, DisplayApp::FullRefreshDirections::Up);
+      return true;
+    default:
+      return false;
+  }
+}
+
+
 void WeatherToday::DisplayWeather() {
 
   currentTemp = lv_label_create(lv_scr_act(), nullptr);

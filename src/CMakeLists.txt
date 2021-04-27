@@ -426,7 +426,6 @@ list(APPEND SOURCE_FILES
         displayapp/screens/ApplicationList.cpp
         displayapp/screens/Notifications.cpp
         displayapp/screens/FlashLight.cpp
-        displayapp/screens/Weather.cpp
         displayapp/screens/WeatherToday.cpp
         displayapp/screens/WeatherForecast.cpp
         displayapp/screens/Motion.cpp
