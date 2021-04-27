@@ -186,6 +186,9 @@ void WeatherToday::UpdateScreen() {
 
   anim += animDelta;
   if(anim == 10 or anim == -10) animDelta = -animDelta;
+
+  //animNav += animNavDelta;
+  //if(animNav == 0 or animNav == 5) animNavDelta = -animNavDelta;
   ++animNav %= 5;
   //UpdateWeather();
   lv_obj_align(iconAnimW, currentTemp, LV_ALIGN_OUT_RIGHT_MID, 40 + anim, 0);

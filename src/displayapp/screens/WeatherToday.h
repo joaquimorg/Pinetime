@@ -38,6 +38,7 @@ namespace Pinetime {
           int8_t anim = 0;
           int8_t animNav = 0;
           int8_t animDelta = 2;
+          int8_t animNavDelta = 1;
 
           Controllers::Settings::Weather weather;
           
