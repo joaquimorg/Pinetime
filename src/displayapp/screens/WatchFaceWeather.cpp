@@ -40,6 +40,19 @@ char const *WatchFaceWeather::NumbersS[] = {
   "F:/N9S.bin"
 };
 
+char const *WatchFaceWeather::NumbersSS[] = {
+  "F:/N0SS.bin",
+  "F:/N1SS.bin",
+  "F:/N2SS.bin",
+  "F:/N3SS.bin",
+  "F:/N4SS.bin",
+  "F:/N5SS.bin",
+  "F:/N6SS.bin",
+  "F:/N7SS.bin",
+  "F:/N8SS.bin",
+  "F:/N9SS.bin"
+};
+
 char const *WatchFaceWeather::WeekDay[] = {
   "F:/MON.bin",
   "F:/TUE.bin",
@@ -70,8 +83,8 @@ WatchFaceWeather::WatchFaceWeather(Pinetime::Applications::DisplayApp *app,
   day = dateTimeController.Day();
   dayOfWeek = dateTimeController.DayOfWeek();
 
-  currentDayOfWeek = dayOfWeek;
-  currentDay = day;
+  currentDayOfWeek = Controllers::DateTime::Days::Unknown;
+  currentDay = 99;
 
   weatherIcon = (uint8_t)settingsController.GetWeather().current.conditionCode;
   sWeatherIcon = weatherIcon;
@@ -87,7 +100,7 @@ WatchFaceWeather::WatchFaceWeather(Pinetime::Applications::DisplayApp *app,
   image[1] = lv_img_create(lv_scr_act(), nullptr);
   lv_obj_set_auto_realign(image[1], true);
   lv_img_set_src(image[1], Numbers[hour%10]);
-  lv_obj_align(image[1], image[0], LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+  lv_obj_align(image[1], nullptr, LV_ALIGN_CENTER, -20, -70);
 
   image[2] = lv_img_create(lv_scr_act(), nullptr);
   lv_obj_set_auto_realign(image[2], true);
@@ -97,7 +110,7 @@ WatchFaceWeather::WatchFaceWeather(Pinetime::Applications::DisplayApp *app,
   image[3] = lv_img_create(lv_scr_act(), nullptr);
   lv_obj_set_auto_realign(image[3], true);
   lv_img_set_src(image[3], Numbers[minute%10]);
-  lv_obj_align(image[3], image[2], LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+  lv_obj_align(image[3], nullptr, LV_ALIGN_CENTER, -20, 30);
 
   image[4] = lv_img_create(lv_scr_act(), nullptr);
   lv_obj_set_auto_realign(image[4], true);
@@ -114,23 +127,41 @@ WatchFaceWeather::WatchFaceWeather(Pinetime::Applications::DisplayApp *app,
   lv_img_set_src(image[6], WeatherToday::Icons[weatherIcon]);
   lv_obj_align(image[6], nullptr, LV_ALIGN_CENTER, 65, -70);
 
-  batteryIcon = lv_label_create(lv_scr_act(), nullptr);
+  /*batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
   lv_obj_set_style_local_text_color(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x2c89a0));
   lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
-  lv_obj_align(batteryIcon, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, -15, -10);
-
-  label_day = lv_label_create(lv_scr_act(), nullptr);
-  lv_obj_set_style_local_text_color(label_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x225500));
-  lv_obj_set_style_local_text_font(label_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
-  lv_label_set_text_fmt(label_day, "%d", day);
-  lv_obj_align(label_day, nullptr, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
-  lv_obj_set_auto_realign(label_day, true);
+  lv_obj_align(batteryIcon, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, -5, 0);*/
 
   image[7] = lv_img_create(lv_scr_act(), nullptr);
   lv_obj_set_auto_realign(image[7], true);
   lv_img_set_src(image[7], WeekDay[((uint8_t)dayOfWeek) - 1]);
-  lv_obj_align(image[7], label_day, LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+  lv_obj_align(image[7], nullptr, LV_ALIGN_IN_BOTTOM_LEFT, 10, -10);
+
+  image[8] = lv_img_create(lv_scr_act(), nullptr);
+  lv_obj_set_auto_realign(image[8], true);
+  if ( day/10%10 == 0 ) {
+    lv_img_set_src(image[8], NumbersSS[day%10]);
+  } else {
+    lv_img_set_src(image[8], NumbersSS[day/10%10]);
+  }
+  lv_obj_align(image[8], image[7], LV_ALIGN_OUT_RIGHT_MID, 10, 0);
+
+  image[9] = lv_img_create(lv_scr_act(), nullptr);
+  lv_obj_set_auto_realign(image[9], true);
+  lv_img_set_src(image[9], NumbersSS[day%10]);
+  lv_obj_align(image[9], image[8], LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+
+  if ( day/10%10 == 0 ) {
+    lv_obj_set_hidden(image[9], true);
+  }
+
+  /*label_day = lv_label_create(lv_scr_act(), nullptr);
+  lv_obj_set_style_local_text_color(label_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x225500));
+  lv_obj_set_style_local_text_font(label_day, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_42);
+  lv_label_set_text_fmt(label_day, "%d", day);
+  lv_obj_align(label_day, image[7], LV_ALIGN_OUT_RIGHT_MID, 5, 0);
+  lv_obj_set_auto_realign(label_day, true);*/
 
   lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -186,15 +217,22 @@ void WatchFaceWeather::UpdateScreen() {
 
   if (day != currentDay) {
     currentDay = day;
-    lv_label_set_text_fmt(label_day, "%d", day);
-  }
-
-  if (dayOfWeek != currentDayOfWeek) {
-    currentDayOfWeek = dayOfWeek;
     lv_img_set_src(image[7], WeekDay[((uint8_t)dayOfWeek) - 1]);
+    if ( day/10%10 == 0 ) {
+      lv_obj_set_hidden(image[9], true);
+      lv_img_set_src(image[8], NumbersSS[day%10]);
+    } else {
+      lv_obj_set_hidden(image[9], false);
+      lv_img_set_src(image[8], NumbersSS[day/10%10]);
+      lv_obj_realign(image[8]);
+      lv_img_set_src(image[9], NumbersSS[day%10]);
+      lv_obj_realign(image[9]);
+    }
+    
+    //lv_label_set_text_fmt(label_day, "%d", day);
   }
 
-  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
+  //lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
 
   /*
   uint8_t hour;

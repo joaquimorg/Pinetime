@@ -37,6 +37,7 @@ namespace Pinetime {
 
           static char const *Numbers[];
           static char const *NumbersS[];
+          static char const *NumbersSS[];
           static char const *WeekDay[];
 
           uint8_t sHour, sMinute, sSecond;
@@ -50,9 +51,9 @@ namespace Pinetime {
 
           lv_task_t* taskUpdate;
 
-          lv_obj_t* image[8];
-          lv_obj_t* batteryIcon;
-          lv_obj_t* label_day;
+          lv_obj_t* image[10];
+          //lv_obj_t* batteryIcon;
+          //lv_obj_t* label_day;
 
           Controllers::DateTime& dateTimeController;
           Controllers::Battery& batteryController;
