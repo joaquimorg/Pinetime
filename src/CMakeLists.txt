@@ -444,6 +444,7 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WatchFaceMinimal.cpp
         displayapp/screens/WatchFaceCustom.cpp
         displayapp/screens/WatchFacePong.cpp
+        displayapp/screens/WatchFaceWeather.cpp
 
         #Fonts
         displayapp/fonts/lv_font_roboto_20.c

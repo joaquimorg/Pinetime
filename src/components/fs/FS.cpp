@@ -48,6 +48,12 @@ using namespace Pinetime::Controllers;
 
 FS::FS(Pinetime::Drivers::SpiNorFlash &spiNorFlash) : spiNorFlash{spiNorFlash} {}
 
+void FS::FormatFS() {
+    for (size_t erased = 0; erased < FS_FILES - FS_HEADER; erased += 0x1000) {
+        spiNorFlash.SectorErase(FS_HEADER + erased);
+    }
+}
+
 void FS::VerifyResource() {
     uint8_t buffer[16];
     spiNorFlash.Read( FS_HEADER, buffer, 16 );

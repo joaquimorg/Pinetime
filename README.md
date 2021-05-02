@@ -66,7 +66,7 @@ This project is released under the GNU General Public License version 3 or, at y
 
 ---
 
-[![PineTime Lite 0.5.0](https://res.cloudinary.com/marcomontalbano/image/upload/v1619513559/video_to_markdown/images/youtube--d87VAyawJ0M-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=d87VAyawJ0M "PineTime Lite 0.5.0")
+[![PineTime Lite 0.5.1](https://res.cloudinary.com/marcomontalbano/image/upload/v1619513559/video_to_markdown/images/youtube--d87VAyawJ0M-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=d87VAyawJ0M "PineTime Lite 0.5.1")
 
 ---
 

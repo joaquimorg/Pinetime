@@ -16,6 +16,7 @@
 #include "WatchFaceMinimal.h"
 #include "WatchFacePong.h"
 #include "WatchFaceCustom.h"
+#include "WatchFaceWeather.h"
 
 using namespace Pinetime::Applications::Screens;
 
@@ -41,6 +42,7 @@ Clock::Clock(DisplayApp* app,
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen1(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen2(); },
                 [this]() -> std::unique_ptr<Screen> { return WatchFaceCustomScreen3(); },
+                [this]() -> std::unique_ptr<Screen> { return WatchFaceWeather(); },                
           },
           Screens::ScreenListModes::LongPress          
         } {
@@ -93,4 +95,8 @@ std::unique_ptr<Screen> Clock::WatchFaceCustomScreen2() {
 
 std::unique_ptr<Screen> Clock::WatchFaceCustomScreen3() {  
   return std::make_unique<Screens::WatchFaceCustom>(2, app, dateTimeController, batteryController, bleController, notificatioManager, settingsController);
+}
+
+std::unique_ptr<Screen> Clock::WatchFaceWeather() {  
+  return std::make_unique<Screens::WatchFaceWeather>(app, dateTimeController, batteryController, settingsController);
 }

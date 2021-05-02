@@ -89,7 +89,7 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
   label_time_min = lv_label_create(lv_scr_act(), NULL);  
   lv_obj_set_style_local_text_color(label_time_min, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x00A3FF));
   lv_obj_set_style_local_text_font(label_time_min, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_clock_76);
-  lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 0, 55);
+  lv_obj_align(label_time_min, nullptr, LV_ALIGN_CENTER, 0, 55);
 
 
   notificationIcon = lv_label_create(lv_scr_act(), NULL);
@@ -99,11 +99,14 @@ WatchFaceMinimal::WatchFaceMinimal(Pinetime::Applications::DisplayApp *app,
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
   lv_obj_set_style_local_text_color(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x666666));
-  lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20); 
+  lv_obj_set_style_local_text_font(batteryIcon, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_sys_20);
+  lv_obj_align(batteryIcon, nullptr, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
   
   // Date   
   label_date = lv_label_create(lv_scr_act(), nullptr);
-  lv_obj_set_style_local_text_color(label_date, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x1FFF00));    
+  lv_obj_set_style_local_text_color(label_date, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x1FFF00));
+  lv_obj_align(label_date, nullptr, LV_ALIGN_CENTER, 0, 0);
+  lv_obj_set_auto_realign(label_date, true);
 
   lv_obj_t* backgroundLabel = lv_label_create(lv_scr_act(), nullptr);
   lv_label_set_long_mode(backgroundLabel, LV_LABEL_LONG_CROP);
@@ -142,20 +145,20 @@ void WatchFaceMinimal::UpdateScreen() {
     if ( settingsController.GetClockType() == Controllers::Settings::ClockType::H12 ) {
       lv_label_set_text_fmt(label_time, "%2i", sHour);
       if ( hour > 9 ) {
-        lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, 0, -55);
+        lv_obj_align(label_time, nullptr, LV_ALIGN_CENTER, 0, -55);
       } else {
-        lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, 10, -55);
+        lv_obj_align(label_time, nullptr, LV_ALIGN_CENTER, 10, -55);
       }
       lv_label_set_text(label_time_am_pm, dateTimeController.HourAMPM(true));
       lv_obj_align(label_time_am_pm, label_time, LV_ALIGN_OUT_LEFT_MID, -5, 0);
       lv_label_set_align( label_time_am_pm, LV_LABEL_ALIGN_CENTER );
     } else {
       lv_label_set_text_fmt(label_time, "%02i", sHour);
-      lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_CENTER, 0, -55);
+      lv_obj_align(label_time, nullptr, LV_ALIGN_CENTER, 0, -55);
     }
     
     lv_label_set_text_fmt(label_time_min,  "%02i", sMinute);
-    lv_obj_align(label_time_min, lv_scr_act(), LV_ALIGN_CENTER, 0, 55);
+    lv_obj_align(label_time_min, nullptr, LV_ALIGN_CENTER, 0, 55);
 
     //lv_arc_set_value(arcHours, sHour);
     //lv_arc_set_value(arcMinutes, sMinute);
@@ -173,18 +176,15 @@ void WatchFaceMinimal::UpdateScreen() {
     } else {
       lv_label_set_text_fmt(label_date, "%s, %02i %s", dateTimeController.DayOfWeekShortToStringLow(), dateTimeController.Day(), dateTimeController.MonthToStringLow());
     }
-    lv_obj_align(label_date, lv_scr_act(), LV_ALIGN_CENTER, 0, 0);
     currentMonth = month;
     currentDayOfWeek = dayOfWeek;
     currentDay = day;
   }
 
-  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));
-  lv_obj_align(batteryIcon, NULL, LV_ALIGN_IN_BOTTOM_LEFT, 5, -5);
+  lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryController.PercentRemaining()));  
 
   if(notificatioManager.AreNewNotificationsAvailable() == true) {
     lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(true));
-    lv_obj_align(notificationIcon, nullptr, LV_ALIGN_IN_BOTTOM_RIGHT, -5, -5);
   } else {
     lv_label_set_text(notificationIcon, NotificationIcon::GetIcon(false));
   }

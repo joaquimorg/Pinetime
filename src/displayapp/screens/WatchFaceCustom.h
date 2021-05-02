@@ -37,24 +37,12 @@ namespace Pinetime {
 
         private:
 
-          struct snowPoint
-          {
-              uint8_t x;
-              uint8_t y;
-          };
-          
           uint8_t sHour, sMinute, sSecond;
 
           Pinetime::Controllers::DateTime::Months currentMonth = Pinetime::Controllers::DateTime::Months::Unknown;
           Pinetime::Controllers::DateTime::Days currentDayOfWeek = Pinetime::Controllers::DateTime::Days::Unknown;
           uint8_t currentDay = 0;
 
-          DirtyValue<float> batteryPercentRemaining  {0};
-          DirtyValue<bool> bleState {false};
-          DirtyValue<std::chrono::time_point<std::chrono::system_clock, std::chrono::nanoseconds>> currentDateTime;
-          DirtyValue<uint32_t> stepCount  {0};
-          DirtyValue<uint8_t> heartbeat  {0};
-          DirtyValue<bool> notificationState {false};
 
           lv_style_t hour_style;
 

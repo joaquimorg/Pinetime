@@ -69,7 +69,7 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
 }
 
 void DisplayApp::Start() {
-  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 800, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 700, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 

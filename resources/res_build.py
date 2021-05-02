@@ -6,7 +6,7 @@ from struct import pack
 def concatFiles():
     fat = bytearray(b'\xFF') * 8176
     #bytearray(4096 * 2)
-    path = "./resfiles"
+    path = "./resbinfiles"
     files = os.listdir(path)
     with open("pinetime-lite.res", "wb") as fo:
         # Write Header, file file identifiction 

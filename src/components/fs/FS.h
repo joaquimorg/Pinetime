@@ -30,6 +30,8 @@ namespace Pinetime {
             void FileRead(void* file_p, uint8_t *buff, uint32_t size);
             void FileSeek(void* file_p, uint32_t pos);
             void VerifyResource();
+
+            void FormatFS();
         private:
             Pinetime::Drivers::SpiNorFlash& spiNorFlash;
             bool fsValid = false;

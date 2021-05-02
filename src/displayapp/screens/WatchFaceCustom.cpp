@@ -17,7 +17,7 @@ WatchFaceCustom::WatchFaceCustom(uint8_t imgnum, Pinetime::Applications::Display
                   Controllers::Battery& batteryController,
                   Controllers::Ble& bleController,
                   Controllers::NotificationManager& notificatioManager,
-                  Controllers::Settings &settingsController) : Screen(app), currentDateTime{{}},
+                  Controllers::Settings &settingsController) : Screen(app),
                                            dateTimeController{dateTimeController}, batteryController{batteryController},
                                            bleController{bleController}, notificatioManager{notificatioManager},
                                            settingsController{settingsController} {
