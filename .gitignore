@@ -20,7 +20,7 @@ tools
 *.map
 *.out
 pinetime*.cbp
-!resources/resfiles/*.bin
+!resources/resbinfiles/*.bin
 
 # External libs
 !src/libs/hrs3300/libheart.a
