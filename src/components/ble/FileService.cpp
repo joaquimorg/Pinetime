@@ -27,9 +27,10 @@ namespace {
 
 FileService::FileService(Pinetime::System::SystemTask &systemTask,
                        Pinetime::Controllers::Ble &bleController,
-                       Pinetime::Drivers::SpiNorFlash &spiNorFlash)
+                       Pinetime::Drivers::SpiNorFlash &spiNorFlash,
+                       Pinetime::Controllers::FS &fs)
 
-: mSystemTask{systemTask}, bleController{bleController}, spiFlash{spiNorFlash},
+: mSystemTask{systemTask}, bleController{bleController}, spiFlash{spiNorFlash}, fs{fs},
 
   mCharacteristicDefinitions {
       { .uuid = reinterpret_cast<const ble_uuid_t*>(&fileDataCharacteristicUuid),
@@ -256,6 +257,80 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
       return 0;
     }
 
+    case Opcodes::COMMAND_FILE_INIT: {
+      uint8_t data[2];
+      data[0] = 0x01;
+
+      // fileInfo[1] = type - create dir = 1 / create file = 2 / delete = 9
+      // fileInfo[2] = name size
+      // fileInfo[3..6] = name size
+      // fileInfo[7...] = name
+
+      uint8_t fileType =  om->om_data[1];
+      uint8_t nameSize =  om->om_data[2];
+
+      fileSize =  om->om_data[3] + (om->om_data[4] << 8) + (om->om_data[5] << 16) + (om->om_data[6] << 24);
+      bytesReceived = 0;
+      std::array<char, 50> fileName;
+      os_mbuf_copydata(om, 7, nameSize + 1, fileName.data());
+
+      if ( fileType == 9 ) {
+        fs.Delete(fileName.data());
+        state = States::Idle;
+        data[1] = (uint8_t)Opcodes::COMMAND_FILE_END;
+
+      } else if ( fileType == 1 ) {
+        fs.MkDir(fileName.data());
+        state = States::Idle;
+        data[1] = (uint8_t)Opcodes::COMMAND_FILE_END;
+
+      } else if ( fileType == 2 ) {
+        bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::FIL);
+        bleController.StartFirmwareUpdate();
+        bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
+        bleController.FirmwareUpdateTotalBytes(fileSize);
+        bleController.FirmwareUpdateCurrentBytes(0);
+        // Send task to open app
+        mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateStart);
+        
+        state = States::FileInit;
+        data[1] = (uint8_t)Opcodes::COMMAND_FILE_START_DATA;
+        //fs.FileClose(file);
+        fs.FileOpen(file, fileName.data(), LFS_O_RDWR | LFS_O_CREAT);
+        
+      } else {
+        state = States::Idle;
+        data[1] = (uint8_t)Opcodes::COMMAND_FILE_ERROR;
+      }
+        
+      NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+      return 0;
+    }
+    case Opcodes::COMMAND_FILE_START_DATA: {
+      if (state != States::FileInit) {
+        return 0;
+      }
+      state = States::FileData;
+      return 0;
+    }
+    case Opcodes::COMMAND_FILE_END: {
+      state = States::Idle;
+      fs.FileClose(file);
+
+      uint8_t data[2];
+      data[0] = 0x01;
+      data[1] = (uint8_t)Opcodes::COMMAND_FILE_END;
+      NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+
+      bleController.FirmwareUpdateCurrentBytes(fileSize);
+      bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Validated);
+      bleController.StopFirmwareUpdate();
+      mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateEnd);
+      xTimerStop(timeoutTimer, 0);
+
+      return 0;
+    }
+
     default:
       return 0;
   }
@@ -265,15 +340,17 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
 int FileService::WritePacketHandler(uint16_t connectionHandle, os_mbuf *om) {
   switch (state) {
     case States::Data: {
-
       spiFlash.Append(om->om_data, om->om_len);
-
       bytesReceived += om->om_len;
       bleController.FirmwareUpdateCurrentBytes(bytesReceived);
-
       return 0;
     }
-    
+    case States::FileData: {
+      fs.FileWrite(file, om->om_data, om->om_len);
+      bytesReceived += om->om_len;
+      bleController.FirmwareUpdateCurrentBytes(bytesReceived);
+      return 0;
+    }
     default:
       // Invalid state
       return 0;

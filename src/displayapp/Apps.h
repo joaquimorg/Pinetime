@@ -23,6 +23,7 @@ namespace Pinetime
       WeatherToday,
       WeatherForecast,
       Motion,
+      FileExplorer,
 
       Settings,
       SettingDisplay,

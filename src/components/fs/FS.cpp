@@ -2,13 +2,16 @@
 #include <cstring>
 #include <cstdlib>
 #include <strings.h>
+#include "drivers/SpiNorFlash.h"
+#include <littlefs/lfs.h>
+#include <lvgl/lvgl.h>
 
 using namespace Pinetime::Controllers;
 
 
-/* 
+/*
  * External Flash MAP (4 MBytes)
- * 
+ *
  * 0x000000 +---------------------------------------+
  *          |  Bootloader Assets                    |
  *          |  256 KBytes                           |
@@ -20,13 +23,7 @@ using namespace Pinetime::Controllers;
  *          |                                       |
  *          |                                       |
  * 0x0B4000 +---------------------------------------+
- *          |                                       |
- * 0x0B4010 +---------------------------------------+
- *          |  File System FAT                      |
- *          |  8 KBytes                             |
- * 0x0B6000 +---------------------------------------+
- *          |  File System FILES                    |
- *          |  3.328 MBytes                         |
+ *          |  File System                          |
  *          |                                       |
  *          |                                       |
  *          |                                       |
@@ -35,155 +32,204 @@ using namespace Pinetime::Controllers;
  *          |  System Settings                      |
  *          |  40 KBytes                            |
  * 0x400000 +---------------------------------------+
+ *
  */
 
-#define FS_HEADER   0x0B4000 // File Image Header
-#define FS_FAT      0x0B4010 // File System FAT
-#define FS_ENDFAT   0x0B5000
-
-#define FS_FILES    0x0B6000 // File System FILES
-#define FS_ENDFILES 0x3F6000 // File System END
+//#define FS_HEADER   0x0B4000 // File Image Header
+//#define FS_ENDFILES 0x3F6000 // File System END
 // File system size = 0x340000 - 3 407 872 Bytes - 3.328 MBytes
 // the last 40 Kbytes is reserved for System Settings
 
-FS::FS(Pinetime::Drivers::SpiNorFlash &spiNorFlash) : spiNorFlash{spiNorFlash} {}
 
-void FS::FormatFS() {
-    for (size_t erased = 0; erased < FS_FILES - FS_HEADER; erased += 0x1000) {
-        spiNorFlash.SectorErase(FS_HEADER + erased);
-    }
+static constexpr size_t BLOCK_SIZE_BYTES = 4096;
+
+
+/*
+*   Interface between littlefs and SpiNorFlash
+*/
+
+static int read(const struct lfs_config *c, lfs_block_t block,
+                lfs_off_t off, void *buffer, lfs_size_t size) {
+    Pinetime::Controllers::FS& lfs = *(reinterpret_cast<Pinetime::Controllers::FS*>(c->context));
+    const size_t address = lfs.mStartAddress + (block * BLOCK_SIZE_BYTES) + off;
+    lfs.mDriver.Read(address, (uint8_t*)buffer, size);
+    // TODO assumes READ was successful
+    return 0u;
 }
 
-void FS::VerifyResource() {
-    uint8_t buffer[16];
-    spiNorFlash.Read( FS_HEADER, buffer, 16 );
-
-    if ( (buffer[0] == 0xAA and buffer[1] == 0x52) and 
-        // File version
-        (buffer[11] == 0x00 and buffer[12] == 0x01) ) {        
-        fsValid = true;
-    } else {
-        fsValid = false;
-    }
+static int prog(const struct lfs_config *c, lfs_block_t block,
+        lfs_off_t off, const void *buffer, lfs_size_t size) {
+    Pinetime::Controllers::FS& lfs = *(reinterpret_cast<Pinetime::Controllers::FS*>(c->context));
+    const size_t address = lfs.mStartAddress + (block * BLOCK_SIZE_BYTES) + off;
+    lfs.mDriver.Write(address, (uint8_t*)buffer, size);
+    return lfs.mDriver.ProgramFailed() ? -1u : 0u;
 }
 
-void FS::FileOpen(void* file_p, uint8_t *fileName) {
+static int erase(const struct lfs_config *c, lfs_block_t block) {
+    Pinetime::Controllers::FS& lfs = *(reinterpret_cast<Pinetime::Controllers::FS*>(c->context));
+    const size_t address = lfs.mStartAddress + (block * BLOCK_SIZE_BYTES);
+    lfs.mDriver.SectorErase(address);
+    return lfs.mDriver.EraseFailed() ? -1u : 0u;
+}
 
-    if ( !fsValid ) return;
+static int sync(const struct lfs_config *c) {
+    // no hardware caching used
+    return 0u;
+}
 
-    file_s currFile;
 
-    file_t* file = static_cast<file_t *>(file_p);
+const static struct lfs_config baseLfsConfig = {
+    .read = read,
+    .prog = prog,
+    .erase = erase,
+    .sync = sync,
 
-    uint8_t buffer[44];
+    .read_size = 8,
+    .prog_size = 8,
+    .block_size = BLOCK_SIZE_BYTES,
+    .block_cycles = 1000u,
 
-    for (uint32_t fatOffset = 0; fatOffset < FS_ENDFAT; fatOffset += sizeof(currFile)) {
-        spiNorFlash.Read( FS_FAT + fatOffset, buffer, sizeof(currFile) );
-        std::memcpy(&currFile, buffer, sizeof(currFile));
-        
-        if ( currFile.name[0] != 0xFF ) {
-            // file found, is the file I need ?
-            if ((strcasecmp((char*)fileName, (char*)currFile.name)) == 0) {
-                // yes
-                file->readAddrOffset = 0x00;
-                file->isOpen = true;
-                file->offset = currFile.offset;
+    .cache_size = 16,
+    .lookahead_size = 16,
 
-                return;
-            }
-        } else {
-            // no more files in FAT
-            file->isOpen = false;
+    .name_max = 50,
+    .attr_max = 50
+
+};
+
+constexpr struct lfs_config createLfsConfig(Pinetime::Controllers::FS& fs, const size_t totalSizeBytes) {
+    struct lfs_config config = baseLfsConfig;
+    config.context = &fs;
+    config.block_count = totalSizeBytes / BLOCK_SIZE_BYTES;
+    return config;
+}
+
+FS::FS(Pinetime::Drivers::SpiNorFlash& driver,
+       const size_t startAddress,
+       const size_t sizeBytes) :
+    mDriver{driver},
+    mStartAddress{startAddress},
+    mSize{sizeBytes},
+    mLfsConfig{createLfsConfig(*this, sizeBytes)} { }
+
+
+void FS::Init() {
+
+    // try mount
+    //lfs_format(&mLfs, &mLfsConfig);
+    int err = lfs_mount(&mLfs, &mLfsConfig);
+
+    // reformat if we can't mount the filesystem
+    // this should only happen on the first boot
+    if (err) {
+        lfs_format(&mLfs, &mLfsConfig);
+        err = lfs_mount(&mLfs, &mLfsConfig);
+        if (err) {
             return;
         }
     }
-    file->isOpen = false;
-    return;
+    VerifyResource();
+    LVGLFileSystemInit();
 }
 
-
-void FS::FileClose(void* file_p) {
-    file_t* file = static_cast<file_t *>(file_p);
-
-    file->readAddrOffset = 0x00;
-    file->isOpen = false;
+void FS::VerifyResource() {
+    // validate the resource metadata
+    fsValid = true;
 }
 
-
-void FS::FileRead(void* file_p, uint8_t *buff, uint32_t size) {
+void FS::FileOpen(lfs_file_t* file_p, const char* fileName, const int flags) {
     if ( !fsValid ) return;
-    file_t* file = static_cast<file_t *>(file_p);
-
-    // Fix for erro reading more than 240 bytes from flash ....
-    //
-    if ( size > 240 ) {
-        uint32_t half = size / 2;
-        spiNorFlash.Read( FS_FILES + file->offset + file->readAddrOffset, (uint8_t *)buff, half );
-        spiNorFlash.Read( FS_FILES + file->offset + file->readAddrOffset + half, (uint8_t *)buff + half, half );
-    }else {
-        spiNorFlash.Read( FS_FILES + file->offset + file->readAddrOffset, (uint8_t *)buff, size );
-    }
-  
-    file->readAddrOffset += size;
+    lfs_file_open(&mLfs, file_p, fileName, flags);
 }
 
-void FS::FileSeek(void* file_p, uint32_t pos) {
+void FS::FileClose(lfs_file_t* file_p) {
     if ( !fsValid ) return;
-
-    file_t* file = static_cast<file_t *>(file_p);
-  
-    file->readAddrOffset = pos;
-  
+    lfs_file_close(&mLfs, file_p);
 }
 
-lv_fs_res_t FSOpen(lv_fs_drv_t* drv, void* file_p, const char* path, lv_fs_mode_t mode) {
-    
-    file_t* file = static_cast<file_t *>(file_p);
+void FS::Delete(const char* fileName) {
+    if ( !fsValid ) return;
+    lfs_remove(&mLfs, fileName);
+}
+
+void FS::FileRead(lfs_file_t* file_p, uint8_t* buff, uint32_t size) {
+    if ( !fsValid ) return;
+    lfs_file_read(&mLfs, file_p, buff, size);
+}
+
+void FS::FileWrite(lfs_file_t* file_p, const uint8_t* buff, uint32_t size) {
+    if ( !fsValid ) return;
+    lfs_file_write(&mLfs, file_p, buff, size);
+}
+
+void FS::FileSeek(lfs_file_t* file_p, uint32_t pos) {
+    if ( !fsValid ) return;
+    lfs_file_seek(&mLfs, file_p, pos, LFS_SEEK_SET);
+}
+
+void FS::MkDir(const char* path) {
+    if ( !fsValid ) return;
+    lfs_mkdir(&mLfs, path);
+}
+
+
+/*
+
+    ----------- LVGL filesystem integration -----------
+
+*/
+
+lv_fs_res_t lvglOpen(lv_fs_drv_t* drv, void* file_p, const char* path, lv_fs_mode_t mode) {
+
+    lfs_file_t* file = static_cast<lfs_file_t *>(file_p);
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileOpen(file_p, (uint8_t *)path);
+    filesys->FileOpen(file, path, LFS_O_RDONLY);
 
-    if (file->isOpen) {
-        return LV_FS_RES_OK;
-    } else {
+    if (file->type == 0) {
         return LV_FS_RES_FS_ERR;
+    } else {
+        return LV_FS_RES_OK;
     }
 }
 
-lv_fs_res_t FSClose(lv_fs_drv_t* drv, void* file_p) {
+lv_fs_res_t lvglClose(lv_fs_drv_t* drv, void* file_p) {
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileClose( file_p );
+    lfs_file_t* file = static_cast<lfs_file_t *>(file_p);
+    filesys->FileClose( file );
 
     return LV_FS_RES_OK;
 }
 
-lv_fs_res_t FSRead(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t btr, uint32_t* br) {
+lv_fs_res_t lvglRead(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t btr, uint32_t* br) {
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileRead(file_p, (uint8_t *)buf, btr);
+    lfs_file_t* file = static_cast<lfs_file_t *>(file_p);
+    filesys->FileRead(file, (uint8_t *)buf, btr);
     *br = btr;
     return LV_FS_RES_OK;
 }
 
-lv_fs_res_t FSSeek(lv_fs_drv_t* drv, void* file_p, uint32_t pos) {
+lv_fs_res_t lvglSeek(lv_fs_drv_t* drv, void* file_p, uint32_t pos) {
     FS* filesys = static_cast<FS *>(drv->user_data);
-    filesys->FileSeek(file_p, pos);
+    lfs_file_t* file = static_cast<lfs_file_t *>(file_p);
+    filesys->FileSeek(file, pos);
     return LV_FS_RES_OK;
 }
 
 
 void FS::LVGLFileSystemInit() {
-    
+
     if ( !fsValid ) return;
     lv_fs_drv_t fs_drv;
     lv_fs_drv_init(&fs_drv);
 
-    fs_drv.file_size = sizeof(file_t);
+    fs_drv.file_size = sizeof(lfs_file_t);
     fs_drv.letter = 'F';
-    fs_drv.open_cb = FSOpen;
-    fs_drv.close_cb = FSClose;
-    fs_drv.read_cb = FSRead;
-    fs_drv.seek_cb = FSSeek;
+    fs_drv.open_cb = lvglOpen;
+    fs_drv.close_cb = lvglClose;
+    fs_drv.read_cb = lvglRead;
+    fs_drv.seek_cb = lvglSeek;
 
-    fs_drv.user_data = this; 
+    fs_drv.user_data = this;
 
     lv_fs_drv_register(&fs_drv);
 

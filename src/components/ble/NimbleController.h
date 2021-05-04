@@ -43,7 +43,7 @@ namespace Pinetime {
                 Pinetime::Controllers::NotificationManager& notificationManager,
                 Pinetime::Controllers::CallNotificationManager &callNotificationManager,
                 Controllers::Battery& batteryController, Pinetime::Drivers::SpiNorFlash& spiNorFlash,
-                Controllers::Settings &settingsController);
+                Controllers::Settings &settingsController, Controllers::FS &fs);
 
         void Init();
         void StartAdvertising();
@@ -73,8 +73,8 @@ namespace Pinetime {
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Controllers::CallNotificationManager& callNotificationManager;
         Pinetime::Drivers::SpiNorFlash& spiNorFlash;
-        Controllers::Settings &settingsController;
-
+        Controllers::Settings& settingsController;
+        
         FileService fileService;
         Pinetime::Controllers::DfuService dfuService;
 

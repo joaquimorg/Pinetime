@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <array>
+#include <littlefs/lfs.h>
 
 #define min // workaround: nimble's min/max macros conflict with libstdc++
 #define max
@@ -20,20 +21,22 @@ namespace Pinetime {
   namespace System {
     class SystemTask;
   }
-  
+
   namespace Drivers {
     class SpiNorFlash;
   }
 
   namespace Controllers {
     class Ble;
+    class FS;
 
     class FileService {
       public:
         FileService(Pinetime::System::SystemTask &systemTask,
                    Pinetime::Controllers::Ble &bleController,
-                   Pinetime::Drivers::SpiNorFlash &spiNorFlash);
-        
+                   Pinetime::Drivers::SpiNorFlash &spiNorFlash,
+                   Pinetime::Controllers::FS &fs);
+
         void Init();
 
         int OnServiceData(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context);
@@ -45,7 +48,7 @@ namespace Pinetime {
             enum class FlashType : uint8_t {
                 RES, FW, BOT
             };
-            
+
             SpiFlash(Pinetime::Drivers::SpiNorFlash& spiNorFlash) : spiNorFlash{spiNorFlash} {}
             void Init(size_t chunkSize, size_t totalSize, FlashType flashType);
             void Erase();
@@ -55,24 +58,25 @@ namespace Pinetime {
 
           private:
             Pinetime::Drivers::SpiNorFlash& spiNorFlash;
+
             static constexpr size_t bufferSize = 240;
             bool ready = false;
             size_t chunkSize = 0;
             size_t totalSize = 0;
-            
+
             FlashType flashType;
             size_t writeOffset = 0;
-            
+
             // Firmware
             size_t maxSize = 475136;
 
             size_t bufferWriteIndex = 0;
             size_t totalWriteIndex = 0;
             uint8_t tempBuffer[bufferSize];
-            
+
             uint16_t ComputeCrc(uint8_t const *p_data, uint32_t size, uint16_t const *p_crc);
             void WriteMagicNumber();
-            
+
             // Don't write to flash... simulate mode for testing...
             bool demoMode = false;
 
@@ -94,10 +98,10 @@ namespace Pinetime {
                 .value = FILE_SERVICE_UUID_CHAR
         };
 
-        Pinetime::System::SystemTask &mSystemTask;
-        Pinetime::Controllers::Ble &bleController;
-
+        Pinetime::System::SystemTask& mSystemTask;
+        Pinetime::Controllers::Ble& bleController;
         SpiFlash spiFlash;
+        Pinetime::Controllers::FS& fs;
 
         const struct ble_gatt_chr_def mCharacteristicDefinitions[3];    ///< number of characteristics (plus one null)
         const struct ble_gatt_svc_def mServiceDefinitions[2];           ///< number of services (plus one null)
@@ -112,10 +116,15 @@ namespace Pinetime {
             COMMAND_FIRMWARE_OK           = 0x07,
             COMMAND_FIRMWARE_ERROR        = 0x08,
             COMMAND_FIRMWARE_CHECKSUM_ERR = 0x09,
+
+            COMMAND_FILE_INIT             = 0x21,
+            COMMAND_FILE_START_DATA       = 0x22,
+            COMMAND_FILE_END              = 0x23,
+            COMMAND_FILE_ERROR            = 0x24,
         };
 
         enum class States : uint8_t {
-            Idle, Init, Start, Data, Validate, Validated
+            Idle, Init, Start, Data, Validate, Validated, FileInit, FileData
         };
         States state = States::Idle;
 
@@ -127,13 +136,15 @@ namespace Pinetime {
         uint16_t fileControlCharacteristicHandle;
         uint16_t fileDataCharacteristicHandle;
 
+        lfs_file_t* file;
+
         int ControlPointHandler(uint16_t connectionHandle, os_mbuf *om);
         int WritePacketHandler(uint16_t connectionHandle, os_mbuf *om);
         void Reset();
 
         void NotificationSend(uint16_t connection, uint16_t charactHandle, const uint8_t *data, const size_t s);
 
-  
+
     };
   }
 }

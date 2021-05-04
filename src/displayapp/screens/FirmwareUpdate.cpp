@@ -15,6 +15,8 @@ FirmwareUpdate::FirmwareUpdate(Pinetime::Applications::DisplayApp *app, Pinetime
     lv_label_set_text_static(titleLabel, "Resource update");
   } else if ( bleController.FWType() == Pinetime::Controllers::Ble::FirmwareType::BOT ) {
     lv_label_set_text_static(titleLabel, "Bootloader update");
+  } else if ( bleController.FWType() == Pinetime::Controllers::Ble::FirmwareType::FIL ) {
+    lv_label_set_text_static(titleLabel, "Download file");
   } else {
     lv_label_set_text_static(titleLabel, "Update");
   }

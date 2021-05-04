@@ -29,6 +29,7 @@ namespace Pinetime {
     class DateTime;
     class NotificationManager;
     class CallNotificationManager;
+    class FS;
   }
 
   namespace System {
@@ -53,7 +54,8 @@ namespace Pinetime {
                    Controllers::BrightnessController& brightnessController,
                    Pinetime::System::SystemTask &systemTask,
                    Pinetime::Controllers::NotificationManager &notificationManager,
-                   Pinetime::Controllers::CallNotificationManager &callNotificationManager);
+                   Pinetime::Controllers::CallNotificationManager &callNotificationManager,
+                   Controllers::FS &fs);
         void Start();
         void PushMessage(Messages msg);
 
@@ -78,6 +80,7 @@ namespace Pinetime {
         Pinetime::System::SystemTask& systemTask;
         Pinetime::Controllers::NotificationManager& notificationManager;
         Pinetime::Controllers::CallNotificationManager& callNotificationManager;
+        Controllers::FS& fs;
         std::unique_ptr<Screens::Screen> currentScreen;
 
         Pinetime::Controllers::FirmwareValidator validator;

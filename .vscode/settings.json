@@ -14,6 +14,10 @@
         "chrono": "cpp",
         "cstdint": "cpp",
         "algorithm": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "fstream": "cpp",
+        "string_view": "cpp",
+        "initializer_list": "cpp",
+        "string": "cpp"
     }
 }

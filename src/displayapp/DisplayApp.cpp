@@ -23,6 +23,7 @@
 #include "displayapp/screens/WeatherToday.h"
 #include "displayapp/screens/WeatherForecast.h"
 #include "displayapp/screens/Motion.h"
+#include "displayapp/screens/FileExplorer.h"
 
 #include "displayapp/screens/settings/QuickSettings.h"
 #include "displayapp/screens/settings/Settings.h"
@@ -48,7 +49,8 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
                        Controllers::BrightnessController& brightnessController,
                        System::SystemTask &systemTask,
                        Pinetime::Controllers::NotificationManager &notificationManager,
-                       Pinetime::Controllers::CallNotificationManager &callNotificationManager) :
+                       Pinetime::Controllers::CallNotificationManager &callNotificationManager,
+                       Controllers::FS &fs) :
         lcd{lcd},
         lvgl{lvgl},
         touchPanel{touchPanel},
@@ -62,14 +64,15 @@ DisplayApp::DisplayApp(Drivers::St7789 &lcd, Components::LittleVgl &lvgl, Driver
         brightnessController{brightnessController},
         systemTask{systemTask},
         notificationManager{notificationManager},
-        callNotificationManager{callNotificationManager}
+        callNotificationManager{callNotificationManager},
+        fs{fs}
 {
   msgQueue = xQueueCreate(queueSize, itemSize);
   StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::Down );
 }
 
 void DisplayApp::Start() {
-  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 700, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(DisplayApp::Process, "DISP", 1000, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 
@@ -368,6 +371,11 @@ void DisplayApp::StartApp(Apps app, DisplayApp::FullRefreshDirections direction)
         break;
       case Apps::Motion: 
         currentScreen = std::make_unique<Screens::Motion>(this, accelerometer);
+        returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
+        break;
+
+      case Apps::FileExplorer: 
+        currentScreen = std::make_unique<Screens::FileExplorer>(this, fs);
         returnApp(Apps::Launcher, FullRefreshDirections::Down, TouchEvents::SwipeDown);
         break;
     }

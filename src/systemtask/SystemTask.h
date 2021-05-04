@@ -88,7 +88,7 @@ namespace Pinetime {
         Controllers::Battery& batteryController;
         Controllers::Ble& bleController;
         Controllers::DateTime& dateTimeController;
-        Controllers::Settings& settingsController;
+        Controllers::Settings& settingsController;        
 
         Pinetime::Drivers::Watchdog watchdog;
         Pinetime::Drivers::WatchdogView watchdogView;
@@ -118,6 +118,9 @@ namespace Pinetime {
         TimerHandle_t hardwareTimer;
         TimerHandle_t wakeUpTimer;
         bool doNotGoToSleep = false;
+
+        static constexpr size_t FS_START_ADDRESS = 0x0B4000;
+        static constexpr size_t TOTAL_SIZE = 0x342000; // 3 416 064 Bytes
 
         void WakeUp();
         static void Process(void* instance);

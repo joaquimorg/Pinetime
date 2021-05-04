@@ -168,7 +168,7 @@ set(NIMBLE_SRC
 set(LVGL_SRC
         libs/lv_conf.h
         libs/lvgl/lvgl.h
-        
+
         libs/lvgl/src/lvgl.h
         libs/lvgl/src/lv_api_map.h
         libs/lvgl/src/lv_conf_internal.h
@@ -204,7 +204,7 @@ set(LVGL_SRC
         libs/lvgl/src/lv_draw/lv_draw_triangle.c
         libs/lvgl/src/lv_draw/lv_img_buf.c
         libs/lvgl/src/lv_draw/lv_img_cache.c
-        libs/lvgl/src/lv_draw/lv_img_decoder.c        
+        libs/lvgl/src/lv_draw/lv_img_decoder.c
         libs/lvgl/src/lv_draw/lv_img_buf.h
         libs/lvgl/src/lv_draw/lv_img_cache.h
         libs/lvgl/src/lv_draw/lv_img_decoder.h
@@ -221,7 +221,7 @@ set(LVGL_SRC
         libs/lvgl/src/lv_hal/lv_hal.h
         libs/lvgl/src/lv_hal/lv_hal_disp.h
         libs/lvgl/src/lv_hal/lv_hal_indev.h
-        libs/lvgl/src/lv_hal/lv_hal_tick.h        
+        libs/lvgl/src/lv_hal/lv_hal_tick.h
         libs/lvgl/src/lv_hal/lv_hal_disp.c
         libs/lvgl/src/lv_hal/lv_hal_indev.c
         libs/lvgl/src/lv_hal/lv_hal_tick.c
@@ -243,7 +243,7 @@ set(LVGL_SRC
         libs/lvgl/src/lv_misc/lv_txt.h
         libs/lvgl/src/lv_misc/lv_txt_ap.h
         libs/lvgl/src/lv_misc/lv_types.h
-        libs/lvgl/src/lv_misc/lv_utils.h        
+        libs/lvgl/src/lv_misc/lv_utils.h
         libs/lvgl/src/lv_misc/lv_anim.c
         libs/lvgl/src/lv_misc/lv_area.c
         libs/lvgl/src/lv_misc/lv_async.c
@@ -305,7 +305,7 @@ set(LVGL_SRC
         libs/lvgl/src/lv_widgets/lv_tabview.h
         libs/lvgl/src/lv_widgets/lv_textarea.h
         libs/lvgl/src/lv_widgets/lv_tileview.h
-        libs/lvgl/src/lv_widgets/lv_win.h        
+        libs/lvgl/src/lv_widgets/lv_win.h
         libs/lvgl/src/lv_widgets/lv_arc.c
         libs/lvgl/src/lv_widgets/lv_bar.c
         libs/lvgl/src/lv_widgets/lv_btn.c
@@ -347,7 +347,14 @@ set(BMA421_SRC
         libs/bma421/bma421.c
         )
 
-        
+set(LITTLEFS_SRC
+        libs/littlefs/lfs_util.h
+        libs/littlefs/lfs.h
+        libs/littlefs/lfs_util.c
+        libs/littlefs/lfs.c
+        )
+
+
 #set(HRS3300_SRC
 #        libs/hrs3300/hrs3300_reg_init.h
 #        libs/hrs3300/hrs3300.h
@@ -355,13 +362,13 @@ set(BMA421_SRC
         #libs/hrs3300/HRS3300lib.h
         #libs/hrs3300/HRS3300lib.cpp
 #        )
-        
+
 
 list(APPEND SOURCE_FILES
         BootloaderVersion.cpp
         logging/NrfLogger.cpp
 
-        
+
         drivers/St7789.cpp
         drivers/SpiNorFlash.cpp
         drivers/SpiMaster.cpp
@@ -396,7 +403,7 @@ list(APPEND SOURCE_FILES
         components/ble/ImmediateAlertService.cpp
         components/ble/ServiceDiscovery.cpp
         components/ble/FileService.cpp
-        
+
         FreeRTOS/port.c
         FreeRTOS/port_cmsis_systick.c
         FreeRTOS/port_cmsis.c
@@ -429,8 +436,9 @@ list(APPEND SOURCE_FILES
         displayapp/screens/WeatherToday.cpp
         displayapp/screens/WeatherForecast.cpp
         displayapp/screens/Motion.cpp
+        displayapp/screens/FileExplorer.cpp
 
-        displayapp/screens/settings/QuickSettings.cpp   
+        displayapp/screens/settings/QuickSettings.cpp
         displayapp/screens/settings/Settings.cpp
         displayapp/screens/settings/SettingDisplay.cpp
         displayapp/screens/settings/SettingTimeFormat.cpp
@@ -455,7 +463,7 @@ list(APPEND SOURCE_FILES
         displayapp/fonts/clock_font/lv_font_clock_42.c
 
         main.cpp
-        
+
         )
 
 
@@ -465,7 +473,7 @@ set(INCLUDE_FILES
         logging/NrfLogger.h
 
         drivers/TwiMaster.h
-        drivers/St7789.h        
+        drivers/St7789.h
         drivers/SpiNorFlash.h
         drivers/SpiMaster.h
         drivers/Spi.h
@@ -500,8 +508,8 @@ set(INCLUDE_FILES
         libs/date/includes/date/julian.h
         libs/date/includes/date/ptz.h
         libs/date/includes/date/tz_private.h
-        displayapp/LittleVgl.h        
-        displayapp/screens/Symbols.h        
+        displayapp/LittleVgl.h
+        displayapp/screens/Symbols.h
         displayapp/lv_pinetime_theme.h
 
         systemtask/SystemTask.h
@@ -523,13 +531,13 @@ set(INCLUDE_FILES
         displayapp/screens/ApplicationList.h
         displayapp/Apps.h
         displayapp/screens/Notifications.h
-        
+
         #Watch Faces
         displayapp/screens/WatchFaceDigital.h
         displayapp/screens/WatchFaceAnalog.h
         displayapp/screens/WatchFaceMinimal.h
         displayapp/screens/WatchFaceCustom.h
-        displayapp/screens/WatchFacePong.h        
+        displayapp/screens/WatchFacePong.h
         )
 
 include_directories(
@@ -537,6 +545,7 @@ include_directories(
         ../
         FreeRTOS/
         libs/
+        libs/littlefs/
         libs/date/includes
         libs/mynewt-nimble/porting/npl/freertos/include
         libs/mynewt-nimble/nimble/include
@@ -679,7 +688,7 @@ target_compile_options(lvgl PRIVATE
         $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -x assembler-with-cpp>
         )
 
-  
+
 # BMA421_SRC
 add_library(bma421 STATIC ${BMA421_SRC})
 target_include_directories(bma421 SYSTEM PUBLIC . ../)
@@ -691,6 +700,19 @@ target_compile_options(bma421 PRIVATE
         $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
         $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -x assembler-with-cpp>
         )
+
+# LITTLEFS_SRC
+add_library(littlefs STATIC ${LITTLEFS_SRC})
+target_include_directories(littlefs SYSTEM PUBLIC . ../)
+target_include_directories(littlefs SYSTEM PUBLIC ${INCLUDES_FROM_LIBS})
+target_compile_options(littlefs PRIVATE
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
+        $<$<AND:$<COMPILE_LANGUAGE:CXX>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
+        $<$<COMPILE_LANGUAGE:ASM>: -MP -MD -x assembler-with-cpp>
+        )
+
 
 # HRS3300
 #add_library(hrs3300lib STATIC IMPORTED)
@@ -715,7 +737,7 @@ set(EXECUTABLE_FILE_NAME ${EXECUTABLE_NAME}-${pinetimelite_VERSION_MAJOR}.${pine
 set(NRF5_LINKER_SCRIPT "${CMAKE_SOURCE_DIR}/gcc_nrf52.ld")
 add_executable(${EXECUTABLE_NAME} ${SOURCE_FILES})
 set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_FILE_NAME})
-target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl bma421 )
+target_link_libraries(${EXECUTABLE_NAME} nimble nrf-sdk lvgl bma421 littlefs )
 target_compile_options(${EXECUTABLE_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:RELEASE>>: ${COMMON_FLAGS} -O3>
@@ -744,7 +766,7 @@ set(IMAGE_MCUBOOT_FILE_NAME image-${pinetimelite_VERSION_MAJOR}.${pinetimelite_V
 set(DFU_FILE_NAME dfu-${pinetimelite_VERSION_MAJOR}.${pinetimelite_VERSION_MINOR}.${pinetimelite_VERSION_PATCH}.zip)
 set(NRF5_LINKER_SCRIPT_MCUBOOT "${CMAKE_SOURCE_DIR}/gcc_nrf52-mcuboot.ld")
 add_executable(${EXECUTABLE_MCUBOOT_NAME} ${SOURCE_FILES})
-target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl bma421 )
+target_link_libraries(${EXECUTABLE_MCUBOOT_NAME} nimble nrf-sdk lvgl bma421 littlefs )
 set_target_properties(${EXECUTABLE_MCUBOOT_NAME} PROPERTIES OUTPUT_NAME ${EXECUTABLE_MCUBOOT_FILE_NAME})
 target_compile_options(${EXECUTABLE_MCUBOOT_NAME} PUBLIC
         $<$<AND:$<COMPILE_LANGUAGE:C>,$<CONFIG:DEBUG>>: ${COMMON_FLAGS} -O0 -g3>

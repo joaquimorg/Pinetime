@@ -75,7 +75,7 @@ typedef int16_t lv_coord_t;
 #define LV_MEM_CUSTOM      0
 #if LV_MEM_CUSTOM == 0
 /* Size of the memory used by `lv_mem_alloc` in bytes (>= 2kB)*/
-#  define LV_MEM_SIZE    (15U * 1024U)
+#  define LV_MEM_SIZE    (14U * 1024U)
 
 /* Compiler prefix for a big array declaration */
 #  define LV_MEM_ATTR
@@ -660,7 +660,7 @@ typedef void * lv_obj_user_data_t;
 #define LV_USE_LINE     1
 
 /*List (dependencies: lv_page, lv_btn, lv_label, (lv_img optionally for icons ))*/
-#define LV_USE_LIST     0
+#define LV_USE_LIST     1
 #if LV_USE_LIST != 0
 /*Default animation time of focusing to a list element [ms] (0: no animation)  */
 #  define LV_LIST_DEF_ANIM_TIME  100
@@ -700,7 +700,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Roller (dependencies: lv_ddlist)*/
-#define LV_USE_ROLLER    1
+#define LV_USE_ROLLER    0
 #if LV_USE_ROLLER != 0
 /*Focus animation time [ms] (0: no animation)*/
 #  define LV_ROLLER_DEF_ANIM_TIME     200
@@ -710,13 +710,13 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Slider (dependencies: lv_bar)*/
-#define LV_USE_SLIDER    1
+#define LV_USE_SLIDER    0
 
 /*Spinbox (dependencies: lv_ta)*/
 #define LV_USE_SPINBOX       0
 
 /*Switch (dependencies: lv_slider)*/
-#define LV_USE_SWITCH       1
+#define LV_USE_SWITCH       0
 
 /*Text area (dependencies: lv_label, lv_page)*/
 #define LV_USE_TEXTAREA       0
@@ -726,7 +726,7 @@ typedef void * lv_obj_user_data_t;
 #endif
 
 /*Table (dependencies: lv_label)*/
-#define LV_USE_TABLE    1
+#define LV_USE_TABLE    0
 #if LV_USE_TABLE
 #  define LV_TABLE_COL_MAX    6
 #  define LV_TABLE_CELL_STYLE_CNT 5

@@ -7,6 +7,7 @@
 #include <libraries/gpiote/app_gpiote.h>
 #include <libraries/timer/app_timer.h>
 #include <softdevice/common/nrf_sdh.h>
+#include <libraries/delay/nrf_delay.h>
 
 // nimble
 #define min // workaround: nimble's min/max macros conflict with libstdc++
@@ -122,6 +123,21 @@ void nrfx_gpiote_evt_handler(nrfx_gpiote_pin_t pin, nrf_gpiote_polarity_t action
 }
 
 extern "C" {
+
+  void vApplicationMallocFailedHook(void) {
+    nrf_gpio_pin_set(LCD_LIGHT_1);
+    nrf_gpio_pin_set(LCD_LIGHT_2);
+    nrf_gpio_pin_set(LCD_LIGHT_3);
+    nrf_gpio_pin_clear(LCD_LIGHT_1);
+    for( ;; ) {
+        nrf_gpio_pin_clear(LCD_LIGHT_2);
+        nrf_gpio_pin_clear(LCD_LIGHT_3);
+        nrf_delay_ms(500);
+        nrf_gpio_pin_set(LCD_LIGHT_2);
+        nrf_gpio_pin_set(LCD_LIGHT_3);
+        nrf_delay_ms(500);
+    }
+  }
 
   void vApplicationIdleHook(void) {
     lv_tick_inc(1);

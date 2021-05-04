@@ -62,14 +62,14 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
                        watchdog{}, 
                        watchdogView{watchdog},
 
-                       fs( spiNorFlash ),
-                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash, settingsController),
+                       fs( spiNorFlash, FS_START_ADDRESS, TOTAL_SIZE ),
+                       nimbleController(*this, bleController, dateTimeController, notificationManager, callNotificationManager, batteryController, spiNorFlash, settingsController, fs),
                        vrMotor( settingsController ) {
   systemTasksMsgQueue = xQueueCreate(10, 1);
 }
 
 void SystemTask::Start() {
-  if (pdPASS != xTaskCreate(SystemTask::Process, "MAIN", 250, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(SystemTask::Process, "MAIN", 350, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 
@@ -92,15 +92,11 @@ void SystemTask::Work() {
   spi.Init();
   lcd.Init();
   brightnessController.Init();
-  brightnessController.Set(Controllers::BrightnessController::Levels::Low);
+  //brightnessController.Set(Controllers::BrightnessController::Levels::Low);
 
   spiNorFlash.Init();
   spiNorFlash.Wakeup();
-  
-  //fs.FormatFS();
-  fs.VerifyResource();
-  fs.LVGLFileSystemInit();
-  
+    
   settingsController.Init();  
 
   nimbleController.Init();
@@ -110,6 +106,8 @@ void SystemTask::Work() {
 
   batteryController.Init();
   //batteryController.Update();
+
+  fs.Init();
 
   // Button
   nrf_gpio_cfg_sense_input(KEY_ACTION, NRF_GPIO_PIN_PULLDOWN, NRF_GPIO_PIN_SENSE_HIGH);
@@ -158,7 +156,7 @@ void SystemTask::Work() {
   displayApp =  std::make_unique<Pinetime::Applications::DisplayApp>(
     lcd, lvgl, touchPanel, batteryController, bleController, spiNorFlash, 
     dateTimeController, watchdogView, settingsController, accelerometer, brightnessController,
-    *this, notificationManager, callNotificationManager);
+    *this, notificationManager, callNotificationManager, fs);
     
   displayApp->Start(); 
 
