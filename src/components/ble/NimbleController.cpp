@@ -151,6 +151,7 @@ int NimbleController::OnGAPEvent(ble_gap_event *event) {
     case BLE_GAP_EVENT_ADV_COMPLETE:
       NRF_LOG_INFO("Advertising event : BLE_GAP_EVENT_ADV_COMPLETE");
       NRF_LOG_INFO("advertise complete; reason=%dn status=%d", event->adv_complete.reason, event->connect.status);
+      StartAdvertising();
       break;
     case BLE_GAP_EVENT_CONNECT: {
       NRF_LOG_INFO("Advertising event : BLE_GAP_EVENT_CONNECT");

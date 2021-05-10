@@ -69,7 +69,7 @@ SystemTask::SystemTask(Drivers::SpiMaster &spi, Drivers::St7789 &lcd,
 }
 
 void SystemTask::Start() {
-  if (pdPASS != xTaskCreate(SystemTask::Process, "MAIN", 250, this, 0, &taskHandle))
+  if (pdPASS != xTaskCreate(SystemTask::Process, "MAIN", 500, this, 0, &taskHandle))
     APP_ERROR_HANDLER(NRF_ERROR_NO_MEM);
 }
 

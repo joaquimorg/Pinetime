@@ -9,6 +9,8 @@
 #undef max
 #undef min
 
+#include <lvgl/lvgl.h>
+
 //00021000-78fc-48fe-8e23-433b3a1942d0
 #define FILE_SERVICE_UUID_BASE {0xd0, 0x42, 0x19, 0x3a, 0x3b, 0x43, 0x23, 0x8e, 0xfe, 0x48, 0xfc, 0x78, 0x00, 0x10, 0x02, 0x00}
 //00021000-78fc-48fe-8e23-433b3a1942d0
@@ -43,7 +45,7 @@ namespace Pinetime {
         class SpiFlash {
           public:
             enum class FlashType : uint8_t {
-                RES, FW, BOT
+                RES, FW, BOT, SCR
             };
             
             SpiFlash(Pinetime::Drivers::SpiNorFlash& spiNorFlash) : spiNorFlash{spiNorFlash} {}
@@ -78,6 +80,8 @@ namespace Pinetime {
 
         };
 
+        void FlushScreenShot(const lv_area_t *area, lv_color_t *color_p);
+
       private:
         static constexpr ble_uuid128_t serviceUuid{
                 .u {.type = BLE_UUID_TYPE_128},
@@ -96,6 +100,7 @@ namespace Pinetime {
 
         Pinetime::System::SystemTask &mSystemTask;
         Pinetime::Controllers::Ble &bleController;
+        Pinetime::Drivers::SpiNorFlash& spiNorFlash;
 
         SpiFlash spiFlash;
 
@@ -112,6 +117,9 @@ namespace Pinetime {
             COMMAND_FIRMWARE_OK           = 0x07,
             COMMAND_FIRMWARE_ERROR        = 0x08,
             COMMAND_FIRMWARE_CHECKSUM_ERR = 0x09,
+
+            COMMAND_SCREEN_SHOT           = 0x30,
+            COMMAND_SCREEN_SHOT_GET       = 0x31,
         };
 
         enum class States : uint8_t {
@@ -123,15 +131,22 @@ namespace Pinetime {
         uint32_t fileSize = 0;
         uint32_t bytesReceived = 0;
         TimerHandle_t timeoutTimer;
+        uint32_t readSCRPos = 0;
 
         uint16_t fileControlCharacteristicHandle;
         uint16_t fileDataCharacteristicHandle;
+
+        uint16_t fileConnectionHandle;
 
         int ControlPointHandler(uint16_t connectionHandle, os_mbuf *om);
         int WritePacketHandler(uint16_t connectionHandle, os_mbuf *om);
         void Reset();
 
+        int HandleRead(ble_gatt_access_ctxt* context);
+
         void NotificationSend(uint16_t connection, uint16_t charactHandle, const uint8_t *data, const size_t s);
+
+        void ScreenShot(uint16_t connectionHandle);
 
   
     };

@@ -4,6 +4,7 @@
 #include <lvgl/lvgl.h>
 #include "components/settings/Settings.h"
 #include "displayapp/screens/Screen.h"
+#include "displayapp/screens/ScreenList.h"
 
 namespace Pinetime {
 
@@ -16,13 +17,17 @@ namespace Pinetime {
           ~SettingWatchFace() override;
 
           bool Refresh() override;
+          bool OnTouchEvent(TouchEvents event) override;
           void UpdateSelected(lv_obj_t *object, lv_event_t event);
          
         private:          
+          
+          static constexpr uint8_t wfTotal = 9;
 
           Controllers::Settings& settingsController;
-          uint8_t optionsTotal;
-          lv_obj_t * cbOption[5];
+          ScreenList<wfTotal> screens;
+          uint8_t selectedFace = 0;
+          std::unique_ptr<Screen> CreateScreen(const char * imageName, uint8_t num);
           
       };
     }

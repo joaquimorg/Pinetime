@@ -54,27 +54,15 @@ This project is released under the GNU General Public License version 3 or, at y
 
 ## Screenshots
 
-![Pinetime](images/pinetimelite_screens.jpg "Pinetime")
+![Pinetime](images/pinetime-lite.jpg "Pinetime")
 
-<img src="images/screens/pinetime_3828.jpg" height="300" /><img src="images/screens/pinetime_3847.jpg" height="300" /><img src="images/screens/pinetime_3857.jpg" height="300" />
-<img src="images/screens/pinetime_3818.jpg" height="300" /><img src="images/screens/pinetime_3905.jpg" height="300" /><img src="images/screens/pinetime_3915.jpg" height="300" />
-<img src="images/screens/pinetime_3922.jpg" height="300" /><img src="images/screens/pinetime_3930.jpg" height="300" /><img src="images/screens/pinetime_3939.jpg" height="300" />
-<img src="images/screens/pinetime_3955.jpg" height="300" /><img src="images/screens/pinetime_4004.jpg" height="300" /><img src="images/screens/pinetime_2745.jpg" height="300" />
-<img src="images/screens/pinetime_2549.jpg" height="300" /><img src="images/screens/pinetime_4019.jpg" height="300" /><img src="images/screens/pinetime_4028.jpg" height="300" />
-<img src="images/screens/pinetime_4044.jpg" height="300" /><img src="images/screens/pinetime_4106.jpg" height="300" /><img src="images/screens/pinetime_4113.jpg" height="300" />
-<img src="images/screens/pinetime_3947.jpg" height="300" /><img src="images/screens/pinetime_5417.jpg" height="300" /><img src="images/screens/pinetime_3122.jpg" height="300" />
+![Pinetime](images/pinetime_lite_watchfaces.jpg "Pinetime")
+
+![Pinetime](images/pinetime_lite_screens.jpg "Pinetime")
 
 ---
 
-[![PineTime Lite 0.5.1](https://res.cloudinary.com/marcomontalbano/image/upload/v1619513559/video_to_markdown/images/youtube--d87VAyawJ0M-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=d87VAyawJ0M "PineTime Lite 0.5.1")
-
----
-
-## Screen Mockups
-
-https://www.figma.com/file/Wx1Z5mz2IgCbQDQS8r0Ljr/Pinetime-Screens-v0.1?node-id=0%3A1
-
-![Pinetime screen mockup](images/PinetimeClockMockup.png "Pinetime")
+[![PineTime Lite 0.6.0](https://res.cloudinary.com/marcomontalbano/image/upload/v1619513559/video_to_markdown/images/youtube--d87VAyawJ0M-c05b58ac6eb4c4700831b2b3070cd403.jpg)](https://www.youtube.com/watch?v=d87VAyawJ0M "PineTime Lite 0.6.0")
 
 ----
 ## Build PinetimeLite

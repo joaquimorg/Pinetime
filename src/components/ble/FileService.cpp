@@ -3,6 +3,7 @@
 #include "drivers/SpiNorFlash.h"
 #include "systemtask/SystemTask.h"
 #include <string>
+#include <lvgl/lvgl.h>
 
 using namespace Pinetime::Controllers;
 
@@ -29,19 +30,19 @@ FileService::FileService(Pinetime::System::SystemTask &systemTask,
                        Pinetime::Controllers::Ble &bleController,
                        Pinetime::Drivers::SpiNorFlash &spiNorFlash)
 
-: mSystemTask{systemTask}, bleController{bleController}, spiFlash{spiNorFlash},
+: mSystemTask{systemTask}, bleController{bleController}, spiNorFlash{spiNorFlash}, spiFlash{spiNorFlash},
 
   mCharacteristicDefinitions {
       { .uuid = reinterpret_cast<const ble_uuid_t*>(&fileDataCharacteristicUuid),
-        .access_cb = FileServiceCallback, 
+        .access_cb = FileServiceCallback,
         .arg = this,
-        .flags = (BLE_GATT_CHR_F_WRITE_NO_RSP), 
+        .flags = (BLE_GATT_CHR_F_WRITE_NO_RSP | BLE_GATT_CHR_F_READ),
         .val_handle = nullptr },
 
       { .uuid = reinterpret_cast<const ble_uuid_t*>(&fileControlCharacteristicUuid),
-        .access_cb = FileServiceCallback, 
+        .access_cb = FileServiceCallback,
         .arg = this,
-        .flags = (BLE_GATT_CHR_F_WRITE | BLE_GATT_CHR_F_NOTIFY), 
+        .flags = (BLE_GATT_CHR_F_WRITE | BLE_GATT_CHR_F_NOTIFY),
         .val_handle = nullptr },
 
       { 0 /* null terminator */ }
@@ -69,7 +70,7 @@ void FileService::Init() {
 }
 
 int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHandle, ble_gatt_access_ctxt *context) {
-  
+
   mtuSize = ble_att_preferred_mtu();
   //mtuSize = ble_att_mtu(connectionHandle);
 
@@ -85,9 +86,19 @@ int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHand
 
 
   if (attributeHandle == fileDataCharacteristicHandle) {
-    if (context->op == BLE_GATT_ACCESS_OP_WRITE_CHR)
-      return WritePacketHandler(connectionHandle, context->om);
-    else return 0;
+    switch(context->op) {
+      case BLE_GATT_ACCESS_OP_WRITE_CHR: {
+        return WritePacketHandler(connectionHandle, context->om);
+      }
+      case BLE_GATT_ACCESS_OP_READ_CHR: {
+        return HandleRead(context);
+      }
+      default:
+        // nimble should never have called us
+        NRF_LOG_INFO("[DFU] Unknown Characteristic : %d", attributeHandle);
+        return BLE_ATT_ERR_UNLIKELY;
+    }
+
   } else if (attributeHandle == fileControlCharacteristicHandle) {
     if (context->op == BLE_GATT_ACCESS_OP_WRITE_CHR)
       return ControlPointHandler(connectionHandle, context->om);
@@ -100,10 +111,9 @@ int FileService::OnServiceData(uint16_t connectionHandle, uint16_t attributeHand
   return BLE_ATT_ERR_UNLIKELY;
 }
 
-
 int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
-  auto opcode = static_cast<Opcodes>(om->om_data[0]);  
-  
+  auto opcode = static_cast<Opcodes>(om->om_data[0]);
+
   switch (opcode) {
     case Opcodes::COMMAND_SEND_FIRMWARE_INFO: {
       if (state != States::Idle && state != States::Start) {
@@ -123,7 +133,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
 
       if (fileSize > 0) {
         data[0] = 0x01;
-        
+
         if ( om->om_data[5] == 0x01 ) {
           bleController.FWType(Pinetime::Controllers::Ble::FirmwareType::RES);
           spiFlash.Init(mtuSize, fileSize, SpiFlash::FlashType::RES);
@@ -155,11 +165,11 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         bleController.FirmwareUpdateCurrentBytes(0);
         // Send task to open app
         mSystemTask.PushMessage(Pinetime::System::SystemTask::Messages::OnResourceUpdateStart);
-        
+
         spiFlash.Erase();
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Running);
 
-        // Notify to send Firmware !          
+        // Notify to send Firmware !
         data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_INIT;
         NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
 
@@ -169,7 +179,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
     }
 
     case Opcodes::COMMAND_FIRMWARE_START_DATA: {
-          
+
       if (state != States::Start) {
         NRF_LOG_INFO("[FileService] -> Receive firmware image requested, but we are not in Start");
         return 0;
@@ -191,7 +201,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
 
       // verify Checksum
       if(spiFlash.CalculateCrc() == crc){
-      
+
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Validated);
         bleController.StopFirmwareUpdate();
 
@@ -215,7 +225,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
 
         NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Error);
-        
+
       }
 
       return 0;
@@ -237,7 +247,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         uint8_t data[2];
         data[0] = 0x01;
         data[1] = (uint8_t)Opcodes::COMMAND_FIRMWARE_END_DATA;
-        
+
         NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
 
         bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Validated);
@@ -256,11 +266,94 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
       return 0;
     }
 
+    case Opcodes::COMMAND_SCREEN_SHOT: {
+        ScreenShot(connectionHandle);
+        readSCRPos = 0;
+      return 0;
+    }
+    case Opcodes::COMMAND_SCREEN_SHOT_GET: {
+        //ScreenShot(connectionHandle);
+        uint8_t data[2];
+        data[0] = 0x01;
+        data[1] = (uint8_t)Opcodes::COMMAND_SCREEN_SHOT_GET;
+
+        NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+        readSCRPos = 0;
+      return 0;
+    }
+
     default:
       return 0;
   }
 }
 
+int FileService::HandleRead(ble_gatt_access_ctxt* context) {
+  uint8_t rgbdata[240];
+  uint32_t readOffset = 0x040000;
+  //uint32_t totalSize = (240*240) * 2;
+  
+  //for (size_t rPos = 0; rPos < totalSize; rPos += sizeof(rgbdata)) {
+    spiNorFlash.Read(readOffset + readSCRPos, rgbdata, sizeof(rgbdata));
+    os_mbuf_append(context->om, rgbdata, sizeof(rgbdata));
+    readSCRPos += sizeof(rgbdata);
+
+    //if ( readSCRPos >= totalSize) return BLE_ATT_ERR_INSUFFICIENT_RES;
+  //}
+  return 0;
+}
+
+
+static void screenshot_disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p) {
+  auto* obj = static_cast<FileService*>(disp_drv->user_data);
+  obj->FlushScreenShot(area, color_p);
+  lv_disp_flush_ready(disp_drv);
+}
+
+void FileService::ScreenShot(uint16_t connectionHandle) {
+  
+  lv_disp_drv_t driver;
+  lv_disp_t *system_disp;
+  uint32_t fileSize = (240*240) * 2;
+
+  readSCRPos = 0;
+  
+  spiFlash.Init(mtuSize, fileSize, SpiFlash::FlashType::SCR);
+  spiFlash.Erase();
+
+  system_disp = lv_disp_get_default();
+  driver.user_data = system_disp->driver.user_data;
+  driver.flush_cb = system_disp->driver.flush_cb;  
+  system_disp->driver.flush_cb = screenshot_disp_flush;
+  system_disp->driver.user_data = this;
+  lv_obj_invalidate( lv_scr_act() );
+  lv_refr_now( system_disp );
+  system_disp->driver.user_data = driver.user_data;
+  system_disp->driver.flush_cb = driver.flush_cb;
+
+  uint8_t data[2];
+  data[0] = 0x01;
+  data[1] = (uint8_t)Opcodes::COMMAND_SCREEN_SHOT;
+
+  NotificationSend(connectionHandle, fileControlCharacteristicHandle, data, sizeof(data));
+}
+
+void FileService::FlushScreenShot(const lv_area_t *area, lv_color_t *color_p) {
+  lv_coord_t x, y;
+  uint16_t *data = (uint16_t *)color_p;
+  uint8_t rgbdata[2];
+  uint32_t size = 0;
+  for(y = area->y1; y <= area->y2; y++) {
+    for(x = area->x1; x <= area->x2; x++) {
+      
+      rgbdata[0] = (uint8_t)((*data) >> 8);
+      rgbdata[1] = (uint8_t)((*data) & 0xff);
+      data++;
+      spiFlash.Append(rgbdata, sizeof(rgbdata));
+      size +=2;
+      if (size > ((240*240) * 2)) return;
+    }
+  }
+}
 
 int FileService::WritePacketHandler(uint16_t connectionHandle, os_mbuf *om) {
   switch (state) {
@@ -273,7 +366,7 @@ int FileService::WritePacketHandler(uint16_t connectionHandle, os_mbuf *om) {
 
       return 0;
     }
-    
+
     default:
       // Invalid state
       return 0;
@@ -299,11 +392,11 @@ void FileService::Restart() {
   state = States::Idle;
   bytesReceived = 0;
   bleController.State(Pinetime::Controllers::Ble::FirmwareUpdateStates::Error);
-  bleController.StopFirmwareUpdate();  
+  bleController.StopFirmwareUpdate();
 }
 
 void FileService::OnTimeout() {
-  
+
   Reset();
 }
 
@@ -317,10 +410,12 @@ void FileService::SpiFlash::Init(size_t chunkSize, size_t totalSize, FlashType f
     writeOffset = 0x0B4000;
   } else if ( this->flashType == FlashType::FW ) {
     writeOffset = 0x040000;
+  } else if ( this->flashType == FlashType::SCR ) {
+    writeOffset = 0x040000;
   } else if ( this->flashType == FlashType::BOT ) {
     writeOffset = 0x000000;
   }
-  
+
 }
 
 void FileService::SpiFlash::Append(uint8_t *data, size_t size) {
@@ -357,7 +452,7 @@ void FileService::SpiFlash::WriteMagicNumber() {
           0x7fefd260,
           0x0f505235,
           0x8079b62c,
-  };  
+  };
   uint32_t offset = writeOffset + (maxSize - (4 * sizeof(uint32_t)));
   spiNorFlash.Write(offset, reinterpret_cast<const uint8_t *>(magic), 4 * sizeof(uint32_t));
 }

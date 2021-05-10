@@ -55,14 +55,14 @@ SettingSteps::SettingSteps(
 
   btnPlus = lv_btn_create(lv_scr_act(), NULL);
   btnPlus->user_data = this;
-  lv_obj_set_size(btnPlus, 60, 40);
+  lv_obj_set_size(btnPlus, 80, 50);
   lv_obj_align(btnPlus, lv_scr_act(), LV_ALIGN_CENTER, 50, 80);
   lv_obj_set_style_local_value_str(btnPlus, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, "+");
   lv_obj_set_event_cb(btnPlus, event_handler);
 
   btnMinus = lv_btn_create(lv_scr_act(), NULL);
   btnMinus->user_data = this;
-  lv_obj_set_size(btnMinus, 60, 40);
+  lv_obj_set_size(btnMinus, 80, 50);
   lv_obj_set_event_cb(btnMinus, event_handler);
   lv_obj_align(btnMinus, lv_scr_act(), LV_ALIGN_CENTER, -50, 80);
   lv_obj_set_style_local_value_str(btnMinus, LV_BTN_PART_MAIN, LV_STATE_DEFAULT, "-");
