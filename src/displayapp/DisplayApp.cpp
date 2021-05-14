@@ -120,24 +120,25 @@ void DisplayApp::Refresh() {
         systemTask.PushMessage(System::SystemTask::Messages::OnDisplayTaskSleeping);
         state = States::Idle;
 
-        // clear screen and current app
-        currentScreen.reset(nullptr);
-        lv_obj_set_style_local_bg_color(lv_scr_act(), LV_OBJ_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x000000));
-        //lv_task_handler();
-
-      break;
-
-      case Messages::GoToRunning:
-        if (state == States::Running) break;
-        //if(!currentScreen) {
-        //  StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
-        //} else {
+        // set the app to show when wake up
+        // 
+        if(!currentScreen) {
+          StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
+        } else {
           if ( currentApp == Apps::Launcher || currentApp == Apps::QuickSettings || currentApp == Apps::Settings ) {
             StartApp( Apps::Clock, DisplayApp::FullRefreshDirections::None );
           } else {
             StartApp( currentApp, DisplayApp::FullRefreshDirections::None );
           }
-        //}
+        }
+
+      break;
+
+      case Messages::GoToRunning:
+        if (state == States::Running) break;
+        
+        // update screen befor restore brightness
+        RunningState();
 
         brightnessController.Restore();
         state = States::Running;
