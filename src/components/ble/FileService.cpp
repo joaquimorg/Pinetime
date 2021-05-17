@@ -296,7 +296,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
         state = States::FileInit;
         data[1] = (uint8_t)Opcodes::COMMAND_FILE_START_DATA;
         //fs.FileClose(file);
-        fs.FileOpen(file, fileName.data(), LFS_O_RDWR | LFS_O_CREAT);
+        fs.FileOpen(&file, fileName.data(), LFS_O_RDWR | LFS_O_CREAT | LFS_O_TRUNC);
         
       } else {
         state = States::Idle;
@@ -315,7 +315,7 @@ int FileService::ControlPointHandler(uint16_t connectionHandle, os_mbuf *om) {
     }
     case Opcodes::COMMAND_FILE_END: {
       state = States::Idle;
-      fs.FileClose(file);
+      fs.FileClose(&file);
 
       uint8_t data[2];
       data[0] = 0x01;
@@ -346,7 +346,7 @@ int FileService::WritePacketHandler(uint16_t connectionHandle, os_mbuf *om) {
       return 0;
     }
     case States::FileData: {
-      fs.FileWrite(file, om->om_data, om->om_len);
+      fs.FileWrite(&file, om->om_data, om->om_len);
       bytesReceived += om->om_len;
       bleController.FirmwareUpdateCurrentBytes(bytesReceived);
       return 0;

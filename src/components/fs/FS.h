@@ -19,6 +19,8 @@ namespace Pinetime {
 
             lfs_t mLfs;
 
+            uint32_t boot_count = 0;
+
             void Init();
             void LVGLFileSystemInit();
 

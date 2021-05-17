@@ -50,8 +50,8 @@ std::unique_ptr<Screen> ApplicationList::CreateScreen1() {
           {
             {"F:/ico_running.bin",    "Steps",    Apps::Steps},
             {"F:/ico_raining.bin",    "Weather",  Apps::WeatherToday},
-            //{"F:/ico_explorer.bin",   "Files",    Apps::FileExplorer},
-            {"",     "",    Apps::None},
+            {"F:/ico_explorer.bin",   "Files",    Apps::FileExplorer},
+            //{"",     "",    Apps::None},
             {"F:/ico_chart.bin",      "Motion",   Apps::Motion},
           }
 

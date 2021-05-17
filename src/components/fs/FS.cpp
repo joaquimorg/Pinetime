@@ -84,7 +84,7 @@ const static struct lfs_config baseLfsConfig = {
     .erase = erase,
     .sync = sync,
 
-    .read_size = 8,
+    .read_size = 16,
     .prog_size = 8,
     .block_size = BLOCK_SIZE_BYTES,
     .block_cycles = 1000u,
@@ -115,6 +115,8 @@ FS::FS(Pinetime::Drivers::SpiNorFlash& driver,
 
 void FS::Init() {
 
+    lfs_file_t file;    
+
     // try mount
     //lfs_format(&mLfs, &mLfsConfig);
     int err = lfs_mount(&mLfs, &mLfsConfig);
@@ -130,6 +132,19 @@ void FS::Init() {
     }
     VerifyResource();
     LVGLFileSystemInit();
+
+    lfs_file_open(&mLfs, &file, "boot_count", LFS_O_RDWR | LFS_O_CREAT);
+    lfs_file_read(&mLfs, &file, &boot_count, sizeof(boot_count));
+
+    // update boot count
+    boot_count += 1;
+    lfs_file_rewind(&mLfs, &file);
+    lfs_file_write(&mLfs, &file, &boot_count, sizeof(boot_count));
+
+    // remember the storage is not updated until the file is closed successfully
+    lfs_file_close(&mLfs, &file);
+
+
 }
 
 void FS::VerifyResource() {

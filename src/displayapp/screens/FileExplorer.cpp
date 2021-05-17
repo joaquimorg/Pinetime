@@ -34,6 +34,13 @@ FileExplorer::FileExplorer(
   lv_obj_set_size(backgroundLabel, 240, 240);
   lv_obj_set_pos(backgroundLabel, 0, 0);
   lv_label_set_text_static(backgroundLabel, "");
+
+  lv_obj_t * info = lv_label_create(lv_scr_act(), NULL);                     /*Enable re-coloring by commands in the text*/
+  lv_label_set_text_fmt(info, "boot %d", fs.boot_count); 
+  lv_obj_set_style_local_text_color(info, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, LV_COLOR_GREEN);
+  lv_label_set_align(info, LV_LABEL_ALIGN_CENTER);
+  lv_obj_align(info, NULL, LV_ALIGN_IN_BOTTOM_MID, 0, 0);
+
 }
 
 FileExplorer::~FileExplorer() {

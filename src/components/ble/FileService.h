@@ -136,7 +136,7 @@ namespace Pinetime {
         uint16_t fileControlCharacteristicHandle;
         uint16_t fileDataCharacteristicHandle;
 
-        lfs_file_t* file;
+        lfs_file_t file;
 
         int ControlPointHandler(uint16_t connectionHandle, os_mbuf *om);
         int WritePacketHandler(uint16_t connectionHandle, os_mbuf *om);
