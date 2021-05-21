@@ -11,7 +11,7 @@ namespace {
     screen->OnObjectEvent(obj, event);
   }
 
-  static void lv_update_task(struct _lv_task_t *task) {  
+  static void lv_update_task(struct _lv_task_t *task) {
     auto user_data = static_cast<Tile *>(task->user_data);
     user_data->UpdateScreen();
   }
@@ -21,11 +21,11 @@ namespace {
 static std::array<std::array<lv_coord_t, 2>, 4> iconPos = {{{-55, -50}, {55, -50}, {-55, 60}, {55, 60}}};
 
 Tile::Tile(uint8_t screenID, uint8_t numScreens,
-    DisplayApp* app, 
-    Controllers::DateTime& dateTimeController, 
+    DisplayApp* app,
+    Controllers::DateTime& dateTimeController,
     Controllers::Settings &settingsController,
     Pinetime::Controllers::Battery& batteryController,
-    std::array<Applications, 4>& applications) : 
+    std::array<Applications, 4>& applications) :
     Screen(app),
     dateTimeController{dateTimeController},
     settingsController{settingsController},
@@ -38,15 +38,13 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
   settingsController.SetAppMenu(screenID);
 
   batteryPercent = batteryController.PercentRemaining();
-  uint8_t hours = dateTimeController.Hours();
-  uint8_t minutes = dateTimeController.Minutes();
-  oldHours = hours;
-  oldMinutes = minutes;
 
   // Time
-  label_time = lv_label_create(lv_scr_act(), NULL);  
-  lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);      
-  lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );    
+  label_time = lv_label_create(lv_scr_act(), NULL);
+  const char* timestr = dateTimeController.GetTimeStr(settingsController.GetClockType() == Controllers::Settings::ClockType::H12);
+  lv_label_set_text_fmt(label_time,  "%s", timestr);
+  delete timestr;
+  lv_label_set_align( label_time, LV_LABEL_ALIGN_CENTER );
   lv_obj_align(label_time, lv_scr_act(), LV_ALIGN_IN_TOP_LEFT, 15, 4);
 
   batteryIcon = lv_label_create(lv_scr_act(), nullptr);
@@ -59,14 +57,14 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
     pageIndicatorBasePoints[0].y = 6;
     pageIndicatorBasePoints[1].x = 240 - 1;
     pageIndicatorBasePoints[1].y = 240 - 6;
-    
+
     pageIndicatorBase = lv_line_create(lv_scr_act(), NULL);
     lv_obj_set_style_local_line_width(pageIndicatorBase, LV_LINE_PART_MAIN, LV_STATE_DEFAULT, 3);
     lv_obj_set_style_local_line_color(pageIndicatorBase, LV_LINE_PART_MAIN, LV_STATE_DEFAULT, lv_color_hex(0x111111));
     lv_obj_set_style_local_line_rounded(pageIndicatorBase, LV_LINE_PART_MAIN, LV_STATE_DEFAULT, true);
     lv_line_set_points(pageIndicatorBase, pageIndicatorBasePoints, 2);
 
-  
+
     uint16_t indicatorSize = 228 / numScreens;
     uint16_t indicatorPos = indicatorSize * screenID;
 
@@ -94,7 +92,7 @@ Tile::Tile(uint8_t screenID, uint8_t numScreens,
 
       iconsAppsLabel[i] = lv_label_create(lv_scr_act(), NULL);
       lv_label_set_long_mode(iconsAppsLabel[i], LV_LABEL_LONG_SROLL);
-      lv_obj_set_width(iconsAppsLabel[i], 105);      
+      lv_obj_set_width(iconsAppsLabel[i], 105);
       lv_label_set_text(iconsAppsLabel[i], applications[i].name);
       lv_label_set_align(iconsAppsLabel[i], LV_LABEL_ALIGN_CENTER );
       lv_obj_align(iconsAppsLabel[i], iconsApps[i], LV_ALIGN_IN_BOTTOM_MID, 0, 25);
@@ -119,14 +117,9 @@ Tile::~Tile() {
 
 void Tile::UpdateScreen() {
 
-  hours = dateTimeController.Hours();
-  minutes = dateTimeController.Minutes();
-  
-  if(oldHours != hours || oldMinutes != minutes) {
-    lv_label_set_text_fmt(label_time,  "%02i:%02i", hours, minutes);
-    oldHours = hours;
-    oldMinutes = minutes;
-  }
+  const char* timestr = dateTimeController.GetTimeStr(settingsController.GetClockType() == Controllers::Settings::ClockType::H12);
+  lv_label_set_text_fmt(label_time,  "%s", timestr);
+  delete timestr;
 
   batteryPercent = batteryController.PercentRemaining();
   lv_label_set_text(batteryIcon, BatteryIcon::GetBatteryIcon(batteryPercent));

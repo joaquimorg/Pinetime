@@ -639,10 +639,10 @@ add_definitions(-D__STACK_SIZE=0x2000)
 add_definitions(-D__HEAP_SIZE=0x2000)
 
 # Release
-set(COMMON_FLAGS_OPT -Os)
+#set(COMMON_FLAGS_OPT -Os)
 
 # Debug
-#set(COMMON_FLAGS_OPT -g3)
+set(COMMON_FLAGS_OPT -g3)
 
 if (NOT CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE "Release")

@@ -37,9 +37,14 @@ void Battery::Init() {
 	//
 
 	// CHARGE INDICATION IRQ
-	//nrf_gpio_cfg_input(CHARGE_IRQ, NRF_GPIO_PIN_NOPULL);	
-	
-	nrf_gpio_cfg_sense_input(CHARGE_IRQ, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+	//nrf_gpio_cfg_input(CHARGE_IRQ, NRF_GPIO_PIN_NOPULL);
+	nrf_gpio_cfg_input(CHARGE_IRQ, NRF_GPIO_PIN_NOPULL);
+
+	if ( nrf_gpio_pin_read(CHARGE_IRQ) ) {
+		nrf_gpio_cfg_sense_input(CHARGE_IRQ, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_LOW);
+	} else {
+		nrf_gpio_cfg_sense_input(CHARGE_IRQ, NRF_GPIO_PIN_NOPULL, NRF_GPIO_PIN_SENSE_HIGH);
+	}
 	static nrfx_gpiote_in_config_t const pinConfigCharge = {
 		.sense = NRF_GPIOTE_POLARITY_TOGGLE,
 		.pull = NRF_GPIO_PIN_NOPULL,

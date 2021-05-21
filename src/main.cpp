@@ -276,7 +276,8 @@ int main(void) {
   //NRF_POWER->SYSTEMOFF = 1;
 
   nrf_drv_clock_init();
-  
+    
+
   debounceTimer = xTimerCreate ("debounceTimer", 200, pdFALSE, (void *) 0, DebounceTimerCallback);
 
   systemTask = std::make_unique<Pinetime::System::SystemTask>(spi0, lcd, spiNorFlash, twiMaster, touchPanel, accelerometer, lvgl, batteryController, bleController,

@@ -49,6 +49,8 @@ void Cst816S::Init() {
 Cst816S::TouchInfos Cst816S::GetTouchInfo() {
   Cst816S::TouchInfos info;
 
+  info.isTouch = false;
+
   auto ret = twiMaster.Read(twiAddress, 0, touchData, sizeof(touchData));
   if(ret != TwiMaster::ErrorCodes::NoError) return {};
 

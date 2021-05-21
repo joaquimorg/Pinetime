@@ -162,6 +162,7 @@ void DisplayApp::Refresh() {
       case Messages::TouchEvent: {
         if (state != States::Running) break;
         auto gesture = OnTouchEvent();
+        if ( gesture == TouchEvents::None ) break;
         if(!currentScreen->OnTouchEvent(gesture)) {
           if ( currentApp == Apps::Clock ) {
             switch (gesture) {
@@ -233,14 +234,15 @@ void DisplayApp::Refresh() {
     }
   }
 
-  if(state != States::Idle && touchMode == TouchModes::Polling) {
+  //lvgl.SetTouchPadEvent(touchPanel.GetTouchInfo());
+  /*if(state != States::Idle && touchMode == TouchModes::Polling) {
     auto info = touchPanel.GetTouchInfo();
     if(info.action == 2) {// 2 = contact
       if(!currentScreen->OnTouchEvent(info.x, info.y)) {
         lvgl.SetNewTapEvent(info.x, info.y);
       }
     }
-  }
+  }*/
 }
 
 void DisplayApp::RunningState() {
@@ -398,13 +400,18 @@ void DisplayApp::PushMessage(DisplayApp::Messages msg) {
 }
 
 TouchEvents DisplayApp::OnTouchEvent() {
-  auto info = touchPanel.GetTouchInfo();
+  auto info = touchPanel.GetTouchInfo();  
+
+  //auto info = lvgl.GetTouchPadEvent();
+
   if(info.isTouch) {
     switch(info.gesture) {
       case Pinetime::Drivers::Cst816S::Gestures::SingleTap:
-        if(touchMode == TouchModes::Gestures)
-          lvgl.SetNewTapEvent(info.x, info.y);
-        return TouchEvents::Tap;
+        lvgl.SetTouchPadEvent(info);
+        /*if(touchMode == TouchModes::Gestures)
+          lvgl.SetNewTapEvent(info.x, info.y);*/
+        //return TouchEvents::Tap;
+        return TouchEvents::None;
       case Pinetime::Drivers::Cst816S::Gestures::LongPress:
         return TouchEvents::LongTap;
       case Pinetime::Drivers::Cst816S::Gestures::DoubleTap:

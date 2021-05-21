@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdio>
+#include <cstdlib>
 #include <chrono>
 
 namespace Pinetime {
@@ -16,9 +18,22 @@ namespace Pinetime {
         Months Month() const { return month; }
         uint8_t Day() const { return day; }
         Days DayOfWeek() const { return dayOfWeek; }
+
         uint8_t Hours() const { return hour; }
         uint8_t Hours12();
+        
         const char *HourAMPM( bool nl );
+        
+        const char *GetTimeStr( bool is12 ) {
+          char *timestr = new char[10];
+          if ( is12 ) {
+            sprintf(timestr, "%i:%02i %s", Hours12(), Minutes(), HourAMPM(false));
+          } else {
+            sprintf(timestr, "%02i:%02i", Hours(), Minutes());
+          }
+          return timestr;
+        }
+
         uint8_t Minutes() const { return minute; }
         uint8_t Seconds() const { return second; }
 

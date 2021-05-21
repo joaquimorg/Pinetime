@@ -10,15 +10,15 @@ Motion::Motion(Pinetime::Applications::DisplayApp *app, Pinetime::Controllers::A
     chart = lv_chart_create(lv_scr_act(), NULL);
     lv_obj_set_size(chart, 240, 240);
     lv_obj_align(chart, NULL, LV_ALIGN_IN_TOP_MID, 0, 0);
-    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   /*Show lines and points too*/
-    //lv_chart_set_series_opa(chart, LV_OPA_70);                            /*Opacity of the data series*/
-    //lv_chart_set_series_width(chart, 4);                                  /*Line width and point radious*/
+    lv_chart_set_type(chart, LV_CHART_TYPE_LINE);   //Show lines and points too
+    //lv_chart_set_series_opa(chart, LV_OPA_70);    //Opacity of the data series
+    //lv_chart_set_series_width(chart, 4);          //Line width and point radious
 
     lv_chart_set_range(chart, -110, 110);
     lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
     lv_chart_set_point_count(chart, 10);
 
-    /*Add 3 data series*/
+    //Add 3 data series
     ser1 = lv_chart_add_series(chart, LV_COLOR_RED);
     ser2 = lv_chart_add_series(chart, LV_COLOR_GREEN);
     ser3 = lv_chart_add_series(chart, LV_COLOR_YELLOW);
