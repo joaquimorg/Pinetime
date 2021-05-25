@@ -28,22 +28,16 @@ LittleVgl::LittleVgl(Pinetime::Drivers::St7789& lcd, Pinetime::Drivers::Cst816S&
 }
 
 void LittleVgl::InitDisplay() {
-  lv_disp_buf_init(&disp_buf_2, buf2_1, buf2_2, LV_HOR_RES_MAX * 4);   /*Initialize the display buffer*/
-  lv_disp_drv_init(&disp_drv);                    /*Basic initialization*/
+  lv_disp_draw_buf_init(&disp_buf_2, buf2_1, NUbuf2_2LL, screenWidth * 4);
 
-  /*Set up the functions to access to your display*/
+  /*Initialize the display*/
+  lv_disp_drv_t disp_drv;
+  lv_disp_drv_init(&disp_drv);
 
-  /*Set the resolution of the display*/
-  disp_drv.hor_res = 240;
-  disp_drv.ver_res = 240;
-
-  /*Used to copy the buffer's content to the display*/
+  disp_drv.hor_res = screenWidth;
+  disp_drv.ver_res = screenHeight;
   disp_drv.flush_cb = disp_flush;
-  /*Set a display buffer*/
-  disp_drv.buffer = &disp_buf_2;
-  disp_drv.user_data = this;
-
-  /*Finally register the driver*/
+  disp_drv.draw_buf = &disp_buf_2;
   lv_disp_drv_register(&disp_drv);
 }
 
@@ -203,7 +197,7 @@ bool LittleVgl::GetTouchPadInfo(lv_indev_data_t *ptr) {
 
 void LittleVgl::InitTheme() {
   
-  lv_theme_t * th = lv_pinetime_theme_init(
+  /*lv_theme_t * th = lv_pinetime_theme_init(
       LV_COLOR_WHITE, LV_COLOR_GRAY,
       0, 
       &lv_font_roboto_20, 
@@ -211,6 +205,6 @@ void LittleVgl::InitTheme() {
       &lv_font_roboto_20, 
       &lv_font_roboto_20);
       
-  lv_theme_set_act(th);
+  lv_theme_set_act(th);*/
 
 }

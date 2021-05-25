@@ -36,6 +36,8 @@ namespace Pinetime {
         Pinetime::Drivers::St7789& lcd;
         Pinetime::Drivers::Cst816S& touchPanel;
 
+        static constexpr uint32_t screenWidth = 240;
+        static constexpr uint32_t screenHeight = 240;
 
         lv_disp_buf_t disp_buf_2;
         lv_color_t buf2_1[LV_HOR_RES_MAX * 4];
